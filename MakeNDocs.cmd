@@ -1,0 +1,1 @@
+%SystemRoot%\Microsoft.NET\Framework\v3.5\msbuild /p:Configuration=Release InTheHand.Net.Personal.CF2\InTheHand.Net.Personal.CF2.csproj  &&  "d:\Program Files\NDoc 1.3\bin\net\1.1\NDocConsole.exe" -project="Alan tmp.ndoc"  && copy /y doc\ThirtyTwoFeet.chm doc\_ThirtyTwoFeet.chm  &&  start doc\_ThirtyTwoFeet.chm

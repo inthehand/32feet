@@ -1,0 +1,9 @@
+[DEFAULT]
+BASEURL=http://32feet.codeplex.com/
+[{000214A0-0000-0000-C000-000000000046}]
+Prop3=19,2
+[InternetShortcut]
+URL=http://32feet.codeplex.com/
+IDList=
+IconFile=http://32feet.codeplex.com/favicon.ico
+IconIndex=1

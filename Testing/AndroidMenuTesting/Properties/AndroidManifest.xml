@@ -1,0 +1,8 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:versionCode="2" android:versionName="2.3" package="AndroidMenuTesting.AndroidMenuTesting">
+	<uses-sdk />
+	<application android:label="AndroidMenuTesting" android:icon="@drawable/icon"></application>
+	<uses-permission android:name="android.permission.BLUETOOTH" />
+	<uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+	<uses-permission android:name="android.permission.INTERNET" />
+</manifest>

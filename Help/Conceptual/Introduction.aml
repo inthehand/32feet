@@ -1,0 +1,67 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<topic id="69b7980a-0abc-45f8-bfac-7cb6f5ad8b30" revisionNumber="1">
+  <developerOrientationDocument xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!--
+    <summary>
+      <para>Optional summary abstract</para>
+    </summary>
+    -->
+    <introduction>
+      <para>There are generally four ways an application might want to use Bluetooth:</para>
+<para>1. Make a direct data connection</para>
+<para>Where the program connects directly to a Bluetooth RFCOMM service, and sends and receives the raw data for that connection.
+The server side function can also be provided.  See section “General Bluetooth data connections” below.</para>
+<para>2. Do an OBEX transfer</para>
+<para>Where the program is an OBEX client and connects to a server, and sends (PUTs) or GETs a file/object.
+The server side function can also be provided.
+See section “OBEX” below.
+<para>3. Have the Bluetooth stack and/or the OS connect to and use a remote service</para>
+<para>Common services for this case are where the service is Headset/Handsfree/A2DP, or networking for instance.
+Here we do not want the program to connect directly to those services, as we wouldn’t know what to do with the raw bytes, but instead want the OS to send audio to the headset, or form a network connection with an access-point or similar.
+See section “Connecting to Bluetooth services” below.</para>
+<para>4. Make a direct data connection using the L2CAP protocol</para>
+<para>Where the program connects directly to a Bluetooth L2CAP service, and sends and receives the raw data for that connection.
+This is not supported currently.</para>
+<para>See http://www.alanjmcf.me.uk/comms/bluetooth/Bluetooth Profiles and 32feet.NET.html for information on what services use which method.</para>
+<para>For device discovery see the section under “General Bluetooth data connections”.</para>
+</para>
+    </introduction>
+    <!-- <inThisSection>Optional description of content in this section</inThisSection> -->
+    <!-- <reference>Optional reference section</reference> -->
+    <!-- <relatedSections>Optional related sections info</relatedSections> -->
+    <!-- <externalResources>Optional external resources section</externalResources> -->
+    <relatedTopics>
+      <!-- One or more of the following:
+           - A local link
+           - An external link
+           - A code entity reference
+
+      <link xlink:href="Other Topic's ID">Link text</link>
+      <externalLink>
+          <linkText>Link text</linkText>
+          <linkAlternateText>Optional alternate link text</linkAlternateText>
+          <linkUri>URI</linkUri>
+      </externalLink>
+      <codeEntityReference>API member ID</codeEntityReference>
+
+      Examples:
+
+      <link xlink:href="00e97994-e9e6-46e0-b420-5be86b2f8278">Some other topic</link>
+
+      <externalLink>
+          <linkText>SHFB on CodePlex</linkText>
+          <linkAlternateText>Go to CodePlex</linkAlternateText>
+          <linkUri>http://shfb.codeplex.com</linkUri>
+      </externalLink>
+
+      <codeEntityReference>T:TestDoc.TestClass</codeEntityReference>
+      <codeEntityReference>P:TestDoc.TestClass.SomeProperty</codeEntityReference>
+      <codeEntityReference>M:TestDoc.TestClass.#ctor</codeEntityReference>
+      <codeEntityReference>M:TestDoc.TestClass.#ctor(System.String,System.Int32)</codeEntityReference>
+      <codeEntityReference>M:TestDoc.TestClass.ToString</codeEntityReference>
+      <codeEntityReference>M:TestDoc.TestClass.FirstMethod</codeEntityReference>
+      <codeEntityReference>M:TestDoc.TestClass.SecondMethod(System.Int32,System.String)</codeEntityReference>
+      -->
+    </relatedTopics>
+  </developerOrientationDocument>
+</topic>

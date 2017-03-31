@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>10.0.0</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{6B1ECD21-2A6F-4EEA-B15A-993014A857E6}</ProjectGuid>
+    <ProjectTypeGuids>{EFBA0AD7-5A72-4C68-AF49-83D382785DCF};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <RootNamespace>AndroidMenuTesting</RootNamespace>
+    <MonoAndroidResourcePrefix>Resources</MonoAndroidResourcePrefix>
+    <MonoAndroidAssetsPrefix>Assets</MonoAndroidAssetsPrefix>
+    <AndroidResgenClass>Resource</AndroidResgenClass>
+    <AndroidApplication>True</AndroidApplication>
+    <AndroidResgenFile>Resources\Resource.designer.cs</AndroidResgenFile>
+    <AssemblyName>AndroidMenuTesting</AssemblyName>
+    <TargetFrameworkVersion>v2.3</TargetFrameworkVersion>
+    <AndroidManifest>Properties\AndroidManifest.xml</AndroidManifest>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>True</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>False</Optimize>
+    <OutputPath>bin\Debug</OutputPath>
+    <DefineConstants>DEBUG;ANDROID;NO_WINFORMS;NO_APP_WINFORMS</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>False</ConsolePause>
+    <AndroidLinkMode>None</AndroidLinkMode>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>none</DebugType>
+    <Optimize>True</Optimize>
+    <OutputPath>bin\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AndroidUseSharedRuntime>False</AndroidUseSharedRuntime>
+    <ConsolePause>False</ConsolePause>
+    <AndroidLinkMode>SdkOnly</AndroidLinkMode>
+    <DefineConstants>ANDROID;NO_WINFORMS;NO_APP_WINFORMS</DefineConstants>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Core" />
+    <Reference Include="Mono.Android" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Activity1.cs" />
+    <Compile Include="Resources\Resource.designer.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="..\ConsoleMenuTesting\BluetoothTesting.cs">
+      <Link>BluetoothTesting.cs</Link>
+    </Compile>
+    <Compile Include="..\ConsoleMenuTesting\DelegateExtension.cs">
+      <Link>DelegateExtension.cs</Link>
+    </Compile>
+    <Compile Include="..\ConsoleMenuTesting\MenuSystem.cs">
+      <Link>MenuSystem.cs</Link>
+    </Compile>
+    <Compile Include="..\ConsoleMenuTesting\Option.cs">
+      <Link>Option.cs</Link>
+    </Compile>
+    <Compile Include="..\ConsoleMenuTesting\SubMenuAttribute.cs">
+      <Link>SubMenuAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\ConsoleMenuTesting\MenuItemAttribute.cs">
+      <Link>MenuItemAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\..\InTheHand.Net.Personal\Net\AsyncResult.cs">
+      <Link>AsyncResult.cs</Link>
+    </Compile>
+    <Compile Include="..\..\InTheHand.Net.Personal\Net\AsyncResultCompletion.cs">
+      <Link>AsyncResultCompletion.cs</Link>
+    </Compile>
+    <Compile Include="..\..\InTheHand.Net.Personal\Net\AsyncResultNoResult.cs">
+      <Link>AsyncResultNoResult.cs</Link>
+    </Compile>
+    <Compile Include="DroidMenuSystem.cs" />
+    <Compile Include="NullMenuSystem.cs" />
+    <Compile Include="..\DeviceMenuTesting\IAuxConsole.cs">
+      <Link>IAuxConsole.cs</Link>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\AboutResources.txt" />
+    <None Include="Assets\AboutAssets.txt" />
+    <None Include="Properties\AndroidManifest.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\layout\Main.axml" />
+    <AndroidResource Include="Resources\values\Strings.xml" />
+    <AndroidResource Include="Resources\drawable\Icon.png" />
+    <AndroidResource Include="Resources\drawable\a32feet.128.png" />
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath)\Novell\Novell.MonoDroid.CSharp.targets" />
+  <ItemGroup>
+    <ProjectReference Include="..\..\ITH.Net.Android\ITH.Net.Android.csproj">
+      <Project>{5BD43A74-91E4-4A35-A3C7-26C07C38CFEB}</Project>
+      <Name>ITH.Net.Android</Name>
+    </ProjectReference>
+  </ItemGroup>
+</Project>

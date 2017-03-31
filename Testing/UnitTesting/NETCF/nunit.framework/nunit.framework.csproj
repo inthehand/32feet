@@ -1,0 +1,85 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.50727</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{FAA2D474-3449-4FBF-BB77-730FD64B7A1B}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>nunit.framework</RootNamespace>
+    <AssemblyName>nunit.framework</AssemblyName>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AbstractAsserter.cs" />
+    <Compile Include="AssemblyInfo.cs" />
+    <Compile Include="Assert.cs" />
+    <Compile Include="Assertion.cs" />
+    <Compile Include="AssertionException.cs" />
+    <Compile Include="AssertionFailureMessage.cs" />
+    <Compile Include="CategoryAttribute.cs" />
+    <Compile Include="ComparisonAsserter.cs" />
+    <Compile Include="ConditionAsserters.cs" />
+    <Compile Include="EqualAsserter.cs" />
+    <Compile Include="EqualityAsserter.cs" />
+    <Compile Include="ExpectedExceptionAttribute.cs" />
+    <Compile Include="ExplicitAttribute.cs" />
+    <Compile Include="greaterasserter.cs" />
+    <Compile Include="IAsserter.cs" />
+    <Compile Include="IgnoreAttribute.cs" />
+    <Compile Include="IgnoreException.cs" />
+    <Compile Include="lessasserter.cs" />
+    <Compile Include="ListContentsAsserter.cs" />
+    <Compile Include="NotEqualAsserter.cs" />
+    <Compile Include="NotSameAsserter.cs" />
+    <Compile Include="OldTestCase.cs" />
+    <Compile Include="PlatformAttribute.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SameAsserter.cs" />
+    <Compile Include="SetUpAttribute.cs" />
+    <Compile Include="SetUpFixtureAttribute.cs" />
+    <Compile Include="StringAssert.cs" />
+    <Compile Include="StringAsserters.cs" />
+    <Compile Include="SuiteAttribute.cs" />
+    <Compile Include="TearDownAttribute.cs" />
+    <Compile Include="TestAttribute.cs" />
+    <Compile Include="TestFixtureAttribute.cs" />
+    <Compile Include="TestFixtureSetUpAttribute.cs" />
+    <Compile Include="TestFixtureTearDownAttribute.cs" />
+    <Compile Include="TypeAsserters.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

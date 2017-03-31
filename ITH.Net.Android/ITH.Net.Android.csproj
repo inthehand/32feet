@@ -1,0 +1,532 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>10.0.0</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{5BD43A74-91E4-4A35-A3C7-26C07C38CFEB}</ProjectGuid>
+    <ProjectTypeGuids>{EFBA0AD7-5A72-4C68-AF49-83D382785DCF};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <RootNamespace>InTheHand</RootNamespace>
+    <MonoAndroidResourcePrefix>Resources</MonoAndroidResourcePrefix>
+    <MonoAndroidAssetsPrefix>Assets</MonoAndroidAssetsPrefix>
+    <AndroidResgenFile>Resources\Resource.designer.cs</AndroidResgenFile>
+    <AndroidResgenClass>Resource</AndroidResgenClass>
+    <AssemblyName>InTheHand.Net.Personal</AssemblyName>
+    <TargetFrameworkVersion>v2.3</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>True</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>False</Optimize>
+    <OutputPath>bin\Debug</OutputPath>
+    <DefineConstants>DEBUG;V2;FX3_5;ANDROID;ANDROID_BTH;NO_MSFT;NO_WINFORMS;NO_WIDCOMM</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>False</ConsolePause>
+    <AndroidLinkMode>None</AndroidLinkMode>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>none</DebugType>
+    <Optimize>True</Optimize>
+    <OutputPath>bin\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AndroidUseSharedRuntime>False</AndroidUseSharedRuntime>
+    <ConsolePause>False</ConsolePause>
+    <AndroidLinkMode>SdkOnly</AndroidLinkMode>
+    <DefineConstants>V2;FX3_5;ANDROID;ANDROID_BTH;NO_MSFT;NO_WINFORMS;NO_WIDCOMM</DefineConstants>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Core" />
+    <Reference Include="Mono.Android" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Resources\Resource.designer.cs" />
+    <Compile Include="..\InTheHand.Net.Personal\FakeAttributes.cs">
+      <Link>FakeAttributes.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Net.Bluetooth.AttributeIds\DeviceIdAttributeId.cs">
+      <Link>Net.Bluetooth.AttributeIds\DeviceIdAttributeId.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Net.Bluetooth.AttributeIds\HidProfileAttributeId.cs">
+      <Link>Net.Bluetooth.AttributeIds\HidProfileAttributeId.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Net.Bluetooth.AttributeIds\SdpSpecAttributeIds.cs">
+      <Link>Net.Bluetooth.AttributeIds\SdpSpecAttributeIds.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Net.Bluetooth.AttributeIds\SigAttributeIds.cs">
+      <Link>Net.Bluetooth.AttributeIds\SigAttributeIds.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Net.Bluetooth.Factory\BluetoothConnector.cs">
+      <Link>Net.Bluetooth.Factory\BluetoothConnector.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Net.Bluetooth.Factory\BluetoothFactory.cs">
+      <Link>Net.Bluetooth.Factory\BluetoothFactory.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Net.Bluetooth.Factory\BluetoothRfcommStreamConnector.cs">
+      <Link>Net.Bluetooth.Factory\BluetoothRfcommStreamConnector.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Net.Bluetooth.Factory\CommonBluetoothClient.cs">
+      <Link>Net.Bluetooth.Factory\CommonBluetoothClient.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Net.Bluetooth.Factory\CommonBluetoothInquiry.cs">
+      <Link>Net.Bluetooth.Factory\CommonBluetoothInquiry.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Net.Bluetooth.Factory\CommonBluetoothListener.cs">
+      <Link>Net.Bluetooth.Factory\CommonBluetoothListener.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Net.Bluetooth.Factory\CommonDiscoveryBluetoothClient.cs">
+      <Link>Net.Bluetooth.Factory\CommonDiscoveryBluetoothClient.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Net.Bluetooth.Factory\CommonRfcommStream.cs">
+      <Link>Net.Bluetooth.Factory\CommonRfcommStream.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Net.Bluetooth.Factory\DecoratorNetworkStream.cs">
+      <Link>Net.Bluetooth.Factory\DecoratorNetworkStream.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Net.Bluetooth.Factory\DiscoDevsParams.cs">
+      <Link>Net.Bluetooth.Factory\DiscoDevsParams.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Net.Bluetooth.Factory\IBluetoothClient.cs">
+      <Link>Net.Bluetooth.Factory\IBluetoothClient.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Net.Bluetooth.Factory\IBluetoothDeviceInfo.cs">
+      <Link>Net.Bluetooth.Factory\IBluetoothDeviceInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Net.Bluetooth.Factory\IBluetoothFactoryFactory.cs">
+      <Link>Net.Bluetooth.Factory\IBluetoothFactoryFactory.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Net.Bluetooth.Factory\IBluetoothListener.cs">
+      <Link>Net.Bluetooth.Factory\IBluetoothListener.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Net.Bluetooth.Factory\IBluetoothRadio.cs">
+      <Link>Net.Bluetooth.Factory\IBluetoothRadio.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Net.Bluetooth.Factory\IBluetoothSecurity.cs">
+      <Link>Net.Bluetooth.Factory\IBluetoothSecurity.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Net.Bluetooth.Factory\IL2CapClient.cs">
+      <Link>Net.Bluetooth.Factory\IL2CapClient.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Net.Bluetooth.Factory\IUsesBluetoothConnectorImplementsServiceLookup.cs">
+      <Link>Net.Bluetooth.Factory\IUsesBluetoothConnectorImplementsServiceLookup.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Net.Bluetooth.Factory\RfcommDecoratorNetworkStream.cs">
+      <Link>Net.Bluetooth.Factory\RfcommDecoratorNetworkStream.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Net.Bluetooth.Factory\TimeoutDecorStream.cs">
+      <Link>Net.Bluetooth.Factory\TimeoutDecorStream.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Net.Bluetooth\AsyncCompletedEventArgs.cs">
+      <Link>Net.Bluetooth\AsyncCompletedEventArgs.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Net.Bluetooth\AsyncOperation.cs">
+      <Link>Net.Bluetooth\AsyncOperation.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Net.Bluetooth\AsyncOperationManager.cs">
+      <Link>Net.Bluetooth\AsyncOperationManager.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Net.Bluetooth\BDIF_BluetoothDeviceInfoProperties.cs">
+      <Link>Net.Bluetooth\BDIF_BluetoothDeviceInfoProperties.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Net.Bluetooth\BluetoothAuthenticationMethod.cs">
+      <Link>Net.Bluetooth\BluetoothAuthenticationMethod.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Net.Bluetooth\BluetoothAuthenticationRequirements.cs">
+      <Link>Net.Bluetooth\BluetoothAuthenticationRequirements.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Net.Bluetooth\BluetoothComponent.cs">
+      <Link>Net.Bluetooth\BluetoothComponent.cs</Link>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Net.Bluetooth\BluetoothFactoryConfig.cs">
+      <Link>Net.Bluetooth\BluetoothFactoryConfig.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Net.Bluetooth\BluetoothIoCapability.cs">
+      <Link>Net.Bluetooth\BluetoothIoCapability.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Net.Bluetooth\BluetoothPublicFactory.cs">
+      <Link>Net.Bluetooth\BluetoothPublicFactory.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Net.Bluetooth\BluetoothRadio.cs">
+      <Link>Net.Bluetooth\BluetoothRadio.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Net.Bluetooth\BluetoothSecurity.cs">
+      <Link>Net.Bluetooth\BluetoothSecurity.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Net.Bluetooth\BluetoothService.cs">
+      <Link>Net.Bluetooth\BluetoothService.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Net.Bluetooth\BluetoothSocketOptionLevel.cs">
+      <Link>Net.Bluetooth\BluetoothSocketOptionLevel.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Net.Bluetooth\BluetoothSocketOptionName.cs">
+      <Link>Net.Bluetooth\BluetoothSocketOptionName.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Net.Bluetooth\BluetoothWin32Authentication.cs">
+      <Link>Net.Bluetooth\BluetoothWin32Authentication.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Net.Bluetooth\BluetoothWin32AuthenticationEventArgs.cs">
+      <Link>Net.Bluetooth\BluetoothWin32AuthenticationEventArgs.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Net.Bluetooth\BluetoothWin32AuthenticationEx.cs">
+      <Link>Net.Bluetooth\BluetoothWin32AuthenticationEx.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Net.Bluetooth\BluetoothWin32EventArgs.cs">
+      <Link>Net.Bluetooth\BluetoothWin32EventArgs.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Net.Bluetooth\BluetoothWin32Events.cs">
+      <Link>Net.Bluetooth\BluetoothWin32Events.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Net.Bluetooth\ClassOfDevice.cs">
+      <Link>Net.Bluetooth\ClassOfDevice.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Net.Bluetooth\DeviceClass.cs">
+      <Link>Net.Bluetooth\DeviceClass.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Net.Bluetooth\DiscoverDevicesEventArgs.cs">
+      <Link>Net.Bluetooth\DiscoverDevicesEventArgs.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Net.Bluetooth\HardwareStatus.cs">
+      <Link>Net.Bluetooth\HardwareStatus.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Net.Bluetooth\HciAndLmpVersions.cs">
+      <Link>Net.Bluetooth\HciAndLmpVersions.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Net.Bluetooth\LinkPolicy.cs">
+      <Link>Net.Bluetooth\LinkPolicy.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Net.Bluetooth\LmpFeatures.cs">
+      <Link>Net.Bluetooth\LmpFeatures.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Net.Bluetooth\LmpFeaturesUtils.cs">
+      <Link>Net.Bluetooth\LmpFeaturesUtils.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Net.Bluetooth\Manufacturer.cs">
+      <Link>Net.Bluetooth\Manufacturer.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Net.Bluetooth\RadioMode.cs">
+      <Link>Net.Bluetooth\RadioMode.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Net.Bluetooth\RadioModes.cs">
+      <Link>Net.Bluetooth\RadioModes.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Net.Bluetooth\RadioVersions.cs">
+      <Link>Net.Bluetooth\RadioVersions.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Net.Bluetooth\SdpQueryType.cs">
+      <Link>Net.Bluetooth\SdpQueryType.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Net.Bluetooth\ServiceClass.cs">
+      <Link>Net.Bluetooth\ServiceClass.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Net.Bluetooth_Sdp2\AttributeIds.cs">
+      <Link>Net.Bluetooth_Sdp2\AttributeIds.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Net.Bluetooth_Sdp2\BluetoothProtocolDescriptorType.cs">
+      <Link>Net.Bluetooth_Sdp2\BluetoothProtocolDescriptorType.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Net.Bluetooth_Sdp2\Enums.cs">
+      <Link>Net.Bluetooth_Sdp2\Enums.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Net.Bluetooth_Sdp2\LanguageBaseItem.cs">
+      <Link>Net.Bluetooth_Sdp2\LanguageBaseItem.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Net.Bluetooth_Sdp2\MapServiceClassToAttributeIdList.cs">
+      <Link>Net.Bluetooth_Sdp2\MapServiceClassToAttributeIdList.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Net.Bluetooth_Sdp2\ServiceAttribute.cs">
+      <Link>Net.Bluetooth_Sdp2\ServiceAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Net.Bluetooth_Sdp2\ServiceElement.cs">
+      <Link>Net.Bluetooth_Sdp2\ServiceElement.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Net.Bluetooth_Sdp2\ServiceRecord.cs">
+      <Link>Net.Bluetooth_Sdp2\ServiceRecord.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Net.Bluetooth_Sdp2\ServiceRecordBuilder.cs">
+      <Link>Net.Bluetooth_Sdp2\ServiceRecordBuilder.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Net.Bluetooth_Sdp2\ServiceRecordCreator.cs">
+      <Link>Net.Bluetooth_Sdp2\ServiceRecordCreator.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Net.Bluetooth_Sdp2\ServiceRecordHelper.cs">
+      <Link>Net.Bluetooth_Sdp2\ServiceRecordHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Net.Bluetooth_Sdp2\ServiceRecordsParser.cs">
+      <Link>Net.Bluetooth_Sdp2\ServiceRecordsParser.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Net.Bluetooth_Sdp2\ServiceRecordUtilities.cs">
+      <Link>Net.Bluetooth_Sdp2\ServiceRecordUtilities.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Net.Bluetooth_Sdp2\Utils.cs">
+      <Link>Net.Bluetooth_Sdp2\Utils.cs</Link>
+    </Compile>
+    <None Include="..\InTheHand.Net.Personal\Net.Bluetooth_Sdp\ISdpNodeContainer.cs">
+      <Link>Net.Bluetooth_Sdp\ISdpNodeContainer.cs</Link>
+    </None>
+    <None Include="..\InTheHand.Net.Personal\Net.Bluetooth_Sdp\ISdpRecord.cs">
+      <Link>Net.Bluetooth_Sdp\ISdpRecord.cs</Link>
+    </None>
+    <None Include="..\InTheHand.Net.Personal\Net.Bluetooth_Sdp\ISdpSearch.cs">
+      <Link>Net.Bluetooth_Sdp\ISdpSearch.cs</Link>
+    </None>
+    <None Include="..\InTheHand.Net.Personal\Net.Bluetooth_Sdp\ISdpStream.cs">
+      <Link>Net.Bluetooth_Sdp\ISdpStream.cs</Link>
+    </None>
+    <None Include="..\InTheHand.Net.Personal\Net.Bluetooth_Sdp\ISdpWalk.cs">
+      <Link>Net.Bluetooth_Sdp\ISdpWalk.cs</Link>
+    </None>
+    <None Include="..\InTheHand.Net.Personal\Net.Bluetooth_Sdp\NodeData.cs">
+      <Link>Net.Bluetooth_Sdp\NodeData.cs</Link>
+    </None>
+    <Compile Include="..\InTheHand.Net.Personal\Net.Bluetooth_Sdp\SdpSpecificType.cs">
+      <Link>Net.Bluetooth_Sdp\SdpSpecificType.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Net.IrDA\IrDAAttributeType.cs">
+      <Link>Net.IrDA\IrDAAttributeType.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Net.IrDA\IrDACharacterSet.cs">
+      <Link>Net.IrDA\IrDACharacterSet.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Net.IrDA\IrDAHints.cs">
+      <Link>Net.IrDA\IrDAHints.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Net.IrDA\IrDAService.cs">
+      <Link>Net.IrDA\IrDAService.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Net.IrDA\IrDASocketOptionLevel.cs">
+      <Link>Net.IrDA\IrDASocketOptionLevel.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Net.IrDA\IrDASocketOptionName.cs">
+      <Link>Net.IrDA\IrDASocketOptionName.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Net.Mime\MediaTypeNames.cs">
+      <Link>Net.Mime\MediaTypeNames.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Net.Ports\PortStatusChangedEventArgs.cs">
+      <Link>Net.Ports\PortStatusChangedEventArgs.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Net.Sockets\AddressFamily.cs">
+      <Link>Net.Sockets\AddressFamily.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Net.Sockets\BluetoothClient.cs">
+      <Link>Net.Sockets\BluetoothClient.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Net.Sockets\BluetoothDeviceInfo.cs">
+      <Link>Net.Sockets\BluetoothDeviceInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Net.Sockets\BluetoothListener.cs">
+      <Link>Net.Sockets\BluetoothListener.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Net.Sockets\BluetoothProtocolType.cs">
+      <Link>Net.Sockets\BluetoothProtocolType.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Net.Sockets\IrDAClient.cs">
+      <Link>Net.Sockets\IrDAClient.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Net.Sockets\IrDADeviceInfo.cs">
+      <Link>Net.Sockets\IrDADeviceInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Net.Sockets\IrDAListener.cs">
+      <Link>Net.Sockets\IrDAListener.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Net.Sockets\ISocketOptionHelper.cs">
+      <Link>Net.Sockets\ISocketOptionHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Net.Sockets\L2CapClient.cs">
+      <Link>Net.Sockets\L2CapClient.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Net.Sockets\SocketAdapter.cs">
+      <Link>Net.Sockets\SocketAdapter.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Net.Sockets\SocketClientAdapter.cs">
+      <Link>Net.Sockets\SocketClientAdapter.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Net.Sockets\SocketStreamIOAdapter.cs">
+      <Link>Net.Sockets\SocketStreamIOAdapter.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Net\AsyncResult.cs">
+      <Link>Net\AsyncResult.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Net\AsyncResultCompletion.cs">
+      <Link>Net\AsyncResultCompletion.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Net\AsyncResultNoResult.cs">
+      <Link>Net\AsyncResultNoResult.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Net\BluetoothAddress.cs">
+      <Link>Net\BluetoothAddress.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Net\BluetoothEndPoint.cs">
+      <Link>Net\BluetoothEndPoint.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Net\IrDAAddress.cs">
+      <Link>Net\IrDAAddress.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Net\IrDAEndPoint.cs">
+      <Link>Net\IrDAEndPoint.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Net\ObexHeader.cs">
+      <Link>Net\ObexHeader.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Net\ObexListener.cs">
+      <Link>Net\ObexListener.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Net\ObexListenerContext.cs">
+      <Link>Net\ObexListenerContext.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Net\ObexListenerRequest.cs">
+      <Link>Net\ObexListenerRequest.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Net\ObexMethod.cs">
+      <Link>Net\ObexMethod.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Net\ObexParser.cs">
+      <Link>Net\ObexParser.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Net\ObexStatusCode.cs">
+      <Link>Net\ObexStatusCode.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Net\ObexTransport.cs">
+      <Link>Net\ObexTransport.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Net\ObexWebRequest.cs">
+      <Link>Net\ObexWebRequest.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Net\ObexWebRequestCreate.cs">
+      <Link>Net\ObexWebRequestCreate.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Net\ObexWebResponse.cs">
+      <Link>Net\ObexWebResponse.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Net\TestUtilities.cs">
+      <Link>Net\TestUtilities.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Net\Utilities.cs">
+      <Link>Net\Utilities.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\ObexUri.cs">
+      <Link>ObexUri.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Properties\AssemblyInfo.cs">
+      <Link>Properties\AssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Runtime\InteropServices\Marshal.cs">
+      <Link>Runtime\InteropServices\Marshal.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\SysCoreDelegates.cs">
+      <Link>SysCoreDelegates.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\TextWriterTraceListener32f.cs">
+      <Link>TextWriterTraceListener32f.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Utils\MiscUtils_TraceNETCF.cs">
+      <Link>Utils\MiscUtils_TraceNETCF.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Utils\MiscUtils.cs">
+      <Link>Utils\MiscUtils.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Utils\Pointers.cs">
+      <Link>Utils\Pointers.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Utils\Process2.cs">
+      <Link>Utils\Process2.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Win32\SYSTEMTIME.cs">
+      <Link>Win32\SYSTEMTIME.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Win32\Win32Error.cs">
+      <Link>Win32\Win32Error.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Windows\Forms\ISelectBluetoothDevice.cs">
+      <Link>Windows\Forms\ISelectBluetoothDevice.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Windows\Forms\NativeMethods.cs">
+      <Link>Windows\Forms\NativeMethods.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Windows\Forms\SelectBluetoothDeviceDialog.cs">
+      <SubType>Component</SubType>
+      <Link>Windows\Forms\SelectBluetoothDeviceDialog.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Windows\Forms\SelectBluetoothDeviceForm.cs">
+      <Link>Windows\Forms\SelectBluetoothDeviceDialogForm.cs</Link>
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Net.Bluetooth.Droid\AndroidBthClient.cs">
+      <Link>Net.Bluetooth.Droid\AndroidBthClient.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Net.Bluetooth.Droid\AndroidBthDeviceInfo.cs">
+      <Link>Net.Bluetooth.Droid\AndroidBthDeviceInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Net.Bluetooth.Droid\AndroidBthFactory.cs">
+      <Link>Net.Bluetooth.Droid\AndroidBthFactory.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Net.Bluetooth.Droid\AndroidBthRadio.cs">
+      <Link>Net.Bluetooth.Droid\AndroidBthRadio.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Net.Bluetooth.Droid\AndroidBthUtils.cs">
+      <Link>Net.Bluetooth.Droid\AndroidBthUtils.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Net.Bluetooth\NullBluetoothFactory.cs">
+      <Link>Net.Bluetooth\NullBluetoothFactory.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Net.Bluetooth\NullBtCli.cs">
+      <Link>Net.Bluetooth\NullBtCli.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Net.Bluetooth\NullBtListener.cs">
+      <Link>Net.Bluetooth\NullBtListener.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Net.Bluetooth\NullRfcommStream.cs">
+      <Link>Net.Bluetooth\NullRfcommStream.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Net.Bluetooth.Droid\AndroidBthInquiry.cs">
+      <Link>Net.Bluetooth.Droid\AndroidBthInquiry.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Net.Bluetooth.Droid\AndroidBthMockFactory.cs">
+      <Link>Net.Bluetooth.Droid\AndroidBthMockFactory.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Utils\PairStream.cs">
+      <Link>Utils\PairStream.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Net.Bluetooth.Factory\CommonSocketExceptions.cs">
+      <Link>Net.Bluetooth.Factory\CommonSocketExceptions.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Net.Bluetooth.NoMsft\NoMsftWindowsBluetoothDeviceInfo.cs">
+      <Link>Net.Bluetooth.NoMsft\NoMsftWindowsBluetoothDeviceInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Net.Bluetooth.Droid\FakeAndroidApi.cs">
+      <Link>Net.Bluetooth.Droid\FakeAndroidApi.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Net.Bluetooth.Droid\MockAndroidBth1.cs">
+      <Link>Net.Bluetooth.Droid\MockAndroidBth1.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Net.Bluetooth.Droid\AndroidMockValues.cs">
+      <Link>Net.Bluetooth.Droid\AndroidMockValues.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Net.Bluetooth.Droid\AndroidBthListener.cs">
+      <Link>Net.Bluetooth.Droid\AndroidBthListener.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Net.Bluetooth.Droid\AndroidBthSocketStream.cs">
+      <Link>Net.Bluetooth.Droid\AndroidBthSocketStream.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Net.Personal\Net.Bluetooth.Droid\AndroidBthInquiry2.cs">
+      <Link>Net.Bluetooth.Droid\AndroidBthInquiry2.cs</Link>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\AboutResources.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\values\Strings.xml" />
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath)\Novell\Novell.MonoDroid.CSharp.targets" />
+  <ItemGroup>
+    <Folder Include="Net.Bluetooth.NoMsft\" />
+    <Folder Include="Net.Bluetooth.Droid\" />
+  </ItemGroup>
+</Project>

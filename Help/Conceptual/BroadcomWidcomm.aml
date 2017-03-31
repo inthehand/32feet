@@ -1,0 +1,106 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<topic id="80a571aa-e323-42c1-80a8-271c625609e5" revisionNumber="1">
+  <developerConceptualDocument xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!--
+    <summary>
+      <para>Optional summary abstract</para>
+    </summary>
+    -->
+    <introduction>
+      <!-- Uncomment this to generate an outline of the section and sub-section
+           titles.  Specify a numeric value as the inner text to limit it to
+           a specific number of sub-topics when creating the outline.  Specify
+           zero (0) to limit it to top-level sections only.  -->
+      <!-- <autoOutline /> -->
+      <para>
+This was new support in version 2.4.  In 3.0 we have done a lot of work to ensure that all functionality works from asynchronous callbacks, new features include setting BluetoothRadio.Mode on CE/WM (there’s no Widcomm API on Win32), correctly reporting the Mode when the radio is disabled, support for InquiryLength in DiscoverDevices, and closing all connections when the radio is switched off. 
+In 2.5, there were improvements to diagnostics on setting-up dependencies and BluetoothListener was rewritten amongst other changes.</para>
+    </introduction>
+    <!-- Add one or more top-level section elements.  These are collapsible.
+         If using <autoOutline />, add an address attribute to identify it
+         and specify a title so that it can be jumped to with a hyperlink. -->
+    <section address="Section1">
+      <title>Broadcom/Widcomm</title>
+      <content>
+        <!-- Uncomment this to create a sub-section outline
+        <autoOutline /> -->
+        
+<para>To enable the Widcomm support, in brief the 32feetWidcomm.dll native DLL need to be present at runtime in the same folder as the main library assembly (InTheHand.Net.Personal.dll) and the application itself. 
+As a native DLL it cannot be referenced at compile-time like a normal managed .NET assembly.</para>
+<para>Also, Win32 needs a particular version of the Visual C++ Runtime libraries, since 2.5.1 this is version 9.0.21022.8, and can be found at <link xlink:href="http://www.microsoft.com/downloads/en/details.aspx?FamilyID=9b2da534-3e03-4391-8a4d-074b9f2bc1bf">Microsoft Visual C++ 2008 Redistributable Package (x86)</link>. (Version 2.5 required version 8.0.50727.4053).
+If not already installed, this can be found at <link xlink:href="http://www.microsoft.com/downloads/details.aspx?familyid=766a6af7-ec73-40ff-b072-9112bab119c2">Microsoft Visual C++ 2005 Service Pack 1 Redistributable Package ATL Security Update</link> </para>
+<para>In more detail, Since the Widcomm API is C++ and thus can’t be P/Invoke’d directly we unfortunately require a native DLL as well as the normal library assembly. 
+Versions of the native DLL are supplied primarily for Win32 x86 and WM2005, we also include PPC2003 and Win32 x64 but we don’t/can’t test them. 
+At runtime the 32feetWidcomm.dll DLL needs to be present alongside the library assembly (or somewhere else in the path presumably), there is no need to reference it at compile-time (as a native DLL is can’t be referenced like a .NET assembly).</para>
+<para>For Widcomm, various users have reported that there are problems on desktop Windows with newer versions of the Widcomm stack, with for instance BluetoothClient.Connect failing with a SocketException with it message including the code “PortLookup_NoneRfcomm”.  We now supply two versions of 32feetWidcomm.dll for Win32 for this reason.  
+Unfortunately when to use them is complex— I wish Widcomm had been a bit cleverer about how they provided their Vista support. :-(  (Note that Bluecove on Java also has to supply two versions of the DLL presumably for similar reasons ).</para>
+<para>•	Normal 32feetWidcomm.dll version</para>
+<para>Works even when the Microsoft Bluetooth stack is also active, and so allows multi-stack support. 
+But might not work on newer version installations of the Widcomm stack.</para>
+<para>•	“SDK6” version</para>
+<para>May be required on newer version installations of the Widcomm stack, but will not work when the Microsoft Bluetooth stack is active.</para>
+<para>We also now include copies of the 32feetWidcomm.dll for x64, let me know if it works for you, it is untested by us.</para>
+<para>There are no further dependencies on Windows Mobile but there is on desktop Windows. 
+That’s the ‘C Runtime’ (CRT) libraries as described above. 
+If the correct version is not installed, then the Widcomm support in the library will report that it can’t load the 32feetWidcomm.dll — even if it’s present in the same folder as the application/library. 
+To check this, run the test app ‘Test32FeetWidcommWin32.exe’ which will report something like: “This application has failed to start because the application configuration is incorrect.
+Reinstalling the application may fix this problem.”  Installing the CRT will fix this. 
+See the Widcomm document for more information.</para>
+
+      </content>
+      <!-- If a section contains a sections element, its content creates
+           sub-sections.  These are not collapsible.
+      <sections>
+          <section address="SubSection1">
+              <title>Sub-section 1</title>
+              <content>
+                  <para>Sub-section content.</para>
+              </content>
+          </section>
+          <section address="SubSection2">
+              <title>Sub-section 2</title>
+              <content>
+                  <para>Sub-section content.</para>
+              </content>
+          </section>
+      </sections> -->
+    </section>
+    <relatedTopics>
+      <!-- One or more of the following:
+           - A local link
+           - An external link
+           - A code entity reference
+
+      <link xlink:href="Other Topic's ID"/>
+      <link xlink:href="Other Topic's ID">Link inner text</link>
+
+      <externalLink>
+          <linkText>Link text</linkText>
+          <linkAlternateText>Optional alternate link text</linkAlternateText>
+          <linkUri>URI</linkUri>
+      </externalLink>
+
+      <codeEntityReference>API member ID</codeEntityReference>
+
+      Examples:
+
+      <link xlink:href="00e97994-e9e6-46e0-b420-5be86b2f8270" />
+      <link xlink:href="00e97994-e9e6-46e0-b420-5be86b2f8278">Some other topic</link>
+
+      <externalLink>
+          <linkText>SHFB on CodePlex</linkText>
+          <linkAlternateText>Go to CodePlex</linkAlternateText>
+          <linkUri>http://shfb.codeplex.com</linkUri>
+      </externalLink>
+
+      <codeEntityReference>T:TestDoc.TestClass</codeEntityReference>
+      <codeEntityReference>P:TestDoc.TestClass.SomeProperty</codeEntityReference>
+      <codeEntityReference>M:TestDoc.TestClass.#ctor</codeEntityReference>
+      <codeEntityReference>M:TestDoc.TestClass.#ctor(System.String,System.Int32)</codeEntityReference>
+      <codeEntityReference>M:TestDoc.TestClass.ToString</codeEntityReference>
+      <codeEntityReference>M:TestDoc.TestClass.FirstMethod</codeEntityReference>
+      <codeEntityReference>M:TestDoc.TestClass.SecondMethod(System.Int32,System.String)</codeEntityReference>
+      -->
+    </relatedTopics>
+  </developerConceptualDocument>
+</topic>

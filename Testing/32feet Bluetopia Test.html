@@ -1,0 +1,2045 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>32feet Bluetopia Test</title>
+    <style type="text/css">
+        .doneTestToDo
+        {
+            text-decoration: line-through;
+        }
+        .testPassed
+        {
+            background-color: #00FF00;
+        }
+        .testAssumePassed
+        {
+            background-color: Green;
+        }
+        .testFailed
+        {
+            background-color: Yellow;
+        }
+    </style>
+</head>
+<body>
+    <!-- ==== -->
+    <h1>
+        Table of Contents</h1>
+    <ol>
+        <li><a href="#usage">Usage</a></li>
+        <li><a href="#stackOneUser">Bluetopia one at a time, and coexistence with the MSFT stack</a></li>
+        <li><a href="#general">General</a></li>
+        <li><a href="#radio">BluetoothRadio</a>
+            <ol>
+                <li><a href="#radio_off">Radio turned off</a></li>
+                <li><a href="#radio_unplugged">Hardware unplugged</a></li>
+            </ol>
+        </li>
+        <li><a href="#deviceInfo">BluetoothDeviceInfo</a></li>
+        <li><a href="#client">BluetoothClient</a>
+            <ol>
+                <li><a href="#client_connect">Connect</a> </li>
+            </ol>
+        </li>
+        <li><a href="#networkStream">NetworkStream</a></li>
+        <li><a href="#listener">BluetoothListener</a></li>
+        <li><a href="#security">BluetoothSecurity</a>
+            <ol>
+                <li><a href="#security_PairRequest">PairRequest</a></li>
+                <li><a href="#security_BtCli_SetPin">BtCli.SetPin</a></li>
+                <li><a href="#security_PairRequest_overrides_stored_LinkKey">PairRequest overrides stored-LinkKey</a></li>
+            </ol>
+        </li>
+        <li><a href="#ObexWebRequest">ObexWebRequest</a></li>
+        <li><a href="#ObexListener">ObexListener</a></li>
+        <li><a href="#Internals">Internals</a></li>
+    </ol>
+    <!-- ==== -->
+    <h1 id="usage">
+        Usage</h1>
+    <ol>
+        <li>Support is now included in the main library for NETCF and is enabled by default.</li>
+        <li>Check whether <code>BluetoothRadio.PrimaryRadio</code> and/or <code>BluetoothRadio.AllRadios</code>
+            are non-empty, and that one has <code>SoftwareManufacter</code> containing value
+            <code>StonesteetOne</code>.</li>
+        <li>See below for what is and isn&#x2019;t supported.</li>
+    </ol>
+    <!-- ==== -->
+    <h1 id="stackOneUser">
+        Bluetopia one at a time, and coexistence with the MSFT stack
+    </h1>
+    <p>
+        The first thing to note is that the Stonestreet One Bluetopia stack only allows
+        one application at a time to use the stack; this includes the control-panel application
+        provided by Stonestreet One called BTExplorer.exe. So if we can&#x2019;t load the
+        stack then check that no other Bluetooth application is active. At start-up we look
+        for the BTExplorer.exe application and kill it if it is running. (Note one can tell
+        whether any application is using Bluetooth from the Windows Mobile UI: if the Wireless
+        Manager Bluetooth state is &#x201C;On&#x201D; and the Bluetooth icon at the bottom
+        right of the Today screen does not have a yellow/black exclamation mark overlay).
+    </p>
+    <p>
+        It is also common on recent devices for the Microsoft stack to be installed alongside
+        the Stonestreet One Bluetopia stack to allow the user a choice of which stack to
+        use. The device I&#x2019;m using current has a control-panel called &#x201C;BT Select&#x201D;
+        (Settings: System) which allows one to select &#x201C;StoneStreetOne&#x201D; or
+        &#x201C;Microsoft&#x201D; and reboot. However it doesn't actually change what API
+        is useable. The &#x201C;BT Select&#x201D; setting only selects which stack&#x2019;s
+        Control Panels are active. If no other application is using Bluetooth (and when
+        Microsoft is selected if its mode is &#x2018;Off&#x2019;) then an application can
+        choose which API to use by using it <em>first</em>. 32feet.NET tries to load the
+        Stonestreet One Bluetopia stack first.
+    </p>
+    <h1 id="general">
+        General</h1>
+    <p>
+        This is a summary see below for the details of each classes supported methods and
+        properties.
+    </p>
+    <p>
+        There is good support for BluetoothRadio, BluetoothDeviceInfo (including RSSI),
+        and device discovery including &#x2018;live&#x2019; discovery. There is preliminary
+        support for BluetoothListener, see below. BluetoothSecurity is also well supported
+        both PairRequest and RemoveDevice, and also SetPin both there and on BluetoothClient.
+        There is only good support for SDP querying.
+    </p>
+    <p>
+        BluetoothClient.Connect is supported for all RFCOMM/SPP connections. BluetoothClient.Authenticate
+        and Encrypt are not supported (haven't looked), and as noted above we <em>do</em>
+        support SetPin.
+    </p>
+    <p>
+        Data transfer (for BluetoothClient and BluetoothListener) seems fine.
+    </p>
+    <p>
+        The current BluetoothListener support is preliminary. It isn't clear from the API
+        how to support multiple connections to the same port number, or even whether multiple
+        concurrent connections to the same port number are supportable.
+        <!-- -->
+        There is however good support for SDP records, including custom records.
+    </p>
+    <p>
+        ObexWebRequest and ObexListener both work &#x2014; listener operation of course
+        limited as above.
+    </p>
+    <p>
+        To check if Stonestreet One Bluetopia support is being loaded, check whether BluetoothRadio.PrimaryRadio
+        or AllRadios returns a radio and whether it's SoftwareManufacturer is an enum value
+        of StonestreetOne.
+    </p>
+    <p>
+        Please let me have any feedback.
+    </p>
+    <h2>
+        Multi-stack</h2>
+    <p>
+        It is not possible to use the Stonestreet One Bluetopia stack along with any other
+        stack. As noted above is not even possible for two <em>applications</em> to use
+        the stack together.
+    </p>
+    <!-- ==== -->
+    <h1 id="radio">
+        BluetoothRadio</h1>
+    <p>
+        The &#x2018;one application at a time limitation&#x2019; also means that the radio
+        is apparently powered-down when no application is using the stack (third-party or
+        BTExplorer.exe). It also means that the radio Mode (connectable/discoverable), Name
+        and Class of Device are not persistent &#x2014; at each stack open, they default
+        respectively to non-connectable/non-discoverable (so can make client connections),
+        a system specific value e.g. &#x201c;mobile compia&#x201d; and zero . 32feet.NET
+        currently does not persist any of these values across sessions currently.
+    </p>
+    <p>
+        Radio settings (e.g. Mode and Name) are also lost when the devices goes into standby
+        even when the stack connection stay open. We aim to look at this sometime in the
+        future storing any settings made by the application and reapplying them on power
+        resume.
+    </p>
+    <p>
+        To Do:</p>
+    <ol>
+        <li class="doneTestToDo">Mode 1) BothOff 2) BothOn 3) !Disco&NotConno</li>
+        <li class="doneTestToDo">Change radio Name. 32feet sees?</li>
+        <li class="doneTestToDo">Set Name; ex?</li>
+        <li class="doneTestToDo">Set Mode; ex?</li>
+        <li class="doneTestToDo">Radio turned off</li>
+        <li class="doneTestToDo">Hardware unplugged</li>
+        <li class="doneTestToDo">Double-check Off->Connectable transition.</li>
+    </ol>
+    <p>
+        See the two tables after this one for the values of the properties when the radio
+        is disabled or un-plugged.
+    </p>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>
+                    Test
+                </th>
+                <th>
+                    Expected
+                </th>
+                <th>
+                    Result
+                </th>
+                <th>
+                    Seen by MSFT support
+                </th>
+            </tr>
+        </thead>
+        <tr>
+            <td>
+                <b>ClassOfDevice ClassOfDevice { get; } </b>
+            </td>
+            <td>
+                No default
+            </td>
+            <td>
+                0
+            </td>
+            <td>
+                1A0114
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <b>IntPtr Handle { get; } </b>
+            </td>
+            <td>
+            </td>
+            <td>
+                NotSupported
+            </td>
+            <td>
+                &nbsp;
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <b>HardwareStatus HardwareStatus { get; } </b>
+            </td>
+            <td>
+            </td>
+            <td>
+                &#x2714;
+            </td>
+            <td>
+                Running
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <b>BluetoothAddress LocalAddress { get; } </b>
+            </td>
+            <td>
+            </td>
+            <td class="testPassed">
+                00:18:9A:11:6D:97
+            </td>
+            <td>
+                00:18:9A:11:6D:97
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <b>Manufacturer Manufacturer { get; } </b>
+            </td>
+            <td>
+                Broadcom Corporation
+            </td>
+            <td class="testPassed">
+                CambridgeSiliconRadio
+            </td>
+            <td>
+                CambridgeSiliconRadio
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <b>RadioMode Mode { get; &hellip;</b>
+            </td>
+            <td>
+                Connectable &amp; Discoverable:<ul>
+                    <li>No &amp; Yes</li>
+                    <li>Yes &amp; Yes</li>
+                    <li>No &amp; No</li>
+                    <li>No &amp; Yes!!</li>
+                </ul>
+            </td>
+            <td>
+                Results:<ul>
+                    <li>xxConnectable</li>
+                    <li>xxDiscoverable</li>
+                    <li>xxPowerOff</li>
+                    <li>xxPowerOff</li>
+                </ul>
+            </td>
+            <td>
+                Results:<ul>
+                    <li>xxConnectable</li>
+                    <li>xxDiscoverable</li>
+                    <li>xxPowerOff</li>
+                    <li>xxPowerOff</li>
+                </ul>
+                (<ul>
+                    <li>PowerOff: Can't connect-to/SDP-query the device. However the device can connect
+                        to other devices.</li>
+                </ul>
+                )
+            </td>
+        </tr>
+        <tr>
+            <td>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>set; } </b>
+            </td>
+            <td>
+            </td>
+            <td>
+                Results:<ul>
+                    <li>PowerOff &#x2714;</li>
+                    <li>Connectable &#x2714;</li>
+                    <li>Discoverable &#x2714;</li>
+                </ul>
+            </td>
+            <td>
+                Results:<ul>
+                    <li>PowerOff &#x2714;</li>
+                    <li>Connectable &#x2714;</li>
+                    <li>Discoverable &#x2714;</li>
+                </ul>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <b>string Name { get; &hellip;</b>
+            </td>
+            <td>
+                alanlt2w
+            </td>
+            <td>
+                mobile compia
+            </td>
+            <td>
+                &lt;blank&gt;
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;set; } </b>
+            </td>
+            <td>
+            </td>
+            <td>
+                <span style="background-color: Yellow;">&#x2718;</span> NotImplemented
+            </td>
+            <td>
+                <span style="background-color: Yellow;">&#x2718;</span> NotImplemented
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <b>Manufacturer SoftwareManufacturer { get; } </b>
+            </td>
+            <td>
+            </td>
+            <td class="testPassed">
+                StonestreetOne
+            </td>
+            <td>
+                Microsoft
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <b>HciVersion HciVersion { get; } </b>
+            </td>
+            <td>
+                &nbsp;
+            </td>
+            <td class="testPassed">
+                v2_0wEdr
+            </td>
+            <td>
+                v2_0wEdr
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <b>int HciRevision { get; } </b>
+            </td>
+            <td>
+                &nbsp;
+            </td>
+            <td class="testPassed">
+                3454
+            </td>
+            <td>
+                3454
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <b>LmpVersion LmpVersion { get; } </b>
+            </td>
+            <td>
+                &nbsp;
+            </td>
+            <td class="testPassed">
+                v2_0wEdr
+            </td>
+            <td>
+                v2_0wEdr
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <b>int LmpSubversion { get; } </b>
+            </td>
+            <td>
+                &nbsp;
+            </td>
+            <td class="testPassed">
+                3454
+            </td>
+            <td>
+                3454
+            </td>
+        </tr>
+    </table>
+    <h2 id="radio_off">
+        Radio turned off</h2>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>
+                    Property
+                </th>
+                <th>
+                    Value
+                </th>
+            </tr>
+        </thead>
+        <tr>
+            <th>
+                HardwareStatus
+            </th>
+            <td>
+                <em>Shutdown</em>
+            </td>
+        </tr>
+        <tr>
+            <th>
+                Mode
+            </th>
+            <td>
+                PowerOff
+            </td>
+        </tr>
+        <tr>
+            <th>
+                Name
+            </th>
+            <td>
+                empty (String.Empty)
+            </td>
+        </tr>
+        <tr>
+            <th>
+                Address
+            </th>
+            <td>
+                empty (BluetoothAddress.None)
+            </td>
+        </tr>
+        <tr>
+            <th>
+                Status of other properties is undefined.
+            </th>
+        </tr>
+    </table>
+    <h2 id="radio_unplugged">
+        Hardware unplugged</h2>
+    <p>
+        Not applicable.</p>
+    <!-- ==== -->
+    <h1 id="deviceInfo">
+        BluetoothDeviceInfo</h1>
+    <p>
+        Similar to the radio situation, the Bluetopia stack does not persist any device
+        information. So each application would have to store its own device records (e.g.
+        address, name, CoD, LinkKey, etc). 32feet.NET stores known devices within a session
+        but does not persist then across sessions. The stack does not even cache device
+        names within one session, so 32feet.NET has to do so manually.
+    </p>
+    <p>
+        To Do:</p>
+    <ol>
+        <li>DeviceName read, change name on remote device, check DeviceName is updated after
+            a call to Refresh.</li>
+        <li>LastSeen.</li>
+    </ol>
+    <p>
+        To Do, for created-from:</p>
+    <ol>
+        <li>By Discovery &#x2014; Remembered.</li>
+        <li>By Discovery &#x2014; Authenticated.</li>
+        <li>By Address &#x2014; Get a Remembered device.</li>
+        <li>By Address &#x2014; Get an Authenticated device.</li>
+        <li>By Address &#x2014; Get a Non-existent device.</li>
+        <li>By Address &#x2014; Get an Unknown but in-range Device.</li>
+        <li>By Discovery &#x2014; DiscoOnly.</li>
+        <li>By Discovery &#x2014; Unknown.</li>
+        <li>By Discovery &#x2014; All devices.</li>
+        <li>By &#x2018;Live&#x2019; Discovery &#x2014; All devices.</li>
+    </ol>
+    <p>
+        Test Notes</p>
+    <ol>
+        <li>May want to check Remembered list from Discovery at each step so see when that stack
+            adds remembers devices.</li>
+        <li>Check timings of &#x201C;by Address&#x201D; cases.</li>
+    </ol>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>
+                    Test
+                </th>
+                <th>
+                    Result
+                </th>
+            </tr>
+        </thead>
+        <tr>
+            <td>
+                bool Authenticated { get; }
+            </td>
+            <td>
+                &#x2718;
+            </td>
+        </tr>
+        <tr>
+            <td>
+                ClassOfDevice ClassOfDevice { get; }
+            </td>
+            <td>
+                &#x2714;
+            </td>
+        </tr>
+        <tr>
+            <td>
+                bool Connected { get; }
+            </td>
+            <td>
+                &#x2718;
+            </td>
+        </tr>
+        <tr>
+            <td>
+                BluetoothAddress DeviceAddress { get; }
+            </td>
+            <td>
+                &#x2714;
+            </td>
+        </tr>
+        <tr>
+            <td>
+                string DeviceName { get; &hellip;
+            </td>
+            <td>
+                &#x2714;
+            </td>
+        </tr>
+        <tr>
+            <td>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;set;
+                }
+            </td>
+            <td>
+                &#x2718; NotImplemented
+            </td>
+        </tr>
+        <tr>
+            <td>
+                byte[][] GetServiceRecordsUnparsed(Guid service);
+            </td>
+            <td>
+                &#x2718; NotSupported
+            </td>
+        </tr>
+        <tr>
+            <td>
+                ServiceRecord[] GetServiceRecords(Guid service);
+            </td>
+            <td>
+                &#x2714; Fully supported
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Guid[] InstalledServices { get; }
+            </td>
+            <td>
+                &#x2718; NotSupportedException
+            </td>
+        </tr>
+        <tr>
+            <td>
+                DateTime LastSeen { get; }
+            </td>
+            <td>
+                &#x2714; Set by device discovery.
+            </td>
+        </tr>
+        <tr>
+            <td>
+                DateTime LastUsed { get; }
+            </td>
+            <td>
+                &#x2718; Returns DateTime.MinValue.
+            </td>
+        </tr>
+        <tr>
+            <td>
+                void Refresh();
+            </td>
+            <td>
+                &#x2714; Resets DeviceName alone.
+            </td>
+        </tr>
+        <tr>
+            <td>
+                bool Remembered { get; }
+            </td>
+            <td>
+                &#x2718;
+            </td>
+        </tr>
+        <tr>
+            <td>
+                int Rssi { get; }
+            </td>
+            <td>
+                &#x2714; Needs a connection to the remote device to work.
+            </td>
+        </tr>
+        <tr>
+            <td>
+                void SetServiceState(Guid service, bool state,<br />
+                bool throwOnError);
+            </td>
+            <td rowspan="2">
+                &#x2718; NotSupportedException
+            </td>
+        </tr>
+        <tr>
+            <td>
+                void SetServiceState(Guid service, bool state);
+            </td>
+        </tr>
+        <tr>
+            <td>
+                void ShowDialog();
+            </td>
+            <td>
+                &#x2718; NotImplemented
+            </td>
+        </tr>
+        <tr>
+            <td>
+                void Update();
+            </td>
+            <td>
+                &#x2718; NotImplemented
+            </td>
+        </tr>
+    </table>
+    <!-- ==== -->
+    <h1 id="client">
+        BluetoothClient</h1>
+    <p>
+        To Do:</p>
+    <ol>
+        <li>xxxx</li>
+        <li class="doneTestToDo">xxxx</li>
+    </ol>
+    <table border="1">
+        <tr>
+            <th>
+            </th>
+            <th>
+                32feet.NET
+            </th>
+        </tr>
+        <tr>
+            <th>
+                BluetoothDeviceInfo[] DiscoverDevices(&hellip;)
+            </th>
+            <td class="testPassed">
+                &#x2714; All/Rmbd/DiscoOnly/etc
+            </td>
+        </tr>
+        <tr>
+            <th>
+                BluetoothDeviceInfo[] Begin-/EndDiscoverDevices(&hellip;)
+            </th>
+            <td class="testPassed">
+                &#x2714;
+            </td>
+        </tr>
+        <tr>
+            <th>
+                TimeSpan InquiryLength { get;
+            </th>
+            <td class="testPassed">
+                &#x2714;
+            </td>
+        </tr>
+        <tr>
+            <th>
+                int InquiryAccessCode { get; set; }
+            </th>
+            <td>
+                <span style="background-color: Yellow;">&#x2718;</span> NotImplemented
+            </td>
+        </tr>
+        <tr>
+            <th>
+            </th>
+            <td>
+            </td>
+        </tr>
+        <tr>
+            <th>
+                void Connect(&hellip;);
+            </th>
+            <td class="testPassed">
+                &#x2714;
+            </td>
+        </tr>
+        <tr>
+            <th>
+                void Begin-/EndConnect(&hellip;);
+            </th>
+            <td class="testPassed">
+                &#x2714;
+            </td>
+        </tr>
+        <tr>
+            <th>
+                bool Connected { get; }
+            </th>
+            <td class="testPassed">
+                &#x2714; See NetworkStream below.
+            </td>
+        </tr>
+        <tr>
+            <th>
+                NetworkStream GetStream();
+            </th>
+            <td class="testPassed">
+                &#x2714;
+            </td>
+        </tr>
+        <tr>
+            <th>
+                Socket Client { get; set; }
+            </th>
+            <td class="testPassed">
+                &#x2718; NotSupported
+            </td>
+        </tr>
+        <tr>
+            <th>
+                int Available { get; }
+            </th>
+            <td>
+                &#x2714;
+            </td>
+        </tr>
+        <tr>
+            <th>
+                LingerOption LingerState { get; set; }
+            </th>
+            <td>
+            </td>
+        </tr>
+        <tr>
+            <th>
+                void Dispose();
+            </th>
+            <td class="testPassed">
+                &#x2714; (ToDo disallow/abort device discovery ).
+            </td>
+        </tr>
+        <tr>
+            <th>
+            </th>
+            <td>
+            </td>
+        </tr>
+        <tr>
+            <th>
+                bool Authenticate { get; &hellip;
+            </th>
+            <td>
+                &#x2714; returns false
+            </td>
+        </tr>
+        <tr>
+            <th>
+                set; }
+            </th>
+            <td>
+                &#x2718; NotSupported
+            </td>
+        </tr>
+        <tr>
+            <th>
+                bool Encrypt { get; &hellip;
+            </th>
+            <td>
+                &#x2714; returns false
+            </td>
+        </tr>
+        <tr>
+            <th>
+                set; }
+            </th>
+            <td>
+                &#x2718; NotSupported
+            </td>
+        </tr>
+        <tr>
+            <th>
+                void SetPin(string pin);
+            </th>
+            <td class="testPassed">
+                &#x2714;
+            </td>
+        </tr>
+        <tr>
+            <th>
+                void SetPin(BluetoothAddress device, string pin);
+            </th>
+            <td class="testPassed">
+                &#x2714;
+            </td>
+        </tr>
+        <tr>
+            <th>
+                Guid LinkKey { get; }
+            </th>
+            <td>
+                <span style="background-color: Yellow;">&#x2718;</span> NotImplemented
+            </td>
+        </tr>
+        <tr>
+            <th>
+                LinkPolicy LinkPolicy { get; }
+            </th>
+            <td>
+                <span style="background-color: Yellow;">&#x2718;</span> NotImplemented
+            </td>
+        </tr>
+        <tr>
+            <th>
+            </th>
+            <td>
+            </td>
+        </tr>
+        <tr>
+            <th>
+                string GetRemoteMachineName(BluetoothAddress)
+            </th>
+            <td>
+                &#x2714;
+            </td>
+        </tr>
+        <tr>
+            <th>
+                string RemoteMachineName { get; }
+            </th>
+            <td>
+                &#x2714;
+            </td>
+        </tr>
+        <tr>
+            <th>
+                BluetoothEndPoint RemoteEndPoint { get; }
+            </th>
+            <td>
+                &#x2714;
+            </td>
+        </tr>
+    </table>
+    <!-- ==== -->
+    <h2 id="client_discovery">
+        Discovery</h2>
+    <p>
+        See <a href="#deviceInfo">BluetoothDeviceInfo</a> for discovery testing.</p>
+    <p>
+        To Do:</p>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>
+                    Test
+                </th>
+                <th>
+                    Result
+                </th>
+                <th>
+                    Error code on MSFT+Win32
+                </th>
+            </tr>
+        </thead>
+        <tr>
+            <td>
+            </td>
+            <td>
+            </td>
+        </tr>
+    </table>
+    <!-- ==== -->
+    <h2 id="client_connect">
+        Connect</h2>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>
+                    Test
+                </th>
+                <th>
+                    Result
+                </th>
+                <th>
+                    Error code on MSFT+Win32
+                </th>
+            </tr>
+        </thead>
+        <tr>
+            <td>
+                Service with SIG Class Id e.g. Wap
+            </td>
+            <td class="testPassed">
+                &#x2714;
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Service with custom (non-SIG) Class Id<br />
+                (Use BtLsnr->ListSomeCustomUuids)
+            </td>
+            <td class="testPassed">
+                &#x2714;
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Connect to a particular port number
+            </td>
+            <td class="testPassed">
+                &#x2714;
+            </td>
+        </tr>
+        <tr>
+            <td>
+                No Service with given Class Id
+            </td>
+            <td class="testPassed">
+                &#x2714; 10049 (PortLookup_Zero)
+            </td>
+            <td>
+                10049 AddressNotAvailable
+            </td>
+        </tr>
+        <tr>
+            <td>
+                No Device with given Address &#x2014; to ClassId
+            </td>
+            <td>
+                <span class="testPassed">&#x2714;</span> 10038 @ 6seconds
+            </td>
+            <td>
+                10060 TimedOut
+            </td>
+        </tr>
+        <tr>
+            <td>
+                No Device with given Address &#x2014; to Port
+            </td>
+            <td class="testPassed">
+                &#x2714; 10060 @ 6seconds (PortCONNECT_ERR) "0x1=ConnectionTimeout"
+            </td>
+            <td>
+                10060 TimedOut
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Service doesn't have RFCOMM pdl
+            </td>
+            <td class="testPassed">
+                &#x2714; 10064 (PortLookup_NoneRfcomm)
+            </td>
+            <td>
+                10064 HostDown
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Already a connection to the RFCOMM port/channel
+            </td>
+            <td class="testPassed">
+                &#x2714; 10048 (-70 = RFCOMM_UNABLE_TO_ADD_CONNECTION)
+            </td>
+            <td>
+                10048 AddressAlreadyInUse
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Connect to 0x1101 SerialPort
+            </td>
+            <td class="testPassed">
+                &#x2714;
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Connect to 0x1105 OBEX Push
+            </td>
+            <td class="testPassed">
+                &#x2714; (ObexWebRequest successful also)
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Connect to 0x1106 OBEX FTP
+            </td>
+            <td class="testPassed">
+                &#x2714; (ObexWebRequest successful also)
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Connect to server that has "require authentication"<br />
+                (and Pin etc not set)
+            </td>
+            <td class="testPassed">
+                10061 PortCONNECT_ERR Log shows "0x2=ConnectionRefused"<br />
+                Slow & see auth events! Wc+XP: 52 seconds<br />
+                <span style="background-color: Yellow;">TODO</span> Send Negative AuthEvent responses
+                when no records to speed this up.
+            </td>
+            <td>
+            </td>
+        </tr>
+    </table>
+    <!-- ==== -->
+    <h1 id="networkStream">
+        NetworkStream</h1>
+    <p>
+        To Do:</p>
+    <ol>
+        <li class="doneTestToDo">Read when buffer empty.</li>
+        <li class="doneTestToDo">Write an amount bigger than the buffer size.</li>
+        <li class="doneTestToDo">Is connection closed automatically on app exit?</li>
+        <li class="doneTestToDo">Is connection closed automatically on app crash GPF/etc?</li>
+        <li>Is connection closed automatically on Radio Off?</li>
+        <li class="doneTestToDo">Read after remote close when there is still data in the buffer.</li>
+        <li class="doneTestToDo">Pending Read through remote close when the remote sends data
+            immediately before close.</li>
+        <li class="doneTestToDo">Finalizable? Drop references to client and stream and check
+            that the connection closes.</li>
+    </ol>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>
+                    Test
+                </th>
+                <th>
+                    Result
+                </th>
+            </tr>
+        </thead>
+        <tr>
+            <th>
+                SendOneAtATime
+            </th>
+            <td class="testPassed">
+                &#x2714;
+            </td>
+        </tr>
+        <tr>
+            <th>
+                SendLots (Write an amount bigger than the buffer size.)
+            </th>
+            <td class="testPassed">
+                &#x2714;
+            </td>
+        </tr>
+        <tr>
+            <th>
+                ReceiveLots
+            </th>
+            <td class="testPassed">
+                &#x2714; (Took 2min15secs seconds to complete (UI updating...))
+            </td>
+        </tr>
+        <tr>
+            <th>
+                SendOneByteAtImmediatelyClose
+            </th>
+            <td class="testPassed">
+                &#x2714; (Done when connection opened as client and as server)
+            </td>
+        </tr>
+        <tr>
+            <th>
+                Read when buffer empty, and send, see receive.
+            </th>
+            <td class="testPassed">
+                &#x2714;
+            </td>
+        </tr>
+        <tr>
+            <th>
+                Connection closed automatically on app exit
+            </th>
+            <td class="testPassed">
+                &#x2714;
+            </td>
+        </tr>
+        <tr>
+            <th>
+                Connection closed automatically on app crash GPF/etc
+            </th>
+            <td class="testPassed">
+                &#x2714; Killed by remote process viewer (and "No" to quit prompt). The close was
+                seen belatedly by the peer &#x2014; presumable after Link Supervisory.
+            </td>
+        </tr>
+        <tr>
+            <th>
+                Connection closed automatically on Radio Off
+            </th>
+            <td>
+                N/A: Remember that RadioOff on this platform means Non-Connectable-Mode, and not
+                radio-powered-down&hellip;
+            </td>
+        </tr>
+        <tr>
+            <th>
+                Read after remote close when there is still data in the buffer.
+            </th>
+            <td class="testPassed">
+                &#x2714;
+            </td>
+        </tr>
+        <tr>
+            <th>
+                Pending Read through remote close when the remote sends data immediately before
+                close.
+            </th>
+            <td class="testPassed">
+                &#x2714;
+            </td>
+        </tr>
+        <tr>
+            <th>
+                Finalizable? Drop references to client and stream and check that the connection
+                closes.
+            </th>
+            <td class="testPassed">
+                &#x2714;
+            </td>
+        </tr>
+        <tr>
+            <th>
+            </th>
+            <td class="testPassed">
+                &#x2714;
+            </td>
+        </tr>
+    </table>
+    <!-- ==== -->
+    <h1 id="listener">
+        BluetoothListener</h1>
+    <p>
+        Supported, but can only accept one connection. It isn't clear from the API how to
+        support multiple connections to the same port number, or even whether multiple concurrent
+        connections to the same port number are supportable. The second and subsequent Accepts
+        will fail.
+        <!-- -->
+        There is however good support for SDP records, including custom records.
+    </p>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>
+                    Test
+                </th>
+                <th>
+                    Result
+                </th>
+            </tr>
+        </thead>
+        <tr>
+            <th>
+                void Start(int backlog);
+            </th>
+            <td>
+            </td>
+        </tr>
+        <tr>
+            <th>
+                void Start();
+            </th>
+            <td>
+                &#x2714;
+            </td>
+        </tr>
+        <tr>
+            <th>
+                void Stop();
+            </th>
+            <td>
+                &#x2714;
+            </td>
+        </tr>
+        <tr>
+            <th>
+                bool Pending();
+            </th>
+            <td class="testPassed">
+                &#x2714;
+            </td>
+        </tr>
+        <tr>
+            <th>
+                BluetoothEndPoint LocalEndPoint { get; }
+            </th>
+            <td class="testPassed">
+                &#x2714; Port is set, address (and service) are not
+            </td>
+        </tr>
+        <tr>
+            <th>
+                Socket Server { get; }
+            </th>
+            <td>
+                &#x2718;
+            </td>
+        </tr>
+        <tr>
+            <th>
+            </th>
+            <td>
+            </td>
+        </tr>
+        <tr>
+            <th>
+                BluetoothClient AcceptBluetoothClient();
+            </th>
+            <td class="testPassed">
+                &#x2714;
+            </td>
+        </tr>
+        <tr>
+            <th>
+                BluetoothClient Begin-/EndAcceptBluetoothClient(…);
+            </th>
+            <td class="testPassed">
+                &#x2714;
+            </td>
+        </tr>
+        <tr>
+            <th>
+                Socket AcceptSocket();
+            </th>
+            <td>
+                &#x2718;
+            </td>
+        </tr>
+        <tr>
+            <th>
+                Socket Begin-/EndAcceptSocket(…);
+            </th>
+            <td>
+                &#x2718;
+            </td>
+        </tr>
+        <tr>
+        </tr>
+        <tr>
+            <th>
+                ServiceClass ServiceClass { get;
+            </th>
+            <td>
+                &#x2714;
+            </td>
+        </tr>
+        <tr>
+            <th>
+                set; }
+            </th>
+            <td>
+                &#x2714;
+            </td>
+        </tr>
+        <tr>
+            <th>
+                string ServiceName { get; set; }
+            </th>
+            <td>
+                &#x2714;
+            </td>
+        </tr>
+        <tr>
+            <th>
+                ServiceRecord ServiceRecord { get; }
+            </th>
+            <td>
+                &#x2714;
+            </td>
+        </tr>
+        <tr>
+        </tr>
+        <tr>
+            <th>
+                bool Authenticate { get; set; }
+            </th>
+            <td>
+                &#x2718;
+            </td>
+        </tr>
+        <tr>
+            <th>
+                bool Encrypt { get; set; }
+            </th>
+            <td>
+                &#x2718;
+            </td>
+        </tr>
+        <tr>
+            <th>
+                void SetPin(BluetoothAddress device, string pin);
+            </th>
+            <td>
+                &#x2718;
+            </td>
+        </tr>
+    </table>
+    <h3>Exception on first connect to BluetoothListener</h3>
+    <p>
+        The exception that occurs when running the Chat2Device sample and a client connects.
+        This exception occurs because the system does not allow the second listen operation.
+    </p>
+    <pre>InTheHand.Net.Bluetooth.StonestreetOne.BluetopiaSocketException was unhandled
+  Message="An operation was attempted on something that is not a socket (Bluetopia: RFCOMM_ADDING_SERVER_INFORMATION (-68))."
+  ErrorCode=10038
+  NativeErrorCode=10038
+  BluetopiaError="RFCOMM_ADDING_SERVER_INFORMATION"
+  BluetopiaErrorCode=-68
+  StackTrace:
+       at InTheHand.Net.Bluetooth.StonestreetOne.BluetopiaUtils.Throw(BluetopiaError ret, String descr)
+       at InTheHand.Net.Bluetooth.StonestreetOne.BluetopiaUtils.CheckAndThrow(BluetopiaError ret, String descr)
+       at InTheHand.Net.Bluetooth.StonestreetOne.BluetopiaRfcommStream.DoOpenServer(Int32 scn)
+       at InTheHand.Net.Bluetooth.Factory.CommonRfcommStream.BeginAccept(BluetoothEndPoint bep, String serviceName, AsyncCallback asyncCallback, Object state)
+       at InTheHand.Net.Bluetooth.Factory.CommonBluetoothListener._StartOneNewListenerPort_inLock()
+       at InTheHand.Net.Bluetooth.Factory.CommonBluetoothListener.StartEnoughNewListenerPort_inLock()
+       at InTheHand.Net.Bluetooth.Factory.CommonBluetoothListener.PortAcceptCallback(IAsyncResult ar)
+       at InTheHand.Net.AsyncResultNoResult.CallbackRunner(Object state)
+       at System.Threading.ThreadPool.WorkItem.doWork(Object o)
+       at System.Threading.Timer.ring()   
+</pre>
+    <!-- ==== -->
+    <h1 id="security">
+        BluetoothSecurity</h1>
+    <p>
+        To Do:</p>
+    <ol>
+        <li>RemoveDevice</li>
+        <li>RemoveDevice full remove?</li>
+        <li>Have LinkKey but remote has deleted theirs&hellip;</li>
+    </ol>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>
+                    Test
+                </th>
+                <th>
+                    Expected
+                </th>
+                <th>
+                    Result
+                </th>
+            </tr>
+        </thead>
+        <tr>
+            <th>
+                PairRequest(BluetoothAddress device, string pin)
+            </th>
+            <td>
+            </td>
+            <td class="testPassed">
+                &#x2714; See <a href="#security_PairRequest">below</a>.
+            </td>
+        </tr>
+        <tr>
+            <th>
+                RemoveDevice(BluetoothAddress device)
+            </th>
+            <td>
+            </td>
+            <td>
+                &#x2718; NotImplemented
+            </td>
+        </tr>
+        <tr>
+            <th>
+                &nbsp;
+            </th>
+        </tr>
+        <tr>
+            <th>
+                SetPin(BluetoothAddress device, string pin)
+            </th>
+            <td>
+            </td>
+            <td class="testPassed">
+                &#x2714; (Also used by BtCli.SetPin)
+            </td>
+        </tr>
+        <tr>
+            <th>
+                RevokePin(BluetoothAddress device)
+            </th>
+            <td>
+            </td>
+            <td>
+                &#x2714; (Also used by BtCli.SetPin)
+            </td>
+        </tr>
+        <tr>
+            <th>
+                &nbsp;
+            </th>
+        </tr>
+        <tr>
+            <th>
+                BluetoothAddress GetPinRequest()
+            </th>
+            <td>
+            </td>
+            <td>
+                &#x2718; NotImplemented.
+            </td>
+        </tr>
+        <tr>
+            <th>
+                RefusePinRequest(BluetoothAddress device)
+            </th>
+            <td>
+            </td>
+            <td>
+                &#x2718; NotImplemented.
+            </td>
+        </tr>
+        <tr>
+            <th>
+                &nbsp;
+            </th>
+        </tr>
+        <tr>
+            <th>
+                SetLinkKey(BluetoothAddress a, Guid linkkey)
+            </th>
+            <td>
+            </td>
+            <td>
+                &#x2718; NotImplemented.
+            </td>
+        </tr>
+    </table>
+    <h2 id="security_PairRequest">
+        PairRequest</h2>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>
+                    Test
+                </th>
+                <th>
+                    Expected
+                </th>
+                <th>
+                    Result
+                </th>
+                <th>
+                    Internals
+                </th>
+            </tr>
+        </thead>
+        <tr>
+            <th>
+                Success
+            </th>
+            <td>
+                True
+            </td>
+            <td>
+                True (peer: MSFT+Win32)
+            </td>
+            <td>
+                <pre>Authenticate_Callback: type: LinkKeyRequest, addr: 008098244CA4
+  Sending Auth Response: -ve (no linkkey)
+Authenticate_Callback: type: PINCodeRequest, addr: 008098244CA4
+  Sending Auth Response: PinCode
+    len: 6 [00-00-00-38-38-33-31-32-30-00-00-00-00-00-00-00-00-00-00]withPad
+Authenticate_Callback: type: LinkKeyCreation, addr: 008098244CA4
+Authenticate_Callback: type: AuthenticationStatus, addr: 008098244CA4
+  Status: NO_ERROR)</pre>
+            </td>
+        </tr>
+        <tr>
+            <th>
+                Local Radio PowerOff
+            </th>
+            <td>
+                Unknown (True)
+            </td>
+            <td>
+                True (peer: iPhone)
+            </td>
+            <td>
+                <pre>Authenticate_Callback: type: LinkKeyRequest, addr: 0026B09C49CE
+  Sending Auth Response: -ve (no linkkey)
+Authenticate_Callback: type: PINCodeRequest, addr: 0026B09C49CE
+  Sending Auth Response: PinCode
+    len: 6 [38-38-33-31-32-30-00-00-00-00-00-00-00-00-00-00]
+Authenticate_Callback: type: LinkKeyCreation, addr: 0026B09C49CE
+Authenticate_Callback: type: AuthenticationStatus, addr: 0026B09C49CE
+  Status: NO_ERROR)</pre>
+            </td>
+        </tr>
+        <tr>
+            <th>
+                Device not in range
+            </th>
+            <td>
+                False
+            </td>
+            <td>
+                False (12 seconds)
+            </td>
+            <td>
+                <pre>Authenticate_Callback: type: AuthenticationStatus, addr: 002233445566
+  Status: PAGE_TIMEOUT)</pre>
+            </td>
+        </tr>
+        <tr>
+            <th>
+                Fails with my WM6 Benq phone
+            </th>
+            <td>
+                (True)
+            </td>
+            <td>
+                False<br />
+                &#x2013; Do <em>not</em> see a prompt on the phone.
+            </td>
+            <td>
+                <pre>Authenticate_Callback: type: LinkKeyRequest, addr: 001702005073
+  Have Pin: True, LinkKey: False
+  Sending Auth Response: -ve (no linkkey)
+Authenticate_Callback: type: PINCodeRequest, addr: 001702005073
+  Have Pin: True, LinkKey: False
+  Sending Auth Response: PinCode
+    len: 6 [00-00-00-38-38-33-31-32-30-00-00-00-00-00-00-00-00-00-00]withPad
+Authenticate_Callback: type: AuthenticationStatus, addr: 001702005073
+  Status: AUTHENTICATION_FAILURE)
+  Have Pin: True, LinkKey: False</pre>
+            </td>
+        </tr>
+        <tr>
+            <th>
+                Peer slightly dead: Widcomm+XP
+            </th>
+            <td>
+                False
+            </td>
+            <td>
+                False (47 seconds)
+            </td>
+            <td>
+                <pre>Authenticate_Callback: type: LinkKeyRequest, addr: 000A3A6865BB
+  Sending Auth Response: -ve (no linkkey)
+Authenticate_Callback: type: PINCodeRequest, addr: 000A3A6865BB
+  Sending Auth Response: PinCode
+    len: 6 [38-38-33-31-32-30-00-00-00-00-00-00-00-00-00-00]
+Authenticate_Callback: type: AuthenticationStatus, addr: 000A3A6865BB
+  Status: LMP_RESPONSE_TIMEOUT)</pre>
+            </td>
+        </tr>
+        <tr>
+            <th>
+                Wrong passcode on peer
+            </th>
+            <td>
+                False
+            </td>
+            <td>
+                False (iPhone)
+            </td>
+            <td>
+                <pre>Authenticate_Callback: type: LinkKeyRequest, addr: 0026B09C49CE
+  Sending Auth Response: -ve (no linkkey)
+Authenticate_Callback: type: PINCodeRequest, addr: 0026B09C49CE
+  Sending Auth Response: PinCode
+    len: 6 [00-00-00-38-38-33-31-32-30-00-00-00-00-00-00-00-00-00-00]withPad
+Authenticate_Callback: type: AuthenticationStatus, addr: 0026B09C49CE
+  Status: AUTHENTICATION_FAILURE)</pre>
+            </td>
+        </tr>
+    </table>
+    <h2 id="security_BtCli_SetPin">
+        BluetoothClient.SetPin</h2>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>
+                    Test
+                </th>
+                <th>
+                    Expected
+                </th>
+                <th>
+                    Result
+                </th>
+                <th>
+                    Internals
+                </th>
+            </tr>
+        </thead>
+        <tr>
+            <th>
+                Connecting to device needing authentication<br />
+                &#x2014; no PIN etc
+            </th>
+            <td>
+                Fail to connect
+            </td>
+            <td>
+                SUCCESS 30seconds<br />
+                (SocketException 10038(!TODO!))
+            </td>
+            <td>
+                <pre>BeginFillInPortState
+Authenticate_Callback: type: LinkKeyRequest, addr: 0007809CC2E9
+  No Pin or LinkKey for that device, exiting.
+HandleSDP_Response_Callback2: ConnectionError=0x1</pre>
+            </td>
+        </tr>
+        <tr>
+            <th>
+                Connecting to device needing authentication<br />
+                &#x2014; where NOT previously connected/auth'd<br />
+                &#x2014; with BtCli.SetPin(p)
+            </th>
+            <td>
+                Success connect
+            </td>
+            <td>
+                SUCCESS
+            </td>
+            <td>
+                <pre>BeginFillInPortState
+Authenticate_Callback: type: <strong>LinkKeyRequest</strong>, addr: 0007809CC2E9
+  Have Pin: True, LinkKey: False
+  Sending Auth Response: -ve (no linkkey)
+Authenticate_Callback: type: <strong>PINCodeRequest</strong>, addr: 0007809CC2E9
+  Have Pin: True, LinkKey: False
+  Sending Auth Response: PinCode
+    len: 4 [33-30-39-39-00-00-00-00-00-00-00-00-00-00-00-00]
+Authenticate_Callback: type: <strong>LinkKeyCreation</strong>, addr: 0007809CC2E9
+  Have Pin: True, LinkKey: False
+HandleSDP_Response_Callback2: ServiceSearchAttributeResponse=0x5
+FillInPort_ServiceDiscoveryCallback, got port: 1
+Authenticate_Callback: type: <strong>LinkKeyRequest</strong>, addr: 0007809CC2E9
+  Have Pin: True, LinkKey: True
+  Sending Auth Response: LinkKey)
+    len: 16
+HandleSPP_Event_Callback2: Port_Open_Confirmation=0x1
+EventConnectConf: Success=0x0
+CONNECTED DEBUGID; m_state: New; m_arConnect (set), IsCompleted: False.</pre>
+            </td>
+        </tr>
+        <tr>
+            <th>
+                Connecting to device needing authentication<br />
+                &#x2014; where NOT previously connected/auth'd<br />
+                &#x2014; with BtCli.SetPin(a,p)
+            </th>
+            <td>
+                Success connect
+            </td>
+            <td>
+                SUCCESS
+            </td>
+            <td>
+                <pre>BeginFillInPortState
+Authenticate_Callback: type: <strong>LinkKeyRequest</strong>, addr: 0007809CC2E9
+  Have Pin: True, LinkKey: False
+  Sending Auth Response: -ve (no linkkey)
+Authenticate_Callback: type: <strong>PINCodeRequest</strong>, addr: 0007809CC2E9
+  Have Pin: True, LinkKey: False
+  Sending Auth Response: PinCode
+    len: 4 [33-30-39-39-00-00-00-00-00-00-00-00-00-00-00-00]
+Authenticate_Callback: type: <strong>LinkKeyCreation</strong>, addr: 0007809CC2E9
+  Have Pin: True, LinkKey: False
+The thread 0x45fc9636 has exited with code 0 (0x0).
+HandleSDP_Response_Callback2: ServiceSearchAttributeResponse=0x5
+BuildRecordList Number_Service_Records: 1
+DoEndServiceDiscovery, got 1 records.
+FillInPort_ServiceDiscoveryCallback, got port: 1
+Authenticate_Callback: type: <strong>LinkKeyRequest</strong>, addr: 0007809CC2E9
+  Have Pin: True, LinkKey: True
+  Sending Auth Response: LinkKey)
+    len: 16
+HandleSPP_Event_Callback2: Port_Open_Confirmation=0x1
+EventConnectConf: Success=0x0
+CONNECTED DEBUGID; m_state: New; m_arConnect (set), IsCompleted: False.</pre>
+            </td>
+        </tr>
+        <tr>
+            <th>
+                Connecting to device needing authentication<br />
+                &#x2014; where were previously connected/auth'd<br />
+                &#x2014; with BtCli.SetPin.
+            </th>
+            <td>
+                Success connect
+            </td>
+            <td>
+                SUCCESS
+            </td>
+            <td>
+                <pre>BeginFillInPortState
+Doing address-less PIN now.
+Authenticate_Callback: type: <strong>LinkKeyRequest</strong>, addr: 0007809CC2E9
+  Have Pin: True, LinkKey: True
+  Sending Auth Response: LinkKey)
+    len: 16
+HandleSDP_Response_Callback2: ServiceSearchAttributeResponse=0x5
+BuildRecordList Number_Service_Records: 1
+DoEndServiceDiscovery, got 1 records.
+FillInPort_ServiceDiscoveryCallback, got port: 1
+Authenticate_Callback: type: <strong>LinkKeyRequest</strong>, addr: 0007809CC2E9
+  Have Pin: True, LinkKey: True
+  Sending Auth Response: LinkKey)
+    len: 16
+HandleSPP_Event_Callback2: Port_Open_Confirmation=0x1
+EventConnectConf: Success=0x0
+CONNECTED DEBUGID; m_state: New; m_arConnect (set), IsCompleted: False.</pre>
+            </td>
+        </tr>
+        <tr>
+            <th>
+                Connecting to device needing authentication<br />
+                &#x2014; where were previously connected/auth'd<br />
+                &#x2014; with NO BtCli.SetPin.
+            </th>
+            <td>
+                Success connect
+            </td>
+            <td>
+                SUCCESS
+            </td>
+            <td>
+                <pre>BeginFillInPortState                
+Authenticate_Callback: type: <strong>LinkKeyRequest</strong>, addr: 0007809CC2E9
+  Have Pin: True, LinkKey: True
+  Sending Auth Response: LinkKey)
+    len: 16
+HandleSDP_Response_Callback2: ServiceSearchAttributeResponse=0x5
+BuildRecordList Number_Service_Records: 1
+DoEndServiceDiscovery, got 1 records.
+FillInPort_ServiceDiscoveryCallback, got port: 1
+Authenticate_Callback: type: <strong>LinkKeyRequest</strong>, addr: 0007809CC2E9
+  Have Pin: True, LinkKey: True
+  Sending Auth Response: LinkKey)
+    len: 16
+HandleSPP_Event_Callback2: Port_Open_Confirmation=0x1
+EventConnectConf: Success=0x0
+CONNECTED DEBUGID; m_state: New; m_arConnect (set), IsCompleted: False.</pre>
+            </td>
+        </tr>
+        <tr>
+            <th>
+                Connecting to <em>Port</em> number to device needing authentication<br />
+                &#x2014; where were not previously connected/auth'd<br />
+                &#x2014; with BtCli.SetPin.
+            </th>
+            <td>
+                Success connect
+            </td>
+            <td>
+                SUCCESS
+            </td>
+            <td>
+                <pre>BeginFillInPortState
+BeginFillInPort, has port -> Completed Syncronously
+Authenticate_Callback: type: <strong>PINCodeRequest</strong>, addr: 001583B41BFA
+  Have Pin: True, LinkKey: False
+  Sending Auth Response: PinCode
+    len: 6 [38-38-33-31-32-30-00-00-00-00-00-00-00-00-00-00]
+Authenticate_Callback: type: <strong>LinkKeyCreation</strong>, addr: 001583B41BFA
+  Have Pin: True, LinkKey: False
+HandleSPP_Event_Callback2: Port_Open_Confirmation=0x1
+EventConnectConf: Success=0x0
+CONNECTED DEBUGID; m_state: New; m_arConnect (set), IsCompleted: False.
+HandleSPP_Event_Callback2: Port_Status_Indication=0x3
+Revoking address-less PIN now.
+RevokePin<-RevokeAddressLessPin: True
+GAP_Remote_Name_Event_Data: status: NO_ERROR, addr: 001583B41BFA
+  name: ALANPC1
+DeviceMenuTesting stopping DEBUG at 22/04/11 14:11:16</pre>
+            </td>
+        </tr>
+    </table>
+    <h2 id="security_PairRequest_overrides_stored_LinkKey">
+        PairRequest overrides stored-LinkKey<br />
+        (PairRequest success and again PairRequest -- see it NOT using the stored-LinkKey)</h2>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>
+                    Test
+                </th>
+                <th>
+                    Expected
+                </th>
+                <th>
+                    Result
+                </th>
+                <th>
+                    Internals
+                </th>
+            </tr>
+        </thead>
+        <tr>
+            <th>
+                PairRequest first time
+            </th>
+            <td>
+                Success
+            </td>
+            <td>
+                SUCCESS
+            </td>
+            <td>
+                <pre>Authenticate_Callback: type: LinkKeyRequest, addr: 0007809CC2E9
+  Have Pin: True, LinkKey: False
+  Sending Auth Response: -ve (no linkkey)
+Authenticate_Callback: type: PINCodeRequest, addr: 0007809CC2E9
+  Have Pin: True, LinkKey: False
+  Sending Auth Response: PinCode
+    len: 4 [33-30-39-39-00-00-00-00-00-00-00-00-00-00-00-00]
+Authenticate_Callback: type: LinkKeyCreation, addr: 0007809CC2E9
+  Have Pin: True, LinkKey: False
+Authenticate_Callback: type: AuthenticationStatus, addr: 0007809CC2E9
+  Status: NO_ERROR)
+  Have Pin: True, LinkKey: False
+</pre>
+            </td>
+        </tr>
+        <tr>
+            <th>
+                PairRequest second time
+            </th>
+            <td>
+                Success, and see it NOT send the stored-LinkKey
+            </td>
+            <td>
+                SUCCESS
+            </td>
+            <td>
+                <pre>Authenticate_Callback: type: LinkKeyRequest, addr: 0007809CC2E9
+  Have Pin: True, LinkKey: False
+  Sending Auth Response: -ve (no linkkey)
+Authenticate_Callback: type: PINCodeRequest, addr: 0007809CC2E9
+  Have Pin: True, LinkKey: False
+  Sending Auth Response: PinCode
+    len: 4 [33-30-39-39-00-00-00-00-00-00-00-00-00-00-00-00]
+The thread 0x687261e has exited with code 0 (0x0).
+Authenticate_Callback: type: LinkKeyCreation, addr: 0007809CC2E9
+  Have Pin: True, LinkKey: False
+Authenticate_Callback: type: AuthenticationStatus, addr: 0007809CC2E9
+  Status: NO_ERROR)
+  Have Pin: True, LinkKey: False
+</pre>
+            </td>
+        </tr>
+        <tr>
+            <th>
+                PairRequest third time, wrong PIN
+            </th>
+            <td>
+                Fail, and see it NOT send the stored-LinkKey
+            </td>
+            <td>
+                SUCCESS
+            </td>
+            <td>
+                <pre>Authenticate_Callback: type: LinkKeyRequest, addr: 0007809CC2E9
+  Have Pin: True, LinkKey: False
+  Sending Auth Response: -ve (no linkkey)
+Authenticate_Callback: type: PINCodeRequest, addr: 0007809CC2E9
+  Have Pin: True, LinkKey: False
+  Sending Auth Response: PinCode
+    len: 7 [38-38-33-31-32-30-20-00-00-00-00-00-00-00-00-00]
+Authenticate_Callback: type: AuthenticationStatus, addr: 0007809CC2E9
+  Status: AUTHENTICATION_FAILURE)
+  Have Pin: True, LinkKey: False</pre>
+            </td>
+        </tr>
+    </table>
+    <!-- ==== -->
+    <h1 id="ObexWebRequest">
+        ObexWebRequest</h1>
+    <p>
+        Supported.</p>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>
+                    Test
+                </th>
+                <th>
+                    Result
+                </th>
+            </tr>
+        </thead>
+        <tr>
+            <th>
+                To non-existent device
+            </th>
+            <td>
+                SUCCESS: WebEx=>SockEx (SDP)
+            </td>
+        </tr>
+        <tr>
+            <th>
+                To fsquirt.exe on XP
+            </th>
+            <td>
+                SUCCESS (sent 70029 bytes)
+            </td>
+        </tr>
+        <tr>
+            <th>
+                To Widcomm+XP
+            </th>
+            <td>
+                SUCCESS (sent 40034 bytes)
+            </td>
+        </tr>
+        <tr>
+            <th>
+                GET, To Widcomm+XP
+            </th>
+            <td>
+                SUCCESS (received 84 bytes)
+            </td>
+        </tr>
+    </table>
+    <!-- ==== -->
+    <h1 id="ObexListener">
+        ObexListener</h1>
+    <p>
+        <strong>Partially</strong> supported &#x2014; BluetoothListener can accept only
+        <em>one</em> connection.</p>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>
+                    Test
+                </th>
+                <th>
+                    Result
+                </th>
+            </tr>
+        </thead>
+        <tr>
+            <th>
+                From fMT on MSFT+XP
+            </th>
+            <td>
+                SUCCESS
+            </td>
+        </tr>
+        <tr>
+            <th>
+                From fsquirt.exe on XP
+            </th>
+            <td>
+                SUCCESS (sent 1840 bytes)
+            </td>
+        </tr>
+    </table>
+    <p>
+        BTW before running: no SDP record. When running:</p>
+    <pre>AttrId: 0x0000 -- ServiceRecordHandle
+UInt32: 0x10000
+
+AttrId: 0x0001 -- ServiceClassIdList
+ElementSequence
+    Uuid128: 00001105-0000-1000-8000-00805f9b34fb -- ObexObjectPush
+
+AttrId: 0x0002 -- ServiceRecordState
+UInt32: 0x2
+
+AttrId: 0x0004 -- ProtocolDescriptorList
+ElementSequence
+    ElementSequence
+        Uuid16: 0x100 -- L2CapProtocol
+    ElementSequence
+        Uuid16: 0x3 -- RFCommProtocol
+        UInt8: 0xB
+    ElementSequence
+        Uuid16: 0x8 -- ObexProtocol
+( ( L2Cap ), ( Rfcomm, ChannelNumber=11 ), ( Obex ) )
+
+AttrId: 0x0303 -- SupportedFormatsList
+ElementSequence
+    UInt8: 0xFF</pre>
+    <!-- ==== -->
+    <h2 id="Internals">
+        Internals</h2>
+    <p>
+        On my M3Sky I see start-up parameters:
+    </p>
+    <code>Calling BSC_Initialize with:HCI_DriverInformation/COMM (COMM, 32), 'COM' 5, BCSP,
+        921600; 921600, 500.</code>
+    <p>
+        That's COM5, BCSP wire protocol, at 921600bps, with initialisation parameters: 921600bps
+        and timeout 500ms. "(COMM, 32)" is the data struct type and size. We don't have
+        support for the USB parameters.</p>
+    <p>
+        Our previous format was:</p>
+    <code>Calling BSC_Initialize with:HCI_DriverInformation__HCI_COMMDriverInformation COMM,
+        32, 5, 921600, BCSP, 500, 921600, 'COM'.</code>
+    <p>
+        Within a session BluetopiaFactory stores a list (hashtable) of Device Address and
+        Name information. Similarly BluetopiaSecurity maintains XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+    </p>
+    <!-- ==== -->
+    <p>
+        - end of document -</p>
+</body>
+</html>

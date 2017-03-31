@@ -1,0 +1,137 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{F4BFF85C-90DC-46F3-A3C3-A2DAB7E0591E}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>GtkMenuTesting</RootNamespace>
+    <AssemblyName>GtkMenuTesting</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+    <StartupObject>
+    </StartupObject>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;NO_WINFORMS</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE;NO_WINFORMS</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="atk-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\..\..\..\Program Files\Mono-2.8\lib\mono\gtk-sharp-2.0\atk-sharp.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="gdk-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\..\..\..\Program Files\Mono-2.8\lib\mono\gtk-sharp-2.0\gdk-sharp.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="glib-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\..\..\..\Program Files\Mono-2.8\lib\mono\gtk-sharp-2.0\glib-sharp.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="gtk-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\..\..\..\Program Files\Mono-2.8\lib\mono\gtk-sharp-2.0\gtk-sharp.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Management" />
+    <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\InTheHand.Net.Personal\Net\AsyncResult.cs">
+      <Link>AsyncResult.cs</Link>
+    </Compile>
+    <Compile Include="..\..\InTheHand.Net.Personal\Net\AsyncResultCompletion.cs">
+      <Link>AsyncResultCompletion.cs</Link>
+    </Compile>
+    <Compile Include="..\..\InTheHand.Net.Personal\Net\AsyncResultNoResult.cs">
+      <Link>AsyncResultNoResult.cs</Link>
+    </Compile>
+    <Compile Include="..\ConsoleMenuTesting\BluetoothTesting.cs">
+      <Link>BluetoothTesting.cs</Link>
+    </Compile>
+    <Compile Include="..\ConsoleMenuTesting\DelegateExtension.cs">
+      <Link>DelegateExtension.cs</Link>
+    </Compile>
+    <Compile Include="..\ConsoleMenuTesting\GCNotification.cs">
+      <Link>GCNotification.cs</Link>
+    </Compile>
+    <Compile Include="..\ConsoleMenuTesting\L2CapTesting.cs">
+      <Link>L2CapTesting.cs</Link>
+    </Compile>
+    <Compile Include="..\ConsoleMenuTesting\MenuItemAttribute.cs">
+      <Link>MenuItemAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\ConsoleMenuTesting\MenuSystem.cs">
+      <Link>MenuSystem.cs</Link>
+    </Compile>
+    <Compile Include="..\ConsoleMenuTesting\Option.cs">
+      <Link>Option.cs</Link>
+    </Compile>
+    <Compile Include="..\ConsoleMenuTesting\OptionSubMenu.cs">
+      <Link>OptionSubMenu.cs</Link>
+    </Compile>
+    <Compile Include="..\ConsoleMenuTesting\SubMenuAttribute.cs">
+      <Link>SubMenuAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\ConsoleMenuTesting\SubMenu_BtWin32Auth.cs">
+      <Link>SubMenu_BtWin32Auth.cs</Link>
+    </Compile>
+    <Compile Include="..\DeviceMenuTesting\IAuxConsole.cs">
+      <Link>IAuxConsole.cs</Link>
+    </Compile>
+    <Compile Include="GtkSynchronizationContext.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Window1.cs" />
+    <Compile Include="WindowConsole.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\InTheHand.Net.Personal\InTheHand.Net.Personal.FX2.csproj">
+      <Project>{98BDDE14-8F8C-40CC-9E45-5BAC73573EF4}</Project>
+      <Name>InTheHand.Net.Personal.FX2</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

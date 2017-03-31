@@ -1,0 +1,68 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BluetoothRemote", "BluetoothRemote", "{EF3B022B-61B9-46AE-B8A5-DA46360DDCD4}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BluetoothSdp", "BluetoothSdp", "{3C84D866-D5BF-41B5-BAFC-082EC4C027FB}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "IrDAServiceClient", "IrDAServiceClient", "{B1D409E1-0CB9-40C3-A401-183C0E7CACC6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BluetoothRemoteListener", "BluetoothRemote\BluetoothRemoteListener\BluetoothRemoteListener.csproj", "{4A52C7EA-615E-4A24-BAFC-6099A6373944}"
+EndProject
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "SdpBrowserDesktop", "BluetoothSDP\SdpBrowserDesktop\SdpBrowserDesktop.vbproj", "{1B613A4F-7B02-4671-8B9F-8EFABAE89591}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IrDAServiceClient", "IrDA\IrDAServiceClient\IrDAServiceClient.csproj", "{85CBE42A-7D65-49E5-AE63-806F90D701A2}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "OBEX", "OBEX", "{532C5F48-1D35-4453-9062-CE771517AFDF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DesktopListener", "ObjectPush\DesktopListener\DesktopListener.csproj", "{C8BE538A-650A-44FE-B264-AD53FBA8D4C7}"
+EndProject
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "DesktopPushVB", "ObjectPush\DesktopPushVB\DesktopPushVB.vbproj", "{85C91019-5BCF-4D74-9285-E7A5FBA2A478}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BluetoothChat2", "BluetoothChat2", "{7B3A7AC5-FD49-4019-A5EA-A9D68BF48176}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Chat2Desktop", "BluetoothChat2\Chat2Desktop\Chat2Desktop.csproj", "{AD106A70-4403-41F3-96C5-581110AE875B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4A52C7EA-615E-4A24-BAFC-6099A6373944}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4A52C7EA-615E-4A24-BAFC-6099A6373944}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4A52C7EA-615E-4A24-BAFC-6099A6373944}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4A52C7EA-615E-4A24-BAFC-6099A6373944}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1B613A4F-7B02-4671-8B9F-8EFABAE89591}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1B613A4F-7B02-4671-8B9F-8EFABAE89591}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1B613A4F-7B02-4671-8B9F-8EFABAE89591}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1B613A4F-7B02-4671-8B9F-8EFABAE89591}.Release|Any CPU.Build.0 = Release|Any CPU
+		{85CBE42A-7D65-49E5-AE63-806F90D701A2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{85CBE42A-7D65-49E5-AE63-806F90D701A2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{85CBE42A-7D65-49E5-AE63-806F90D701A2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{85CBE42A-7D65-49E5-AE63-806F90D701A2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C8BE538A-650A-44FE-B264-AD53FBA8D4C7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C8BE538A-650A-44FE-B264-AD53FBA8D4C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C8BE538A-650A-44FE-B264-AD53FBA8D4C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C8BE538A-650A-44FE-B264-AD53FBA8D4C7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{85C91019-5BCF-4D74-9285-E7A5FBA2A478}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{85C91019-5BCF-4D74-9285-E7A5FBA2A478}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{85C91019-5BCF-4D74-9285-E7A5FBA2A478}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{85C91019-5BCF-4D74-9285-E7A5FBA2A478}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AD106A70-4403-41F3-96C5-581110AE875B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AD106A70-4403-41F3-96C5-581110AE875B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AD106A70-4403-41F3-96C5-581110AE875B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AD106A70-4403-41F3-96C5-581110AE875B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{4A52C7EA-615E-4A24-BAFC-6099A6373944} = {EF3B022B-61B9-46AE-B8A5-DA46360DDCD4}
+		{1B613A4F-7B02-4671-8B9F-8EFABAE89591} = {3C84D866-D5BF-41B5-BAFC-082EC4C027FB}
+		{85CBE42A-7D65-49E5-AE63-806F90D701A2} = {B1D409E1-0CB9-40C3-A401-183C0E7CACC6}
+		{C8BE538A-650A-44FE-B264-AD53FBA8D4C7} = {532C5F48-1D35-4453-9062-CE771517AFDF}
+		{85C91019-5BCF-4D74-9285-E7A5FBA2A478} = {532C5F48-1D35-4453-9062-CE771517AFDF}
+		{AD106A70-4403-41F3-96C5-581110AE875B} = {7B3A7AC5-FD49-4019-A5EA-A9D68BF48176}
+	EndGlobalSection
+EndGlobal

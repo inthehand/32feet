@@ -1,0 +1,232 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{3EB8A0C0-9E40-4A39-9FE5-6EDA1D1FB7B5}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>FormsMenuTesting</RootNamespace>
+    <AssemblyName>FormsMenuTesting</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SccProjectName>
+    </SccProjectName>
+    <SccLocalPath>
+    </SccLocalPath>
+    <SccAuxPath>
+    </SccAuxPath>
+    <SccProvider>
+    </SccProvider>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <UpgradeBackupLocation />
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;FX3_5;FX4</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE;FX3_5;FX4</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;FX4</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
+    <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <DefineConstants>TRACE;FX4</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
+    <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.VisualBasic" />
+    <Reference Include="System" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Management" />
+    <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\InTheHand.Net.Personal\Net\AsyncResult.cs">
+      <Link>AsyncResult.cs</Link>
+    </Compile>
+    <Compile Include="..\..\InTheHand.Net.Personal\Net\AsyncResultCompletion.cs">
+      <Link>AsyncResultCompletion.cs</Link>
+    </Compile>
+    <Compile Include="..\..\InTheHand.Net.Personal\Net\AsyncResultNoResult.cs">
+      <Link>AsyncResultNoResult.cs</Link>
+    </Compile>
+    <Compile Include="..\ConsoleMenuTesting\BluetoothTesting.cs">
+      <Link>BluetoothTesting.cs</Link>
+    </Compile>
+    <Compile Include="..\ConsoleMenuTesting\DelegateExtension.cs">
+      <Link>DelegateExtension.cs</Link>
+    </Compile>
+    <Compile Include="..\ConsoleMenuTesting\GCNotification.cs">
+      <Link>GCNotification.cs</Link>
+    </Compile>
+    <Compile Include="..\ConsoleMenuTesting\L2CapTesting.cs">
+      <Link>L2CapTesting.cs</Link>
+    </Compile>
+    <Compile Include="..\ConsoleMenuTesting\MenuItemAttribute.cs">
+      <Link>MenuItemAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\ConsoleMenuTesting\MenuSystem.cs">
+      <Link>MenuSystem.cs</Link>
+    </Compile>
+    <Compile Include="..\ConsoleMenuTesting\Option.cs">
+      <Link>Option.cs</Link>
+    </Compile>
+    <Compile Include="..\ConsoleMenuTesting\SubMenuAttribute.cs">
+      <Link>SubMenuAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\ConsoleMenuTesting\SubMenu_BtWin32Auth.cs">
+      <Link>SubMenu_BtWin32Auth.cs</Link>
+    </Compile>
+    <Compile Include="..\DeviceMenuTesting\FormConsole.cs">
+      <Link>FormConsole.cs</Link>
+    </Compile>
+    <Compile Include="..\DeviceMenuTesting\IAuxConsole.cs">
+      <Link>IAuxConsole.cs</Link>
+    </Compile>
+    <Compile Include="..\FormsMenuTesting\Form1.cs">
+      <SubType>Form</SubType>
+      <Link>Form1.cs</Link>
+    </Compile>
+    <Compile Include="..\FormsMenuTesting\Form1.Designer.cs">
+      <DependentUpon>Form1.cs</DependentUpon>
+      <Link>Form1.Designer.cs</Link>
+    </Compile>
+    <Compile Include="..\FormsMenuTesting\FormReadAddr.cs">
+      <SubType>Form</SubType>
+      <Link>FormReadAddr.cs</Link>
+    </Compile>
+    <Compile Include="..\FormsMenuTesting\FormReadAddr.designer.cs">
+      <DependentUpon>FormReadAddr.cs</DependentUpon>
+      <Link>FormReadAddr.designer.cs</Link>
+    </Compile>
+    <Compile Include="..\FormsMenuTesting\Program.cs">
+      <Link>Program.cs</Link>
+    </Compile>
+    <Compile Include="..\FormsMenuTesting\Properties\AssemblyInfo.cs">
+      <Link>Properties\AssemblyInfo.cs</Link>
+    </Compile>
+    <EmbeddedResource Include="..\FormsMenuTesting\Form1.resx">
+      <DependentUpon>Form1.cs</DependentUpon>
+      <Link>Form1.resx</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\FormsMenuTesting\FormReadAddr.resx">
+      <DependentUpon>FormReadAddr.cs</DependentUpon>
+      <Link>FormReadAddr.resx</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\FormsMenuTesting\Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+      <Link>Properties\Resources.resx</Link>
+    </EmbeddedResource>
+    <Compile Include="..\FormsMenuTesting\Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+      <Link>Properties\Resources.Designer.cs</Link>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <None Include="..\FormsMenuTesting\Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+      <Link>Properties\Settings.settings</Link>
+    </None>
+    <Compile Include="..\FormsMenuTesting\Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <Link>Properties\Settings.Designer.cs</Link>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\ITH.Net.Personal.FX4\InTheHand.Net.Personal.FX4.csproj">
+      <!--Project>{98BDDE14-8F8C-40CC-9E45-5BAC73573EF4}</Project-->
+      <Name>InTheHand.Net.Personal.FX2</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.0">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4 %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

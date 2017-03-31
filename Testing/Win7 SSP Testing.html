@@ -1,0 +1,112 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head>
+    <title>Testing BluetoothWin32Authentication Windows 7 Secure Simple Pairing (SSP) support</title>
+    
+    <style>
+    .codeSample { background-color: #e5e5e5;
+                  white-space: pre-line;
+                  margin-left: 1em;
+                  }
+    .codeInline { white-space: pre;
+                  font-family: Monospace;
+                  }
+    </style>
+</head>
+<body>
+
+<h1>Testing BluetoothWin32Authentication Windows 7 Secure Simple Pairing (SSP) support</h1>
+<p>Testing Windows 7 SSP Support in our class <span class="codeInline">BluetoothWin32Authentication</span>.
+(Native methods BluetoothRegisterForAuthenticationEx and BluetoothSendAuthenticationEx).
+</p>
+<p>2011-February Alan McFarlane
+</p>
+
+<!-- -->
+<h2>Against BlueSoleil</h2>
+<p>Windows:</p>
+<div class="codeSample">Win3    2Auth hndlr, peer: 00190E02C916 host2, m: <strong>NumericComparison</strong>, req: MITMProtection<strong>Not</strong>RequiredBonding, io: DisplayYesNo, n_pk: 630773
+</div>
+
+<!-- -->
+<h2>BlueZ+Linux initiating the pair, with various IO-Capabilities</h2>
+<p>Using the BlueZ D-Bus API Agent method CreatePairedDevice which allows one
+to set the IO-Capability to advertise, using modified version of their example
+script simple-agent.py.
+</p>
+
+<h3>1. Old dongle in Linux</h3>
+<p>Linux:</p>
+<div class="codeSample">rupert@linux:~> simple-agent2.py hci0 00:15:83:42:1b:0c
+
+RequestPinCode (/org/bluez/18341/hci0/dev_00_15_83_42_1B_0C)
+Enter PIN Code:
+</div>
+<p>Windows:</p>
+<div class="codeSample">Win32Auth hndlr, peer: 001583B41BFA linux-0, m: <strong>Legacy</strong>, req: MITMProtectionNotDefined, io: Undefined, n_pk:
+</div>
+<p>(BTW: Using the built-in Bluetooth control-panel to add the device,
+it displays a six-digit PIN.  As I remember, with text
+ “Please enter the following PIN on ‘xxxx’.”).
+</p>
+
+<h3>2. Linux with 2.1 dongle, IO-Capability = Default (DisplayYesNo)</h3>
+<p>Linux:</p>
+<div class="codeSample">rupert@linux:~> simple-agent2.py hci0 00:15:83:42:1b:0c
+
+RequestConfirmation (/org/bluez/20114/hci0/dev_00_15_83_42_1B_0C, 518009)
+Confirm passkey (yes/no): yes
+Release
+New device (/org/bluez/20114/hci0/dev_00_15_83_42_1B_0C)
+</div>
+<p>Windows:</p>
+<div class="codeSample">Win32Auth hndlr, peer: 001060552CCA linux-0, m: <strong>NumericComparison</strong>, req: MITMProtectionRequiredBonding, io: DisplayYesNo, n_pk: 518009
+</div>
+
+<h3>3. Linux IO-Capability = KeyboardOnly</h3>
+<p>Linux:</p>
+<div class="codeSample">rupert@linux:~> simple-agent2.py hci0 00:15:83:42:1b:0c <strong>KeyboardOnly</strong>
+
+RequestPasskey (/org/bluez/20114/hci0/dev_00_15_83_42_1B_0C)
+Enter passkey: 766841
+Release
+New device (/org/bluez/20114/hci0/dev_00_15_83_42_1B_0C)
+</div>
+<p>Windows:</p>
+<div class="codeSample">Win32Auth hndlr, peer: 001060552CCA linux-0, m: <strong>PasskeyNotification</strong>, req: MITMProtectionRequiredBonding, io: KeyboardOnly, n_pk: 766841
+</div>
+
+<h3>4. NoInputNoOutput</h3>
+<p>Linux:</p>
+<div class="codeSample">rupert@linux:~> simple-agent2.py hci0 00:15:83:42:1b:0c <strong>NoInputNoOutput</strong> delete
+
+RequestConfirmation (/org/bluez/20114/hci0/dev_00_15_83_42_1B_0C, 904813)
+Confirm passkey (yes/no): yes
+Release
+New device (/org/bluez/20114/hci0/dev_00_15_83_42_1B_0C)
+</div>
+<p>Windows:</p>
+<div class="codeSample">Win32Auth hndlr, peer: 001060552CCA linux-0, m: <strong>NumericComparison</strong>, req: MITMProtectionRequiredBonding, io: NoInputNoOutput, n_pk: 904813
+</div>
+<p>
+Note: <em>Had</em> to tell the program to delete the device first.
+Presumbly here because it is a change from an “Authenticated” to an “Unauthenticated” Link Key…
+</p>
+
+<h3>5. DisplayOnly</h3>
+<p>Linux:</p>
+<div class="codeSample">rupert@linux:~> simple-agent2.py hci0 00:15:83:42:1b:0c <strong>DisplayOnly</strong> delete
+
+RequestConfirmation (/org/bluez/20114/hci0/dev_00_15_83_42_1B_0C, 980045)
+Confirm passkey (yes/no): yes
+Release
+New device (/org/bluez/20114/hci0/dev_00_15_83_42_1B_0C)
+</div>
+<p>Windows:</p>
+<div class="codeSample">Win32Auth hndlr, peer: 001060552CCA linux-0, m: <strong>NumericComparison</strong>, req: MITMProtectionRequiredBonding, io: DisplayOnly, n_pk: 980045
+</div>
+<p>Note: did tell the program to delete the device first.
+</p>
+
+</body>
+</html>

@@ -1,0 +1,405 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{98BDDE14-8F8C-40CC-9E45-5BAC73573EF4}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>InTheHand</RootNamespace>
+    <AssemblyName>InTheHand.Net.Personal</AssemblyName>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>2.0</OldToolsVersion>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;WinXP;V2;BlueZ;FX3_5</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>
+    </DocumentationFile>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE;WinXP;V2;FX3_5</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Release\InTheHand.Net.Personal.XML</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'CodeAnalysis|AnyCPU' ">
+    <OutputPath>bin\CodeAnalysis\</OutputPath>
+    <DefineConstants>TRACE;WinXP;V2;FX3_5;CODE_ANALYSIS</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
+    <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
+    <ErrorReport>prompt</ErrorReport>
+    <NoWarn>1591</NoWarn>
+    <CodeAnalysisRules>-Microsoft.Globalization#CA1304;-Microsoft.Globalization#CA1305;-Microsoft.Performance#CA1822</CodeAnalysisRules>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="mscorlib" />
+    <Reference Include="NDesk.DBus, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f6716e4f9b2ed099, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\ExternalLibs\Mono etc\NDesk.DBus.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="FakeAttributes.cs" />
+    <Compile Include="Net.Bluetooth.AttributeIds\DeviceIdAttributeId.cs" />
+    <Compile Include="Net.Bluetooth.AttributeIds\HidProfileAttributeId.cs" />
+    <Compile Include="Net.Bluetooth.AttributeIds\SdpSpecAttributeIds.cs" />
+    <Compile Include="Net.Bluetooth.AttributeIds\SigAttributeIds.cs" />
+    <Compile Include="Net.Bluetooth.BlueSoleil\BluesoleilClient.cs" />
+    <Compile Include="Net.Bluetooth.BlueSoleil\BluesoleilDeviceInfo.cs" />
+    <Compile Include="Net.Bluetooth.BlueSoleil\BluesoleilException.cs" />
+    <Compile Include="Net.Bluetooth.BlueSoleil\BluesoleilFactory.cs" />
+    <Compile Include="Net.Bluetooth.BlueSoleil\BluesoleilRadio.cs" />
+    <Compile Include="Net.Bluetooth.BlueSoleil\BluesoleilSecurity.cs" />
+    <Compile Include="Net.Bluetooth.BlueSoleil\BlueSoleilSerialPortNetworkStream.cs" />
+    <Compile Include="Net.Bluetooth.BlueSoleil\BluesoleilUtils.cs" />
+    <Compile Include="Net.Bluetooth.BlueSoleil\BtSdkError.cs" />
+    <Compile Include="Net.Bluetooth.BlueSoleil\IBluesoleilApi.cs" />
+    <Compile Include="Net.Bluetooth.BlueSoleil\IBluesoleilConnection.cs" />
+    <Compile Include="Net.Bluetooth.BlueSoleil\ISerialPortWrapper.cs" />
+    <Compile Include="Net.Bluetooth.BlueSoleil\NativeMethods.cs" />
+    <Compile Include="Net.Bluetooth.BlueSoleil\NullBluesoleilConnection.cs" />
+    <Compile Include="Net.Bluetooth.BlueSoleil\RealBluesoleilApi.cs" />
+    <Compile Include="Net.Bluetooth.BlueSoleil\SerialPortNetworkStream.cs" />
+    <Compile Include="Net.Bluetooth.BlueSoleil\StackConsts.cs" />
+    <Compile Include="Net.Bluetooth.BlueSoleil\Structs.cs" />
+    <Compile Include="Net.Bluetooth.BlueZ\BluezClient.cs" />
+    <Compile Include="Net.Bluetooth.BlueZ\BluezDbus.cs" />
+    <Compile Include="Net.Bluetooth.BlueZ\BluezDbusInterface.cs" />
+    <Compile Include="Net.Bluetooth.BlueZ\BluezDeviceInfo.cs" />
+    <Compile Include="Net.Bluetooth.BlueZ\BluezError.cs" />
+    <Compile Include="Net.Bluetooth.BlueZ\BluezFactory.cs" />
+    <Compile Include="Net.Bluetooth.BlueZ\BluezL2CapClient.cs" />
+    <Compile Include="Net.Bluetooth.BlueZ\BluezL2capEndPoint.cs" />
+    <Compile Include="Net.Bluetooth.BlueZ\BluezL2capListener.cs" />
+    <Compile Include="Net.Bluetooth.BlueZ\BluezListener.cs" />
+    <Compile Include="Net.Bluetooth.BlueZ\BluezRadio.cs" />
+    <Compile Include="Net.Bluetooth.BlueZ\BluezRfcommEndPoint.cs" />
+    <Compile Include="Net.Bluetooth.BlueZ\BluezSdpQuery.cs" />
+    <Compile Include="Net.Bluetooth.BlueZ\BluezSecurity.cs" />
+    <Compile Include="Net.Bluetooth.BlueZ\BluezSocketOptionHelper.cs" />
+    <Compile Include="Net.Bluetooth.BlueZ\BluezUtils.cs" />
+    <Compile Include="Net.Bluetooth.BlueZ\NativeMethods.cs" />
+    <Compile Include="Net.Bluetooth.BlueZ\StackConsts.cs" />
+    <Compile Include="Net.Bluetooth.BlueZ\Structs.cs" />
+    <Compile Include="Net.Bluetooth.Droid\AndroidBthClient.cs" />
+    <Compile Include="Net.Bluetooth.Droid\AndroidBthDeviceInfo.cs" />
+    <Compile Include="Net.Bluetooth.Droid\AndroidBthFactory.cs" />
+    <Compile Include="Net.Bluetooth.Droid\AndroidBthInquiry.cs" />
+    <Compile Include="Net.Bluetooth.Droid\AndroidBthInquiry2.cs" />
+    <Compile Include="Net.Bluetooth.Droid\AndroidBthListener.cs" />
+    <Compile Include="Net.Bluetooth.Droid\AndroidBthMockFactory.cs" />
+    <Compile Include="Net.Bluetooth.Droid\AndroidBthRadio.cs" />
+    <Compile Include="Net.Bluetooth.Droid\AndroidBthSocketStream.cs" />
+    <Compile Include="Net.Bluetooth.Droid\AndroidBthUtils.cs" />
+    <Compile Include="Net.Bluetooth.Droid\AndroidMockValues.cs" />
+    <Compile Include="Net.Bluetooth.Droid\FakeAndroidApi.cs" />
+    <Compile Include="Net.Bluetooth.Droid\MockAndroidBth1.cs" />
+    <Compile Include="Net.Bluetooth.Factory\BluetoothConnector.cs" />
+    <Compile Include="Net.Bluetooth.Factory\BluetoothFactory.cs" />
+    <Compile Include="Net.Bluetooth.Factory\BluetoothRfcommStreamConnector.cs" />
+    <Compile Include="Net.Bluetooth.Factory\CommonBluetoothClient.cs" />
+    <Compile Include="Net.Bluetooth.Factory\CommonBluetoothInquiry.cs" />
+    <Compile Include="Net.Bluetooth.Factory\CommonBluetoothListener.cs" />
+    <Compile Include="Net.Bluetooth.Factory\CommonDiscoveryBluetoothClient.cs" />
+    <Compile Include="Net.Bluetooth.Factory\CommonRfcommStream.cs" />
+    <Compile Include="Net.Bluetooth.Factory\CommonSocketExceptions.cs" />
+    <Compile Include="Net.Bluetooth.Factory\DecoratorNetworkStream.cs" />
+    <Compile Include="Net.Bluetooth.Factory\DiscoDevsParams.cs" />
+    <Compile Include="Net.Bluetooth.Factory\IBluetoothClient.cs" />
+    <Compile Include="Net.Bluetooth.Factory\IBluetoothDeviceInfo.cs" />
+    <Compile Include="Net.Bluetooth.Factory\IBluetoothFactoryFactory.cs" />
+    <Compile Include="Net.Bluetooth.Factory\IBluetoothListener.cs" />
+    <Compile Include="Net.Bluetooth.Factory\IBluetoothRadio.cs" />
+    <Compile Include="Net.Bluetooth.Factory\IBluetoothSecurity.cs" />
+    <Compile Include="Net.Bluetooth.Factory\IL2CapClient.cs" />
+    <Compile Include="Net.Bluetooth.Factory\IUsesBluetoothConnectorImplementsServiceLookup.cs" />
+    <Compile Include="Net.Bluetooth.Factory\RfcommDecoratorNetworkStream.cs" />
+    <Compile Include="Net.Bluetooth.Factory\TimeoutDecorStream.cs" />
+    <Compile Include="Net.Bluetooth.Msft\BLOB.cs" />
+    <Compile Include="Net.Bluetooth.Msft\BthInquiryResult.cs" />
+    <Compile Include="Net.Bluetooth.Msft\BLUETOOTH_DEVICE_INFO.cs" />
+    <Compile Include="Net.Bluetooth.Msft\BLUETOOTH_FIND_RADIO_PARAMS.cs" />
+    <Compile Include="Net.Bluetooth.Msft\BLUETOOTH_RADIO_INFO.cs" />
+    <Compile Include="Net.Bluetooth.Msft\BTHNS_BLOB.cs" />
+    <Compile Include="Net.Bluetooth.Msft\BTHNS_INQUIRYBLOB.cs" />
+    <Compile Include="Net.Bluetooth.Msft\BTHNS_RESULT.cs" />
+    <Compile Include="Net.Bluetooth.Msft\BTHNS_SETBLOB.cs" />
+    <Compile Include="Net.Bluetooth.Msft\BTH_DEVICE_INFO.cs" />
+    <Compile Include="Net.Bluetooth.Msft\BTH_RADIO_INFO.cs" />
+    <Compile Include="Net.Bluetooth.Msft\CSADDR_INFO.cs" />
+    <Compile Include="Net.Bluetooth.Msft\MicrosoftSdpService.cs" />
+    <Compile Include="Net.Bluetooth.Msft\NativeMethods.cs" />
+    <Compile Include="Net.Bluetooth.Msft\SocketBluetoothClient.cs" />
+    <Compile Include="Net.Bluetooth.Msft\SocketsBluetoothFactory.cs" />
+    <Compile Include="Net.Bluetooth.Msft\WinCEBluetoothRadio.cs" />
+    <Compile Include="Net.Bluetooth.Msft\WindowsBluetoothDeviceInfo.cs" />
+    <Compile Include="Net.Bluetooth.Msft\WindowsBluetoothListener.cs" />
+    <Compile Include="Net.Bluetooth.Msft\WindowsBluetoothRadio.cs" />
+    <Compile Include="Net.Bluetooth.Msft\WindowsBluetoothSecurity.cs" />
+    <Compile Include="Net.Bluetooth.Msft\WindowsRadioHandle.cs" />
+    <Compile Include="Net.Bluetooth.Msft\WSAQUERYSET.cs" />
+    <Compile Include="Net.Bluetooth.NoMsft\NoMsftIrDAListener.cs" />
+    <Compile Include="Net.Bluetooth.NoMsft\NoMsftWindowsBluetoothDeviceInfo.cs" />
+    <Compile Include="Net.Bluetooth.Widcomm\IBtIf.cs" />
+    <Compile Include="Net.Bluetooth.Widcomm\IRfCommIf.cs" />
+    <Compile Include="Net.Bluetooth.Widcomm\IRfcommPort.cs" />
+    <Compile Include="Net.Bluetooth.Widcomm\ISdpDiscoveryRecordsBuffer.cs" />
+    <Compile Include="Net.Bluetooth.Widcomm\ISdpService.cs" />
+    <Compile Include="Net.Bluetooth.Widcomm\L2CapIf.cs" />
+    <Compile Include="Net.Bluetooth.Widcomm\L2CapPort.cs" />
+    <Compile Include="Net.Bluetooth.Widcomm\SdpDiscoveryRecordsBuffer.cs" />
+    <Compile Include="Net.Bluetooth.Widcomm\SdpService.cs" />
+    <Compile Include="Net.Bluetooth.Widcomm\WidcommBluetoothClient.cs" />
+    <Compile Include="Net.Bluetooth.Widcomm\WidcommBluetoothDeviceInfo.cs" />
+    <Compile Include="Net.Bluetooth.Widcomm\WidcommBluetoothFactory.cs" />
+    <Compile Include="Net.Bluetooth.Widcomm\WidcommBluetoothListener.cs" />
+    <Compile Include="Net.Bluetooth.Widcomm\WidcommBluetoothRadio.cs" />
+    <Compile Include="Net.Bluetooth.Widcomm\WidcommBluetoothSecurity.cs" />
+    <Compile Include="Net.Bluetooth.Widcomm\WidcommBtIf.cs" />
+    <Compile Include="Net.Bluetooth.Widcomm\WidcommBtInterface.cs" />
+    <Compile Include="Net.Bluetooth.Widcomm\WidcommL2CapClient.cs" />
+    <Compile Include="Net.Bluetooth.Widcomm\WidcommL2CapListener.cs" />
+    <Compile Include="Net.Bluetooth.Widcomm\WidcommNativeBits.cs" />
+    <Compile Include="Net.Bluetooth.Widcomm\WidcommPlaying.cs" />
+    <Compile Include="Net.Bluetooth.Widcomm\WidcommPortSingleThreader.cs" />
+    <Compile Include="Net.Bluetooth.Widcomm\WidcommRfCommIf.cs" />
+    <Compile Include="Net.Bluetooth.Widcomm\WidcommRfcommInterface.cs" />
+    <Compile Include="Net.Bluetooth.Widcomm\WidcommRfcommPort.cs" />
+    <Compile Include="Net.Bluetooth.Widcomm\WidcommRfcommStream.cs" />
+    <Compile Include="Net.Bluetooth.Widcomm\WidcommSdpServiceCreator.cs" />
+    <Compile Include="Net.Bluetooth.Widcomm\WidcommSerialPort.cs" />
+    <Compile Include="Net.Bluetooth.Widcomm\WidcommSocketExceptions.cs" />
+    <Compile Include="Net.Bluetooth.Widcomm\WidcommSppClient.cs" />
+    <Compile Include="Net.Bluetooth.Widcomm\WidcommSppSocketExceptions.cs" />
+    <Compile Include="Net.Bluetooth.Widcomm\WidcommStBtIf.cs" />
+    <Compile Include="Net.Bluetooth.Widcomm\WidcommStRfCommIf.cs" />
+    <Compile Include="Net.Bluetooth.Widcomm\WidcommStructs.cs" />
+    <Compile Include="Net.Bluetooth.Widcomm\WidcommUtils.cs" />
+    <Compile Include="Net.Bluetooth\AsyncCompletedEventArgs.cs" />
+    <Compile Include="Net.Bluetooth\AsyncOperation.cs" />
+    <Compile Include="Net.Bluetooth\AsyncOperationManager.cs" />
+    <Compile Include="Net.Bluetooth\BDIF_BluetoothDeviceInfoProperties.cs" />
+    <Compile Include="Net.Bluetooth\BluetoothAuthenticationMethod.cs" />
+    <Compile Include="Net.Bluetooth\BluetoothAuthenticationRequirements.cs" />
+    <Compile Include="Net.Bluetooth\BluetoothComponent.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Net.Bluetooth\BluetoothFactoryConfig.cs" />
+    <Compile Include="Net.Bluetooth\BluetoothFactorySection.cs" />
+    <Compile Include="Net.Bluetooth\BluetoothIoCapability.cs" />
+    <Compile Include="Net.Bluetooth\BluetoothPublicFactory.cs" />
+    <Compile Include="Net.Bluetooth\BluetoothRadio.cs" />
+    <Compile Include="Net.Bluetooth\BluetoothSecurity.cs" />
+    <Compile Include="Net.Bluetooth\BluetoothService.cs" />
+    <Compile Include="Net.Bluetooth\BluetoothSocketOptionLevel.cs" />
+    <Compile Include="Net.Bluetooth\BluetoothSocketOptionName.cs" />
+    <Compile Include="Net.Bluetooth\BluetoothWin32Authentication.cs" />
+    <Compile Include="Net.Bluetooth\BluetoothWin32AuthenticationEventArgs.cs" />
+    <Compile Include="Net.Bluetooth\BluetoothWin32AuthenticationEx.cs" />
+    <Compile Include="Net.Bluetooth\BluetoothWin32EventArgs.cs" />
+    <Compile Include="Net.Bluetooth\BluetoothWin32Events.cs" />
+    <Compile Include="Net.Bluetooth\ClassOfDevice.cs" />
+    <Compile Include="Net.Bluetooth\DeviceClass.cs" />
+    <Compile Include="Net.Bluetooth\DiscoverDevicesEventArgs.cs" />
+    <Compile Include="Net.Bluetooth\HardwareStatus.cs" />
+    <Compile Include="Net.Bluetooth\HciAndLmpVersions.cs" />
+    <Compile Include="Net.Bluetooth\LinkPolicy.cs" />
+    <Compile Include="Net.Bluetooth\LmpExtendedFeatures.cs" />
+    <Compile Include="Net.Bluetooth\LmpFeatures.cs" />
+    <Compile Include="Net.Bluetooth\LmpFeaturesUtils.cs" />
+    <Compile Include="Net.Bluetooth\Manufacturer.cs" />
+    <Compile Include="Net.Bluetooth\NullBluetoothFactory.cs" />
+    <Compile Include="Net.Bluetooth\NullBtCli.cs" />
+    <Compile Include="Net.Bluetooth\NullBtListener.cs" />
+    <Compile Include="Net.Bluetooth\NullRfcommStream.cs" />
+    <Compile Include="Net.Bluetooth\RadioMode.cs" />
+    <Compile Include="Net.Bluetooth\RadioModes.cs" />
+    <Compile Include="Net.Bluetooth\RadioVersions.cs" />
+    <Compile Include="Net.Bluetooth\SdpQueryType.cs" />
+    <Compile Include="Net.Bluetooth\ServiceClass.cs" />
+    <Compile Include="Net.Bluetooth_Sdp2\AttributeIds.cs" />
+    <Compile Include="Net.Bluetooth_Sdp2\BluetoothProtocolDescriptorType.cs" />
+    <Compile Include="Net.Bluetooth_Sdp2\Enums.cs" />
+    <Compile Include="Net.Bluetooth_Sdp2\LanguageBaseItem.cs" />
+    <Compile Include="Net.Bluetooth_Sdp2\MapServiceClassToAttributeIdList.cs" />
+    <Compile Include="Net.Bluetooth_Sdp2\ServiceAttribute.cs" />
+    <Compile Include="Net.Bluetooth_Sdp2\ServiceElement.cs" />
+    <Compile Include="Net.Bluetooth_Sdp2\ServiceRecord.cs" />
+    <Compile Include="Net.Bluetooth_Sdp2\ServiceRecordBuilder.cs" />
+    <Compile Include="Net.Bluetooth_Sdp2\ServiceRecordCreator.cs" />
+    <Compile Include="Net.Bluetooth_Sdp2\ServiceRecordHelper.cs" />
+    <Compile Include="Net.Bluetooth_Sdp2\ServiceRecordsParser.cs" />
+    <Compile Include="Net.Bluetooth_Sdp2\ServiceRecordUtilities.cs" />
+    <Compile Include="Net.Bluetooth_Sdp2\Utils.cs" />
+    <Compile Include="Net.Bluetooth_Sdp\NodeData.cs" />
+    <Compile Include="Net.Bluetooth_Sdp\SdpSpecificType.cs" />
+    <Compile Include="Net.IrDA\IrDAAttributeType.cs" />
+    <Compile Include="Net.IrDA\IrDACharacterSet.cs" />
+    <Compile Include="Net.IrDA\IrDAHints.cs" />
+    <Compile Include="Net.IrDA\IrDAService.cs" />
+    <Compile Include="Net.IrDA\IrDASocketOptionLevel.cs" />
+    <Compile Include="Net.IrDA\IrDASocketOptionName.cs" />
+    <Compile Include="Net.Mime\MediaTypeNames.cs" />
+    <Compile Include="Net.Ports\PortStatusChangedEventArgs.cs" />
+    <Compile Include="Net.Sockets\AddressFamily.cs" />
+    <Compile Include="Net.Sockets\BluetoothClient.cs" />
+    <Compile Include="Net.Sockets\BluetoothDeviceInfo.cs" />
+    <Compile Include="Net.Sockets\BluetoothListener.cs" />
+    <Compile Include="Net.Sockets\BluetoothProtocolType.cs" />
+    <Compile Include="Net.Sockets\IrDAClient.cs" />
+    <Compile Include="Net.Sockets\IrDADeviceInfo.cs" />
+    <Compile Include="Net.Sockets\IrDAListener.cs" />
+    <Compile Include="Net.Sockets\ISocketOptionHelper.cs" />
+    <Compile Include="Net.Sockets\L2CapClient.cs" />
+    <Compile Include="Net.Sockets\L2CapListener.cs" />
+    <Compile Include="Net.Sockets\SocketAdapter.cs" />
+    <Compile Include="Net.Sockets\SocketClientAdapter.cs" />
+    <Compile Include="Net.Sockets\SocketStreamIOAdapter.cs" />
+    <Compile Include="Net\AsyncResult.cs" />
+    <Compile Include="Net\AsyncResultCompletion.cs" />
+    <Compile Include="Net\AsyncResultNoResult.cs" />
+    <Compile Include="Net\BluetoothAddress.cs" />
+    <Compile Include="Net\BluetoothEndPoint.cs" />
+    <Compile Include="Net\IrDAAddress.cs" />
+    <Compile Include="Net\IrDAEndPoint.cs" />
+    <Compile Include="Net\ObexHeader.cs" />
+    <Compile Include="Net\ObexListener.cs" />
+    <Compile Include="Net\ObexListenerContext.cs" />
+    <Compile Include="Net\ObexListenerRequest.cs" />
+    <Compile Include="Net\ObexMethod.cs" />
+    <Compile Include="Net\ObexParser.cs" />
+    <Compile Include="Net\ObexStatusCode.cs" />
+    <Compile Include="Net\ObexTransport.cs" />
+    <Compile Include="Net\ObexWebRequest.cs" />
+    <Compile Include="Net\ObexWebRequestCreate.cs" />
+    <Compile Include="Net\ObexWebResponse.cs" />
+    <Compile Include="Net\TestUtilities.cs" />
+    <Compile Include="Net\Utilities.cs" />
+    <Compile Include="ObexUri.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Runtime\InteropServices\Marshal.cs" />
+    <Compile Include="SysCoreDelegates.cs" />
+    <Compile Include="TextWriterTraceListener32f.cs" />
+    <Compile Include="Utils\MiscUtils.cs" />
+    <Compile Include="Utils\MiscUtils_TraceNETCF.cs" />
+    <Compile Include="Utils\PairStream.cs" />
+    <Compile Include="Utils\Pointers.cs" />
+    <Compile Include="Utils\Process2.cs" />
+    <Compile Include="Win32\SYSTEMTIME.cs" />
+    <Compile Include="Win32\Win32Error.cs" />
+    <Compile Include="Windows\Forms\BLUETOOTH_COD_PAIRS.cs" />
+    <Compile Include="Windows\Forms\BLUETOOTH_SELECT_DEVICE_PARAMS.cs" />
+    <Compile Include="Windows\Forms\ISelectBluetoothDevice.cs" />
+    <Compile Include="Windows\Forms\NativeMethods.cs" />
+    <Compile Include="Windows\Forms\SelectBluetoothDeviceDialog.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Windows\Forms\SelectBluetoothDeviceForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\ExternalLibs\Mono etc\NDesk.DBus.dll">
+      <Link>Net.Bluetooth.BlueZ\NDesk.DBus.dll</Link>
+    </None>
+    <None Include="app.config">
+    </None>
+    <None Include="BluetoothStacks.cd" />
+    <None Include="Net.Bluetooth.BlueSoleil\32feet BlueSoleil Test.html" />
+    <None Include="Net.Bluetooth.Msft\BTH_LOCAL_VERSION.cs" />
+    <None Include="Net.Bluetooth\BluetoothVersion.cs" />
+    <None Include="Windows\Forms\DeviceFilterEventArgs.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="InTheHand.snk" />
+    <None Include="Net.Bluetooth.BlueZ\32feet BlueZ Test.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Windows\Forms\SelectBluetoothDeviceForm.resx">
+      <DependentUpon>SelectBluetoothDeviceForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.2.0">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 2.0 %28x86%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.0">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.0 %28x86%29</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

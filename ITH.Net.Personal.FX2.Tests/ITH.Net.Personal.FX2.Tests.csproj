@@ -1,0 +1,236 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{C75F09AE-A995-4070-9F71-8BE5BB5B39B7}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>InTheHand.Net.Tests</RootNamespace>
+    <AssemblyName>ITH.Net.Personal.FX2.Tests</AssemblyName>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+    <SignAssembly>false</SignAssembly>
+    <AssemblyOriginatorKeyFile>Alan32feetTestKey.snk</AssemblyOriginatorKeyFile>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>2.0</OldToolsVersion>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;NUNIT</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Moq, Version=4.0.10827.0, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\ExternalLibs\Moq\Moq.dll</HintPath>
+    </Reference>
+    <Reference Include="NMock2, Version=2.0.0.44, Culture=neutral, PublicKeyToken=37d3be0adc87c2b7, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Testing\UnitTesting\ExternalLibs\NMock2.dll</HintPath>
+    </Reference>
+    <Reference Include="nunit.framework, Version=2.2.7.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Testing\UnitTesting\ExternalLibs\nunit.framework.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Runtime.Serialization.Formatters.Soap" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\Testing\MiscFeatureTestCs\TestConnectedProperty.cs">
+      <Link>Widcomm\TestConnectedProperty.cs</Link>
+    </Compile>
+    <Compile Include="..\Testing\MiscFeatureTestCs\TestSocketPair.cs">
+      <Link>Widcomm\TestSocketPair.cs</Link>
+    </Compile>
+    <Compile Include="Droid\AndroidCoDTests.cs" />
+    <Compile Include="Droid\AndroidConnTests.cs" />
+    <Compile Include="Droid\AndroidDeviceTests.cs" />
+    <Compile Include="Droid\AndroidLsnrTests.cs" />
+    <Compile Include="Droid\AndroidRadioTests.cs" />
+    <Compile Include="Droid\AndroidTestInfra.cs" />
+    <Compile Include="Droid\AndroidTesting.cs" />
+    <Compile Include="Droid\SimpleMock.cs" />
+    <Compile Include="Bluetooth.cs" />
+    <Compile Include="BluetoothClientMergeTest.cs" />
+    <Compile Include="BluetoothTesting\ClassOfDeviceTests.cs" />
+    <Compile Include="BluetopiaTests\BluetopiaConnectTests.cs" />
+    <Compile Include="BluetopiaTests\BluetopiaDataTests.cs" />
+    <Compile Include="BluetopiaTests\BluetopiaDeviceInfoTests.cs" />
+    <Compile Include="BluetopiaTests\BluetopiaDiscoveryTests.cs" />
+    <Compile Include="BluetopiaTests\BluetopiaExceptionTests.cs" />
+    <Compile Include="BluetopiaTests\BluetopiaRadioTests.cs" />
+    <Compile Include="BluetopiaTests\BluetopiaSdpCreateManualTests.cs" />
+    <Compile Include="BluetopiaTests\BluetopiaSdpCreatorTests.cs" />
+    <Compile Include="BluetopiaTests\BluetopiaSdpParseTests.cs" />
+    <Compile Include="BluetopiaTests\BluetopiaSdpQueryTests.cs" />
+    <Compile Include="BluetopiaTests\BluetopiaTesting.cs" />
+    <Compile Include="BluetopiaTests\ClientTesting.cs" />
+    <Compile Include="BluetopiaTests\SppEventCreator.cs" />
+    <Compile Include="BtAddrSerialization.cs" />
+    <Compile Include="BtEndPointSerialization.cs" />
+    <Compile Include="CommonBt\CommonLsnrTests.cs" />
+    <Compile Include="ConfigTests.cs" />
+    <Compile Include="Infrastructure.cs" />
+    <Compile Include="Infra\Assert2.cs" />
+    <Compile Include="Infra\ClientTesting.cs" />
+    <Compile Include="Infra\Delegate2.cs" />
+    <Compile Include="Infra\MyNMock2Extensions.cs" />
+    <Compile Include="Infra\SocketStreamAdapter.cs" />
+    <Compile Include="Infra\TestsApmUtils.cs" />
+    <Compile Include="IrdaNet.cs" />
+    <Compile Include="IrdaNetSockets.cs" />
+    <Compile Include="Misc.cs" />
+    <Compile Include="MsftBt\AuthEventArgsTests.cs" />
+    <Compile Include="ObexListenerTests.cs" />
+    <Compile Include="ObexReqTests.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Sdp2\AllElementTypes.cs" />
+    <Compile Include="Sdp2\AttributeIdTests.cs" />
+    <Compile Include="Sdp2\AttrIdLookupTests.cs" />
+    <Compile Include="Sdp2\BadRecordFormatTests.cs" />
+    <Compile Include="Sdp2\CompleteThirdPartyRecords.cs" />
+    <Compile Include="Sdp2\CoverArgException.cs" />
+    <Compile Include="Sdp2\Data1.cs" />
+    <Compile Include="Sdp2\DataCompleteThirdPartyRecordsTests.cs" />
+    <Compile Include="Sdp2\DumpTests.cs" />
+    <Compile Include="Sdp2\ElementNumericalInputTests.cs" />
+    <Compile Include="Sdp2\ElementTests.cs" />
+    <Compile Include="Sdp2\HeaderBytes.cs" />
+    <Compile Include="Sdp2\LanguageBaseListTests.cs" />
+    <Compile Include="Sdp2\RecordAccess.cs" />
+    <Compile Include="Sdp2\RecordLangBaseTests.cs" />
+    <Compile Include="Sdp2\RecordsTests1.cs" />
+    <Compile Include="Sdp2\RecordStringLangBaseTests.cs" />
+    <Compile Include="Sdp2\RecordTestInfra.cs" />
+    <Compile Include="Sdp2\SdpCreatorTests.cs" />
+    <Compile Include="Sdp2\SdpHelperTests.cs" />
+    <Compile Include="Sdp2\ServiceRecordBuilderJsr82Tests.cs" />
+    <Compile Include="Sdp2\ServiceRecordBuilderTests.cs" />
+    <Compile Include="Sdp2\SplitMultiRecordTests.cs" />
+    <Compile Include="Sdp2\UtilsClassToAttributeIdListTests.cs" />
+    <Compile Include="Sdp2\UuidTests.cs" />
+    <Compile Include="TestsUtils.cs" />
+    <Compile Include="SocketsComparison\SocketsTimeoutReadTests.cs" />
+    <Compile Include="Widcomm\WidcommCommsTimeoutTests.cs" />
+    <Compile Include="Widcomm\WidcommExceptionsTest.cs" />
+    <Compile Include="Widcomm\WidcommFactoryGivenInstances.cs" />
+    <Compile Include="Widcomm\EventFirer.cs" />
+    <Compile Include="Widcomm\SdpDiscoveryRecordsTest.cs" />
+    <Compile Include="Widcomm\WidcommFactoryNotImpl.cs" />
+    <Compile Include="Widcomm\TestLsnrRfCommIf.cs" />
+    <Compile Include="Widcomm\TestLsnrRfcommPort.cs" />
+    <Compile Include="Widcomm\TestSdpService2.cs" />
+    <Compile Include="Widcomm\TestWcLsnrBluetoothFactory.cs" />
+    <Compile Include="Widcomm\TestWcLsnrManyBluetoothFactory.cs" />
+    <Compile Include="Widcomm\WidcommBluetoothListenerTest.cs" />
+    <Compile Include="Widcomm\TestRfCommIf.cs" />
+    <Compile Include="Widcomm\TestRfcommPort.cs" />
+    <Compile Include="Widcomm\WidcommBluetoothClientCommsTest.cs" />
+    <Compile Include="Widcomm\WidcommBluetoothClientInquiryTest.cs" />
+    <Compile Include="Widcomm\WidcommBluetoothDeviceInfoTest.cs" />
+    <Compile Include="Widcomm\WidcommBluetoothWritePartials.cs" />
+    <Compile Include="Widcomm\WidcommCliConnectedProperty.cs" />
+    <Compile Include="Widcomm\WidcommListenerCopyOfGeneralTests.cs" />
+    <Compile Include="Widcomm\WidcommNetworkStreamTest.cs" />
+    <Compile Include="Widcomm\WidcommSdpRecordCreatorTest.cs" />
+    <Compile Include="Widcomm\WidcommUtilsTest.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\InTheHand.Net.Personal\InTheHand.Net.Personal.FX2.csproj">
+      <Project>{98BDDE14-8F8C-40CC-9E45-5BAC73573EF4}</Project>
+      <Name>InTheHand.Net.Personal.FX2</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Alan32feetTestKey.snk" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.2.0">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 2.0 %28x86%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.0">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.0 %28x86%29</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Testing\UnitTesting\ExternalLibs\NMock2.dll">
+      <Link>NMock2.dll</Link>
+    </None>
+    <None Include="..\Testing\UnitTesting\ExternalLibs\nunit.framework.dll">
+      <Link>nunit.framework.dll</Link>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\ExternalLibs\Moq\Moq.dll">
+      <Link>Moq.dll</Link>
+    </None>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

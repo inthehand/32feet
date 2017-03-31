@@ -1,0 +1,562 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head>
+    <title>Widcomm tests</title>
+    <style type="text/css">
+    dt strong { text-decoration: underline }
+    dl.FooBar dt:before {
+        content: "\2024 "; /* OR counter(fooBar) ". "; */
+    }
+    table.foo { margin-right: 10px; margin-bottom: 10px;
+        display: inline;
+        border-collapse: collapse;
+    }
+    td.col_hdr_end { border-right: solid 2px black; }
+    td.row_hdr_end { border-bottom: solid 2px black; }
+    td.col_row_hdr_end { border-right: solid 2px black; 
+        border-bottom: solid 2px black; 
+    }
+    td.value_not_changes {
+        background-color: silver;
+    }
+    </style>
+</head>
+<body>
+    <h1>Widcomm on 32feet.NET tests</h1>
+    <p style="">Alan McFarlane
+    <br/>
+        January 2010</p>
+   <h2>
+       Widcomm no Radio present</h2>
+    <p>
+        bug 23222. &nbsp; On Win32 (XP) test of Widcomm radio dongle unplugged.</p>
+    <ol>
+        <li>With Radio dongle attached, all should work: PrimaryRadio/AllRadios should include
+            the Widcomm radio (if no MSFT present, or multi-radio enabled).</li>
+        <li> Unplug the radio.&nbsp; Now PrimaryRadio should return null, etc.</li>
+    </ol>
+    <p>
+        The failing behaviour is for a empty radio instance to be returned, like:</p>
+    <pre>        option>10
+        BtIf_Create
+        BtIf_GetLocalDeviceVersionInfo
+                [Assertion Failed: GetLocalDeviceVersionInfo failed]
+        BtIf_GetLocalDeviceName
+                [Assertion Failed: GetLocalDeviceName failed]
+        BtIf_GetLocalDeviceInfoBdAddr
+                [Assertion Failed: GetLocalDeviceInfoBdAddr failed]
+        BtIf_IsDeviceConnectableDiscoverable
+        Radio, address: 00:00:00:00:00:00
+        Mode: Discoverable
+        Name: , LmpSubversion: 0
+        ClassOfDevice: 0, device: Miscellaneous / service: None
+        Software: Broadcom,  Hardware: Ericsson, status: Running
+        Remote: ''</pre>
+    <h2>
+        WidcommDeviceInfo GetServiceRecords</h2>
+    <p>
+        Device-/ConsoleMenuTesting menu option &ldquo;ServiceDiscovery&rdquo; etc.
+        &nbsp; Against any device, at least one record should be listed, the SDP 
+        server record itself.&nbsp; The device may have other records.</p>
+    <p>
+        Note that we cannot dump the whole record as Widcomm does not provide access
+        to the raw record bytes.  Check the documentation for the Attributes we lookup (currently
+        only the Service Class, and Name, and RFCOMM Channel Number).</p>
+    <p>
+        Also need to do a specific class query to check we filter correctly.&nbsp; Widcomm
+        returns *all* the records read in the current session, so we have to filter the
+        matching ones in GetServiceRecords.</p>
+    <ol>
+        <li>Do a query for a specific class id e.g. OPP. </li>
+        <li>Then query for all (L2CAP). </li>
+        <li>Then do a query for the first class again. You should see only the record(s) listed
+            originally, and not those listed in the &#x2018;all&#x2019; step.
+            <br />
+            (Originally we behaved as: see correct result for the original query, but all records
+            are listed after the &#x2018;all&#x2019; query). </li>
+    </ol>
+    <h2>
+        Widcomm BluetoothListener</h2>
+    <p>
+        See the general BluetoothListener test also.</p>
+    <h2>Widcomm BluetoothListener Authenticate and Encrypt properties</h2>
+    <p>Connecting from a device that isn't trusted by the Widcomm-stack machine the DUT.</p>
+    <p>In each case, on the DUT, start BluetoothListener apply the respective settings
+    and then connect from the peer machine. Check that the peer machine succeeds/fails
+    to connect as expected.</p>
+    <p>Recommend specifying the Service Class UUID each time, and
+    with a different value each time, e.g. 0x00010001, then 0x00010002, etc. May also
+    be wise to manually specify the port at well, using 11, 12, etc in correspondence
+    with the UUID.</p>
+    <dl>
+    <dt>1. <strong>Yes</strong> Auth, <strong>No</strong> Encrypt </dt>
+    <dd>Expect to see Widcomm authentication prompt pop-up on the DUT. Ignore it, 
+    or open and hit Cancel button. (Then will see authentication failed pop-up). 
+    Expect no incoming connection on DUT. Expect fail. (MSFT: EHOSTDOWN) Cancel 
+    listener (or exit test app if necessary) on DUT. </dd>
+    <dt>2. <strong>No</strong> Auth, <strong>No</strong> Encrypt </dt>
+    <dd>Expect success.</dd>
+    <dt>3. <strong>Yes</strong> Auth, <strong>No</strong> Encrypt </dt>
+    <dd>Expect fail as #1.</dd>
+    <dt>4. <strong>No</strong> Auth, <strong>Yes</strong> Encrypt </dt>
+    <dd>Expect fail as #1. Note this does not check that the data is being sent 
+    encrypted. Presumably only sniffing the traffic would ensure that?</dd>
+    <dt>5. <strong>Yes</strong> Auth, <strong>No</strong> Encrypt </dt>
+    <dd>Expect fail as #1.</dd>
+    <dt>6. <strong>No</strong> Auth, <strong>No</strong> Encrypt </dt>
+    <dd>Just to verify that the two devices can still connect, i.e. no hardware 
+    fault or etc has occurred. Expect success as #2.</dd>
+    </dl>
+    <h2>
+        WidcommDeviceInfo get_Remembered versus get_Authenticated</h2>
+    <p>
+        We want to check that we see devices of the two types: {Remembered=true, Authenticated=false}
+        and {Remembered=true, Authenticated=true}. This requires that we have
+        at least one device in Widcomm's &#x201C;Trusted Devices&#x201D; set.</p>
+    <p>
+        Run discovery with at least remembered=authentication=true, discoverableOnly must
+        be false, unknown is better set to false also.</p>
+    <p>
+        In Widcomm a device is &#x2018;remembered&#x2019; whenever the stack sees it 
+        &#x2014; unlike MSFT where manual request is required.
+        One may need to force a device to be trusted &#x2014; either by calling BluetoothSecurity.PairRequest,
+        or by making a connection with it to a service requiring authentication.</p>
+    <p>
+        A nice test to is to have a trusted device and then make it untrusted (either BluetoothSecurity.RemoveDevice,
+        or use the Widcomm UI e.g. on WM do {Wireless XX -&gt; Manage -&gt; Advanced menu
+        -&gt; Trusted Devices -&gt; Remove} and on two discovery process see it R+A and
+        then R-A.</p>
+    <h2>
+        BluetoothSecurity (PairRequest, RemoveDevice)</h2>
+    <p>
+        In a similar area to the above, here testing whether we can add and remove devices
+        from the trusted list. Choose a peer device that is in range and you can bond
+        with. Run discovery(auth+rmbd) and/or use the Widcomm UI to view trusted device
+        and see the device removed from the trusted list with <strong>RemoveDevice</strong> 
+        and added with <strong>PairRequest</strong>.</p>
+    <h2>
+        Widcomm UI</h2>
+    <p>
+        <img src="docimages/IPaqPairedDevicesDlg.PNG" 
+         width="240" height="140"
+         alt="Paired Device dialog box on iPAQ Windows Mobile"
+         title="Paired Device dialog box on iPAQ Windows Mobile"
+         style="float: right" />In iPAQ: 
+        StartMenu &#x2192; iPAQWireless &#x2192; Manager &#x2192; Menu &#x2192; PairedDevices</p>
+    <h2>
+        WidcommBluetoothClient</h2>
+    <p>
+        In BluetoothClient we have to do a manual SDP lookup (unless the port is set in
+        the specified BluetoothEndPoint), thus there's some complexity around that.&nbsp;
+        There's the test below 'BluetoothClient' which does SvcA-&gt;SvcB-&gt;SvcA.&nbsp;
+        The SDP Lookup takes 12 seconds to time-out when the target device is not found.</p>
+    <h3>
+        Connect works</h3>
+    <p>
+        Connect to a remote service, e.g. OBEX or SerialPort on most device types, or 1113
+        to another instance on ConsoleMenuTesting.</p>
+    <p>
+        If the port (RFCOMM SCN) is specified in the endpoint then the process is less complex
+        (no SDP lookup) though not worth testing that in most cases.</p>
+    <h3>
+        Connect (SDP) take a while to time-out</h3>
+    <p>
+        Start a Connect to a non-existent device, it will take a while (12secs) for the
+        SDP lookup to fail.&nbsp; See that that delay (only) occurs.</p>
+    <p>
+        We would like to report a useful Winsock Error code but Widcomm doesn't tell us
+        if the failure was not-present, security, or something else.&nbsp; So ignore the
+        exception error code.</p>
+    <h3>
+        Restricted to one Connect (SDP) at a time</h3>
+    <p>
+        Use ConsoleMenuTesting option: "ConnectMultiple".</p>
+    <h3>
+        Connect can be cancelled</h3>
+    <p>
+        Start a Connect to a non-existent device, it will take a while (12secs) for the
+        SDP lookup to fail.&nbsp; In that time call BluetoothClient.Close and the sync/async
+        Connect will fail with a ObjDispEx (we only test the async case from the same thread
+        here).&nbsp; Later the SDP lookup will complete, and it will NOT crash!</p>
+    <h3>
+        Cancelled Connect doesn't allow the next immediately</h3>
+    <p>
+        Here we can see that we aren't able to do another connect immediately when we cancel
+        a previous connect.&nbsp; We have to wait for the SDP to complete first.&nbsp; The
+        current script in ConsoleMenuTesting is as following.&nbsp; It runs two Connect,
+        the first as async=Y, cancel=Y; and we expect to see the second fail with "one at
+        a time" InvOpEx.</p>
+    <table>
+        <pre>13
+002233445566
+
+
+
+
+
+
+y
+y
+y
+13
+0022446688aa
+
+
+
+
+
+
+y
+</pre>
+        </table>
+    <h2>
+        Connections close at switch Radio Off</h2>
+    <p>
+        bug 28623. &nbsp; [widcomm] Use OnStackStatusChange to close connections when radio
+        turned off</p>
+    <p>
+        On PDAs when the radio is turned off when there is an current RFCOMM connection,
+        no connection loss event is received, so the program there thinks the connection
+        is still open, and will hang on a Read for instance (the remote end sees the connection
+        close due to 20s timeout).&nbsp; So we need to listen for the radio-off event and
+        manually close any connections then.&nbsp; Note that on my iPAQ hx2710 with Widcomm
+        1.7.1.1424 when the radio is switched off a CONN_ERR event <strong>is</strong> recevied,
+        this is not the case on my Asus device nor a newer iPAQ I&#39;ve tested on.</p>
+    <p>
+        This functionality is not implemented on the desktop PC platform, we saw wierd/bad
+        things happening when implemented.&nbsp; The radio-off situation is less likely
+        to happen then, e.g. less need for saving power, so its not important to implement
+        it there, we&#39;ll look at it again based on demand.&nbsp; (The wierd/bad thing
+        was that after the native code called up into the managed code to report the OnStackStatusChange
+        event things went all wrong).</p>
+    <p>
+        We need to test the connection(s) are closed.&nbsp; We should also test that the
+        infrastructure is working correctly, that the list of open connections is maintained
+        correctly, being added to at both <em>client</em> and <em>server</em> connect, and
+        the connection is removed from the list when it <em>closes</em>.</p>
+    <h3>
+        Test using DeviceMenuTesting</h3>
+    <p>
+        1. Make a client connection to a remote machine and close the connection.&nbsp;
+        Run a server on the PDA and connect to it from a remote machine, and close the connection.</p>
+    <p>
+        2. Run a server on the PDA and connect to it from a remote machine, and start a
+        Read on the connection.</p>
+    <p>
+        3. In Wireless Manager or similar turn off the radio.</p>
+    <ul>
+        <li>Check the connection has been closed, i.e. the Read returned 0=EoF.</li>
+        <li>Check that a Write fails with an IOException wrapping a SocketException (and not
+            an ObjectDisposedException).</li>
+        <li>Check that the number of closes reported the off-handler is one (e.g. "<code>PortKill_Runner
+            done (1)</code>") &#x2014; i.e. the two previous connections were correctly removed
+            from the list when they closed.</li>
+    </ul>
+    <p>
+        4. Re-enable the radio, restart DeviceMenuTesting (if required &#x2013; or use HackShutdown),
+        make a client connection to a remote machine.&nbsp; Turn off the radio, and start
+        a Read on the connection.</p>
+    <ul>
+        <li>Check the connection has been closed, i.e. the Read returned 0=EoF etc.</li>
+    </ul>
+    <!-- ===================================================== -->
+    <hr />
+    <h1>
+        General test</h1>
+    <h2>
+        BluetoothClient</h2>
+    <p>
+        <em>This checks a possible failure case on Widcomm pre 2.4.</em></p>
+    <p>
+        Connect three times: to SvcA, SvcB, then SvcA again. For instance on another machine
+        run two copies of ConsoleMenuTesting and use the ListenMultiple option with a different
+        UUID in each instance.</p>
+    <p>
+        Ensure that third connect does not connect to SvcB, but correctly to SvcA.</p>
+    <h2>
+        GetServiceRecords</h2>
+    <p>
+        <em>This checks a possible failure case on Widcomm pre 2.4.</em></p>
+    <p>
+        Query for OPP, then for all, the for OPP again.</p>
+    <p>
+        Ensure that the third query doesn't return 'all', but the same result as the first
+        query.</p>
+    <h2>
+        BluetoothListener (SDP and accepts)</h2>
+    <ol>
+        <li>View test machine's SDP database, start BluetoothListener, view SDP contents
+            again and check correct record has been added -- has Service Class List with selected
+            Class Id, and has a valid RFCOMM ProtocolDescriptorList. </li>
+        <li>Make a connection to the server, and transfer some data.</li>
+        <li>Stop the listener (lsnr.Stop()) and check that the record has gone.</li>
+        <li>Start a BluetoothListener setting also the ServiceName property, check that the
+            added SDP record includes the given name, and the record has a correct corresponding
+            LanguageBaseIdList.</li>
+        <li>Close the app by TaskManager / taskkill.exe, and check that the record has gone.</li>
+        <li>Start a BluetoothListener giving a custom SDP record (as a ServiceRecord instance),
+            check that the record is added -- and no default record is added too.</li>
+    </ol>
+    <h2>
+        SetPin on BluetoothClient / BluetoothListener 
+    </h2>
+    <h3>
+        Stack support</h3>
+    <dl class="FooBar">
+        <dt>Microsoft stack on Windows CE / Windows Mobile</dt>
+        <dd>A socket option is available which sets the PIN to use for all purposes 
+            on that socket.  A device address can optionally be provided to specify
+            that the pin is only for that device.</dd>
+        <dt>Microsoft stack on desktop Windows</dt>
+        <dd>No socket option is available.  The only feature is an event raised 
+            for all requests for a PIN.  In the library this is provided by class 
+            <code>BluetoothWin32Authentication</code>.  It can be used in two forms,
+            firstly in an automatic mode where the caller specifies a device address
+            and the pin and it should use to authenticate to that address.  
+            In the second mode the caller supplies a callback method which can 
+            respond to the PIN requests.
+            </dd>
+        <dt>Broadcom/Widcomm stack on both platforms</dt>
+        <dd>No &lsquo;socket&rsquo; option is available.  No event for PIN requests 
+            is provided either.  The only PIN related method is CBtIf::Bond which 
+            <em>actively</em> bonds using the given PIN.
+            </dd>
+        </dl>
+    <h3>Functional spec</h3>
+    <p>
+        Default method should be for the user to call <code>SetPin(String pin)</code> 
+        before connect, which specifies that that pin is to be used this connection, 
+        or at least that the PIN should be used for the device that this instance is 
+        connecting to.&nbsp; There will also be a SetPin(BluetoothAddress device,String pin) method, but I'm not
+        sure of its use.</p>
+    <p>
+        The use of these after a connection is made is not obvious to me.&nbsp; By then
+        the PIN is not required since the connection has been successful without one!</p>
+    <h3>
+        Implementation</h3>
+    <ul>
+    <li>
+        On WM/CE, the socket option should be used for both methods: for <code>SetPin(string)</code> 
+        without the device address, and for <code>SetPin(BluetoothAddress,String)</code>
+        with the address.
+        <cite><a href="http://msdn.microsoft.com/en-us/library/ms863363.aspx">
+        BTH_SOCKOPT_SECURITY in the Windows CE docs</a></cite></li>
+    <li>On desktop Windows:
+        <ul> 
+        <li><code>SetPin(BluetoothAddress,String)</code> should
+            start an ‘automatic’ BluetoothWin32Authenticator using the two parameters.
+            </li>
+        <li>When <code>SetPin(string)</code> is called <em>before</em> the instance
+            is connected, it should store the pin.  When the caller later initiates 
+            a connection the device address from the connect
+            call along with the stored pin should be used to start an &lsquo;automatic&rsquo;
+            BluetoothWin32Authenticator.</li>
+        <li>When <code>SetPin(string)</code> is called called after connection 
+            the connected remote device address can be used.
+            </li>
+        </ul>
+        </li>
+    <li>On Widcomm no obvious useful method is apparent.&nbsp; We've implemented the 
+        following: try to connect and if it fails to call <code>CBtIf::Bond()</code> and try 
+        the connect again.&nbsp;
+        However, at least with the Microsoft stack as the peer device, that is not useful
+        &#x2014; the Bond operation fails.
+        </li>
+    </ul>
+    <h3>Tests</h3>
+    <dl>
+    <dt>1. With <code>BluetoothClient</code>, Connect to a service on an unbonded device,
+        where the service or device requires authentication.</dt>
+    <dd>Expect failure</dd>
+    <dt>2. Do again, this time first calling <code>SetPin(pin)</code> on the BluetoothClient.</dt>
+    <dd>Expect success: the PIN is used automatically, the devices bond, and the 
+        connection succeeds.</dd>
+    <dt>3. Do again, this time first calling <code>SetPin(address,pin)</code> on the BluetoothClient.</dt>
+    <dd>First delete the bonding on the peer device and re-test #1.<br />
+        Expect success: the PIN is used automatically, the devices bond, and the 
+        connection succeeds.</dd>
+    <dt>4. Do again, this time first calling <code>SetPin(<em>wrongAddress</em>,pin)</code> 
+        on the BluetoothClient.</dt>
+    <dd>First delete the bonding on the peer device and re-test #1.<br />
+        Expect failure.</dd>
+    </dl>
+    <h2>
+        Bluetooth stack loading error reporting and options</h2>
+    <p>
+        Can be configured whether to attempt to initialise more that one stack (i.e. MSFT
+        and Widcomm together), also need to configure where we report errors in all case.&nbsp;
+        For instance if configured to load more that one stack but the first stack fails
+        to init, should the error be reported.&nbsp; Answer: probably not, one stack may
+        be enough for the use case.</p>
+    <p>
+        So the following configurations exist and the
+        number of errors that should be reported are listed.&nbsp; The cells with underscores
+        have been tested.</p>
+    <div>
+        <table class="foo">
+            <caption>
+                OneStack=Y, RAE=N</caption>
+            <tr>
+                <td style="width: 44px">
+                </td>
+                <td style="width: 15px">
+                </td>
+                <td colspan="2">
+                    Widcomm</td>
+            </tr>
+            <tr>
+                <td style="width: 44px">
+                </td>
+                <td style="width: 15px" class="col_row_hdr_end">
+                </td>
+                <td class="row_hdr_end">
+                    Y</td>
+                <td class="row_hdr_end">
+                    N</td>
+            </tr>
+            <tr>
+                <td rowspan="2" style="width: 44px">
+                    MSFT</td>
+                <td style="width: 15px" class="col_hdr_end">
+                    Y</td>
+                <td class="value_not_changes">
+                    0</td>
+                <td>
+                    0_</td>
+            </tr>
+            <tr>
+                <td style="width: 15px" class="col_hdr_end">
+                    N</td>
+                <td>
+                    0_</td>
+                <td class="value_not_changes">
+                    2_</td>
+            </tr>
+        </table>
+        <table class="foo">
+            <caption>
+                OneStack=Y, RAE=Y</caption>
+            <tr>
+                <td>
+                </td>
+                <td>
+                </td>
+                <td colspan="2">
+                    Widcomm</td>
+            </tr>
+            <tr>
+                <td>
+                </td>
+                <td class="col_row_hdr_end">
+                </td>
+                <td class="row_hdr_end">
+                    Y</td>
+                <td class="row_hdr_end">
+                    N</td>
+            </tr>
+            <tr>
+                <td rowspan="2">
+                    MSFT</td>
+                <td class="col_hdr_end">
+                    Y</td>
+                <td class="value_not_changes">
+                    0</td>
+                <td>
+                    0</td>
+            </tr>
+            <tr>
+                <td class="col_hdr_end">
+                    N</td>
+                <td>
+                    1_</td>
+                <td class="value_not_changes">
+                    2_</td>
+            </tr>
+        </table>
+        <table class="foo">
+            <caption>
+                OneStack=N, RAE=N</caption>
+            <tr>
+                <td>
+                </td>
+                <td>
+                </td>
+                <td colspan="2">
+                    Widcomm</td>
+            </tr>
+            <tr>
+                <td>
+                </td>
+                <td class="col_row_hdr_end">
+                </td>
+                <td class="row_hdr_end">
+                    Y</td>
+                <td class="row_hdr_end">
+                    N</td>
+            </tr>
+            <tr>
+                <td rowspan="2">
+                    MSFT</td>
+                <td class="col_hdr_end">
+                    Y</td>
+                <td class="value_not_changes">
+                    0</td>
+                <td>
+                    0_</td>
+            </tr>
+            <tr>
+                <td class="col_hdr_end">
+                    N</td>
+                <td>
+                    0</td>
+                <td class="value_not_changes">
+                    2</td>
+            </tr>
+        </table>
+        <table class="foo">
+            <caption>
+                OneStack=N, RAE=Y</caption>
+            <tr>
+                <td>
+                </td>
+                <td style="width: 16px">
+                </td>
+                <td colspan="2">
+                    Widcomm</td>
+            </tr>
+            <tr>
+                <td>
+                </td>
+                <td style="width: 16px" class="col_row_hdr_end">
+                </td>
+                <td class="row_hdr_end">
+                    Y</td>
+                <td class="row_hdr_end">
+                    N</td>
+            </tr>
+            <tr>
+                <td rowspan="2">
+                    MSFT</td>
+                <td class="col_hdr_end" style="width: 16px">
+                    Y</td>
+                <td class="value_not_changes">
+                    0</td>
+                <td>
+                    1_</td>
+            </tr>
+            <tr>
+                <td class="col_hdr_end" style="width: 16px; height: 21px">
+                    N</td>
+                <td style="height: 21px">
+                    1</td>
+                <td style="height: 21px" class="value_not_changes">
+                    2_</td>
+            </tr>
+        </table>
+    </div>
+    <p>
+        Check also when on a suitable machine that one stack is loaded when &#x201C;OneStack&#x201D;
+        is true, and two are loaded when it is false.
+    </p>
+</body>
+</html>

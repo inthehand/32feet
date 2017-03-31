@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>32feet.NET</id>
+    <version>3.5.0.3</version>
+    <authors>Alan McFarlane,Peter Foot</authors>
+    <owners>Peter Foot,Alan McFarlane</owners>
+    <licenseUrl>http://32feet.codeplex.com/license</licenseUrl>
+    <projectUrl>http://32feet.codeplex.com/releases/view/88941</projectUrl>
+    <iconUrl>http://download.codeplex.com/Download?ProjectName=32feet&amp;DownloadId=172377&amp;Build=18398</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>32feet.NET is a shared-source project to make personal area networking technologies such as Bluetooth, Infrared (IrDA) and more, easily accessible from .NET code. Supports desktop, mobile or embedded systems. 32feet.NET is free for commercial or non-commercial use. If you use the binaries you can just use the library as-is, ...
+Note that this package does NOT include the Broadcom/Widcomm dependencies, download the library from Codeplex if you need Widcomm support.</description>
+    <summary>32feet.NET - Personal Area Networking for .NET</summary>
+    <releaseNotes>This version changes the 32feet.NET library (both desktop and NETCF) to use the .NET Framework version 3.5. Previously we compiled for .NET v2.0.
+
+There are no code changes from our version 3.4.
+
+The most important new features in 3.4 since 3.3 are:
+&#x2022; Provide callback on SelectBluetoothDeviceDialog to allow filtering of devices
+&#x2022; BluetoothDeviceInfo.GetVersions method
+&#x2022; Add Windows 8 enum values -- important for enum BluetoothDeviceInfoProperties as exposed by BluetoothWin32RadioInRangeEventArgs
+&#x2022; Bluetopia: Basic support for BluetoothListener
+
+The most important fixes since 3.3 are:
+&#x2022; BluetoothWin32Events doesn't work on x64
+&#x2022; Support ObexWebRequest.Timeout on all NETCF stack (even MSFT+WM)
+&#x2022; Using the NETCF version on the desktop gives a unfriendly message: Unable to load DLL 'coredll.dll'
+
+The full list of workitems is at http://32feet.codeplex.com/workitem/list/advanced?release=3.4&amp;size=25&amp;status=all</releaseNotes>
+    <copyright>Copyright &#x00A9; 2003 - 2012</copyright>
+    <tags>Bluetooth OBEX IrDA</tags>
+  </metadata>
+  <files>
+    <file src="..\InTheHand.Net.Personal\bin\Release\InTheHand.Net.Personal.dll" target="lib\net\InTheHand.Net.Personal.dll" />
+    <file src="..\InTheHand.Net.Personal\bin\Release\InTheHand.Net.Personal.XML" target="lib\net\InTheHand.Net.Personal.XML" />
+    <file src="..\InTheHand.Net.Personal\bin\Release\InTheHand.Net.Personal.pdb" target="lib\net\InTheHand.Net.Personal.pdb" />
+    <file src="..\InTheHand.Net.Personal.CF2\bin\Release\InTheHand.Net.Personal.dll" target="lib\net-cf\InTheHand.Net.Personal.dll" />
+    <file src="..\InTheHand.Net.Personal.CF2\bin\Release\InTheHand.Net.Personal.XML" target="lib\net-cf\InTheHand.Net.Personal.XML" />
+    <file src="..\InTheHand.Net.Personal.CF2\bin\Release\InTheHand.Net.Personal.pdb" target="lib\net-cf\InTheHand.Net.Personal.pdb" />
+    <!-- Include the following element to include the sources which allows 
+         users to debug into the library code via SymbolSource.
+    <file src="..\InTheHand.Net.Personal\**\*.cs" target="src" />
+    -->
+  </files>
+</package>

@@ -1,0 +1,155 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{62A0F389-8F79-4F88-87FC-C247D787A40D}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>SeparateBlueSoleil</RootNamespace>
+    <AssemblyName>SeparateBlueSoleil</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'CodeAnalysis|AnyCPU' ">
+    <OutputPath>bin\CodeAnalysis\</OutputPath>
+    <DefineConstants>TRACE;CODE_ANALYSIS</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
+    <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\InTheHand.Net.Personal\Net.Bluetooth.BlueSoleil\BluesoleilClient.cs">
+      <Link>Net.Bluetooth.BlueSoleil\BluesoleilClient.cs</Link>
+    </Compile>
+    <Compile Include="..\..\InTheHand.Net.Personal\Net.Bluetooth.BlueSoleil\BluesoleilDeviceInfo.cs">
+      <Link>Net.Bluetooth.BlueSoleil\BluesoleilDeviceInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\..\InTheHand.Net.Personal\Net.Bluetooth.BlueSoleil\BluesoleilException.cs">
+      <Link>Net.Bluetooth.BlueSoleil\BluesoleilException.cs</Link>
+    </Compile>
+    <Compile Include="..\..\InTheHand.Net.Personal\Net.Bluetooth.BlueSoleil\BluesoleilFactory.cs">
+      <Link>Net.Bluetooth.BlueSoleil\BluesoleilFactory.cs</Link>
+    </Compile>
+    <Compile Include="..\..\InTheHand.Net.Personal\Net.Bluetooth.BlueSoleil\BluesoleilRadio.cs">
+      <Link>Net.Bluetooth.BlueSoleil\BluesoleilRadio.cs</Link>
+    </Compile>
+    <Compile Include="..\..\InTheHand.Net.Personal\Net.Bluetooth.BlueSoleil\BluesoleilSecurity.cs">
+      <Link>Net.Bluetooth.BlueSoleil\BluesoleilSecurity.cs</Link>
+    </Compile>
+    <Compile Include="..\..\InTheHand.Net.Personal\Net.Bluetooth.BlueSoleil\BlueSoleilSerialPortNetworkStream.cs">
+      <Link>Net.Bluetooth.BlueSoleil\BlueSoleilSerialPortNetworkStream.cs</Link>
+    </Compile>
+    <Compile Include="..\..\InTheHand.Net.Personal\Net.Bluetooth.BlueSoleil\BluesoleilUtils.cs">
+      <Link>Net.Bluetooth.BlueSoleil\BluesoleilUtils.cs</Link>
+    </Compile>
+    <Compile Include="..\..\InTheHand.Net.Personal\Net.Bluetooth.BlueSoleil\BtSdkError.cs">
+      <Link>Net.Bluetooth.BlueSoleil\BtSdkError.cs</Link>
+    </Compile>
+    <Compile Include="..\..\InTheHand.Net.Personal\Net.Bluetooth.BlueSoleil\IBluesoleilApi.cs">
+      <Link>Net.Bluetooth.BlueSoleil\IBluesoleilApi.cs</Link>
+    </Compile>
+    <Compile Include="..\..\InTheHand.Net.Personal\Net.Bluetooth.BlueSoleil\IBluesoleilConnection.cs">
+      <Link>Net.Bluetooth.BlueSoleil\IBluesoleilConnection.cs</Link>
+    </Compile>
+    <Compile Include="..\..\InTheHand.Net.Personal\Net.Bluetooth.BlueSoleil\ISerialPortWrapper.cs">
+      <Link>Net.Bluetooth.BlueSoleil\ISerialPortWrapper.cs</Link>
+    </Compile>
+    <Compile Include="..\..\InTheHand.Net.Personal\Net.Bluetooth.BlueSoleil\NativeMethods.cs">
+      <Link>Net.Bluetooth.BlueSoleil\NativeMethods.cs</Link>
+    </Compile>
+    <Compile Include="..\..\InTheHand.Net.Personal\Net.Bluetooth.BlueSoleil\NullBluesoleilConnection.cs">
+      <Link>Net.Bluetooth.BlueSoleil\NullBluesoleilConnection.cs</Link>
+    </Compile>
+    <Compile Include="..\..\InTheHand.Net.Personal\Net.Bluetooth.BlueSoleil\RealBluesoleilApi.cs">
+      <Link>Net.Bluetooth.BlueSoleil\RealBluesoleilApi.cs</Link>
+    </Compile>
+    <Compile Include="..\..\InTheHand.Net.Personal\Net.Bluetooth.BlueSoleil\SerialPortNetworkStream.cs">
+      <Link>Net.Bluetooth.BlueSoleil\SerialPortNetworkStream.cs</Link>
+    </Compile>
+    <Compile Include="..\..\InTheHand.Net.Personal\Net.Bluetooth.BlueSoleil\StackConsts.cs">
+      <Link>Net.Bluetooth.BlueSoleil\StackConsts.cs</Link>
+    </Compile>
+    <Compile Include="..\..\InTheHand.Net.Personal\Net.Bluetooth.BlueSoleil\Structs.cs">
+      <Link>Net.Bluetooth.BlueSoleil\Structs.cs</Link>
+    </Compile>
+    <Compile Include="..\..\InTheHand.Net.Personal\Net\AsyncResult.cs">
+      <Link>AsyncResult\AsyncResult.cs</Link>
+    </Compile>
+    <Compile Include="..\..\InTheHand.Net.Personal\Net\AsyncResultCompletion.cs">
+      <Link>AsyncResult\AsyncResultCompletion.cs</Link>
+    </Compile>
+    <Compile Include="..\..\InTheHand.Net.Personal\Net\AsyncResultNoResult.cs">
+      <Link>AsyncResult\AsyncResultNoResult.cs</Link>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\InTheHand.Net.Personal\InTheHand.Net.Personal.FX2.csproj">
+      <Project>{98BDDE14-8F8C-40CC-9E45-5BAC73573EF4}</Project>
+      <Name>InTheHand.Net.Personal.FX2</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\..\..\..\..\..\Suppliers\IVT_BlueSoleil\BlueSoleil_SDK_2.0.5\BlueSoleil_SDK_2.0.5\SDKheaders\include\Btsdk_API.h">
+      <Link>native include files\Btsdk_API.h</Link>
+    </Content>
+    <Content Include="..\..\..\..\..\..\Suppliers\IVT_BlueSoleil\BlueSoleil_SDK_2.0.5\BlueSoleil_SDK_2.0.5\SDKheaders\include\Btsdk_Macro.h">
+      <Link>native include files\Btsdk_Macro.h</Link>
+    </Content>
+    <Content Include="..\..\..\..\..\..\Suppliers\IVT_BlueSoleil\BlueSoleil_SDK_2.0.5\BlueSoleil_SDK_2.0.5\SDKheaders\include\Btsdk_Stru.h">
+      <Link>native include files\Btsdk_Stru.h</Link>
+    </Content>
+    <Content Include="..\..\..\..\..\..\Suppliers\IVT_BlueSoleil\BlueSoleil_SDK_2.0.5\BlueSoleil_SDK_2.0.5\SDKheaders\include\Btsdk_ui.h">
+      <Link>native include files\Btsdk_ui.h</Link>
+    </Content>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

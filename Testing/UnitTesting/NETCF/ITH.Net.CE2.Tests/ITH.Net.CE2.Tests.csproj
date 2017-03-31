@@ -1,0 +1,279 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{AE459D1D-8956-4773-A110-EA77DD9E5B0A}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ITH.Net.CE2.Tests</RootNamespace>
+    <AssemblyName>ITH.Net.CE2.Tests</AssemblyName>
+    <ProjectTypeGuids>{4D628B5B-2FBC-4AA6-8C16-197242AEB884};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <PlatformFamilyName>PocketPC</PlatformFamilyName>
+    <PlatformID>3C41C503-53EF-4c2a-8DD4-A8217CAD115E</PlatformID>
+    <OSVersion>4.20</OSVersion>
+    <DeployDirSuffix>ITH.Net.CE2.Tests</DeployDirSuffix>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+    <FormFactorID>
+    </FormFactorID>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>2.0</OldToolsVersion>
+    <NativePlatformName>Pocket PC 2003</NativePlatformName>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;PocketPC;NETCF;BLUETOPIA</DefineConstants>
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
+    <ErrorReport>prompt</ErrorReport>
+    <FileAlignment>512</FileAlignment>
+    <WarningLevel>4</WarningLevel>
+    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE;$(PlatformFamilyName)</DefineConstants>
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
+    <ErrorReport>prompt</ErrorReport>
+    <FileAlignment>512</FileAlignment>
+    <WarningLevel>4</WarningLevel>
+    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="mscorlib" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\..\..\ITH.Net.Personal.FX2.Tests\Bluetooth.cs">
+      <Link>Bluetooth.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\ITH.Net.Personal.FX2.Tests\BluetoothClientMergeTest.cs">
+      <Link>BluetoothClientMergeTest.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\ITH.Net.Personal.FX2.Tests\ConfigTests.cs">
+      <Link>ConfigTests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\ITH.Net.Personal.FX2.Tests\Infrastructure.cs">
+      <Link>Infra\Infrastructure.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\ITH.Net.Personal.FX2.Tests\Infra\Assert2.cs">
+      <Link>Infra\Assert2.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\ITH.Net.Personal.FX2.Tests\Infra\Delegate2.cs">
+      <Link>Infra\Delegate2.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\ITH.Net.Personal.FX2.Tests\Infra\SocketStreamAdapter.cs">
+      <Link>Infra\SocketStreamAdapter.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\ITH.Net.Personal.FX2.Tests\Infra\TestsApmUtils.cs">
+      <Link>Infra\TestsApmUtils.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\ITH.Net.Personal.FX2.Tests\IrdaNet.cs">
+      <Link>IrdaNet.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\ITH.Net.Personal.FX2.Tests\IrdaNetSockets.cs">
+      <Link>IrdaNetSockets.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\ITH.Net.Personal.FX2.Tests\Misc.cs">
+      <Link>Misc.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\ITH.Net.Personal.FX2.Tests\ObexReqTests.cs">
+      <Link>ObexReqTests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\ITH.Net.Personal.FX2.Tests\Sdp2\AllElementTypes.cs">
+      <Link>Sdp2\AllElementTypes.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\ITH.Net.Personal.FX2.Tests\Sdp2\AttributeIdTests.cs">
+      <Link>Sdp2\AttributeIdTests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\ITH.Net.Personal.FX2.Tests\Sdp2\AttrIdLookupTests.cs">
+      <Link>Sdp2\AttrIdLookupTests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\ITH.Net.Personal.FX2.Tests\Sdp2\BadRecordFormatTests.cs">
+      <Link>Sdp2\BadRecordFormatTests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\ITH.Net.Personal.FX2.Tests\Sdp2\CompleteThirdPartyRecords.cs">
+      <Link>Sdp2\CompleteThirdPartyRecords.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\ITH.Net.Personal.FX2.Tests\Sdp2\CoverArgException.cs">
+      <Link>Sdp2\CoverArgException.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\ITH.Net.Personal.FX2.Tests\Sdp2\Data1.cs">
+      <Link>Sdp2\Data1.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\ITH.Net.Personal.FX2.Tests\Sdp2\DataCompleteThirdPartyRecordsTests.cs">
+      <Link>Sdp2\DataCompleteThirdPartyRecordsTests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\ITH.Net.Personal.FX2.Tests\Sdp2\DumpTests.cs">
+      <Link>Sdp2\DumpTests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\ITH.Net.Personal.FX2.Tests\Sdp2\ElementNumericalInputTests.cs">
+      <Link>Sdp2\ElementNumericalInputTests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\ITH.Net.Personal.FX2.Tests\Sdp2\ElementTests.cs">
+      <Link>Sdp2\ElementTests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\ITH.Net.Personal.FX2.Tests\Sdp2\HeaderBytes.cs">
+      <Link>Sdp2\HeaderBytes.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\ITH.Net.Personal.FX2.Tests\Sdp2\LanguageBaseListTests.cs">
+      <Link>Sdp2\LanguageBaseListTests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\ITH.Net.Personal.FX2.Tests\Sdp2\RecordAccess.cs">
+      <Link>Sdp2\RecordAccess.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\ITH.Net.Personal.FX2.Tests\Sdp2\RecordLangBaseTests.cs">
+      <Link>Sdp2\RecordLangBaseTests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\ITH.Net.Personal.FX2.Tests\Sdp2\RecordsTests1.cs">
+      <Link>Sdp2\RecordsTests1.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\ITH.Net.Personal.FX2.Tests\Sdp2\RecordStringLangBaseTests.cs">
+      <Link>Sdp2\RecordStringLangBaseTests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\ITH.Net.Personal.FX2.Tests\Sdp2\RecordTestInfra.cs">
+      <Link>Sdp2\RecordTestInfra.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\ITH.Net.Personal.FX2.Tests\Sdp2\SdpCreatorTests.cs">
+      <Link>Sdp2\SdpCreatorTests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\ITH.Net.Personal.FX2.Tests\Sdp2\SdpHelperTests.cs">
+      <Link>Sdp2\SdpHelperTests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\ITH.Net.Personal.FX2.Tests\Sdp2\ServiceRecordBuilderJsr82Tests.cs">
+      <Link>Sdp2\ServiceRecordBuilderJsr82Tests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\ITH.Net.Personal.FX2.Tests\Sdp2\ServiceRecordBuilderTests.cs">
+      <Link>Sdp2\ServiceRecordBuilderTests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\ITH.Net.Personal.FX2.Tests\Sdp2\SplitMultiRecordTests.cs">
+      <Link>Sdp2\SplitMultiRecordTests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\ITH.Net.Personal.FX2.Tests\Sdp2\UtilsClassToAttributeIdListTests.cs">
+      <Link>Sdp2\UtilsClassToAttributeIdListTests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\ITH.Net.Personal.FX2.Tests\Sdp2\UuidTests.cs">
+      <Link>Sdp2\UuidTests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\ITH.Net.Personal.FX2.Tests\TestsUtils.cs">
+      <Link>Infra\TestsUtils.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\ITH.Net.Personal.FX2.Tests\Widcomm\EventFirer.cs">
+      <Link>Widcomm\EventFirer.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\ITH.Net.Personal.FX2.Tests\Widcomm\SdpDiscoveryRecordsTest.cs">
+      <Link>Widcomm\SdpDiscoveryRecordsTest.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\ITH.Net.Personal.FX2.Tests\Widcomm\TestLsnrRfCommIf.cs">
+      <Link>Widcomm\TestLsnrRfCommIf.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\ITH.Net.Personal.FX2.Tests\Widcomm\TestLsnrRfcommPort.cs">
+      <Link>Widcomm\TestLsnrRfcommPort.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\ITH.Net.Personal.FX2.Tests\Widcomm\TestRfCommIf.cs">
+      <Link>Widcomm\TestRfCommIf.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\ITH.Net.Personal.FX2.Tests\Widcomm\TestRfcommPort.cs">
+      <Link>Widcomm\TestRfcommPort.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\ITH.Net.Personal.FX2.Tests\Widcomm\TestSdpService2.cs">
+      <Link>Widcomm\TestSdpService2.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\ITH.Net.Personal.FX2.Tests\Widcomm\TestWcLsnrBluetoothFactory.cs">
+      <Link>Widcomm\TestWcLsnrBluetoothFactory.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\ITH.Net.Personal.FX2.Tests\Widcomm\TestWcLsnrManyBluetoothFactory.cs">
+      <Link>Widcomm\TestWcLsnrManyBluetoothFactory.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\ITH.Net.Personal.FX2.Tests\Widcomm\WidcommBluetoothClientCommsTest.cs">
+      <Link>Widcomm\WidcommBluetoothClientCommsTest.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\ITH.Net.Personal.FX2.Tests\Widcomm\WidcommBluetoothClientInquiryTest.cs">
+      <Link>Widcomm\WidcommBluetoothClientInquiryTest.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\ITH.Net.Personal.FX2.Tests\Widcomm\WidcommBluetoothDeviceInfoTest.cs">
+      <Link>Widcomm\WidcommBluetoothDeviceInfoTest.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\ITH.Net.Personal.FX2.Tests\Widcomm\WidcommBluetoothListenerTest.cs">
+      <Link>Widcomm\WidcommBluetoothListenerTest.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\ITH.Net.Personal.FX2.Tests\Widcomm\WidcommBluetoothWritePartials.cs">
+      <Link>Widcomm\WidcommBluetoothWritePartials.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\ITH.Net.Personal.FX2.Tests\Widcomm\WidcommCliConnectedProperty.cs">
+      <Link>Widcomm\WidcommCliConnectedProperty.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\ITH.Net.Personal.FX2.Tests\Widcomm\WidcommCommsTimeoutTests.cs">
+      <Link>Widcomm\WidcommCommsTimeout.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\ITH.Net.Personal.FX2.Tests\Widcomm\WidcommExceptionsTest.cs">
+      <Link>Widcomm\WidcommExceptionsTest.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\ITH.Net.Personal.FX2.Tests\Widcomm\WidcommFactoryGivenInstances.cs">
+      <Link>Widcomm\WidcommFactoryGivenInstances.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\ITH.Net.Personal.FX2.Tests\Widcomm\WidcommFactoryNotImpl.cs">
+      <Link>Widcomm\WidcommFactoryNotImpl.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\ITH.Net.Personal.FX2.Tests\Widcomm\WidcommListenerCopyOfGeneralTests.cs">
+      <Link>Widcomm\WidcommListenerCopyOfGeneralTests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\ITH.Net.Personal.FX2.Tests\Widcomm\WidcommNetworkStreamTest.cs">
+      <Link>Widcomm\WidcommNetworkStreamTest.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\ITH.Net.Personal.FX2.Tests\Widcomm\WidcommSdpRecordCreatorTest.cs">
+      <Link>Widcomm\WidcommSdpRecordCreatorTest.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\ITH.Net.Personal.FX2.Tests\Widcomm\WidcommUtilsTest.cs">
+      <Link>Widcomm\WidcommUtilsTest.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\MiscFeatureTestCs\TestConnectedProperty.cs">
+      <Link>Widcomm\TestConnectedProperty.cs</Link>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\InTheHand.Net.Personal.CF2\InTheHand.Net.Personal.CF2.csproj">
+      <Project>{074482D6-215C-4F5B-BD29-7E26DE840CFE}</Project>
+      <Name>InTheHand.Net.Personal.CF2</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\nunit.frameworkCF2\nunit.frameworkCF2.csproj">
+      <Project>{E5B18C89-1505-4001-B8CF-81B67AE8A571}</Project>
+      <Name>nunit.frameworkCF2</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Condition="'$(TargetFrameworkVersion)' == 'v1.0'" Project="$(MSBuildBinPath)\Microsoft.CompactFramework.CSharp.v1.targets" />
+  <Import Condition="'$(TargetFrameworkVersion)' == 'v2.0'" Project="$(MSBuildBinPath)\Microsoft.CompactFramework.CSharp.targets" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}">
+        <HostingProcess disable="1" />
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  <Import Condition="'$(TargetFrameworkVersion)' == 'v3.5'" Project="$(MSBuildBinPath)\Microsoft.CompactFramework.CSharp.targets" />
+</Project>
