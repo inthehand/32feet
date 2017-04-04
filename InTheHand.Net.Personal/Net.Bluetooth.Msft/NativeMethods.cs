@@ -803,10 +803,9 @@ namespace InTheHand.Net.Bluetooth.Msft
 
         //The BluetoothIsVersionAvailable function indicates if the installed Bluetooth binary set supports the requested version.
         //Requires Windows XP SP2 or later
-        [DllImport(bthpropsDll, SetLastError = false, CharSet = CharSet.Unicode)]
+        [DllImport(bthpropsDll, SetLastError = false)]
         [return: MarshalAs(UnmanagedType.Bool)]
-        internal static extern bool BluetoothIsVersionAvailable(byte MajorVersion, byte MinorVersion
-);
+        internal static extern bool BluetoothIsVersionAvailable(byte MajorVersion, byte MinorVersion);
 
 
 #endif

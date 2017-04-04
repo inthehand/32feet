@@ -37,6 +37,18 @@ namespace InTheHand.Net.Bluetooth
         /// Bluetooth Core Specification 4.0
         /// </summary>
         v4_0 = 6,
+        /// <summary>
+        /// Bluetooth Core Specification 4.1
+        /// </summary>
+        v4_1 = 7,
+        /// <summary>
+        /// Bluetooth Core Specification 4.2
+        /// </summary>
+        v4_2 = 8,
+        /// <summary>
+        /// Bluetooth Core Specification 5.0
+        /// </summary>
+        V5_0 = 9,
         //
         /// <summary>
         /// Unknown version &#x2104; probably the stack API
@@ -79,6 +91,18 @@ namespace InTheHand.Net.Bluetooth
         /// Bluetooth Core Specification 4.0
         /// </summary>
         v4_0 = 6,
+        /// <summary>
+        /// Bluetooth Core Specification 4.1
+        /// </summary>
+        v4_1 = 7,
+        /// <summary>
+        /// Bluetooth Core Specification 4.2
+        /// </summary>
+        v4_2 = 8,
+        /// <summary>
+        /// Bluetooth Core Specification 5.0
+        /// </summary>
+        V5_0 = 9,
         //
         /// <summary>
         /// Unknown version &#x2104; probably the stack API
