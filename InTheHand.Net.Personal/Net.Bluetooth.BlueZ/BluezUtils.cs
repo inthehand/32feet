@@ -12,7 +12,9 @@ using System.Text;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Net.Sockets;
+#if FX3_5
 using System.Linq;
+#endif
 
 namespace InTheHand.Net.Bluetooth.BlueZ
 {

@@ -5,7 +5,9 @@ Notices: Written by Jeffrey Richter
 
 using System;
 using System.Diagnostics;
-//using InTheHand.SystemCore;
+#if !FX3_5
+using InTheHand.SystemCore;
+#endif
 using System.Diagnostics.CodeAnalysis;
 
 

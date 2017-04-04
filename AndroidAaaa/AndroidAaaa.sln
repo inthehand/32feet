@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Testing", "Testing", "{13D6492B-E7C6-40F0-8BC5-9BA6D7D5F2C2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AndroidMenuTesting", "..\Testing\AndroidMenuTesting\AndroidMenuTesting.csproj", "{6B1ECD21-2A6F-4EEA-B15A-993014A857E6}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Unit-Testing", "Unit-Testing", "{0F83506F-8B20-43F7-AC87-72A19D16A7E6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ITH.Net.Android", "..\ITH.Net.Android\ITH.Net.Android.csproj", "{5BD43A74-91E4-4A35-A3C7-26C07C38CFEB}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5BD43A74-91E4-4A35-A3C7-26C07C38CFEB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5BD43A74-91E4-4A35-A3C7-26C07C38CFEB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5BD43A74-91E4-4A35-A3C7-26C07C38CFEB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5BD43A74-91E4-4A35-A3C7-26C07C38CFEB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6B1ECD21-2A6F-4EEA-B15A-993014A857E6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6B1ECD21-2A6F-4EEA-B15A-993014A857E6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6B1ECD21-2A6F-4EEA-B15A-993014A857E6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6B1ECD21-2A6F-4EEA-B15A-993014A857E6}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{6B1ECD21-2A6F-4EEA-B15A-993014A857E6} = {13D6492B-E7C6-40F0-8BC5-9BA6D7D5F2C2}
+		{0F83506F-8B20-43F7-AC87-72A19D16A7E6} = {13D6492B-E7C6-40F0-8BC5-9BA6D7D5F2C2}
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		StartupItem = ..\Testing\AndroidMenuTesting\AndroidMenuTesting.csproj
+	EndGlobalSection
+EndGlobal

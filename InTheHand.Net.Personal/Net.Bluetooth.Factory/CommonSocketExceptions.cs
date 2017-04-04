@@ -6,7 +6,9 @@
 
 using System;
 using System.Collections.Generic;
+#if FX3_5
 using System.Linq;
+#endif
 using System.Text;
 using System.Net.Sockets;
 #if !NETCF
@@ -97,7 +99,7 @@ namespace InTheHand.Net.Bluetooth.Widcomm
         protected abstract string ErrorCodeAndDescription { get; }
 
         //----
-        #region Serializable
+#region Serializable
 #if !NETCF
         private const string SzName_location = "_location";
 
@@ -114,7 +116,7 @@ namespace InTheHand.Net.Bluetooth.Widcomm
             info.AddValue(SzName_location, m_location);
         }
 #endif
-        #endregion
+#endregion
     }
 
 
@@ -133,13 +135,13 @@ namespace InTheHand.Net.Bluetooth.Widcomm
         }
 
         //----
-        #region Serializable
+#region Serializable
 #if !NETCF
         protected NoResultCodeWidcommSocketException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
         }
 #endif
-        #endregion
+#endregion
     }
 }

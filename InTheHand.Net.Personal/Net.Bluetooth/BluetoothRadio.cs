@@ -9,7 +9,9 @@ using System;
 using System.Collections;
 using InTheHand.Net.Bluetooth.Factory;
 using System.Diagnostics;
+#if FX3_5
 using System.Linq;
+#endif
 using System.Collections.Generic;
 
 namespace InTheHand.Net.Bluetooth
