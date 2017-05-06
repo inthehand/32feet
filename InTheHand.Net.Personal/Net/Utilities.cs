@@ -3,7 +3,7 @@
 // InTheHand.Net.Utilities
 // 
 // Copyright (c) 2003-2007 In The Hand Ltd, All rights reserved.
-// This source code is licensed under the In The Hand Community License - see License.txt
+// This source code is licensed under the MIT License
 
 using System;
 using System.Runtime.InteropServices;
@@ -154,7 +154,7 @@ namespace InTheHand.Net
 
     }//class
 
-
+    /*
     //--------------------------------------------------------------------------
     internal
 #if ! V1
@@ -206,5 +206,5 @@ namespace InTheHand.Net
 #endif
 
     }//class
-
+    */
 }

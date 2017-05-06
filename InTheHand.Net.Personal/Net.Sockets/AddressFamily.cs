@@ -2,8 +2,8 @@
 //
 // InTheHand.Net.Sockets.AddressFamily32
 // 
-// Copyright (c) 2003-2006 In The Hand Ltd, All rights reserved.
-// This source code is licensed under the In The Hand Community License - see License.txt
+// Copyright (c) 2003-2017 In The Hand Ltd, All rights reserved.
+// This source code is licensed under the MIT License
 //
 // Peter Foot 18/04/2006 - replaces previous separate IrDA and Bluetooth enums.
 //

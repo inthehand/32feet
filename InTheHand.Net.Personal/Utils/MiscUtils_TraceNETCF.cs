@@ -4,7 +4,7 @@
 // 
 // Copyright (c) 2008-2010 In The Hand Ltd, All rights reserved.
 // Copyright (c) 2008-2010 Alan J. McFarlane, All rights reserved.
-// This source code is licensed under the In The Hand Community License - see License.txt
+// This source code is licensed under the MIT License
 
 #if NETCF || ANDROID
 #define DEBUG // Mapping Trace.WriteLine to Debug.WriteLine for NETCF pre-3.5!

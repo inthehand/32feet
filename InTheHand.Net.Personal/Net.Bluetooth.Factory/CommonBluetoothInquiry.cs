@@ -4,7 +4,7 @@
 // 
 // Copyright (c) 2008-2010 Alan J.McFarlane, All rights reserved.
 // Copyright (c) 2008-2010 In The Hand Ltd, All rights reserved.
-// This source code is licensed under the In The Hand Community License - see License.txt
+// This source code is licensed under the MIT License
 
 using AsyncResultInquiry = InTheHand.Net.AsyncResult<System.Collections.Generic.List<System.UInt32>>;
 using AR_Inquiry = InTheHand.Net.AsyncResult<System.Collections.Generic.List<InTheHand.Net.Bluetooth.Factory.IBluetoothDeviceInfo>,

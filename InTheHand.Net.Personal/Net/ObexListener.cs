@@ -3,7 +3,7 @@
 // InTheHand.Net.ObexListener
 // 
 // Copyright (c) 2003-2007 In The Hand Ltd, All rights reserved.
-// This source code is licensed under the In The Hand Community License - see License.txt
+// This source code is licensed under the MIT License
 
 //#define ADD_SERVICE_NAME_TO_SDP_RECORD
 

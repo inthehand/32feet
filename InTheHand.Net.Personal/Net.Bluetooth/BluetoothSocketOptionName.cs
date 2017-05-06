@@ -3,7 +3,7 @@
 // InTheHand.Net.Bluetooth.BluetoothSocketOptionName
 // 
 // Copyright (c) 2003-2008 In The Hand Ltd, All rights reserved.
-// This source code is licensed under the In The Hand Community License - see License.txt
+// This source code is licensed under the MIT License
 
 using System;
 using System.Net.Sockets;
@@ -16,23 +16,44 @@ namespace InTheHand.Net.Sockets
     public static class BluetoothSocketOptionName
     {
         /// <summary>
-		/// On connected socket, triggers authentication.
-		/// On not connected socket, forces authentication on connection.
-		/// For incoming connection this means that connection is rejected if authentication cannot be performed.
-		/// </summary>
-		/// <remarks>The optval and optlen parameters are ignored; however, Winsock implementation on Windows CE requires optlen to be at least 4 and optval to point to at least an integer datum.</remarks>
-		public const SocketOptionName Authenticate	= (SocketOptionName)0x00000001;
-		/// <summary>
-		/// Toggles authentication under Windows XP.
+		/// Toggles authentication under Windows.
 		/// </summary>
 		/// <remarks>optlen=sizeof(ULONG), optval = &amp;(ULONG)TRUE/FALSE</remarks>
-        public const SocketOptionName XPAuthenticate = unchecked((SocketOptionName) 0x80000001); //- 2147483647;
-		/// <summary>
+        public const SocketOptionName Authenticate = unchecked((SocketOptionName) 0x80000001); // optlen=sizeof(ULONG), optval = &(ULONG)TRUE/FALSE 
+
+        /// <summary>
 		/// On a connected socket, this command turns encryption on or off.
 		/// On an unconnected socket, this forces encryption to be on or off on connection.
 		/// For an incoming connection, this means that the connection is rejected if the encryption cannot be turned on.
 		/// </summary>
-        public const SocketOptionName Encrypt = (SocketOptionName)0x00000002;	// optlen=sizeof(unsigned int), optval = &amp;(unsigned int)TRUE/FALSE
+        public const SocketOptionName Encrypt = (SocketOptionName)0x00000002; // optlen=sizeof(unsigned int), optval = &amp;(unsigned int)TRUE/FALSE
+
+        /// <summary>
+        /// Get or set the default MTU on Windows.
+        /// </summary>
+        /// <remarks>optlen=sizeof(ULONG), optval = &amp;mtu</remarks>
+        public const SocketOptionName Mtu = unchecked((SocketOptionName)0x80000007); // optlen=sizeof(ULONG), optval = &mtu
+
+        /// <summary>
+		/// Get or set the maximum MTU on Windows.
+		/// </summary>
+		/// <remarks>optlen=sizeof(ULONG), optval = &amp;max. mtu</remarks>
+        public const SocketOptionName MtuMaximum = unchecked((SocketOptionName)0x80000008);// - 2147483640;
+
+        /// <summary>
+		/// Get or set the minimum MTU on Windows.
+		/// </summary>
+		/// <remarks>optlen=sizeof(ULONG), optval = &amp;min. mtu</remarks>
+        public const SocketOptionName MtuMinimum = unchecked((SocketOptionName)0x8000000a);// - 2147483638;
+
+#if NETCF
+        /// <summary>
+        /// On connected socket, triggers authentication.
+        /// On not connected socket, forces authentication on connection.
+        /// For incoming connection this means that connection is rejected if authentication cannot be performed.
+        /// </summary>
+        /// <remarks>Windows CE only. The optval and optlen parameters are ignored; however, Winsock implementation on Windows CE requires optlen to be at least 4 and optval to point to at least an integer datum.</remarks>
+        public const SocketOptionName AuthenticateCE	= (SocketOptionName)0x00000001;
 		/// <summary>
 		/// This sets or revokes PIN code to use with a connection or socket.
 		/// </summary>
@@ -46,11 +67,6 @@ namespace InTheHand.Net.Sockets
 		/// </summary>
         public const SocketOptionName GetLink = (SocketOptionName)0x00000005;	// bound only! optlen=sizeof(BTH_SOCKOPT_SECURITY), optval=&amp;BTH_SOCKOPT_SECURITY
 		/// <summary>
-		/// Get or set the default MTU on Windows XP.
-		/// </summary>
-		/// <remarks>optlen=sizeof(ULONG), optval = &amp;mtu</remarks>
-        public const SocketOptionName XPMtu = unchecked((SocketOptionName)0x80000007);// - 2147483641;
-		/// <summary>
 		/// This sets default MTU (maximum transmission unit) for connection negotiation.
 		/// While allowed for connected socket, it has no effect if the negotiation has already completed.
 		/// Setting it on listening socket will propagate the value for all incoming connections.
@@ -62,11 +78,6 @@ namespace InTheHand.Net.Sockets
 		/// </summary>
         public const SocketOptionName GetMtu = (SocketOptionName)0x00000007;	// optlen=sizeof(unsigned int), optval = &amp;mtu
 		/// <summary>
-		/// Get or set the maximum MTU on Windows XP.
-		/// </summary>
-		/// <remarks>optlen=sizeof(ULONG), optval = &amp;max. mtu</remarks>
-        public const SocketOptionName XPMtuMaximum = unchecked((SocketOptionName)0x80000008);// - 2147483640;
-		/// <summary>
 		/// This sets maximum MTU for connection negotiation.
 		/// While allowed for connected socket, it has no effect if the negotiation has already completed.
 		/// Setting it on listening socket will propagate the value for all incoming connections.
@@ -77,11 +88,6 @@ namespace InTheHand.Net.Sockets
 		/// Because negotiation has already happened, has little meaning for connected socket.
 		/// </summary>
         public const SocketOptionName GetMtuMaximum = (SocketOptionName)0x00000009;	// bound only! optlen=sizeof(unsigned int), optval = &amp;max. mtu
-		/// <summary>
-		/// Get or set the minimum MTU on Windows XP.
-		/// </summary>
-		/// <remarks>optlen=sizeof(ULONG), optval = &amp;min. mtu</remarks>
-        public const SocketOptionName XPMtuMinimum = unchecked((SocketOptionName)0x8000000a);// - 2147483638;
 		/// <summary>
 		/// This sets minimum MTU for connection negotiation.
 		/// While allowed for connected socket, it has no effect if the negotiation has already completed.
@@ -253,6 +259,6 @@ namespace InTheHand.Net.Sockets
 		/// The mode can either be sniff, park, or hold. The socket must be connected.
 		/// </summary>
         public const SocketOptionName GetMode = (SocketOptionName)0x0000002b;	// connected only! optlen=sizeof(int), optval = &mode
-
+#endif
     }
 }

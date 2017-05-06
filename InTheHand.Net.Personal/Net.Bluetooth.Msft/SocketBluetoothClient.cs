@@ -3,7 +3,7 @@
 // InTheHand.Net.Bluetooth.Msft.BluetoothClient
 // 
 // Copyright (c) 2003-2008 In The Hand Ltd, All rights reserved.
-// This source code is licensed under the In The Hand Community License - see License.txt
+// This source code is licensed under the MIT License
 
 //#define WIN32_READ_BTH_DEVICE_INFO
 
@@ -846,7 +846,7 @@ namespace InTheHand.Net.Bluetooth.Msft
         #endregion
 
 
-        #region Link Key
+#region Link Key
         /// <summary>
         /// Returns link key associated with peer Bluetooth device.
         /// </summary>
@@ -855,16 +855,19 @@ namespace InTheHand.Net.Bluetooth.Msft
             get
             {
                 EnsureNotDisposed();
-                byte[] link = clientSocket.GetSocketOption(BluetoothSocketOptionLevel.RFComm, BluetoothSocketOptionName.GetLink, 32);
-
                 byte[] bytes = new byte[16];
+#if NETCF
+                byte[] link = clientSocket.GetSocketOption(BluetoothSocketOptionLevel.RFComm, BluetoothSocketOptionName.GetLink, 32);
                 Buffer.BlockCopy(link, 16, bytes, 0, 16);
+#endif                
+
                 return new Guid(bytes);
             }
         }
-        #endregion
 
-        #region Link Policy
+#endregion
+
+#region Link Policy
         /// <summary>
         /// Returns the Link Policy of the current connection.
         /// </summary>
@@ -873,14 +876,18 @@ namespace InTheHand.Net.Bluetooth.Msft
             get
             {
                 EnsureNotDisposed();
+#if NETCF
                 byte[] policy = clientSocket.GetSocketOption(BluetoothSocketOptionLevel.RFComm, BluetoothSocketOptionName.GetLinkPolicy, 4);
                 return (LinkPolicy)BitConverter.ToInt32(policy, 0);
+#else
+                return LinkPolicy.Disabled;
+#endif
             }
         }
-        #endregion
+#endregion
 
 
-        #region Set PIN
+#region Set PIN
         /// <summary>
         /// Sets the PIN associated with the currently connected device.
         /// </summary>
@@ -935,10 +942,10 @@ namespace InTheHand.Net.Bluetooth.Msft
             }
 #endif
         }
-        #endregion
+#endregion
 
 
-        #region Remote Machine Name
+#region Remote Machine Name
         public BluetoothEndPoint RemoteEndPoint
         {
             get
@@ -1035,9 +1042,9 @@ namespace InTheHand.Net.Bluetooth.Msft
 			}
 #endif
         }
-        #endregion
+#endregion
 
-        #region IDisposable Members
+#region IDisposable Members
 
         /// <summary>
         /// Releases the unmanaged resources used by the BluetoothClient and optionally releases the managed resources.
@@ -1091,9 +1098,9 @@ namespace InTheHand.Net.Bluetooth.Msft
             Dispose(false);
         }
 
-        #endregion
+#endregion
 
-        #region Throw SocketException For HR
+#region Throw SocketException For HR
         internal static void ThrowSocketExceptionForHR(int errorCode)
         {
             if (errorCode < 0) {
@@ -1115,12 +1122,12 @@ namespace InTheHand.Net.Bluetooth.Msft
                 throw new SocketException(socketerror);
             }
         }
-        #endregion
+#endregion
 
         internal class MsftSocketOptionHelper : ISocketOptionHelper
         {
             readonly Socket m_socket;
-#if ! WinCE
+#if !WinCE
             private bool authenticate = false;
             private BluetoothWin32Authentication m_authenticator;
 #endif
@@ -1131,7 +1138,7 @@ namespace InTheHand.Net.Bluetooth.Msft
                 m_socket = socket;
             }
 
-            #region Authenticate
+#region Authenticate
             /// <summary>
             /// Gets or sets the authentication state of the current connect or behaviour to use when connection is established.
             /// </summary>
@@ -1160,14 +1167,14 @@ namespace InTheHand.Net.Bluetooth.Msft
 #if NETCF
                     m_socket.SetSocketOption(BluetoothSocketOptionLevel.RFComm, BluetoothSocketOptionName.SetAuthenticationEnabled, (int)(value ? 1 : 0));
 #else
-                    m_socket.SetSocketOption(BluetoothSocketOptionLevel.RFComm, BluetoothSocketOptionName.XPAuthenticate, value);
+                    m_socket.SetSocketOption(BluetoothSocketOptionLevel.RFComm, BluetoothSocketOptionName.Authenticate, value);
                     authenticate = value;
 #endif
                 }
             }
-            #endregion
+#endregion
 
-            #region Encrypt
+#region Encrypt
             /// <summary>
             /// On unconnected sockets, enforces encryption to establish a connection.
             /// Encryption is only available for authenticated connections.
@@ -1184,9 +1191,9 @@ namespace InTheHand.Net.Bluetooth.Msft
                     encrypt = value;
                 }
             }
-            #endregion
+#endregion
 
-            #region Set Pin
+#region Set Pin
             public void SetPin(BluetoothAddress device, string pin)
             {
 #if WinXP
@@ -1222,7 +1229,7 @@ namespace InTheHand.Net.Bluetooth.Msft
                 m_socket.SetSocketOption(BluetoothSocketOptionLevel.RFComm, BluetoothSocketOptionName.SetPin, link);
 #endif
             }
-            #endregion
+#endregion
 
         }//class--SocketOptionHelper
 

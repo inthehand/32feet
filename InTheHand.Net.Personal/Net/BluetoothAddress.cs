@@ -3,7 +3,7 @@
 // InTheHand.Net.BluetoothAddress
 // 
 // Copyright (c) 2003-2010 In The Hand Ltd, All rights reserved.
-// This source code is licensed under the In The Hand Community License - see License.txt
+// This source code is licensed under the MIT License
 
 using System;
 using System.Diagnostics.CodeAnalysis;
@@ -44,9 +44,20 @@ namespace InTheHand.Net
 			BitConverter.GetBytes(address).CopyTo(data,0);
 		}
 
-		/// <summary>
-		/// Initializes a new instance of the <see cref="BluetoothAddress"/> class with the specified address.
-		/// </summary>
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BluetoothAddress"/> class with the specified address.
+        /// </summary>
+        /// <param name="address"><see cref="UInt64"/> representation of the address.</param>
+        [CLSCompliant(false)]
+        public BluetoothAddress(ulong address) : this()
+        {
+            //copy value to array
+            BitConverter.GetBytes(address).CopyTo(data, 0);
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BluetoothAddress"/> class with the specified address.
+        /// </summary>
         /// -
         /// <remarks>
         /// <para>Note: The address should be supplied in little-endian order on the
@@ -62,10 +73,10 @@ namespace InTheHand.Net
         /// </para>
         /// </remarks>
         /// -
-		/// <param name="address">Address as 6 byte array.</param>
+        /// <param name="address">Address as 6 byte array.</param>
         /// <exception cref="T:System.ArgumentNullException">address passed was <see langword="null"/>.</exception>
         /// <exception cref="T:System.ArgumentException">address passed was not a 6 byte array.</exception>
-		public BluetoothAddress(byte[] address) : this()
+        public BluetoothAddress(byte[] address) : this()
 		{
             if (address == null) {
                 throw new ArgumentNullException("address");
@@ -373,6 +384,19 @@ namespace InTheHand.Net
 		public long ToInt64()
 		{
 			return BitConverter.ToInt64(data, 0);
+        }
+        #endregion
+
+        #region ToUInt64
+        /// <summary>
+		/// Returns the Bluetooth address as an unsigned long integer.
+		/// </summary>
+        /// -
+        /// <returns>An <see cref="T:System.UInt64"/>.</returns>
+        [CLSCompliant(false)]
+		public ulong ToUInt64()
+        {
+            return BitConverter.ToUInt64(data, 0);
         }
         #endregion
 

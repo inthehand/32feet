@@ -3,7 +3,7 @@
 // InTheHand.Net.Bluetooth.BluetoothRadio
 // 
 // Copyright (c) 2003-2010 In The Hand Ltd, All rights reserved.
-// This source code is licensed under the In The Hand Community License - see License.txt
+// This source code is licensed under the MIT License
 
 using System;
 using System.Collections;
@@ -65,19 +65,33 @@ namespace InTheHand.Net.Bluetooth
         {
             var fList = BluetoothFactory.Factories;
             var all = CombineAllRadios(fList);
+#if !FX3_5
+            return ((List<BluetoothRadio>)all).ToArray();
+#else
             return all.ToArray();
+#endif
         }
 
         private static IEnumerable<BluetoothRadio> CombineAllRadios(IList<BluetoothFactory> factories)
         {
-            //System.Collections.Generic.IEnumerable<BluetoothRadio> allX
-            //    = factories.SelectMany(f => f.DoGetAllRadios()
-            //        .Select(ir => new BluetoothRadio(f, ir)));
+#if !FX3_5
+            List<BluetoothRadio> radios = new List<BluetoothRadio>();
+            foreach(BluetoothFactory f in factories)
+            {
+                foreach(IBluetoothRadio r in f.DoGetAllRadios())
+                {
+                    radios.Add(new BluetoothRadio(f, r));
+                }
+            }
+
+            return radios;
+#else
             System.Collections.Generic.IEnumerable<BluetoothRadio> all
                  = from f in factories
                    from ir in f.DoGetAllRadios()
                    select new BluetoothRadio(f, ir);
             return all;
+#endif
         }
 
         /// <summary>
@@ -112,7 +126,7 @@ namespace InTheHand.Net.Bluetooth
             return new BluetoothRadio(BluetoothFactory.Factory, BluetoothFactory.Factory.DoGetPrimaryRadio());
         }
 
-        #region IsSupported
+#region IsSupported
         /// <summary>
         /// Gets a value that indicates whether the 32feet.NET library can be used with the current device.
         /// </summary>
@@ -120,7 +134,7 @@ namespace InTheHand.Net.Bluetooth
         {
             get { return (AllRadios.Length > 0); }
         }
-        #endregion
+#endregion
 
         //----------------------------------------------------------------------
         readonly IBluetoothRadio m_impl;
