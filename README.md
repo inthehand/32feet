@@ -14,7 +14,7 @@ Downloads are available here on the _Downloads_ tab. Packages are also available
 [InTheHand.Devices.Enumeration](http://nuget.org/packages/InTheHand.Devices.Enumeration)
 
 ## Documentation / Tutorial
-The user guide is available in the [Wiki](https://github.com/inthehand/32feet/wiki) section, and the class documentation is at [http://inthehand.com/library/32feet/] and in the release package.
+The user guide is available in the [Wiki](https://github.com/inthehand/32feet/wiki) section, and the class documentation is at [http://inthehand.github.io/] and in the release package.
 
 Please start by reading it.  It contains general information firstly on the various features contained in the library, and on what type of Bluetooth connection you want.  It also contains information on using each feature.
 
