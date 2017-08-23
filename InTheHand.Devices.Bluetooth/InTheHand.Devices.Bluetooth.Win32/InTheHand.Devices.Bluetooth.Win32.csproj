@@ -1,0 +1,183 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{15851D1E-6757-49EA-9A28-BEBAF5C9A3E0}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>InTheHand.Devices.Bluetooth.Win32</RootNamespace>
+    <AssemblyName>InTheHand.Devices.Bluetooth.Win32</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="Microsoft.CSharp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\AssemblyInfo.cs">
+      <Link>Properties\AssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Devices.Bluetooth\Bluetooth\Bluetooth.Win32.cs">
+      <Link>Bluetooth\Bluetooth.Win32.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Devices.Bluetooth\Bluetooth\BluetoothAdapter.cs">
+      <Link>Bluetooth\BluetoothAdapter.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Devices.Bluetooth\Bluetooth\BluetoothAdapter.Win32.cs">
+      <Link>Bluetooth\BluetoothAdapter.Win32.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Devices.Bluetooth\Bluetooth\BluetoothAddressType.cs">
+      <Link>Bluetooth\BluetoothAddressType.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Devices.Bluetooth\Bluetooth\BluetoothCacheMode.cs">
+      <Link>Bluetooth\BluetoothCacheMode.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Devices.Bluetooth\Bluetooth\BluetoothClassOfDevice.cs">
+      <Link>Bluetooth\BluetoothClassOfDevice.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Devices.Bluetooth\Bluetooth\BluetoothCompanyId.cs">
+      <Link>Bluetooth\BluetoothCompanyId.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Devices.Bluetooth\Bluetooth\BluetoothConnectionStatus.cs">
+      <Link>Bluetooth\BluetoothConnectionStatus.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Devices.Bluetooth\Bluetooth\BluetoothDevice.cs">
+      <Link>Bluetooth\BluetoothDevice.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Devices.Bluetooth\Bluetooth\BluetoothDevice.Win32.cs">
+      <Link>Bluetooth\BluetoothDevice.Win32.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Devices.Bluetooth\Bluetooth\BluetoothError.cs">
+      <Link>Bluetooth\BluetoothError.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Devices.Bluetooth\Bluetooth\BluetoothMajorClass.cs">
+      <Link>Bluetooth\BluetoothMajorClass.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Devices.Bluetooth\Bluetooth\BluetoothMinorClass.cs">
+      <Link>Bluetooth\BluetoothMinorClass.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Devices.Bluetooth\Bluetooth\BluetoothServiceCapabilities.cs">
+      <Link>Bluetooth\BluetoothServiceCapabilities.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Devices.Bluetooth\Bluetooth\BluetoothUuidHelper.cs">
+      <Link>Bluetooth\BluetoothUuidHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Devices.Bluetooth\Bluetooth\Rfcomm\RfcommDeviceService.cs">
+      <Link>Bluetooth\Rfcomm\RfcommDeviceService.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Devices.Bluetooth\Bluetooth\Rfcomm\RfcommDeviceService.Win32.cs">
+      <Link>Bluetooth\Rfcomm\RfcommDeviceService.Win32.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Devices.Bluetooth\Bluetooth\Rfcomm\RfcommDeviceServicesResult.cs">
+      <Link>Bluetooth\Rfcomm\RfcommDeviceServicesResult.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Devices.Bluetooth\Bluetooth\Rfcomm\RfcommServiceId.cs">
+      <Link>Bluetooth\Rfcomm\RfcommServiceId.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Devices.Bluetooth\Bluetooth\Rfcomm\RfcommServiceId.Portable.cs">
+      <Link>Bluetooth\Rfcomm\RfcommServiceId.Portable.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Devices.Bluetooth\Enumeration\DeviceAccessState.cs">
+      <Link>Enumeration\DeviceAccessState.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Devices.Bluetooth\Enumeration\DeviceInformation.cs">
+      <Link>Enumeration\DeviceInformation.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Devices.Bluetooth\Enumeration\DeviceInformation.Win32.cs">
+      <Link>Enumeration\DeviceInformation.Win32.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Devices.Bluetooth\Enumeration\DeviceInformationCollection.cs">
+      <Link>Enumeration\DeviceInformationCollection.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Devices.Bluetooth\Enumeration\DeviceInformationCustomPairing.cs">
+      <Link>Enumeration\DeviceInformationCustomPairing.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Devices.Bluetooth\Enumeration\DeviceInformationPairing.cs">
+      <Link>Enumeration\DeviceInformationPairing.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Devices.Bluetooth\Enumeration\DeviceInformationPairing.Win32.cs">
+      <Link>Enumeration\DeviceInformationPairing.Win32.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Devices.Bluetooth\Enumeration\DevicePairingKinds.cs">
+      <Link>Enumeration\DevicePairingKinds.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Devices.Bluetooth\Enumeration\DevicePairingRequestedEventArgs.cs">
+      <Link>Enumeration\DevicePairingRequestedEventArgs.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Devices.Bluetooth\Enumeration\DevicePairingResult.cs">
+      <Link>Enumeration\DevicePairingResult.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Devices.Bluetooth\Enumeration\DevicePicker.cs">
+      <Link>Enumeration\DevicePicker.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Devices.Bluetooth\Enumeration\DevicePicker.Win32.cs">
+      <Link>Enumeration\DevicePicker.Win32.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Devices.Bluetooth\Enumeration\DevicePickerAppearance.cs">
+      <Link>Enumeration\DevicePickerAppearance.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Devices.Bluetooth\Enumeration\DevicePickerFilter.cs">
+      <Link>Enumeration\DevicePickerFilter.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Devices.Bluetooth\Enumeration\DeviceSelectedEventArgs.cs">
+      <Link>Enumeration\DeviceSelectedEventArgs.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Devices.Bluetooth\Enumeration\DeviceUnpairingResult.cs">
+      <Link>Enumeration\DeviceUnpairingResult.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Devices.Bluetooth\Enumeration\DeviceUnpairingResultStatus.cs">
+      <Link>Enumeration\DeviceUnpairingResultStatus.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Devices.Bluetooth\Enumeration\DeviceWatcher.cs">
+      <Link>Enumeration\DeviceWatcher.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Devices.Bluetooth\Enumeration\DeviceWatcher.Win32.cs">
+      <Link>Enumeration\DeviceWatcher.Win32.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Devices.Bluetooth\Enumeration\DeviceWatcherStatus.cs">
+      <Link>Enumeration\DeviceWatcherStatus.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Devices.Bluetooth\Radios\Radio.cs">
+      <Link>Radios\Radio.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Devices.Bluetooth\Radios\Radio.Win32.cs">
+      <Link>Radios\Radio.Win32.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Devices.Bluetooth\Radios\RadioAccessState.cs">
+      <Link>Radios\RadioAccessState.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Devices.Bluetooth\Radios\RadioKind.cs">
+      <Link>Radios\RadioKind.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Devices.Bluetooth\Radios\RadioState.cs">
+      <Link>Radios\RadioState.cs</Link>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="InTheHand.Pontoon">
+      <Version>10.2017.8.23</Version>
+    </PackageReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
