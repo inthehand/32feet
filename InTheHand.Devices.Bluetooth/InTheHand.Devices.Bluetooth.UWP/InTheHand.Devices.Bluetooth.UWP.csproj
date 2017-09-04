@@ -1,54 +1,118 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>8.0.30703</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{33149B35-24E1-4F2D-9B8B-1FC89A894DD2}</ProjectGuid>
-    <ProjectTypeGuids>{FEACFBD2-3405-455C-9665-78FE426C6842};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <ProjectGuid>{FDAFE908-FF81-43F4-94C0-A403D6A453B2}</ProjectGuid>
     <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>InTheHand.Devices.Bluetooth</RootNamespace>
-    <IPhoneResourcePrefix>Resources</IPhoneResourcePrefix>
     <AssemblyName>InTheHand.Devices.Bluetooth</AssemblyName>
+    <DefaultLanguage>en-US</DefaultLanguage>
+    <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
+    <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.15063.0</TargetPlatformVersion>
+    <TargetPlatformMinVersion>10.0.14393.0</TargetPlatformMinVersion>
+    <MinimumVisualStudioVersion>14</MinimumVisualStudioVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{A5A43C5B-DE2A-4C0C-9213-0A381AF9435A};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug</OutputPath>
-    <DefineConstants>DEBUG;</DefineConstants>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <ConsolePause>false</ConsolePause>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\NuGet\lib\xamarinios\</OutputPath>
+    <OutputPath>..\NuGet\lib\uap10.0\</OutputPath>
+    <DefineConstants>TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <ConsolePause>false</ConsolePause>
-    <DocumentationFile>..\NuGet\lib\xamarinios\InTheHand.Devices.Bluetooth.xml</DocumentationFile>
+    <DocumentationFile>..\NuGet\lib\uap10.0\InTheHand.Devices.Bluetooth.XML</DocumentationFile>
+    <GenerateLibraryLayout>true</GenerateLibraryLayout>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
+    <NoWarn>;2008</NoWarn>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <PlatformTarget>x86</PlatformTarget>
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <DefineConstants>TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
+    <Optimize>true</Optimize>
+    <NoWarn>;2008</NoWarn>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|ARM'">
+    <PlatformTarget>ARM</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\ARM\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
+    <NoWarn>;2008</NoWarn>
+    <DebugType>full</DebugType>
+    <PlatformTarget>ARM</PlatformTarget>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|ARM'">
+    <PlatformTarget>ARM</PlatformTarget>
+    <OutputPath>bin\ARM\Release\</OutputPath>
+    <DefineConstants>TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
+    <Optimize>true</Optimize>
+    <NoWarn>;2008</NoWarn>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>ARM</PlatformTarget>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <PlatformTarget>x64</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
+    <NoWarn>;2008</NoWarn>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <PlatformTarget>x64</PlatformTarget>
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
+    <Optimize>true</Optimize>
+    <NoWarn>;2008</NoWarn>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup>
+    <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Xml" />
-    <Reference Include="System.Core" />
-    <Reference Include="Xamarin.iOS" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Resources\" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="..\AssemblyInfo.cs">
-      <Link>Properties\AssemblyInfo.cs</Link>
-    </Compile>
     <Compile Include="..\InTheHand.Devices.Bluetooth\Bluetooth\BluetoothAdapter.cs">
       <Link>Bluetooth\BluetoothAdapter.cs</Link>
     </Compile>
-    <Compile Include="..\InTheHand.Devices.Bluetooth\Bluetooth\BluetoothAdapter.Unified.cs">
-      <Link>Bluetooth\BluetoothAdapter.Unified.cs</Link>
+    <Compile Include="..\InTheHand.Devices.Bluetooth\Bluetooth\BluetoothAdapter.uwp.cs">
+      <Link>Bluetooth\BluetoothAdapter.uwp.cs</Link>
     </Compile>
     <Compile Include="..\InTheHand.Devices.Bluetooth\Bluetooth\BluetoothAddressType.cs">
       <Link>Bluetooth\BluetoothAddressType.cs</Link>
@@ -65,14 +129,20 @@
     <Compile Include="..\InTheHand.Devices.Bluetooth\Bluetooth\BluetoothConnectionStatus.cs">
       <Link>Bluetooth\BluetoothConnectionStatus.cs</Link>
     </Compile>
+    <Compile Include="..\InTheHand.Devices.Bluetooth\Bluetooth\BluetoothDevice.cs">
+      <Link>Bluetooth\BluetoothDevice.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Devices.Bluetooth\Bluetooth\BluetoothDevice.uwp.cs">
+      <Link>Bluetooth\BluetoothDevice.uwp.cs</Link>
+    </Compile>
     <Compile Include="..\InTheHand.Devices.Bluetooth\Bluetooth\BluetoothError.cs">
       <Link>Bluetooth\BluetoothError.cs</Link>
     </Compile>
     <Compile Include="..\InTheHand.Devices.Bluetooth\Bluetooth\BluetoothLEDevice.cs">
       <Link>Bluetooth\BluetoothLEDevice.cs</Link>
     </Compile>
-    <Compile Include="..\InTheHand.Devices.Bluetooth\Bluetooth\BluetoothLEDevice.Unified.cs">
-      <Link>Bluetooth\BluetoothLEDevice.Unified.cs</Link>
+    <Compile Include="..\InTheHand.Devices.Bluetooth\Bluetooth\BluetoothLEDevice.uwp.cs">
+      <Link>Bluetooth\BluetoothLEDevice.uwp.cs</Link>
     </Compile>
     <Compile Include="..\InTheHand.Devices.Bluetooth\Bluetooth\BluetoothMajorClass.cs">
       <Link>Bluetooth\BluetoothMajorClass.cs</Link>
@@ -86,14 +156,11 @@
     <Compile Include="..\InTheHand.Devices.Bluetooth\Bluetooth\BluetoothUuidHelper.cs">
       <Link>Bluetooth\BluetoothUuidHelper.cs</Link>
     </Compile>
-    <Compile Include="..\InTheHand.Devices.Bluetooth\Bluetooth\GenericAttributeProfile\CBUUIDExtensions.cs">
-      <Link>Bluetooth\GenericAttributeProfile\CBUUIDExtensions.cs</Link>
-    </Compile>
     <Compile Include="..\InTheHand.Devices.Bluetooth\Bluetooth\GenericAttributeProfile\GattCharacteristic.cs">
       <Link>Bluetooth\GenericAttributeProfile\GattCharacteristic.cs</Link>
     </Compile>
-    <Compile Include="..\InTheHand.Devices.Bluetooth\Bluetooth\GenericAttributeProfile\GattCharacteristic.Unified.cs">
-      <Link>Bluetooth\GenericAttributeProfile\GattCharacteristic.Unified.cs</Link>
+    <Compile Include="..\InTheHand.Devices.Bluetooth\Bluetooth\GenericAttributeProfile\GattCharacteristic.uwp.cs">
+      <Link>Bluetooth\GenericAttributeProfile\GattCharacteristic.uwp.cs</Link>
     </Compile>
     <Compile Include="..\InTheHand.Devices.Bluetooth\Bluetooth\GenericAttributeProfile\GattCharacteristicProperties.cs">
       <Link>Bluetooth\GenericAttributeProfile\GattCharacteristicProperties.cs</Link>
@@ -107,14 +174,14 @@
     <Compile Include="..\InTheHand.Devices.Bluetooth\Bluetooth\GenericAttributeProfile\GattDescriptor.cs">
       <Link>Bluetooth\GenericAttributeProfile\GattDescriptor.cs</Link>
     </Compile>
-    <Compile Include="..\InTheHand.Devices.Bluetooth\Bluetooth\GenericAttributeProfile\GattDescriptor.Unified.cs">
-      <Link>Bluetooth\GenericAttributeProfile\GattDescriptor.Unified.cs</Link>
+    <Compile Include="..\InTheHand.Devices.Bluetooth\Bluetooth\GenericAttributeProfile\GattDescriptor.uwp.cs">
+      <Link>Bluetooth\GenericAttributeProfile\GattDescriptor.uwp.cs</Link>
     </Compile>
     <Compile Include="..\InTheHand.Devices.Bluetooth\Bluetooth\GenericAttributeProfile\GattDescriptorsResult.cs">
       <Link>Bluetooth\GenericAttributeProfile\GattDescriptorsResult.cs</Link>
     </Compile>
-    <Compile Include="..\InTheHand.Devices.Bluetooth\Bluetooth\GenericAttributeProfile\GattDescriptorsResult.Unified.cs">
-      <Link>Bluetooth\GenericAttributeProfile\GattDescriptorsResult.Unified.cs</Link>
+    <Compile Include="..\InTheHand.Devices.Bluetooth\Bluetooth\GenericAttributeProfile\GattDescriptorsResult.uwp.cs">
+      <Link>Bluetooth\GenericAttributeProfile\GattDescriptorsResult.uwp.cs</Link>
     </Compile>
     <Compile Include="..\InTheHand.Devices.Bluetooth\Bluetooth\GenericAttributeProfile\GattDescriptorUuids.cs">
       <Link>Bluetooth\GenericAttributeProfile\GattDescriptorUuids.cs</Link>
@@ -122,17 +189,17 @@
     <Compile Include="..\InTheHand.Devices.Bluetooth\Bluetooth\GenericAttributeProfile\GattDeviceService.cs">
       <Link>Bluetooth\GenericAttributeProfile\GattDeviceService.cs</Link>
     </Compile>
-    <Compile Include="..\InTheHand.Devices.Bluetooth\Bluetooth\GenericAttributeProfile\GattDeviceService.Unified.cs">
-      <Link>Bluetooth\GenericAttributeProfile\GattDeviceService.Unified.cs</Link>
+    <Compile Include="..\InTheHand.Devices.Bluetooth\Bluetooth\GenericAttributeProfile\GattDeviceService.uwp.cs">
+      <Link>Bluetooth\GenericAttributeProfile\GattDeviceService.uwp.cs</Link>
     </Compile>
     <Compile Include="..\InTheHand.Devices.Bluetooth\Bluetooth\GenericAttributeProfile\GattPresentationFormatTypes.cs">
       <Link>Bluetooth\GenericAttributeProfile\GattPresentationFormatTypes.cs</Link>
     </Compile>
-    <Compile Include="..\InTheHand.Devices.Bluetooth\Bluetooth\GenericAttributeProfile\GattReadResult.Bytes.cs">
-      <Link>Bluetooth\GenericAttributeProfile\GattReadResult.Bytes.cs</Link>
-    </Compile>
     <Compile Include="..\InTheHand.Devices.Bluetooth\Bluetooth\GenericAttributeProfile\GattReadResult.cs">
       <Link>Bluetooth\GenericAttributeProfile\GattReadResult.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Devices.Bluetooth\Bluetooth\GenericAttributeProfile\GattReadResult.uwp.cs">
+      <Link>Bluetooth\GenericAttributeProfile\GattReadResult.uwp.cs</Link>
     </Compile>
     <Compile Include="..\InTheHand.Devices.Bluetooth\Bluetooth\GenericAttributeProfile\GattServiceUuids.cs">
       <Link>Bluetooth\GenericAttributeProfile\GattServiceUuids.cs</Link>
@@ -143,14 +210,29 @@
     <Compile Include="..\InTheHand.Devices.Bluetooth\Bluetooth\GenericAttributeProfile\GattWriteOption.cs">
       <Link>Bluetooth\GenericAttributeProfile\GattWriteOption.cs</Link>
     </Compile>
+    <Compile Include="..\InTheHand.Devices.Bluetooth\Bluetooth\Rfcomm\RfcommDeviceService.cs">
+      <Link>Bluetooth\Rfcomm\RfcommDeviceService.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Devices.Bluetooth\Bluetooth\Rfcomm\RfcommDeviceService.uwp.cs">
+      <Link>Bluetooth\Rfcomm\RfcommDeviceService.uwp.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Devices.Bluetooth\Bluetooth\Rfcomm\RfcommDeviceServicesResult.cs">
+      <Link>Bluetooth\Rfcomm\RfcommDeviceServicesResult.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Devices.Bluetooth\Bluetooth\Rfcomm\RfcommServiceId.cs">
+      <Link>Bluetooth\Rfcomm\RfcommServiceId.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Devices.Bluetooth\Bluetooth\Rfcomm\RfcommServiceId.uwp.cs">
+      <Link>Bluetooth\Rfcomm\RfcommServiceId.uwp.cs</Link>
+    </Compile>
     <Compile Include="..\InTheHand.Devices.Bluetooth\Enumeration\DeviceAccessState.cs">
       <Link>Enumeration\DeviceAccessState.cs</Link>
     </Compile>
     <Compile Include="..\InTheHand.Devices.Bluetooth\Enumeration\DeviceInformation.cs">
       <Link>Enumeration\DeviceInformation.cs</Link>
     </Compile>
-    <Compile Include="..\InTheHand.Devices.Bluetooth\Enumeration\DeviceInformation.Unified.cs">
-      <Link>Enumeration\DeviceInformation.Unified.cs</Link>
+    <Compile Include="..\InTheHand.Devices.Bluetooth\Enumeration\DeviceInformation.uwp.cs">
+      <Link>Enumeration\DeviceInformation.uwp.cs</Link>
     </Compile>
     <Compile Include="..\InTheHand.Devices.Bluetooth\Enumeration\DeviceInformationCollection.cs">
       <Link>Enumeration\DeviceInformationCollection.cs</Link>
@@ -160,6 +242,9 @@
     </Compile>
     <Compile Include="..\InTheHand.Devices.Bluetooth\Enumeration\DeviceInformationPairing.cs">
       <Link>Enumeration\DeviceInformationPairing.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Devices.Bluetooth\Enumeration\DeviceInformationPairing.Uwp.cs">
+      <Link>Enumeration\DeviceInformationPairing.Uwp.cs</Link>
     </Compile>
     <Compile Include="..\InTheHand.Devices.Bluetooth\Enumeration\DevicePairingKinds.cs">
       <Link>Enumeration\DevicePairingKinds.cs</Link>
@@ -172,6 +257,9 @@
     </Compile>
     <Compile Include="..\InTheHand.Devices.Bluetooth\Enumeration\DevicePicker.cs">
       <Link>Enumeration\DevicePicker.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Devices.Bluetooth\Enumeration\DevicePicker.uwp.cs">
+      <Link>Enumeration\DevicePicker.uwp.cs</Link>
     </Compile>
     <Compile Include="..\InTheHand.Devices.Bluetooth\Enumeration\DevicePickerAppearance.cs">
       <Link>Enumeration\DevicePickerAppearance.cs</Link>
@@ -188,14 +276,17 @@
     <Compile Include="..\InTheHand.Devices.Bluetooth\Enumeration\DeviceUnpairingResultStatus.cs">
       <Link>Enumeration\DeviceUnpairingResultStatus.cs</Link>
     </Compile>
-    <Compile Include="..\InTheHand.Devices.Bluetooth\Enumeration\DeviceWatcherStatus.cs">
+    <None Include="..\InTheHand.Devices.Bluetooth\Enumeration\DeviceWatcher.cs">
+      <Link>Enumeration\DeviceWatcher.cs</Link>
+    </None>
+    <None Include="..\InTheHand.Devices.Bluetooth\Enumeration\DeviceWatcher.UWP.cs">
+      <Link>Enumeration\DeviceWatcher.UWP.cs</Link>
+    </None>
+    <None Include="..\InTheHand.Devices.Bluetooth\Enumeration\DeviceWatcherStatus.cs">
       <Link>Enumeration\DeviceWatcherStatus.cs</Link>
-    </Compile>
+    </None>
     <Compile Include="..\InTheHand.Devices.Bluetooth\Radios\Radio.cs">
       <Link>Radios\Radio.cs</Link>
-    </Compile>
-    <Compile Include="..\InTheHand.Devices.Bluetooth\Radios\Radio.Unified.cs">
-      <Link>Radios\Radio.Unified.cs</Link>
     </Compile>
     <Compile Include="..\InTheHand.Devices.Bluetooth\Radios\RadioAccessState.cs">
       <Link>Radios\RadioAccessState.cs</Link>
@@ -206,11 +297,26 @@
     <Compile Include="..\InTheHand.Devices.Bluetooth\Radios\RadioState.cs">
       <Link>Radios\RadioState.cs</Link>
     </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="Properties\InTheHand.Devices.Bluetooth.UWP.rd.xml" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="InTheHand.Pontoon">
       <Version>10.2017.8.23</Version>
     </PackageReference>
+    <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
+      <Version>5.4.0</Version>
+    </PackageReference>
   </ItemGroup>
-  <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
+  <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
+    <VisualStudioVersion>14.0</VisualStudioVersion>
+  </PropertyGroup>
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v$(VisualStudioVersion)\Microsoft.Windows.UI.Xaml.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
 </Project>

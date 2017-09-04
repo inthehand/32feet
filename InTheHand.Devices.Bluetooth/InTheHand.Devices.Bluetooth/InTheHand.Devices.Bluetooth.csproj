@@ -7,7 +7,13 @@
     <Version>4.0.0</Version>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <OutputPath>C:\Users\peter\Source\Repos\32feet\InTheHand.Devices.Bluetooth\NuGet\lib\</OutputPath>
+    <DocumentationFile>C:\Users\peter\Source\Repos\32feet\InTheHand.Devices.Bluetooth\InTheHand.Devices.Bluetooth\InTheHand.Devices.Bluetooth.xml</DocumentationFile>
+  </PropertyGroup>
+
   <ItemGroup>
+    <Compile Remove="Bluetooth\Bluetooth.Win32.cs" />
     <Compile Remove="Bluetooth\BluetoothAdapter.Android.cs" />
     <Compile Remove="Bluetooth\BluetoothAdapter.Unified.cs" />
     <Compile Remove="Bluetooth\BluetoothAdapter.uwp.cs" />

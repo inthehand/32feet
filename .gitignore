@@ -251,3 +251,4 @@ paket-files/
 .idea/
 *.sln.iml
 /Widcomm
+/InTheHand.Devices.Bluetooth/NuGet/lib

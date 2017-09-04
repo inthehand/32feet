@@ -171,7 +171,7 @@ namespace InTheHand.Devices.Bluetooth
                     return majorClassName;
                 }
 
-#if WINDOWS_PHONE_APP
+#if WINDOWS_PHONE_APP || NETSTANDARD1_4
                 foreach (FieldInfo fi in typeof(BluetoothMinorClass).GetRuntimeFields())
 #else
                 foreach (FieldInfo fi in typeof(BluetoothMinorClass).GetFields())
