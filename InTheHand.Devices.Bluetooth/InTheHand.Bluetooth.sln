@@ -1,17 +1,17 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26730.12
+VisualStudioVersion = 15.0.27130.2010
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InTheHand.Devices.Bluetooth", "InTheHand.Devices.Bluetooth\InTheHand.Devices.Bluetooth.csproj", "{D7C44908-581A-4523-91EC-4079B20E34C7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InTheHand.Bluetooth", "InTheHand.Devices.Bluetooth\InTheHand.Bluetooth.csproj", "{D7C44908-581A-4523-91EC-4079B20E34C7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InTheHand.Devices.Bluetooth.Win32", "InTheHand.Devices.Bluetooth.Win32\InTheHand.Devices.Bluetooth.Win32.csproj", "{15851D1E-6757-49EA-9A28-BEBAF5C9A3E0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InTheHand.Bluetooth.Win32", "InTheHand.Devices.Bluetooth.Win32\InTheHand.Bluetooth.Win32.csproj", "{15851D1E-6757-49EA-9A28-BEBAF5C9A3E0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InTheHand.Devices.Bluetooth.Android", "InTheHand.Devices.Bluetooth.Android\InTheHand.Devices.Bluetooth.Android.csproj", "{37A94CE9-B217-4226-82F6-110EC34DA0DA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InTheHand.Bluetooth.Android", "InTheHand.Devices.Bluetooth.Android\InTheHand.Bluetooth.Android.csproj", "{37A94CE9-B217-4226-82F6-110EC34DA0DA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InTheHand.Devices.Bluetooth.iOS", "InTheHand.Devices.Bluetooth.iOS\InTheHand.Devices.Bluetooth.iOS.csproj", "{33149B35-24E1-4F2D-9B8B-1FC89A894DD2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InTheHand.Bluetooth.iOS", "InTheHand.Devices.Bluetooth.iOS\InTheHand.Bluetooth.iOS.csproj", "{33149B35-24E1-4F2D-9B8B-1FC89A894DD2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InTheHand.Devices.Bluetooth.UWP", "InTheHand.Devices.Bluetooth.UWP\InTheHand.Devices.Bluetooth.UWP.csproj", "{FDAFE908-FF81-43F4-94C0-A403D6A453B2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InTheHand.Bluetooth.UWP", "InTheHand.Devices.Bluetooth.UWP\InTheHand.Bluetooth.UWP.csproj", "{FDAFE908-FF81-43F4-94C0-A403D6A453B2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

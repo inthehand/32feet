@@ -160,6 +160,9 @@
     <Compile Include="..\InTheHand.Devices.Bluetooth\Enumeration\DeviceWatcherStatus.cs">
       <Link>Enumeration\DeviceWatcherStatus.cs</Link>
     </Compile>
+    <Compile Include="..\InTheHand.Devices.Bluetooth\NetworkStream.cs">
+      <Link>NetworkStream.cs</Link>
+    </Compile>
     <Compile Include="..\InTheHand.Devices.Bluetooth\Radios\Radio.cs">
       <Link>Radios\Radio.cs</Link>
     </Compile>
