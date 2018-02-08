@@ -23,17 +23,17 @@ namespace InTheHand.Devices.Bluetooth.Rfcomm
         }
 
 
-        private BluetoothDevice _device;
-        private RfcommServiceId _service;
+        private BluetoothDevice _device = null;
+        private RfcommServiceId _service = null;
 
         private BluetoothDevice GetDevice()
         {
-            return null;
+            return _device;
         }
 
         private RfcommServiceId GetServiceId()
         {
-            return null;
+            return _service;
         }
         
         private Task<Stream> OpenStreamAsyncImpl()

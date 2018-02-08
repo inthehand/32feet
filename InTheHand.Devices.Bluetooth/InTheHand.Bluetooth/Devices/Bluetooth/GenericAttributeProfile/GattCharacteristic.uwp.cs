@@ -47,15 +47,15 @@ namespace InTheHand.Devices.Bluetooth.GenericAttributeProfile
 #endif
         }
 
-        private Task<GattDescriptorsResult> GetDescriptorsAsyncImpl(BluetoothCacheMode cacheMode)
+        private async Task<GattDescriptorsResult> GetDescriptorsAsyncImpl(BluetoothCacheMode cacheMode)
         {
             IReadOnlyList<GattDescriptor> descriptors = null;
             // Update for Creators Update
-            var result = _characteristic.GetAllDescriptors();
+            var result = await _characteristic.GetDescriptorsAsync();
             if (result != null)
             {
                 List<GattDescriptor> found = new List<GattDescriptor>();
-                foreach (Windows.Devices.Bluetooth.GenericAttributeProfile.GattDescriptor d in result)
+                foreach (Windows.Devices.Bluetooth.GenericAttributeProfile.GattDescriptor d in result.Descriptors)
                 {
                     found.Add(d);
                 }
@@ -63,18 +63,18 @@ namespace InTheHand.Devices.Bluetooth.GenericAttributeProfile
                 descriptors = found.AsReadOnly();
             }
 
-            return Task.FromResult(new GattDescriptorsResult(descriptors));
+            return new GattDescriptorsResult(descriptors);
         }
 
-        private Task<GattDescriptorsResult> GetDescriptorsForUuidAsyncImpl(Guid descriptorUuid, BluetoothCacheMode cacheMode)
+        private async Task<GattDescriptorsResult> GetDescriptorsForUuidAsyncImpl(Guid descriptorUuid, BluetoothCacheMode cacheMode)
         {
             IReadOnlyList<GattDescriptor> descriptors = null;
             // Update for Creators Update
-            var result = _characteristic.GetDescriptors(descriptorUuid);
+            var result = await _characteristic.GetDescriptorsForUuidAsync(descriptorUuid);
             if (result != null)
             {
                 List<GattDescriptor> found = new List<GattDescriptor>();
-                foreach(Windows.Devices.Bluetooth.GenericAttributeProfile.GattDescriptor d in result)
+                foreach(Windows.Devices.Bluetooth.GenericAttributeProfile.GattDescriptor d in result.Descriptors)
                 {
                     found.Add(d);
                 }
@@ -82,7 +82,7 @@ namespace InTheHand.Devices.Bluetooth.GenericAttributeProfile
                 descriptors = found.AsReadOnly();
             }
 
-            return Task.FromResult(new GattDescriptorsResult(descriptors));
+            return new GattDescriptorsResult(descriptors);
         }
 
 

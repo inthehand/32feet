@@ -1,0 +1,91 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard1.4</TargetFramework>
+    <Company>In The Hand Ltd</Company>
+    <Product>32feet.NET</Product>
+    <Version>4.2018.2.8</Version>
+    <RepositoryUrl>https://github.com/inthehand/32feet</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/inthehand/32feet</PackageProjectUrl>
+    <PackageLicenseUrl>https://github.com/inthehand/32feet/blob/master/LICENSE</PackageLicenseUrl>
+    <Copyright>Copyright (c) 2004-2018 In The Hand Ltd</Copyright>
+    <Description>32feet.NET is a shared-source project to make personal area networking technologies such as Bluetooth, Infrared (IrDA) and more, easily accessible from .NET code.</Description>
+    <FileVersion>4.2018.2.8</FileVersion>
+    <AssemblyVersion>4.0.0.0</AssemblyVersion>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <OutputPath>C:\Users\peter\Source\Repos\32feet\InTheHand.Devices.Bluetooth\NuGet\lib\</OutputPath>
+    <DocumentationFile>C:\Users\peter\Source\Repos\32feet\InTheHand.Devices.Bluetooth\InTheHand.Devices.Bluetooth\InTheHand.Devices.Bluetooth.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Devices\Bluetooth\Bluetooth.Win32.cs" />
+    <Compile Remove="Devices\Bluetooth\BluetoothAdapter.Android.cs" />
+    <Compile Remove="Devices\Bluetooth\BluetoothAdapter.Unified.cs" />
+    <Compile Remove="Devices\Bluetooth\BluetoothAdapter.uwp.cs" />
+    <Compile Remove="Devices\Bluetooth\BluetoothAdapter.Win32.cs" />
+    <Compile Remove="Devices\Bluetooth\BluetoothDevice.Android.cs" />
+    <Compile Remove="Devices\Bluetooth\BluetoothDevice.uwp.cs" />
+    <Compile Remove="Devices\Bluetooth\BluetoothDevice.Win32.cs" />
+    <Compile Remove="Devices\Bluetooth\BluetoothLEDevice.Android.cs" />
+    <Compile Remove="Devices\Bluetooth\BluetoothLEDevice.Unified.cs" />
+    <Compile Remove="Devices\Bluetooth\BluetoothLEDevice.uwp.cs" />
+    <Compile Remove="Devices\Bluetooth\BluetoothLEDevice.Win81.cs" />
+    <Compile Remove="Devices\Bluetooth\GenericAttributeProfile\CBUUIDExtensions.cs" />
+    <Compile Remove="Devices\Bluetooth\GenericAttributeProfile\GattCharacteristic.Android.cs" />
+    <Compile Remove="Devices\Bluetooth\GenericAttributeProfile\GattCharacteristic.Unified.cs" />
+    <Compile Remove="Devices\Bluetooth\GenericAttributeProfile\GattCharacteristic.uwp.cs" />
+    <Compile Remove="Devices\Bluetooth\GenericAttributeProfile\GattDescriptor.Android.cs" />
+    <Compile Remove="Devices\Bluetooth\GenericAttributeProfile\GattDescriptor.Unified.cs" />
+    <Compile Remove="Devices\Bluetooth\GenericAttributeProfile\GattDescriptor.uwp.cs" />
+    <Compile Remove="Devices\Bluetooth\GenericAttributeProfile\GattDescriptorsResult.Android.cs" />
+    <Compile Remove="Devices\Bluetooth\GenericAttributeProfile\GattDescriptorsResult.Unified.cs" />
+    <Compile Remove="Devices\Bluetooth\GenericAttributeProfile\GattDescriptorsResult.uwp.cs" />
+    <Compile Remove="Devices\Bluetooth\GenericAttributeProfile\GattDeviceService.Android.cs" />
+    <Compile Remove="Devices\Bluetooth\GenericAttributeProfile\GattDeviceService.Unified.cs" />
+    <Compile Remove="Devices\Bluetooth\GenericAttributeProfile\GattDeviceService.uwp.cs" />
+    <Compile Remove="Devices\Bluetooth\GenericAttributeProfile\GattReadResult.uwp.cs" />
+    <Compile Remove="Devices\Bluetooth\Rfcomm\RfcommDeviceService.Android.cs" />
+    <Compile Remove="Devices\Bluetooth\Rfcomm\RfcommDeviceService.uwp.cs" />
+    <Compile Remove="Devices\Bluetooth\Rfcomm\RfcommDeviceService.Win32.cs" />
+    <Compile Remove="Devices\Bluetooth\Rfcomm\RfcommServiceId.uwp.cs" />
+    <Compile Remove="Devices\Enumeration\DeviceInformation.Android.cs" />
+    <Compile Remove="Devices\Enumeration\DeviceInformation.Unified.cs" />
+    <Compile Remove="Devices\Enumeration\DeviceInformation.uwp.cs" />
+    <Compile Remove="Devices\Enumeration\DeviceInformation.Win32.cs" />
+    <Compile Remove="Devices\Enumeration\DeviceInformationPairing.Android.cs" />
+    <Compile Remove="Devices\Enumeration\DeviceInformationPairing.Uwp.cs" />
+    <Compile Remove="Devices\Enumeration\DeviceInformationPairing.Win32.cs" />
+    <Compile Remove="Devices\Enumeration\DevicePicker.Android.cs" />
+    <Compile Remove="Devices\Enumeration\DevicePicker.iOS.cs" />
+    <Compile Remove="Devices\Enumeration\DevicePicker.uwp.cs" />
+    <Compile Remove="Devices\Enumeration\DevicePicker.Win32.cs" />
+    <Compile Remove="Devices\Enumeration\DevicePickerControl.xaml.cs" />
+    <Compile Remove="Devices\Enumeration\DevicePickerDialog.xaml.cs" />
+    <Compile Remove="Devices\Enumeration\DeviceViewModel.cs" />
+    <Compile Remove="Devices\Enumeration\DeviceWatcher.cs" />
+    <Compile Remove="Devices\Enumeration\DeviceWatcher.Win32.cs" />
+    <Compile Remove="Devices\Radios\Radio.Android.cs" />
+    <Compile Remove="Devices\Radios\Radio.Unified.cs" />
+    <Compile Remove="Devices\Radios\Radio.Win32.cs" />
+    <Compile Remove="Devices\Radios\Radio.wp8.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Devices\Enumeration\DevicePickerControl.xaml" />
+    <None Remove="Devices\Enumeration\DevicePickerDialog.xaml" />
+    <None Remove="InTheHand.Devices.Bluetooth.xml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Devices\Enumeration\" />
+    <Folder Include="Devices\Bluetooth\" />
+    <Folder Include="Devices\Radios\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="InTheHand.Pontoon" Version="10.2018.1.4" />
+  </ItemGroup>
+
+</Project>

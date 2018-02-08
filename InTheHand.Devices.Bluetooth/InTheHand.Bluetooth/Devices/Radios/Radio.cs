@@ -51,50 +51,6 @@ namespace InTheHand.Devices.Radios
 #endif
 
         /// <summary>
-        /// A static method that retrieves a Radio object corresponding to a device Id obtained through FindAllAsync(System.String) and related APIs.
-        /// </summary>
-        /// <param name="deviceId">A string that identifies a particular radio device.</param>
-        /// <returns>An asynchronous retrieval operation.
-        /// On successful completion, it contains a <see cref="Radio"/> object that represents the specified radio device.</returns>
-        /// <remarks>
-        /// <para/><list type="table">
-        /// <listheader><term>Platform</term><description>Version supported</description></listheader>
-        /// <item><term>Windows UWP</term><description>Windows 10</description></item>
-        /// <item><term>Windows (Desktop Apps)</term><description>Windows 10</description></item></list>
-        /// </remarks>
-        public static async Task<Radio> FromIdAsync(string deviceId)
-        {
-#if WINDOWS_UWP
-            return await Windows.Devices.Radios.Radio.FromIdAsync(deviceId);
-#else
-            return null;
-#endif
-        }
-
-        /// <summary>
-        /// A static method that returns an Advanced Query Syntax (AQS) string to be used to enumerate or monitor Radio devices with FindAllAsync(System.String) and related methods.
-        /// </summary>
-        /// <returns>An identifier to be used to enumerate radio devices.</returns>
-        /// <remarks>
-        /// <para/><list type="table">
-        /// <listheader><term>Platform</term><description>Version supported</description></listheader>
-        /// <item><term>Windows UWP</term><description>Windows 10</description></item>
-        /// <item><term>Windows (Desktop Apps)</term><description>Windows 10</description></item></list>
-        /// </remarks>
-        public static string GetDeviceSelector()
-        {
-#if WINDOWS_UWP
-            return Windows.Devices.Radios.Radio.GetDeviceSelector();
-
-#elif WIN32
-            return DoGetDeviceSelector();
-
-#else
-            return string.Empty;
-#endif
-        }
-
-        /// <summary>
         /// A static, asynchronous method that retrieves a collection of <see cref="Radio"/> objects representing radio devices existing on the system.
         /// </summary>
         /// <returns>An asynchronous retrieval operation. When the operation is complete, contains a list of Radio objects describing available radios.</returns>
@@ -136,6 +92,7 @@ namespace InTheHand.Devices.Radios
         /// <para/><list type="table">
         /// <listheader><term>Platform</term><description>Version supported</description></listheader>
         /// <item><term>Windows UWP</term><description>Windows 10</description></item>
+        /// <item><term>Windows (Desktop Apps)</term><description>Windows 7 or later (Not required)</description></item>
         /// </remarks>
         public static async Task<RadioAccessStatus> RequestAccessAsync()
         {
@@ -166,16 +123,19 @@ namespace InTheHand.Devices.Radios
         /// <item><term>Windows UWP</term><description>Windows 10</description></item>
         /// <item><term>Windows (Desktop Apps)</term><description>Windows 7 or later</description></item></list>
         /// </remarks>
-        public async Task<RadioAccessStatus> SetStateAsync(RadioState value)
+        public Task<RadioAccessStatus> SetStateAsync(RadioState value)
         {
 #if WINDOWS_UWP
-            return (RadioAccessStatus)((int)await _radio.SetStateAsync((Windows.Devices.Radios.RadioState)((int)value)));
+            return Task<RadioAccessStatus>.Run(async ()=>
+            {
+                return (RadioAccessStatus)((int)await _radio.SetStateAsync((Windows.Devices.Radios.RadioState)((int)value)));
+            });
 
 #elif __ANDROID__ || WIN32
-            return await DoSetStateAsync(value);
+            return DoSetStateAsync(value);
 
 #else
-            return RadioAccessStatus.Unspecified;
+            return Task.FromResult(RadioAccessStatus.Unspecified);
 #endif
         }
 

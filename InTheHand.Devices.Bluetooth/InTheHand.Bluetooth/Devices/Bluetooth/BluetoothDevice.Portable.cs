@@ -16,19 +16,19 @@ namespace InTheHand.Devices.Bluetooth
 {
     partial class BluetoothDevice
     {
-        private static async Task<BluetoothDevice> FromBluetoothAddressAsyncImpl(ulong bluetoothAddress)
+        private static Task<BluetoothDevice> FromBluetoothAddressAsyncImpl(ulong bluetoothAddress)
         {
-            return null;
+            return Task.FromResult<BluetoothDevice>(null);
         }
 
-        private static async Task<BluetoothDevice> FromIdAsyncImpl(string deviceId)
+        private static Task<BluetoothDevice> FromIdAsyncImpl(string deviceId)
         {
-            return null;
+            return Task.FromResult<BluetoothDevice>(null);
         }
 
-        private static async Task<BluetoothDevice> FromDeviceInformationAsyncImpl(DeviceInformation deviceInformation)
+        private static Task<BluetoothDevice> FromDeviceInformationAsyncImpl(DeviceInformation deviceInformation)
         {
-            return null;
+            return Task.FromResult<BluetoothDevice>(null);
         }
 
         private static string GetDeviceSelectorImpl()

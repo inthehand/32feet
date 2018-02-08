@@ -6,6 +6,8 @@
 
 using System;
 using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
 
 #if __ANDROID__
 using Android.Bluetooth;
@@ -78,8 +80,9 @@ namespace InTheHand.Networking.Sockets
         }
 
         /// <summary>
-        /// Gets a value that indicates whether the stream supports seeking. This property is not currently supported.This property always returns false.
+        /// Gets a value that indicates whether the stream supports seeking. This property is not currently supported.
         /// </summary>
+        /// <value>This property always returns false.</value>
         public override bool CanSeek
         {
             get
@@ -122,7 +125,7 @@ namespace InTheHand.Networking.Sockets
                 return _socket.InputStream.Length;
 
 #else
-                return 0;
+                throw new NotSupportedException();
 #endif
             }
         }
@@ -135,7 +138,7 @@ namespace InTheHand.Networking.Sockets
         {
             get
             {
-                return 0;
+                throw new NotSupportedException();
             }
 
             set
@@ -158,6 +161,24 @@ namespace InTheHand.Networking.Sockets
         }
 
         /// <summary>
+        /// Asynchronously clears all buffers for this stream and causes any buffered data to be written to the underlying device.
+        /// </summary>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        public override Task FlushAsync(CancellationToken cancellationToken)
+        {
+#if WINDOWS_UWP || WINDOWS_APP || WINDOWS_PHONE_APP || WINDOWS_PHONE_81
+            return _outputStream.FlushAsync(cancellationToken);
+
+#elif __ANDROID__
+            return _socket.OutputStream.FlushAsync(cancellationToken);
+
+#else
+            return Task.CompletedTask;
+#endif
+        }
+
+        /// <summary>
         /// Reads data from the NetworkStream.
         /// </summary>
         /// <param name="buffer"></param>
@@ -174,6 +195,27 @@ namespace InTheHand.Networking.Sockets
 
 #else
             return 0;
+#endif
+        }
+
+        /// <summary>
+        /// Asynchronously reads a sequence of bytes from the current stream and advances the position within the stream by the number of bytes read.
+        /// </summary>
+        /// <param name="buffer"></param>
+        /// <param name="offset"></param>
+        /// <param name="count"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        public override Task<int> ReadAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken)
+        {
+#if WINDOWS_UWP || WINDOWS_APP || WINDOWS_PHONE_APP || WINDOWS_PHONE_81
+            return _inputStream.ReadAsync(buffer, offset, count, cancellationToken);
+
+#elif __ANDROID__
+            return _socket.InputStream.ReadAsync(buffer, offset, count, cancellationToken);
+
+#else
+            return Task.FromResult<int>(0);
 #endif
         }
 
@@ -216,9 +258,30 @@ namespace InTheHand.Networking.Sockets
         }
 
         /// <summary>
-        /// Releases the unmanaged resources used by the NetworkStream and optionally releases the managed resources.
+        /// Asynchronously writes a sequence of bytes to the current stream and advances the current position within this stream by the number of bytes written.
         /// </summary>
-        /// <param name="disposing"></param>
+        /// <param name="buffer"></param>
+        /// <param name="offset"></param>
+        /// <param name="count"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        public override Task WriteAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken)
+        {
+#if WINDOWS_UWP || WINDOWS_APP || WINDOWS_PHONE_APP || WINDOWS_PHONE_81
+            return _outputStream.WriteAsync(buffer, offset, count, cancellationToken);
+
+#elif __ANDROID__
+            return _socket.OutputStream.WriteAsync(buffer, offset, count, cancellationToken);
+
+#else
+            return Task.CompletedTask;
+#endif
+        }
+
+            /// <summary>
+            /// Releases the unmanaged resources used by the NetworkStream and optionally releases the managed resources.
+            /// </summary>
+            /// <param name="disposing"></param>
         protected override void Dispose(bool disposing)
         {
 #if WINDOWS_UWP || WINDOWS_APP || WINDOWS_PHONE_APP || WINDOWS_PHONE_81

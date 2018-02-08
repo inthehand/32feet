@@ -24,16 +24,6 @@ namespace InTheHand.Devices.Radios
             _object10 = o10;
         }
 
-        private static string DoGetDeviceSelector()
-        {
-            if (s_type10 != null)
-            {
-                return s_type10.GetMethod(nameof(GetDeviceSelector), BindingFlags.Public | BindingFlags.Static).Invoke(null, new object[0]).ToString();
-            }
-
-            return string.Empty;
-        }
-
         private static async Task<RadioAccessStatus> DoRequestAccessAsync()
         {
             /*if (s_type10 != null)
