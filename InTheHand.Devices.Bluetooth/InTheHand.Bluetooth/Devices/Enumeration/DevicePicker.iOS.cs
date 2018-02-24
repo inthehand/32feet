@@ -22,9 +22,12 @@ namespace InTheHand.Devices.Enumeration
         private Task<DeviceInformation> DoPickSingleDeviceAsync(Rect selection, Placement placement)
         {
             s_current = this;
-              
-            // TODO: register EAAccessoryManager notifications so handle can be triggered when device picked
 
+            // TODO: register EAAccessoryManager notifications so handle can be triggered when device picked
+            EAAccessoryManager.SharedAccessoryManager.RegisterForLocalNotifications();
+            EAAccessoryManager.SharedAccessoryManager.AddObserver(EAAccessoryManager.DidConnectNotification, global::Foundation.NSKeyValueObservingOptions.New, (c) => {
+                global::System.Diagnostics.Debug.WriteLine(c.NewValue.ToString());
+            });
             EAAccessoryManager.SharedAccessoryManager.ShowBluetoothAccessoryPicker(null, (e)=> {
                 if (e != null)
                 {
