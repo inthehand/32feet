@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27130.2010
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InTheHand.Bluetooth", "InTheHand.Bluetooth\InTheHand.Bluetooth.csproj", "{D7C44908-581A-4523-91EC-4079B20E34C7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InTheHand.Bluetooth", "InTheHand.Bluetooth\InTheHand.Bluetooth.csproj", "{D7C44908-581A-4523-91EC-4079B20E34C7}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InTheHand.Bluetooth.Win32", "InTheHand.Bluetooth.Win32\InTheHand.Bluetooth.Win32.csproj", "{15851D1E-6757-49EA-9A28-BEBAF5C9A3E0}"
 EndProject
@@ -12,6 +12,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InTheHand.Bluetooth.iOS", "InTheHand.Bluetooth.iOS\InTheHand.Bluetooth.iOS.csproj", "{33149B35-24E1-4F2D-9B8B-1FC89A894DD2}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InTheHand.Bluetooth.UWP", "InTheHand.Bluetooth.UWP\InTheHand.Bluetooth.UWP.csproj", "{FDAFE908-FF81-43F4-94C0-A403D6A453B2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InTheHand.Bluetooth.Mac", "InTheHand.Bluetooth.Mac\InTheHand.Bluetooth.Mac.csproj", "{238A01B7-1AA2-4F62-B5DE-8244ECAC1DD8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -105,6 +107,22 @@ Global
 		{FDAFE908-FF81-43F4-94C0-A403D6A453B2}.Release|x64.Build.0 = Release|x64
 		{FDAFE908-FF81-43F4-94C0-A403D6A453B2}.Release|x86.ActiveCfg = Release|x86
 		{FDAFE908-FF81-43F4-94C0-A403D6A453B2}.Release|x86.Build.0 = Release|x86
+		{238A01B7-1AA2-4F62-B5DE-8244ECAC1DD8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{238A01B7-1AA2-4F62-B5DE-8244ECAC1DD8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{238A01B7-1AA2-4F62-B5DE-8244ECAC1DD8}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{238A01B7-1AA2-4F62-B5DE-8244ECAC1DD8}.Debug|ARM.Build.0 = Debug|Any CPU
+		{238A01B7-1AA2-4F62-B5DE-8244ECAC1DD8}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{238A01B7-1AA2-4F62-B5DE-8244ECAC1DD8}.Debug|x64.Build.0 = Debug|Any CPU
+		{238A01B7-1AA2-4F62-B5DE-8244ECAC1DD8}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{238A01B7-1AA2-4F62-B5DE-8244ECAC1DD8}.Debug|x86.Build.0 = Debug|Any CPU
+		{238A01B7-1AA2-4F62-B5DE-8244ECAC1DD8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{238A01B7-1AA2-4F62-B5DE-8244ECAC1DD8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{238A01B7-1AA2-4F62-B5DE-8244ECAC1DD8}.Release|ARM.ActiveCfg = Release|Any CPU
+		{238A01B7-1AA2-4F62-B5DE-8244ECAC1DD8}.Release|ARM.Build.0 = Release|Any CPU
+		{238A01B7-1AA2-4F62-B5DE-8244ECAC1DD8}.Release|x64.ActiveCfg = Release|Any CPU
+		{238A01B7-1AA2-4F62-B5DE-8244ECAC1DD8}.Release|x64.Build.0 = Release|Any CPU
+		{238A01B7-1AA2-4F62-B5DE-8244ECAC1DD8}.Release|x86.ActiveCfg = Release|Any CPU
+		{238A01B7-1AA2-4F62-B5DE-8244ECAC1DD8}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
