@@ -4,6 +4,8 @@ using CoreFoundation;
 using Foundation;
 using ObjCRuntime;
 
+namespace IOBluetooth
+{
 public enum BluetoothCompanyIdentifers : uint
 {
 	EricssonTechnologyLicensing = 0,
@@ -4092,15 +4094,14 @@ public enum IOBluetoothHandsFreeCodecID : byte
 	Aaceld = 128
 }
 
-[Native]
-public enum IOBluetoothSMSMode : uint
+public enum SMSMode
 {
 	Pdu,
 	Text
 }
 
 [Native]
-public enum IOBluetoothHandsFreeSMSSupport : uint
+public enum IOBluetoothHandsFreeSMSSupport : ulong
 {
 	Phase2SMSSupport = 1 << 0,
 	Phase2pSMSSupport = 1 << 1,
@@ -4108,11 +4109,12 @@ public enum IOBluetoothHandsFreeSMSSupport : uint
 }
 
 [Native]
-public enum IOBluetoothHandsFreePDUMessageStatus : uint
+public enum IOBluetoothHandsFreePDUMessageStatus : ulong
 {
 	RecUnread = 0,
 	RecRead = 1,
 	StoUnsent = 2,
 	StoSent = 3,
 	All = 4
+}
 }
