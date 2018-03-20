@@ -705,15 +705,14 @@ public enum BluetoothConnectionHandle : uint
 	None = 65535
 }
 
-//[Verify (InferredFromMemberPrefix)]
-//public enum BluetoothEncryptionEnable : uint
-//{
-//	Off = 0,
-//	On = 1,
-//	Bredre0 = 1,
-//	Leaesccm = 1,
-//	Bredraesccm = 2
-//}
+public enum BluetoothEncryptionEnable : uint
+{
+	Off = 0,
+	On = 1,
+	Bredre0 = 1,
+	Leaesccm = 1,
+	Bredraesccm = 2
+}
 
 //[Verify (InferredFromMemberPrefix)]
 //public enum BluetoothKeyFlag : uint
@@ -734,6 +733,7 @@ public enum BluetoothConnectionHandle : uint
 //	ChangedCombination = 6
 //}
 
+    [Flags]
 public enum BluetoothPacketType : uint
 {
 	Reserved1 = 1,
@@ -757,6 +757,7 @@ public enum BluetoothPacketType : uint
 	End
 }
 
+    [Flags]
 public enum BluetoothSynchronousConnectionPacketType : uint
 {
 	None = 0,

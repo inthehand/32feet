@@ -13,14 +13,14 @@ namespace IOBluetooth
     {
     }
 
-    //// @interface IOBluetoothUserNotification : NSObject
-    //[BaseType(typeof(NSObject))]
-    //interface IOBluetoothUserNotification
-    //{
-    //    // -(void)unregister;
-    //    [Export("unregister")]
-    //    void Unregister();
-    //}
+    // @interface IOBluetoothUserNotification : NSObject
+    [BaseType(typeof(NSObject))]
+    interface IOBluetoothUserNotification
+    {
+        // -(void)unregister;
+        [Export("unregister")]
+        void Unregister();
+    }
 
     //// @protocol IOBluetoothDeviceAsyncCallbacks
     //[Protocol, Model]
@@ -47,13 +47,13 @@ namespace IOBluetooth
     interface IOBluetoothDevice : INSCoding, INSSecureCoding
     {
         // +(IOBluetoothUserNotification *)registerForConnectNotifications:(id)observer selector:(SEL)inSelector;
-        //[Static]
-        //[Export("registerForConnectNotifications:selector:")]
-        //IOBluetoothUserNotification RegisterForConnectNotifications(NSObject observer, Selector inSelector);
+        [Static]
+        [Export("registerForConnectNotifications:selector:")]
+        IOBluetoothUserNotification RegisterForConnectNotifications(NSObject observer, Selector inSelector);
 
-        //// -(IOBluetoothUserNotification *)registerForDisconnectNotification:(id)observer selector:(SEL)inSelector;
-        //[Export("registerForDisconnectNotification:selector:")]
-        //IOBluetoothUserNotification RegisterForDisconnectNotification(NSObject observer, Selector inSelector);
+        // -(IOBluetoothUserNotification *)registerForDisconnectNotification:(id)observer selector:(SEL)inSelector;
+        [Export("registerForDisconnectNotification:selector:")]
+        IOBluetoothUserNotification RegisterForDisconnectNotification(NSObject observer, Selector inSelector);
 
         // +(instancetype)deviceWithAddress:(const BluetoothDeviceAddress *)address;
         [Static]
@@ -77,13 +77,13 @@ namespace IOBluetooth
         //[Export("sendL2CAPEchoRequest:length:")]
         //int SendL2CAPEchoRequest(NSArray data, ushort length);
 
-        //// -(IOReturn)openRFCOMMChannelSync:(IOBluetoothRFCOMMChannel **)rfcommChannel withChannelID:(BluetoothRFCOMMChannelID)channelID delegate:(id)channelDelegate;
-        //[Export("openRFCOMMChannelSync:withChannelID:delegate:")]
-        //int OpenRFCOMMChannelSync(out IOBluetoothRFCOMMChannel rfcommChannel, byte channelID, NSObject channelDelegate);
+        // -(IOReturn)openRFCOMMChannelSync:(IOBluetoothRFCOMMChannel **)rfcommChannel withChannelID:(BluetoothRFCOMMChannelID)channelID delegate:(id)channelDelegate;
+        [Export("openRFCOMMChannelSync:withChannelID:delegate:")]
+        int OpenRFCOMMChannelSync(out IOBluetoothRFCOMMChannel rfcommChannel, byte channelID, NSObject channelDelegate);
 
-        //// -(IOReturn)openRFCOMMChannelAsync:(IOBluetoothRFCOMMChannel **)rfcommChannel withChannelID:(BluetoothRFCOMMChannelID)channelID delegate:(id)channelDelegate;
-        //[Export("openRFCOMMChannelAsync:withChannelID:delegate:")]
-        //int OpenRFCOMMChannelAsync(out IOBluetoothRFCOMMChannel rfcommChannel, byte channelID, NSObject channelDelegate);
+        // -(IOReturn)openRFCOMMChannelAsync:(IOBluetoothRFCOMMChannel **)rfcommChannel withChannelID:(BluetoothRFCOMMChannelID)channelID delegate:(id)channelDelegate;
+        [Export("openRFCOMMChannelAsync:withChannelID:delegate:")]
+        int OpenRFCOMMChannelAsync(out IOBluetoothRFCOMMChannel rfcommChannel, byte channelID, NSObject channelDelegate);
 
         // @property (readonly) BluetoothClassOfDevice classOfDevice;
         [Export("classOfDevice")]
@@ -115,7 +115,7 @@ namespace IOBluetooth
 
         // -(const BluetoothDeviceAddress *)getAddress;
         [Export("getAddress")]
-        ulong Address { get; }
+        IntPtr GetAddress();
 
         // @property (readonly) NSString * addressString;
         [Export("addressString")]
@@ -277,7 +277,7 @@ namespace IOBluetooth
     interface IOBluetoothDeviceInquiry
     {
         [Wrap("WeakDelegate")]
-        NSObject Delegate { get; set; }
+        IOBluetoothDeviceInquiryDelegate Delegate { get; set; }
 
         // @property (assign) id delegate;
         [NullAllowed, Export("delegate", ArgumentSemantic.Assign)]
@@ -286,11 +286,11 @@ namespace IOBluetooth
         // +(instancetype)inquiryWithDelegate:(id)delegate;
         [Static]
         [Export("inquiryWithDelegate:")]
-        IOBluetoothDeviceInquiry InquiryWithDelegate(NSObject @delegate);
+        IOBluetoothDeviceInquiry InquiryWithDelegate(IOBluetoothDeviceInquiryDelegate @delegate);
 
         // -(instancetype)initWithDelegate:(id)delegate;
         [Export("initWithDelegate:")]
-        IntPtr Constructor(NSObject @delegate);
+        IntPtr Constructor(IOBluetoothDeviceInquiryDelegate @delegate);
 
         // -(IOReturn)start;
         [Export("start")]
@@ -327,6 +327,7 @@ namespace IOBluetooth
 
     // @protocol IOBluetoothDeviceInquiryDelegate
     [Protocol]
+    [BaseType(typeof(NSObject))]
     interface IOBluetoothDeviceInquiryDelegate
     {
         // @optional -(void)deviceInquiryStarted:(IOBluetoothDeviceInquiry *)sender;
@@ -486,118 +487,119 @@ namespace IOBluetooth
     //	NSString IOBluetoothHostControllerPoweredOffNotification { get; }
     //}
 
-    //// @interface IOBluetoothL2CAPChannel : IOBluetoothObject <NSPortDelegate>
-    //[BaseType(typeof(IOBluetoothObject))]
-    //interface IOBluetoothL2CAPChannel : INSPortDelegate
-    //{
-    //    // +(IOBluetoothUserNotification *)registerForChannelOpenNotifications:(id)object selector:(SEL)selector;
-    //    [Static]
-    //    [Export("registerForChannelOpenNotifications:selector:")]
-    //    IOBluetoothUserNotification RegisterForChannelOpenNotifications(NSObject @object, Selector selector);
+    // @interface IOBluetoothL2CAPChannel : IOBluetoothObject <NSPortDelegate>
+    [BaseType(typeof(IOBluetoothObject))]
+    interface IOBluetoothL2CAPChannel : INSPortDelegate
+    {
+        // +(IOBluetoothUserNotification *)registerForChannelOpenNotifications:(id)object selector:(SEL)selector;
+        [Static]
+        [Export("registerForChannelOpenNotifications:selector:")]
+        IOBluetoothUserNotification RegisterForChannelOpenNotifications(NSObject @object, Selector selector);
 
-    //    // +(IOBluetoothUserNotification *)registerForChannelOpenNotifications:(id)object selector:(SEL)selector withPSM:(BluetoothL2CAPPSM)psm direction:(IOBluetoothUserNotificationChannelDirection)inDirection;
-    //    [Static]
-    //    [Export("registerForChannelOpenNotifications:selector:withPSM:direction:")]
-    //    IOBluetoothUserNotification RegisterForChannelOpenNotifications(NSObject @object, Selector selector, ushort psm, uint inDirection);
+        // +(IOBluetoothUserNotification *)registerForChannelOpenNotifications:(id)object selector:(SEL)selector withPSM:(BluetoothL2CAPPSM)psm direction:(IOBluetoothUserNotificationChannelDirection)inDirection;
+        [Static]
+        [Export("registerForChannelOpenNotifications:selector:withPSM:direction:")]
+        IOBluetoothUserNotification RegisterForChannelOpenNotifications(NSObject @object, Selector selector, ushort psm, uint inDirection);
 
-    //    // +(instancetype)withObjectID:(IOBluetoothObjectID)objectID;
-    //    [Static]
-    //    [Export("withObjectID:")]
-    //    IOBluetoothL2CAPChannel WithObjectID(nuint objectID);
+        // +(instancetype)withObjectID:(IOBluetoothObjectID)objectID;
+        [Static]
+        [Export("withObjectID:")]
+        IOBluetoothL2CAPChannel WithObjectID(nuint objectID);
 
-    //    // -(IOReturn)closeChannel;
-    //    [Export("closeChannel")]
-    //    int CloseChannel();
+        // -(IOReturn)closeChannel;
+        [Export("closeChannel")]
+        int CloseChannel();
 
-    //    // @property (readonly) BluetoothL2CAPMTU outgoingMTU;
-    //    [Export("outgoingMTU")]
-    //    ushort OutgoingMTU { get; }
+        // @property (readonly) BluetoothL2CAPMTU outgoingMTU;
+        [Export("outgoingMTU")]
+        ushort OutgoingMTU { get; }
 
-    //    // @property (readonly) BluetoothL2CAPMTU incomingMTU;
-    //    [Export("incomingMTU")]
-    //    ushort IncomingMTU { get; }
+        // @property (readonly) BluetoothL2CAPMTU incomingMTU;
+        [Export("incomingMTU")]
+        ushort IncomingMTU { get; }
 
-    //    // -(IOReturn)requestRemoteMTU:(BluetoothL2CAPMTU)remoteMTU;
-    //    [Export("requestRemoteMTU:")]
-    //    int RequestRemoteMTU(ushort remoteMTU);
+        // -(IOReturn)requestRemoteMTU:(BluetoothL2CAPMTU)remoteMTU;
+        [Export("requestRemoteMTU:")]
+        int RequestRemoteMTU(ushort remoteMTU);
 
-    //    // -(IOReturn)writeAsync:(void *)data length:(UInt16)length refcon:(void *)refcon;
-    //    [Export("writeAsync:length:refcon:")]
-    //    int WriteAsync(IntPtr data, ushort length, IntPtr refcon);
+        // -(IOReturn)writeAsync:(void *)data length:(UInt16)length refcon:(void *)refcon;
+        [Export("writeAsync:length:refcon:")]
+        int WriteAsync(IntPtr data, ushort length, IntPtr refcon);
 
-    //    // -(IOReturn)writeSync:(void *)data length:(UInt16)length;
-    //    [Export("writeSync:length:")]
-    //    int WriteSync(IntPtr data, ushort length);
+        // -(IOReturn)writeSync:(void *)data length:(UInt16)length;
+        [Export("writeSync:length:")]
+        int WriteSync(IntPtr data, ushort length);
 
-    //    // -(IOReturn)setDelegate:(id)channelDelegate;
-    //    [Export("setDelegate:")]
-    //    int SetDelegate(NSObject channelDelegate);
+        // -(IOReturn)setDelegate:(id)channelDelegate;
+        [Export("setDelegate:")]
+        int SetDelegate(IOBluetoothL2CAPChannelDelegate channelDelegate);
 
-    //    // -(IOReturn)setDelegate:(id)channelDelegate withConfiguration:(NSDictionary *)channelConfiguration;
-    //    [Export("setDelegate:withConfiguration:")]
-    //    int SetDelegate(NSObject channelDelegate, NSDictionary channelConfiguration);
+        // -(IOReturn)setDelegate:(id)channelDelegate withConfiguration:(NSDictionary *)channelConfiguration;
+        [Export("setDelegate:withConfiguration:")]
+        int SetDelegate(IOBluetoothL2CAPChannelDelegate channelDelegate, NSDictionary channelConfiguration);
 
-    //    // -(id)delegate;
-    //    [Export("delegate")]
-    //    NSObject Delegate { get; }
+        // -(id)delegate;
+        [Export("delegate")]
+        IOBluetoothL2CAPChannelDelegate Delegate { get; }
 
-    //    // @property (readonly, retain) IOBluetoothDevice * device;
-    //    [Export("device", ArgumentSemantic.Retain)]
-    //    IOBluetoothDevice Device { get; }
+        // @property (readonly, retain) IOBluetoothDevice * device;
+        [Export("device", ArgumentSemantic.Retain)]
+        IOBluetoothDevice Device { get; }
 
-    //    // @property (readonly, assign) IOBluetoothObjectID objectID;
-    //    [Export("objectID")]
-    //    nuint ObjectID { get; }
+        // @property (readonly, assign) IOBluetoothObjectID objectID;
+        [Export("objectID")]
+        nuint ObjectID { get; }
 
-    //    // @property (readonly, assign) BluetoothL2CAPPSM PSM;
-    //    [Export("PSM")]
-    //    ushort PSM { get; }
+        // @property (readonly, assign) BluetoothL2CAPPSM PSM;
+        [Export("PSM")]
+        ushort PSM { get; }
 
-    //    // @property (readonly, assign) BluetoothL2CAPChannelID localChannelID;
-    //    [Export("localChannelID")]
-    //    ushort LocalChannelID { get; }
+        // @property (readonly, assign) BluetoothL2CAPChannelID localChannelID;
+        [Export("localChannelID")]
+        ushort LocalChannelID { get; }
 
-    //    // @property (readonly, assign) BluetoothL2CAPChannelID remoteChannelID;
-    //    [Export("remoteChannelID")]
-    //    ushort RemoteChannelID { get; }
+        // @property (readonly, assign) BluetoothL2CAPChannelID remoteChannelID;
+        [Export("remoteChannelID")]
+        ushort RemoteChannelID { get; }
 
-    //    // -(BOOL)isIncoming;
-    //    [Export("isIncoming")]
-    //    bool IsIncoming { get; }
+        // -(BOOL)isIncoming;
+        [Export("isIncoming")]
+        bool IsIncoming { get; }
 
-    //    // -(IOBluetoothUserNotification *)registerForChannelCloseNotification:(id)observer selector:(SEL)inSelector;
-    //    [Export("registerForChannelCloseNotification:selector:")]
-    //    IOBluetoothUserNotification RegisterForChannelCloseNotification(NSObject observer, Selector inSelector);
-    //}
+        // -(IOBluetoothUserNotification *)registerForChannelCloseNotification:(id)observer selector:(SEL)inSelector;
+        [Export("registerForChannelCloseNotification:selector:")]
+        IOBluetoothUserNotification RegisterForChannelCloseNotification(NSObject observer, Selector inSelector);
+    }
 
-    //// @protocol IOBluetoothL2CAPChannelDelegate
-    //[Protocol]
-    //interface IOBluetoothL2CAPChannelDelegate
-    //{
-    //    // @optional -(void)l2capChannelData:(IOBluetoothL2CAPChannel *)l2capChannel data:(void *)dataPointer length:(size_t)dataLength;
-    //    [Export("l2capChannelData:data:length:")]
-    //    void L2capChannelData(IOBluetoothL2CAPChannel l2capChannel, IntPtr dataPointer, nuint dataLength);
+    // @protocol IOBluetoothL2CAPChannelDelegate
+    [Protocol,Model]
+    [BaseType(typeof(NSObject))]
+    interface IOBluetoothL2CAPChannelDelegate
+    {
+        // @optional -(void)l2capChannelData:(IOBluetoothL2CAPChannel *)l2capChannel data:(void *)dataPointer length:(size_t)dataLength;
+        [Export("l2capChannelData:data:length:")]
+        void L2capChannelData(IOBluetoothL2CAPChannel l2capChannel, IntPtr dataPointer, nuint dataLength);
 
-    //    // @optional -(void)l2capChannelOpenComplete:(IOBluetoothL2CAPChannel *)l2capChannel status:(IOReturn)error;
-    //    [Export("l2capChannelOpenComplete:status:")]
-    //    void L2capChannelOpenComplete(IOBluetoothL2CAPChannel l2capChannel, int error);
+        // @optional -(void)l2capChannelOpenComplete:(IOBluetoothL2CAPChannel *)l2capChannel status:(IOReturn)error;
+        [Export("l2capChannelOpenComplete:status:")]
+        void L2capChannelOpenComplete(IOBluetoothL2CAPChannel l2capChannel, int error);
 
-    //    // @optional -(void)l2capChannelClosed:(IOBluetoothL2CAPChannel *)l2capChannel;
-    //    [Export("l2capChannelClosed:")]
-    //    void L2capChannelClosed(IOBluetoothL2CAPChannel l2capChannel);
+        // @optional -(void)l2capChannelClosed:(IOBluetoothL2CAPChannel *)l2capChannel;
+        [Export("l2capChannelClosed:")]
+        void L2capChannelClosed(IOBluetoothL2CAPChannel l2capChannel);
 
-    //    // @optional -(void)l2capChannelReconfigured:(IOBluetoothL2CAPChannel *)l2capChannel;
-    //    [Export("l2capChannelReconfigured:")]
-    //    void L2capChannelReconfigured(IOBluetoothL2CAPChannel l2capChannel);
+        // @optional -(void)l2capChannelReconfigured:(IOBluetoothL2CAPChannel *)l2capChannel;
+        [Export("l2capChannelReconfigured:")]
+        void L2capChannelReconfigured(IOBluetoothL2CAPChannel l2capChannel);
 
-    //    // @optional -(void)l2capChannelWriteComplete:(IOBluetoothL2CAPChannel *)l2capChannel refcon:(void *)refcon status:(IOReturn)error;
-    //    [Export("l2capChannelWriteComplete:refcon:status:")]
-    //    void L2capChannelWriteComplete(IOBluetoothL2CAPChannel l2capChannel, IntPtr refcon, int error);
+        // @optional -(void)l2capChannelWriteComplete:(IOBluetoothL2CAPChannel *)l2capChannel refcon:(void *)refcon status:(IOReturn)error;
+        [Export("l2capChannelWriteComplete:refcon:status:")]
+        void L2capChannelWriteComplete(IOBluetoothL2CAPChannel l2capChannel, IntPtr refcon, int error);
 
-    //    // @optional -(void)l2capChannelQueueSpaceAvailable:(IOBluetoothL2CAPChannel *)l2capChannel;
-    //    [Export("l2capChannelQueueSpaceAvailable:")]
-    //    void L2capChannelQueueSpaceAvailable(IOBluetoothL2CAPChannel l2capChannel);
-    //}
+        // @optional -(void)l2capChannelQueueSpaceAvailable:(IOBluetoothL2CAPChannel *)l2capChannel;
+        [Export("l2capChannelQueueSpaceAvailable:")]
+        void L2capChannelQueueSpaceAvailable(IOBluetoothL2CAPChannel l2capChannel);
+    }
 
     ////[Static]
     ////[Verify (ConstantsInterfaceAssociation)]
@@ -612,129 +614,129 @@ namespace IOBluetooth
     ////	NSString IOBluetoothL2CAPChannelTerminatedNotification { get; }
     ////}
 
-    //// @interface IOBluetoothRFCOMMChannel : IOBluetoothObject <NSPortDelegate>
-    //[BaseType(typeof(IOBluetoothObject))]
-    //interface IOBluetoothRFCOMMChannel : INSPortDelegate
-    //{
-    //    // +(IOBluetoothUserNotification *)registerForChannelOpenNotifications:(id)object selector:(SEL)selector;
-    //    [Static]
-    //    [Export("registerForChannelOpenNotifications:selector:")]
-    //    IOBluetoothUserNotification RegisterForChannelOpenNotifications(NSObject @object, Selector selector);
+    // @interface IOBluetoothRFCOMMChannel : IOBluetoothObject <NSPortDelegate>
+    [BaseType(typeof(IOBluetoothObject))]
+    interface IOBluetoothRFCOMMChannel : INSPortDelegate
+    {
+        // +(IOBluetoothUserNotification *)registerForChannelOpenNotifications:(id)object selector:(SEL)selector;
+        [Static]
+        [Export("registerForChannelOpenNotifications:selector:")]
+        IOBluetoothUserNotification RegisterForChannelOpenNotifications(NSObject @object, Selector selector);
 
-    //    // +(IOBluetoothUserNotification *)registerForChannelOpenNotifications:(id)object selector:(SEL)selector withChannelID:(BluetoothRFCOMMChannelID)channelID direction:(IOBluetoothUserNotificationChannelDirection)inDirection;
-    //    [Static]
-    //    [Export("registerForChannelOpenNotifications:selector:withChannelID:direction:")]
-    //    IOBluetoothUserNotification RegisterForChannelOpenNotifications(NSObject @object, Selector selector, byte channelID, uint inDirection);
+        // +(IOBluetoothUserNotification *)registerForChannelOpenNotifications:(id)object selector:(SEL)selector withChannelID:(BluetoothRFCOMMChannelID)channelID direction:(IOBluetoothUserNotificationChannelDirection)inDirection;
+        [Static]
+        [Export("registerForChannelOpenNotifications:selector:withChannelID:direction:")]
+        IOBluetoothUserNotification RegisterForChannelOpenNotifications(NSObject @object, Selector selector, byte channelID, uint inDirection);
 
-    //    // +(instancetype)withRFCOMMChannelRef:(IOBluetoothRFCOMMChannelRef)rfcommChannelRef;
-    //    //[Static]
-    //    //[Export ("withRFCOMMChannelRef:")]
-    //    //unsafe IOBluetoothRFCOMMChannel WithRFCOMMChannelRef (IOBluetoothRFCOMMChannelRef* rfcommChannelRef);
+        // +(instancetype)withRFCOMMChannelRef:(IOBluetoothRFCOMMChannelRef)rfcommChannelRef;
+        //[Static]
+        //[Export ("withRFCOMMChannelRef:")]
+        //unsafe IOBluetoothRFCOMMChannel WithRFCOMMChannelRef (IOBluetoothRFCOMMChannelRef* rfcommChannelRef);
 
-    //    // +(instancetype)withObjectID:(IOBluetoothObjectID)objectID;
-    //    [Static]
-    //    [Export("withObjectID:")]
-    //    IOBluetoothRFCOMMChannel WithObjectID(nuint objectID);
+        // +(instancetype)withObjectID:(IOBluetoothObjectID)objectID;
+        [Static]
+        [Export("withObjectID:")]
+        IOBluetoothRFCOMMChannel WithObjectID(nuint objectID);
 
-    //    // -(IOBluetoothRFCOMMChannelRef)getRFCOMMChannelRef;
-    //    //[Export ("getRFCOMMChannelRef")]
-    //    //[Verify (MethodToProperty)]
-    //    //unsafe IOBluetoothRFCOMMChannelRef* RFCOMMChannelRef { get; }
+        // -(IOBluetoothRFCOMMChannelRef)getRFCOMMChannelRef;
+        //[Export ("getRFCOMMChannelRef")]
+        //[Verify (MethodToProperty)]
+        //unsafe IOBluetoothRFCOMMChannelRef* RFCOMMChannelRef { get; }
 
-    //    // -(IOReturn)closeChannel;
-    //    [Export("closeChannel")]
-    //    int CloseChannel();
+        // -(IOReturn)closeChannel;
+        [Export("closeChannel")]
+        int CloseChannel();
 
-    //    // -(BOOL)isOpen;
-    //    [Export("isOpen")]
-    //    bool IsOpen { get; }
+        // -(BOOL)isOpen;
+        [Export("isOpen")]
+        bool IsOpen { get; }
 
-    //    // -(BluetoothRFCOMMMTU)getMTU;
-    //    [Export("getMTU")]
-    //    ushort MTU { get; }
+        // -(BluetoothRFCOMMMTU)getMTU;
+        [Export("getMTU")]
+        ushort MTU { get; }
 
-    //    // -(BOOL)isTransmissionPaused;
-    //    [Export("isTransmissionPaused")]
-    //    bool IsTransmissionPaused { get; }
+        // -(BOOL)isTransmissionPaused;
+        [Export("isTransmissionPaused")]
+        bool IsTransmissionPaused { get; }
 
-    //    // -(IOReturn)writeAsync:(void *)data length:(UInt16)length refcon:(void *)refcon;
-    //    [Export("writeAsync:length:refcon:")]
-    //    int WriteAsync(IntPtr data, ushort length, IntPtr refcon);
+        // -(IOReturn)writeAsync:(void *)data length:(UInt16)length refcon:(void *)refcon;
+        [Export("writeAsync:length:refcon:")]
+        int WriteAsync(IntPtr data, ushort length, IntPtr refcon);
 
-    //    // -(IOReturn)writeSync:(void *)data length:(UInt16)length;
-    //    [Export("writeSync:length:")]
-    //    int WriteSync(IntPtr data, ushort length);
+        // -(IOReturn)writeSync:(void *)data length:(UInt16)length;
+        [Export("writeSync:length:")]
+        int WriteSync(IntPtr data, ushort length);
 
-    //    // -(IOReturn)setSerialParameters:(UInt32)speed dataBits:(UInt8)nBits parity:(BluetoothRFCOMMParityType)parity stopBits:(UInt8)bitStop;
-    //    [Export("setSerialParameters:dataBits:parity:stopBits:")]
-    //    int SetSerialParameters(uint speed, byte nBits, uint parity, byte bitStop);
+        // -(IOReturn)setSerialParameters:(UInt32)speed dataBits:(UInt8)nBits parity:(BluetoothRFCOMMParityType)parity stopBits:(UInt8)bitStop;
+        [Export("setSerialParameters:dataBits:parity:stopBits:")]
+        int SetSerialParameters(uint speed, byte nBits, uint parity, byte bitStop);
 
-    //    // -(IOReturn)sendRemoteLineStatus:(BluetoothRFCOMMLineStatus)lineStatus;
-    //    [Export("sendRemoteLineStatus:")]
-    //    int SendRemoteLineStatus(uint lineStatus);
+        // -(IOReturn)sendRemoteLineStatus:(BluetoothRFCOMMLineStatus)lineStatus;
+        [Export("sendRemoteLineStatus:")]
+        int SendRemoteLineStatus(uint lineStatus);
 
-    //    // -(IOReturn)setDelegate:(id)delegate;
-    //    [Export("setDelegate:")]
-    //    int SetDelegate(NSObject @delegate);
+        // -(IOReturn)setDelegate:(id)delegate;
+        [Export("setDelegate:")]
+        int SetDelegate(NSObject @delegate);
 
-    //    // -(id)delegate;
-    //    [Export("delegate")]
-    //    IOBluetoothRFCOMMChannelDelegate Delegate { get; }
+        // -(id)delegate;
+        [Export("delegate")]
+        IOBluetoothRFCOMMChannelDelegate Delegate { get; }
 
-    //    // -(BluetoothRFCOMMChannelID)getChannelID;
-    //    [Export("getChannelID")]
-    //    byte ChannelID { get; }
+        // -(BluetoothRFCOMMChannelID)getChannelID;
+        [Export("getChannelID")]
+        byte ChannelID { get; }
 
-    //    // -(BOOL)isIncoming;
-    //    [Export("isIncoming")]
-    //    bool IsIncoming { get; }
+        // -(BOOL)isIncoming;
+        [Export("isIncoming")]
+        bool IsIncoming { get; }
 
-    //    // -(IOBluetoothDevice *)getDevice;
-    //    [Export("getDevice")]
-    //    IOBluetoothDevice Device { get; }
+        // -(IOBluetoothDevice *)getDevice;
+        [Export("getDevice")]
+        IOBluetoothDevice Device { get; }
 
-    //    // -(IOBluetoothObjectID)getObjectID;
-    //    [Export("getObjectID")]
-    //    nuint ObjectID { get; }
+        // -(IOBluetoothObjectID)getObjectID;
+        [Export("getObjectID")]
+        nuint ObjectID { get; }
 
-    //    // -(IOBluetoothUserNotification *)registerForChannelCloseNotification:(id)observer selector:(SEL)inSelector;
-    //    [Export("registerForChannelCloseNotification:selector:")]
-    //    IOBluetoothUserNotification RegisterForChannelCloseNotification(NSObject observer, Selector inSelector);
-    //}
+        // -(IOBluetoothUserNotification *)registerForChannelCloseNotification:(id)observer selector:(SEL)inSelector;
+        [Export("registerForChannelCloseNotification:selector:")]
+        IOBluetoothUserNotification RegisterForChannelCloseNotification(NSObject observer, Selector inSelector);
+    }
 
-    //// @protocol IOBluetoothRFCOMMChannelDelegate
-    //[Protocol,Model]
-    //[BaseType(typeof(NSObject))]
-    //interface IOBluetoothRFCOMMChannelDelegate
-    //{
-    //    // @optional -(void)rfcommChannelData:(IOBluetoothRFCOMMChannel *)rfcommChannel data:(void *)dataPointer length:(size_t)dataLength;
-    //    [Export("rfcommChannelData:data:length:")]
-    //    void RfcommChannelData(IOBluetoothRFCOMMChannel rfcommChannel, IntPtr dataPointer, nuint dataLength);
+    // @protocol IOBluetoothRFCOMMChannelDelegate
+    [Protocol,Model]
+    [BaseType(typeof(NSObject))]
+    interface IOBluetoothRFCOMMChannelDelegate
+    {
+        // @optional -(void)rfcommChannelData:(IOBluetoothRFCOMMChannel *)rfcommChannel data:(void *)dataPointer length:(size_t)dataLength;
+        [Export("rfcommChannelData:data:length:")]
+        void RfcommChannelData(IOBluetoothRFCOMMChannel rfcommChannel, IntPtr dataPointer, nuint dataLength);
 
-    //    // @optional -(void)rfcommChannelOpenComplete:(IOBluetoothRFCOMMChannel *)rfcommChannel status:(IOReturn)error;
-    //    [Export("rfcommChannelOpenComplete:status:")]
-    //    void RfcommChannelOpenComplete(IOBluetoothRFCOMMChannel rfcommChannel, int error);
+        // @optional -(void)rfcommChannelOpenComplete:(IOBluetoothRFCOMMChannel *)rfcommChannel status:(IOReturn)error;
+        [Export("rfcommChannelOpenComplete:status:")]
+        void RfcommChannelOpenComplete(IOBluetoothRFCOMMChannel rfcommChannel, int error);
 
-    //    // @optional -(void)rfcommChannelClosed:(IOBluetoothRFCOMMChannel *)rfcommChannel;
-    //    [Export("rfcommChannelClosed:")]
-    //    void RfcommChannelClosed(IOBluetoothRFCOMMChannel rfcommChannel);
+        // @optional -(void)rfcommChannelClosed:(IOBluetoothRFCOMMChannel *)rfcommChannel;
+        [Export("rfcommChannelClosed:")]
+        void RfcommChannelClosed(IOBluetoothRFCOMMChannel rfcommChannel);
 
-    //    // @optional -(void)rfcommChannelControlSignalsChanged:(IOBluetoothRFCOMMChannel *)rfcommChannel;
-    //    [Export("rfcommChannelControlSignalsChanged:")]
-    //    void RfcommChannelControlSignalsChanged(IOBluetoothRFCOMMChannel rfcommChannel);
+        // @optional -(void)rfcommChannelControlSignalsChanged:(IOBluetoothRFCOMMChannel *)rfcommChannel;
+        [Export("rfcommChannelControlSignalsChanged:")]
+        void RfcommChannelControlSignalsChanged(IOBluetoothRFCOMMChannel rfcommChannel);
 
-    //    // @optional -(void)rfcommChannelFlowControlChanged:(IOBluetoothRFCOMMChannel *)rfcommChannel;
-    //    [Export("rfcommChannelFlowControlChanged:")]
-    //    void RfcommChannelFlowControlChanged(IOBluetoothRFCOMMChannel rfcommChannel);
+        // @optional -(void)rfcommChannelFlowControlChanged:(IOBluetoothRFCOMMChannel *)rfcommChannel;
+        [Export("rfcommChannelFlowControlChanged:")]
+        void RfcommChannelFlowControlChanged(IOBluetoothRFCOMMChannel rfcommChannel);
 
-    //    // @optional -(void)rfcommChannelWriteComplete:(IOBluetoothRFCOMMChannel *)rfcommChannel refcon:(void *)refcon status:(IOReturn)error;
-    //    [Export("rfcommChannelWriteComplete:refcon:status:")]
-    //    void RfcommChannelWriteComplete(IOBluetoothRFCOMMChannel rfcommChannel, IntPtr refcon, int error);
+        // @optional -(void)rfcommChannelWriteComplete:(IOBluetoothRFCOMMChannel *)rfcommChannel refcon:(void *)refcon status:(IOReturn)error;
+        [Export("rfcommChannelWriteComplete:refcon:status:")]
+        void RfcommChannelWriteComplete(IOBluetoothRFCOMMChannel rfcommChannel, IntPtr refcon, int error);
 
-    //    // @optional -(void)rfcommChannelQueueSpaceAvailable:(IOBluetoothRFCOMMChannel *)rfcommChannel;
-    //    [Export("rfcommChannelQueueSpaceAvailable:")]
-    //    void RfcommChannelQueueSpaceAvailable(IOBluetoothRFCOMMChannel rfcommChannel);
-    //}
+        // @optional -(void)rfcommChannelQueueSpaceAvailable:(IOBluetoothRFCOMMChannel *)rfcommChannel;
+        [Export("rfcommChannelQueueSpaceAvailable:")]
+        void RfcommChannelQueueSpaceAvailable(IOBluetoothRFCOMMChannel rfcommChannel);
+    }
 
     //// @interface IOBluetoothSDPDataElement : NSObject <NSCoding, NSSecureCoding>
     //[BaseType(typeof(NSObject))]
