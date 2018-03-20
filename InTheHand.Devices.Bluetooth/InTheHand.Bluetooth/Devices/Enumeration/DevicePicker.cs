@@ -6,9 +6,9 @@
 //-----------------------------------------------------------------------
 
 using System;
+#if !UNITY
 using System.Threading.Tasks;
-using InTheHand.Foundation;
-using InTheHand.UI.Popups;
+#endif
 #if WINDOWS_APP
 using Windows.UI.Xaml.Controls.Primitives;
 #endif
@@ -36,7 +36,6 @@ namespace InTheHand.Devices.Enumeration
 #endif
 
 #if !WINDOWS_UWP
-        private DevicePickerAppearance _appearance = new DevicePickerAppearance();   
         private DevicePickerFilter _filter = new DevicePickerFilter();
         
 #endif
@@ -70,13 +69,18 @@ namespace InTheHand.Devices.Enumeration
         // <summary>
         // Indicates that the user selected a device in the picker.
         // </summary>
-        internal event TypedEventHandler<DevicePicker, DeviceSelectedEventArgs> DeviceSelected;
+        //internal event EventHandler<DeviceSelectedEventArgs> DeviceSelected;
 
         // Raises the DeviceSelected event
-        internal void OnDeviceSelected(DeviceInformation device)
-        {
-            DeviceSelected?.Invoke(this, new DeviceSelectedEventArgs() { SelectedDevice = device });
-        }
+        //internal void OnDeviceSelected(DeviceInformation device)
+        //{
+        //    DeviceSelected?.Invoke(this, new DeviceSelectedEventArgs() { SelectedDevice = device });
+        //}
+
+#if !UNITY
+#if !WINDOWS_UWP
+        private DevicePickerAppearance _appearance = new DevicePickerAppearance();
+#endif
 
 
         /// <summary>
@@ -101,6 +105,8 @@ namespace InTheHand.Devices.Enumeration
 #endif
             }
         }
+#endif
+        
 
         /// <summary>
         /// Gets the filter used to choose what devices to show in the picker.
@@ -120,61 +126,47 @@ namespace InTheHand.Devices.Enumeration
             {
 #if WINDOWS_UWP
                 return GetFilter();
-#else                
+#else
                 return _filter;
 #endif
             }
         }
 
-        /*
-        /// <summary>
-        /// Hides the picker.
-        /// </summary>
-        public void Hide()
-        {
-#if WINDOWS_PHONE_APP
-            if(_dialog == null)
-            {
-                throw new InvalidOperationException("Picker is not shown");
-            }
-
-            _dialog.Hide();
-#else
-#endif
-        }*/
-
         /// <summary>
         /// Shows the picker UI and returns the selected device; does not require you to register for an event.
         /// </summary>
         /// <returns></returns>
-        public Task<DeviceInformation> PickSingleDeviceAsync()
-        {
-            return PickSingleDeviceAsync(new Rect(0,0,1,1), Placement.Default);
-        }
+/*
+public Task<DeviceInformation> PickSingleDeviceAsync()
+{
+    return PickSingleDeviceAsync(new Rect(0,0,1,1), Placement.Default);
+}
 
-        /// <summary>
-        /// Shows the picker UI and returns the selected device; does not require you to register for an event.
-        /// </summary>
-        /// <param name="selection">The rectangle from which you want the picker to fly out.
-        /// <para>Ignored on Phone platforms as dialog is presented full-screen and Windows Desktop where it is centered.</para></param>
-        /// <returns></returns>
-        public Task<DeviceInformation> PickSingleDeviceAsync(Rect selection)
-        {
-            return PickSingleDeviceAsync(selection, Placement.Default);
-        }
+/// <summary>
+/// Shows the picker UI and returns the selected device; does not require you to register for an event.
+/// </summary>
+/// <param name="selection">The rectangle from which you want the picker to fly out.
+/// <para>Ignored on Phone platforms as dialog is presented full-screen and Windows Desktop where it is centered.</para></param>
+/// <returns></returns>
+public Task<DeviceInformation> PickSingleDeviceAsync(Rect selection)
+{
+    return PickSingleDeviceAsync(selection, Placement.Default);
+}
 
-        /// <summary>
-        /// Shows the picker UI and returns the selected device; does not require you to register for an event.
-        /// </summary>
-        /// <param name="selection">The rectangle from which you want the picker to fly out.
-        /// <para>Ignored on Phone platforms as dialog is presented full-screen and Windows Desktop where it is centered.</para></param>
-        /// <param name="placement">The edge of the rectangle from which you want the picker to fly out.
-        /// <para>Ignored on Phone platforms as dialog is presented full-screen and Windows Desktop where it is centered.</para></param>
-        /// <returns></returns>
-        public async Task<DeviceInformation> PickSingleDeviceAsync(Rect selection, Placement placement)
+/// <summary>
+/// Shows the picker UI and returns the selected device; does not require you to register for an event.
+/// </summary>
+/// <param name="selection">The rectangle from which you want the picker to fly out.
+/// <para>Ignored on Phone platforms as dialog is presented full-screen and Windows Desktop where it is centered.</para></param>
+/// <param name="placement">The edge of the rectangle from which you want the picker to fly out.
+/// <para>Ignored on Phone platforms as dialog is presented full-screen and Windows Desktop where it is centered.</para></param>
+/// <returns></returns>
+*/
+#if !UNITY
+        public async Task<DeviceInformation> PickSingleDeviceAsync()
         {
 #if __ANDROID__ || __IOS__ || WIN32 || WINDOWS_UWP
-            return await DoPickSingleDeviceAsync(selection, placement);
+            return await DoPickSingleDeviceAsync();
 
 #elif WINDOWS_PHONE_APP
             _dialog = new DevicePickerDialog(this);
@@ -195,37 +187,6 @@ namespace InTheHand.Devices.Enumeration
             return null;
 #endif
         }
-
-        /*
-        /// <summary>
-        /// Shows the picker UI.
-        /// </summary>
-        /// <param name="selection">The rectangle from which you want the picker to fly out.
-        /// Ignored on Windows Phone.</param>
-        public void Show(Rect selection)
-        {
-            Show(selection, Placement.Default);
-        }
-
-        /// <summary>
-        /// Shows the picker UI. 
-        /// </summary>
-        /// <param name="selection">The rectangle from which you want the picker to fly out.
-        /// Ignored on Windows Phone.</param>
-        /// <param name="placement">The edge of the rectangle from which you want the picker to fly out.
-        /// Ignored on Windows Phone.</param>
-        public void Show(Rect selection, Placement placement)
-        {
-#if WINDOWS_PHONE_APP
-            _dialog = new DevicePickerDialog(this);
-            _dialog.ShowAsync();
-#elif WINDOWS_APP
-            _popup = new Popup();
-            _popup.Child = new DevicePickerControl(this, _popup);
-            _popup.HorizontalOffset = selection.Right;
-            _popup.VerticalOffset = selection.Top;
-            _popup.IsOpen = true;
 #endif
-        }*/
-    }
+        }
 }

@@ -1,11 +1,13 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="DeviceInformationPairing.cs" company="In The Hand Ltd">
-//   Copyright (c) 2017 In The Hand Ltd, All rights reserved.
+//   Copyright (c) 2017-18 In The Hand Ltd, All rights reserved.
 //   This source code is licensed under the MIT License - see License.txt
 // </copyright>
 //-----------------------------------------------------------------------
 
+#if !UNITY
 using System.Threading.Tasks;
+#endif
 using System;
 
 namespace InTheHand.Devices.Enumeration
@@ -47,6 +49,7 @@ namespace InTheHand.Devices.Enumeration
             }
         }
 
+#if !UNITY
         /// <summary>
         /// Gets the <see cref="DeviceInformationCustomPairing"/> object necessary for custom pairing.
         /// </summary>
@@ -65,9 +68,10 @@ namespace InTheHand.Devices.Enumeration
 
 #else
                 return null;
-#endif              
+#endif
             }
         }
+#endif
 
         /// <summary>
         /// Gets a value that indicates whether the device is currently paired.
@@ -93,6 +97,7 @@ namespace InTheHand.Devices.Enumeration
             }
         }
 
+#if !UNITY
         /// <summary>
         /// Attempts to pair the device.
         /// </summary>
@@ -106,7 +111,7 @@ namespace InTheHand.Devices.Enumeration
         /// </remarks>
         public Task<DevicePairingResult> PairAsync()
         {
-#if __ANDROID__ ||  WIN32
+#if __ANDROID__ || WIN32
             return Task.FromResult<DevicePairingResult>(DoPair());
 
 #elif WINDOWS_UWP
@@ -139,5 +144,6 @@ namespace InTheHand.Devices.Enumeration
             return Task.FromResult<DeviceUnpairingResult>(null);
 #endif
         }
+#endif
     }
 }

@@ -1,6 +1,6 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="BluetoothLEDevice.cs" company="In The Hand Ltd">
-//   Copyright (c) 2015-17 In The Hand Ltd, All rights reserved.
+//   Copyright (c) 2015-18 In The Hand Ltd, All rights reserved.
 //   This source code is licensed under the MIT License - see License.txt
 // </copyright>
 //-----------------------------------------------------------------------
@@ -11,7 +11,6 @@ using InTheHand.Devices.Enumeration;
 using InTheHand.Devices.Bluetooth.GenericAttributeProfile;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using InTheHand.Foundation;
 using System.Threading;
 
 namespace InTheHand.Devices.Bluetooth
@@ -85,11 +84,11 @@ namespace InTheHand.Devices.Bluetooth
             return GetDeviceSelectorFromConnectionStatusImpl(connectionStatus);
         }
 
-        private event TypedEventHandler<BluetoothLEDevice, object> _nameChanged;
+        private event EventHandler _nameChanged;
         /// <summary>
         /// Occurs when the name of the device has changed.
         /// </summary>
-        public event TypedEventHandler<BluetoothLEDevice, Object> NameChanged
+        public event EventHandler NameChanged
         {
             add
             {
@@ -156,11 +155,11 @@ namespace InTheHand.Devices.Bluetooth
             _connectionStatusChanged?.Invoke(this, EventArgs.Empty);
         }
 
-        private event TypedEventHandler<BluetoothLEDevice, object> _connectionStatusChanged;
+        private event EventHandler _connectionStatusChanged;
         /// <summary>
         /// Occurs when the connection status for the device has changed.
         /// </summary>
-        public event TypedEventHandler<BluetoothLEDevice, object> ConnectionStatusChanged
+        public event EventHandler ConnectionStatusChanged
         {
             add
             {

@@ -22,7 +22,7 @@ namespace InTheHand.Devices.Enumeration
         internal static DevicePicker s_current;
         internal Android.Bluetooth.BluetoothDevice _device;
         
-        private Task<DeviceInformation> DoPickSingleDeviceAsync(Rect selection, Placement placement)
+        private Task<DeviceInformation> DoPickSingleDeviceAsync()//Rect selection, Placement placement)
         {
             s_current = this;
 

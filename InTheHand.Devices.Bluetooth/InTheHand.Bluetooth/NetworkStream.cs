@@ -1,18 +1,23 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="NetworkStream.cs" company="In The Hand Ltd">
-//   Copyright (c) 2017 In The Hand Ltd, All rights reserved.
+//   Copyright (c) 2017-18 In The Hand Ltd, All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
+
 
 using System;
 using System.IO;
 using System.Threading;
+#if !UNITY
 using System.Threading.Tasks;
+#endif
 
 #if __ANDROID__
 using Android.Bluetooth;
 #elif WINDOWS_UWP || WINDOWS_APP || WINDOWS_PHONE_APP || WINDOWS_PHONE_81
 using Windows.Networking.Sockets;
+#elif UNITY
+using InTheHand.Net.Sockets;
 #endif
 
 namespace InTheHand.Networking.Sockets
@@ -58,6 +63,13 @@ namespace InTheHand.Networking.Sockets
         {
             _socket = socket;
         }
+#elif UNITY
+        private MonoBluetoothSocket _socket;
+
+        public NetworkStream(MonoBluetoothSocket socket)
+        {
+            _socket = socket;
+        }
 #endif
 
         /// <summary>
@@ -72,6 +84,9 @@ namespace InTheHand.Networking.Sockets
 
 #elif __ANDROID__
                 return _socket.InputStream.CanRead;
+
+#elif UNITY
+                return true;
 
 #else
                 return false;
@@ -104,6 +119,9 @@ namespace InTheHand.Networking.Sockets
 #elif __ANDROID__
                 return _socket.OutputStream.CanWrite;
 
+#elif UNITY
+                return true;
+
 #else
                 return false;
 #endif
@@ -123,6 +141,9 @@ namespace InTheHand.Networking.Sockets
 
 #elif __ANDROID__
                 return _socket.InputStream.Length;
+
+#elif UNITY
+                return _socket.Available;
 
 #else
                 throw new NotSupportedException();
@@ -160,6 +181,7 @@ namespace InTheHand.Networking.Sockets
 #endif
         }
 
+#if !UNITY
         /// <summary>
         /// Asynchronously clears all buffers for this stream and causes any buffered data to be written to the underlying device.
         /// </summary>
@@ -177,6 +199,7 @@ namespace InTheHand.Networking.Sockets
             return Task.CompletedTask;
 #endif
         }
+#endif
 
         /// <summary>
         /// Reads data from the NetworkStream.
@@ -193,11 +216,15 @@ namespace InTheHand.Networking.Sockets
 #elif __ANDROID__
             return _socket.InputStream.Read(buffer, offset, count);
 
+#elif UNITY
+            return _socket.Receive(buffer, count, 0);
+
 #else
             return 0;
 #endif
         }
 
+#if !UNITY
         /// <summary>
         /// Asynchronously reads a sequence of bytes from the current stream and advances the position within the stream by the number of bytes read.
         /// </summary>
@@ -218,6 +245,7 @@ namespace InTheHand.Networking.Sockets
             return Task.FromResult<int>(0);
 #endif
         }
+#endif
 
         /// <summary>
         /// Sets the current position of the stream to the given value.
@@ -254,9 +282,13 @@ namespace InTheHand.Networking.Sockets
 
 #elif __ANDROID__
             _socket.OutputStream.Write(buffer, offset, count);
+
+#elif UNITY
+            _socket.Send(buffer, count, 0);
 #endif
         }
 
+#if !UNITY
         /// <summary>
         /// Asynchronously writes a sequence of bytes to the current stream and advances the current position within this stream by the number of bytes written.
         /// </summary>
@@ -277,6 +309,7 @@ namespace InTheHand.Networking.Sockets
             return Task.CompletedTask;
 #endif
         }
+#endif
 
             /// <summary>
             /// Releases the unmanaged resources used by the NetworkStream and optionally releases the managed resources.
@@ -294,6 +327,10 @@ namespace InTheHand.Networking.Sockets
 
 #elif __ANDROID__
             _socket?.Close();
+            _socket?.Dispose();
+            _socket = null;
+
+#elif UNITY
             _socket?.Dispose();
             _socket = null;
 #endif

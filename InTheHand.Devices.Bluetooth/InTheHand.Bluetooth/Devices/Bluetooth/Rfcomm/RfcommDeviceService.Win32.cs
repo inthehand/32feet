@@ -1,6 +1,6 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="RfcommDeviceService.Win32.cs" company="In The Hand Ltd">
-//   Copyright (c) 2017 In The Hand Ltd, All rights reserved.
+//   Copyright (c) 2017-18 In The Hand Ltd, All rights reserved.
 //   This source code is licensed under the MIT License - see License.txt
 // </copyright>
 //-----------------------------------------------------------------------
@@ -9,12 +9,15 @@ using System;
 using System.Globalization;
 using System.IO;
 using System.Net.Sockets;
+#if !UNITY
 using System.Threading.Tasks;
+#endif
 
 namespace InTheHand.Devices.Bluetooth.Rfcomm
 {
     partial class RfcommDeviceService
     {
+#if !UNITY
         private static async Task<RfcommDeviceService> FromIdAsyncImpl(string deviceId)
         {
             if(deviceId.StartsWith("BLUETOOTH#"))
@@ -30,6 +33,7 @@ namespace InTheHand.Devices.Bluetooth.Rfcomm
 
             return null;
         }
+#endif
         
         private static string GetDeviceSelectorImpl(RfcommServiceId serviceId)
         {
@@ -55,14 +59,24 @@ namespace InTheHand.Devices.Bluetooth.Rfcomm
             return _service;
         }
         
+        public Stream OpenStream()
+        {
+            var socket = BluetoothSockets.CreateRfcommSocket();
+            socket.Connect(new BluetoothEndPoint(this));
+#if UNITY
+            return new InTheHand.Networking.Sockets.NetworkStream(socket);
+#else
+            return new NetworkStream(socket);
+#endif
+        }
+#if !UNITY
         private Task<Stream> OpenStreamAsyncImpl()
         {
             return Task.Run<Stream>(() =>
             {
-                var socket = BluetoothSockets.CreateRfcommSocket();
-                socket.Connect(new BluetoothEndPoint(this));
-                return new NetworkStream(socket);
+                return OpenStream();
             });
         }
+#endif
     }
 }

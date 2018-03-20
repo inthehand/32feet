@@ -6,6 +6,7 @@
 //-----------------------------------------------------------------------
 
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace InTheHand.Devices.Bluetooth.Rfcomm
 {
@@ -15,9 +16,15 @@ namespace InTheHand.Devices.Bluetooth.Rfcomm
     public sealed partial class RfcommDeviceServicesResult
     {
         private BluetoothError _error;
+#if UNITY
+        private ReadOnlyCollection<RfcommDeviceService> _services;
+
+        internal RfcommDeviceServicesResult(BluetoothError error, ReadOnlyCollection<RfcommDeviceService> services)
+#else
         private IReadOnlyList<RfcommDeviceService> _services;
 
         internal RfcommDeviceServicesResult(BluetoothError error, IReadOnlyList<RfcommDeviceService> services)
+#endif
         {
             _error = error;
             _services = services;
@@ -37,7 +44,11 @@ namespace InTheHand.Devices.Bluetooth.Rfcomm
         /// <summary>
         /// The collection of returned services.
         /// </summary>
+#if UNITY
+        public ReadOnlyCollection<RfcommDeviceService> Services
+#else
         public IReadOnlyList<RfcommDeviceService> Services
+#endif
         {
             get
             {

@@ -1,6 +1,6 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="GattCharacteristic.cs" company="In The Hand Ltd">
-//   Copyright (c) 2015-17 In The Hand Ltd, All rights reserved.
+//   Copyright (c) 2015-18 In The Hand Ltd, All rights reserved.
 //   This source code is licensed under the MIT License - see License.txt
 // </copyright>
 //-----------------------------------------------------------------------
@@ -8,7 +8,6 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using InTheHand.Foundation;
 
 namespace InTheHand.Devices.Bluetooth.GenericAttributeProfile
 {
@@ -133,11 +132,11 @@ namespace InTheHand.Devices.Bluetooth.GenericAttributeProfile
             }
         }
 
-        private event TypedEventHandler<GattCharacteristic, GattValueChangedEventArgs> valueChanged;
+        private event EventHandler<GattValueChangedEventArgs> valueChanged;
         /// <summary>
         /// An App can register an event handler in order to receive events when notification or indications are received from a device, after setting the Client Characteristic Configuration Descriptor.
         /// </summary>
-        public event TypedEventHandler<GattCharacteristic, GattValueChangedEventArgs> ValueChanged
+        public event EventHandler<GattValueChangedEventArgs> ValueChanged
         {
             add
             {

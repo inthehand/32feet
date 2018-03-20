@@ -19,18 +19,19 @@ namespace InTheHand.Devices.Enumeration
             _deviceInfo = info;
         }
 
+#if !UNITY
         private DeviceInformationCustomPairing GetCustom()
         {
             return new DeviceInformationCustomPairing(_deviceInfo);
         }
-
+#endif
 
         private bool GetIsPaired()
         {
             return _deviceInfo.fAuthenticated;
         }
 
-        private DevicePairingResult DoPair()
+        public DevicePairingResult Pair()
         {
             int result = NativeMethods.BluetoothAuthenticateDevice(IntPtr.Zero, IntPtr.Zero, ref _deviceInfo, null, 0);
 
@@ -42,7 +43,7 @@ namespace InTheHand.Devices.Enumeration
             return new DevicePairingResult(result);
         }
 
-        private DeviceUnpairingResult DoUnpair()
+        public DeviceUnpairingResult Unpair()
         {
             ulong addr = _deviceInfo.Address;
             int result = NativeMethods.BluetoothRemoveDevice(ref addr);

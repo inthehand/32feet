@@ -7,7 +7,9 @@
 
 using System;
 using System.IO;
+#if !UNITY
 using System.Threading.Tasks;
+#endif
 using System.Reflection;
 using System.Globalization;
 
@@ -19,10 +21,12 @@ namespace InTheHand.Devices.Bluetooth.Rfcomm
     /// </summary>
     public sealed partial class RfcommDeviceService
     {
+#if !UNITY
         public static Task<RfcommDeviceService> FromIdAsync(string deviceId)
         {
             return FromIdAsyncImpl(deviceId);
         }
+#endif
 
         /// <summary>
         /// Gets an Advanced Query Syntax (AQS) string for identifying instances of an RFCOMM service.
@@ -61,6 +65,7 @@ namespace InTheHand.Devices.Bluetooth.Rfcomm
             }
         }
 
+#if !UNITY
         /// <summary>
         /// Connects to the remote service and returns a read/write Stream to communicate over.
         /// </summary>
@@ -70,6 +75,7 @@ namespace InTheHand.Devices.Bluetooth.Rfcomm
         {
             return OpenStreamAsyncImpl();
         }
+#endif
 
         /// <summary>
         /// 
