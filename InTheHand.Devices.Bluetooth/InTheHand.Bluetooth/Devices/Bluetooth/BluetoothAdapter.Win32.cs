@@ -1,55 +1,66 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="BluetoothAdapter.Win32.cs" company="In The Hand Ltd">
-//   Copyright (c) 2017 In The Hand Ltd, All rights reserved.
+//   Copyright (c) 2017-18 In The Hand Ltd, All rights reserved.
 //   This source code is licensed under the MIT License - see License.txt
 // </copyright>
 //-----------------------------------------------------------------------
 
 using System;
+#if !UNITY
 using System.Threading.Tasks;
+#endif
 using System.Runtime.InteropServices;
 using System.Diagnostics;
 
 namespace InTheHand.Devices.Bluetooth
 {
     partial class BluetoothAdapter
-    {        
+    {    
+        private static BluetoothAdapter GetDefaultImpl()
+        {
+            if (s_default == null)
+            {
+                NativeMethods.BLUETOOTH_FIND_RADIO_PARAMS p = new NativeMethods.BLUETOOTH_FIND_RADIO_PARAMS();
+                p.dwSize = Marshal.SizeOf(p);
+                IntPtr radioHandle;
+                IntPtr findHandle = NativeMethods.BluetoothFindFirstRadio(ref p, out radioHandle);
+                if (findHandle != IntPtr.Zero)
+                {
+                    NativeMethods.BLUETOOTH_RADIO_INFO radioInfo = new NativeMethods.BLUETOOTH_RADIO_INFO();
+                    radioInfo.dwSize = Marshal.SizeOf(radioInfo);
+                    if (NativeMethods.BluetoothGetRadioInfo(radioHandle, ref radioInfo) == 0)
+                    {
+                        s_default = new BluetoothAdapter(radioHandle, radioInfo);
+                    }
+
+                    NativeMethods.BluetoothFindRadioClose(findHandle);
+                }
+            }
+
+            return s_default;
+        }
+
+#if !UNITY
         private static Task<BluetoothAdapter> GetDefaultAsyncImpl()
         {
             return Task.Run(() =>
             {
-                if (s_default == null)
-                {
-                    NativeMethods.BLUETOOTH_FIND_RADIO_PARAMS p = new NativeMethods.BLUETOOTH_FIND_RADIO_PARAMS();
-                    p.dwSize = Marshal.SizeOf(p);
-                    IntPtr radioHandle;
-                    IntPtr findHandle = NativeMethods.BluetoothFindFirstRadio(ref p, out radioHandle);
-                    if (findHandle != IntPtr.Zero)
-                    {
-                        NativeMethods.BLUETOOTH_RADIO_INFO radioInfo = new NativeMethods.BLUETOOTH_RADIO_INFO();
-                        radioInfo.dwSize = Marshal.SizeOf(radioInfo);
-                        if (NativeMethods.BluetoothGetRadioInfo(radioHandle, ref radioInfo) == 0)
-                        {
-                            s_default = new BluetoothAdapter(radioHandle, radioInfo);
-                        }
-
-                        NativeMethods.BluetoothFindRadioClose(findHandle);
-                    }
-                }
-
-                return s_default;
+                return GetDefaultImpl();
             });
         }
+#endif
 
         private IntPtr _handle;
         private NativeMethods.BLUETOOTH_RADIO_INFO _radioInfo;
+#if !UNITY
         private BluetoothMessageWindow _messageWindow;
         private int _notifyHandle;
-
+#endif
         internal BluetoothAdapter(IntPtr radioHandle, NativeMethods.BLUETOOTH_RADIO_INFO radioInfo)
         {
             _handle = radioHandle;
             _radioInfo = radioInfo;
+#if !UNITY
             NativeMethods.SetWindowSubclass(Process.GetCurrentProcess().MainWindowHandle, SubclassProc, 1, IntPtr.Zero);
 
             //_messageWindow = new BluetoothMessageWindow();
@@ -65,9 +76,10 @@ namespace InTheHand.Devices.Bluetooth
             //filter.dbch_eventguid = NativeMethods.GUID_BLUETOOTH_HCI_EVENT;
             //int notifyHandle = NativeMethods.RegisterDeviceNotification(Process.GetCurrentProcess().MainWindowHandle, ref filter, NativeMethods.DEVICE_NOTIFY.WINDOWS_HANDLE);
             NativeMethods.PostMessage(Process.GetCurrentProcess().MainWindowHandle, 0x401, IntPtr.Zero, IntPtr.Zero);
-
+#endif
         }
 
+#if !UNITY
         private int SubclassProc(IntPtr hWnd, uint uMsg, IntPtr wParam, IntPtr lParam, uint uIdSubclass, IntPtr dwRefData)
         {
             switch (uMsg)
@@ -103,7 +115,7 @@ namespace InTheHand.Devices.Bluetooth
         
 
         internal event EventHandler<ulong> ConnectionStatusChanged;
-
+#endif
         
         private ulong GetBluetoothAddress()
         {

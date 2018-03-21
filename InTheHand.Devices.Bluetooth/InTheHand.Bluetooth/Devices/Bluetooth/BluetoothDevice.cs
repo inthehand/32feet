@@ -1,17 +1,18 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="BluetoothDevice.cs" company="In The Hand Ltd">
-//   Copyright (c) 2017 In The Hand Ltd, All rights reserved.
+//   Copyright (c) 2017-18 In The Hand Ltd, All rights reserved.
 //   This source code is licensed under the MIT License - see License.txt
 // </copyright>
 //-----------------------------------------------------------------------
 
 using InTheHand.Devices.Bluetooth.Rfcomm;
 using InTheHand.Devices.Enumeration;
-using InTheHand.Foundation;
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+#if !UNITY
 using System.Threading.Tasks;
+#endif
 
 namespace InTheHand.Devices.Bluetooth
 {
@@ -30,6 +31,7 @@ namespace InTheHand.Devices.Bluetooth
     /// </remarks>
     public sealed partial class BluetoothDevice
     {
+#if !UNITY
         /// <summary>
         /// Returns a <see cref="BluetoothDevice"/> object for the given BluetoothAddress.
         /// </summary>
@@ -48,6 +50,7 @@ namespace InTheHand.Devices.Bluetooth
         {
             return FromBluetoothAddressAsyncImpl(address);
         }
+
 
         /// <summary>
         /// Returns a <see cref="BluetoothDevice"/> object for the given Id.
@@ -68,7 +71,7 @@ namespace InTheHand.Devices.Bluetooth
         {
             return FromDeviceInformationAsyncImpl(deviceInformation);
         }
-
+#endif
         /// <summary>
         /// Gets an Advanced Query Syntax (AQS) string for identifying all Bluetooth devices.
         /// This string is passed to the <see cref="DeviceInformation.FindAllAsync"/> or CreateWatcher method in order to get a list of Bluetooth devices.
@@ -141,6 +144,7 @@ namespace InTheHand.Devices.Bluetooth
             }
         }
 
+#if !UNITY
         private void RaiseConnectionStatusChanged()
         {
             _connectionStatusChanged?.Invoke(this, EventArgs.Empty);
@@ -173,6 +177,7 @@ namespace InTheHand.Devices.Bluetooth
 
             }
         }
+#endif
 
         /// <summary>
         /// Gets the device Id.
@@ -203,12 +208,12 @@ namespace InTheHand.Devices.Bluetooth
             _nameChanged?.Invoke(this, null);
         }
 
-        private event TypedEventHandler<BluetoothDevice, object> _nameChanged;
+        private event EventHandler _nameChanged;
 
         /// <summary>
         /// Occurs when the name of the device has changed.
         /// </summary>
-        public event TypedEventHandler<BluetoothDevice, object> NameChanged
+        public event EventHandler NameChanged
         {
             add
             {
@@ -229,6 +234,7 @@ namespace InTheHand.Devices.Bluetooth
             }
         }
 
+#if !UNITY
         /// <summary>
         /// Retrieves all Rfcomm Services on the remote Bluetooth Device.
         /// </summary>
@@ -247,6 +253,7 @@ namespace InTheHand.Devices.Bluetooth
         {
             return GetRfcommServicesAsyncImpl(cacheMode);
         }
+#endif
 
         /// <summary>
         /// 

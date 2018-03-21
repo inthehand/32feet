@@ -1,6 +1,6 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="Bluetooth.Win32.cs" company="In The Hand Ltd">
-//   Copyright (c) 2017 In The Hand Ltd, All rights reserved.
+//   Copyright (c) 2017-18 In The Hand Ltd, All rights reserved.
 //   This source code is licensed under the MIT License - see License.txt
 // </copyright>
 //-----------------------------------------------------------------------
@@ -11,13 +11,12 @@ using System.Diagnostics;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Net.Sockets;
 using System.Net;
 
 namespace InTheHand.Devices.Bluetooth
 {
-    internal sealed class BluetoothEndPoint : global::System.Net.EndPoint
+    internal sealed class BluetoothEndPoint : EndPoint
     {
         private ulong _bluetoothAddress;
         private Guid _serviceId;
@@ -112,6 +111,13 @@ namespace InTheHand.Devices.Bluetooth
 
     internal static class BluetoothSockets
     {
+#if UNITY
+        public static InTheHand.Net.Sockets.MonoBluetoothSocket CreateRfcommSocket()
+        {
+            return new InTheHand.Net.Sockets.MonoBluetoothSocket();
+        }
+
+#else
         public static AddressFamily BluetoothAddressFamily = (AddressFamily)32;
         public static ProtocolType RfcommProtocolType = (ProtocolType)3;
 
@@ -119,6 +125,7 @@ namespace InTheHand.Devices.Bluetooth
         {
             return new Socket(BluetoothAddressFamily, SocketType.Stream, RfcommProtocolType);
         }
+#endif
     }
 
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
@@ -493,6 +500,7 @@ namespace InTheHand.Devices.Bluetooth
         }
     }
 
+#if !UNITY
     internal sealed class BluetoothMessageWindow
     {
         private NativeMethods.WindowProc _wndProc;
@@ -506,7 +514,7 @@ namespace InTheHand.Devices.Bluetooth
             //_pumpThread.IsBackground = true;
             _wndProc = new NativeMethods.WindowProc(WindowProc);
             NativeMethods.WNDCLASS cls = new NativeMethods.WNDCLASS();
-            cls.lpszClassName = "InTheHand.Devices.Bluetooth";
+            cls.lpszClassName = "InTheHand.Bluetooth";
             cls.hInstance = Marshal.GetHINSTANCE(Assembly.GetExecutingAssembly().ManifestModule);
             cls.lpfnWndProc = _wndProc;
             uint registration = NativeMethods.RegisterClass(ref cls);
@@ -597,4 +605,5 @@ namespace InTheHand.Devices.Bluetooth
             }
         }
     }
+#endif
 }

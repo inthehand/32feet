@@ -19,7 +19,7 @@ namespace InTheHand.Devices.Enumeration
         internal static DevicePicker s_current;
         internal EASession _device;
         
-        private Task<DeviceInformation> DoPickSingleDeviceAsync(Rect selection, Placement placement)
+        private Task<DeviceInformation> DoPickSingleDeviceAsync()
         {
             s_current = this;
 

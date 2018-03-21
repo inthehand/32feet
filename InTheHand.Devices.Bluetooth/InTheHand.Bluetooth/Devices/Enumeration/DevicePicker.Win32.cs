@@ -1,6 +1,6 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="DevicePicker.Win32.cs" company="In The Hand Ltd">
-//   Copyright (c) 2017 In The Hand Ltd, All rights reserved.
+//   Copyright (c) 2017-18 In The Hand Ltd, All rights reserved.
 //   This source code is licensed under the MIT License - see License.txt
 // </copyright>
 //-----------------------------------------------------------------------
@@ -8,11 +8,11 @@
 using System;
 using System.Globalization;
 using System.Runtime.InteropServices;
+#if !UNITY
 using System.Threading.Tasks;
+#endif
 using InTheHand.Devices.Bluetooth;
 using System.Diagnostics;
-using InTheHand.Foundation;
-using InTheHand.UI.Popups;
 using System.Collections.Generic;
 
 namespace InTheHand.Devices.Enumeration
@@ -21,7 +21,123 @@ namespace InTheHand.Devices.Enumeration
     {
         //private NativeMethods.PFN_DEVICE_CALLBACK _callback;
 
-        private async Task<DeviceInformation> DoPickSingleDeviceAsync(Rect selection, Placement placement)
+        public DeviceInformation PickSingleDevice()
+        {
+            NativeMethods.BLUETOOTH_SELECT_DEVICE_PARAMS sdp = new NativeMethods.BLUETOOTH_SELECT_DEVICE_PARAMS();
+            sdp.dwSize = Marshal.SizeOf(sdp);
+            sdp.hwndParent = Process.GetCurrentProcess().MainWindowHandle;
+            sdp.numDevices = 1;
+#if !UNITY
+            if (!string.IsNullOrEmpty(Appearance.Title))
+            {
+                sdp.info = Appearance.Title;
+            }
+#endif
+            //defaults
+            sdp.fShowAuthenticated = true;
+            sdp.fShowUnknown = false;
+
+            List<int> codMasks = new List<int>();
+
+            if (Filter.SupportedDeviceSelectors.Count > 0)
+            {
+                foreach (string filter in Filter.SupportedDeviceSelectors)
+                {
+                    var parts = filter.Split(':');
+                    switch (parts[0])
+                    {
+                        case "bluetoothClassOfDevice":
+                            int codMask = 0;
+                            if (int.TryParse(parts[1], NumberStyles.HexNumber, null, out codMask))
+                            {
+                                codMasks.Add(codMask);
+                                break;
+                            }
+                            break;
+
+                        case "bluetoothPairingState":
+                            bool pairingState = bool.Parse(parts[1]);
+                            if (pairingState)
+                            {
+                                sdp.fShowAuthenticated = true;
+                                sdp.fShowUnknown = false;
+                            }
+                            else
+                            {
+                                sdp.fShowAuthenticated = false;
+                                sdp.fShowUnknown = true;
+                            }
+                            break;
+                    }
+                }
+            }
+
+            sdp.hwndParent = NativeMethods.GetForegroundWindow();
+
+            if (codMasks.Count > 0)
+            {
+                // marshal the CODs to native memory
+                sdp.numOfClasses = codMasks.Count;
+                sdp.prgClassOfDevices = Marshal.AllocHGlobal(8 * codMasks.Count);
+                for (int i = 0; i < codMasks.Count; i++)
+                {
+                    Marshal.WriteInt32(new IntPtr(sdp.prgClassOfDevices.ToInt32() +  (8 * i)), codMasks[i]);
+                }
+            }
+
+            /*if (Filter.SupportedDeviceSelectors.Count > 0)
+            {
+                _callback = new NativeMethods.PFN_DEVICE_CALLBACK(FilterDevices);
+                sdp.pfnDeviceCallback = _callback;
+                //sdp.pvParam = Marshal.AllocHGlobal(4);
+                //Marshal.WriteInt32(sdp.pvParam, 1);
+            }*/
+
+            bool success = NativeMethods.BluetoothSelectDevices(ref sdp);
+
+            if (sdp.prgClassOfDevices != IntPtr.Zero)
+            {
+                Marshal.FreeHGlobal(sdp.prgClassOfDevices);
+                sdp.prgClassOfDevices = IntPtr.Zero;
+                sdp.numOfClasses = 0;
+            }
+
+            if (success)
+            {
+#if UNITY
+                BLUETOOTH_DEVICE_INFO info = (BLUETOOTH_DEVICE_INFO)Marshal.PtrToStructure(sdp.pDevices, typeof(BLUETOOTH_DEVICE_INFO));
+#else
+                BLUETOOTH_DEVICE_INFO info = Marshal.PtrToStructure<BLUETOOTH_DEVICE_INFO>(sdp.pDevices);
+#endif
+                NativeMethods.BluetoothSelectDevicesFree(ref sdp);
+
+                foreach (string query in Filter.SupportedDeviceSelectors)
+                {
+                    var parts = query.Split(':');
+
+                    if (parts[0] == "bluetoothService")
+                    {
+                        Guid serviceUuid = new Guid(parts[1]);
+                        foreach (Guid g in BluetoothDevice.GetRfcommServices(ref info))
+                        {
+                            if (g == serviceUuid)
+                            {
+                                return new DeviceInformation(info, serviceUuid);
+                            }
+                        }
+
+                        return null;
+                    }
+                }
+
+                return new DeviceInformation(info);
+            }
+
+            return null;
+        }
+
+#if !UNITY
+        private async Task<DeviceInformation> DoPickSingleDeviceAsync()
         {
             NativeMethods.BLUETOOTH_SELECT_DEVICE_PARAMS sdp = new NativeMethods.BLUETOOTH_SELECT_DEVICE_PARAMS();
             sdp.dwSize = Marshal.SizeOf(sdp);
@@ -130,31 +246,32 @@ namespace InTheHand.Devices.Enumeration
 
             return null;
         }
+#endif
 
-        /*private bool FilterDevices(IntPtr param, ref BLUETOOTH_DEVICE_INFO info)
-        {
-            Debug.WriteLine(info.Address);
-
-            Guid[] services = GetRemoteServices(info);
-            if (services.Length > 0)
-            {
-                foreach (string filter in Filter.SupportedDeviceSelectors)
+                /*private bool FilterDevices(IntPtr param, ref BLUETOOTH_DEVICE_INFO info)
                 {
-                    Guid service = Guid.Parse(filter);
-                    for (int i = 0; i < services.Length; i++)
+                    Debug.WriteLine(info.Address);
+
+                    Guid[] services = GetRemoteServices(info);
+                    if (services.Length > 0)
                     {
-                        if (services[i] == service)
+                        foreach (string filter in Filter.SupportedDeviceSelectors)
                         {
-                            return true;
+                            Guid service = Guid.Parse(filter);
+                            for (int i = 0; i < services.Length; i++)
+                            {
+                                if (services[i] == service)
+                                {
+                                    return true;
+                                }
+                            }
                         }
                     }
-                }
-            }
 
-            return false;
-        }*/
+                    return false;
+                }*/
 
-        private Guid[] GetRemoteServices(BLUETOOTH_DEVICE_INFO info)
+                private Guid[] GetRemoteServices(BLUETOOTH_DEVICE_INFO info)
         {
             Guid[] services = new Guid[16];
             int ns = services.Length;

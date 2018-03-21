@@ -1,12 +1,14 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="BluetoothAdapter.cs" company="In The Hand Ltd">
-//   Copyright (c) 2017 In The Hand Ltd, All rights reserved.
+//   Copyright (c) 2017-18 In The Hand Ltd, All rights reserved.
 //   This source code is licensed under the MIT License - see License.txt
 // </copyright>
 //-----------------------------------------------------------------------
 
 using System;
+#if !UNITY
 using System.Threading.Tasks;
+#endif
 using System.Runtime.InteropServices;
 
 namespace InTheHand.Devices.Bluetooth
@@ -23,6 +25,15 @@ namespace InTheHand.Devices.Bluetooth
     {
         private static BluetoothAdapter s_default;
 
+#if UNITY
+        /// <summary>
+        /// Gets the default BluetoothAdapter.
+        /// </summary>
+        public static BluetoothAdapter GetDefault()
+        {
+            return GetDefaultImpl();
+        }
+#else
         /// <summary>
         /// Gets the default BluetoothAdapter.
         /// </summary>
@@ -31,19 +42,25 @@ namespace InTheHand.Devices.Bluetooth
         {
             return GetDefaultAsyncImpl();
         }
-
+#endif
         internal static BluetoothAdapter Default
         {
             get
             {
+#if WIN32 || UNITY
+                return GetDefaultImpl();
+#else
                 if(s_default == null)
                 {
+
                     var t = GetDefaultAsync();
                     t.Wait();
                     s_default = t.Result;
+
                 }
 
                 return s_default;
+#endif
             }
         }
 

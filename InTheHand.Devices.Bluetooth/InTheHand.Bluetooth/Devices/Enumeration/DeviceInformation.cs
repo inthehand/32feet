@@ -1,12 +1,14 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="DeviceInformation.cs" company="In The Hand Ltd">
-//   Copyright (c) 2015-17 In The Hand Ltd, All rights reserved.
+//   Copyright (c) 2015-18 In The Hand Ltd, All rights reserved.
 //   This source code is licensed under the MIT License - see License.txt
 // </copyright>
 //-----------------------------------------------------------------------
 
 using System.Collections.Generic;
+#if !UNITY
 using System.Threading.Tasks;
+#endif
 
 namespace InTheHand.Devices.Enumeration
 {
@@ -24,6 +26,7 @@ namespace InTheHand.Devices.Enumeration
     /// </remarks>
     public sealed partial class DeviceInformation
     {
+#if !UNITY
         /// <summary>
         /// Enumerates DeviceInformation objects matching the specified query string.
         /// </summary>
@@ -37,6 +40,7 @@ namespace InTheHand.Devices.Enumeration
 
             return all.AsReadOnly();
         }
+#endif
 
         /// <summary>
         /// A string representing the identity of the device.
@@ -60,7 +64,7 @@ namespace InTheHand.Devices.Enumeration
             }
         }
 
-#if __ANDROID__ || WINDOWS_UWP || WIN32
+
         /// <summary>
         /// Gets the information about the capabilities for this device to pair.
         /// </summary>
@@ -69,10 +73,14 @@ namespace InTheHand.Devices.Enumeration
         {
             get
             {
+#if __ANDROID__ || WINDOWS_UWP || WIN32
                 return GetPairing();
+#else
+                return null;
+#endif
             }
         }
-#endif
+
 
         /// <summary>
         /// Returns the Id of the <see cref="DeviceInformation"/>.

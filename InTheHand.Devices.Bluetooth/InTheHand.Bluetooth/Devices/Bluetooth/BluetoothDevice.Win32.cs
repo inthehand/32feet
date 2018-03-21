@@ -1,6 +1,6 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="BluetoothDevice.Win32.cs" company="In The Hand Ltd">
-//   Copyright (c) 2017 In The Hand Ltd, All rights reserved.
+//   Copyright (c) 2017-18 In The Hand Ltd, All rights reserved.
 //   This source code is licensed under the MIT License - see License.txt
 // </copyright>
 //-----------------------------------------------------------------------
@@ -9,14 +9,17 @@ using InTheHand.Devices.Bluetooth.Rfcomm;
 using InTheHand.Devices.Enumeration;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Globalization;
+#if !UNITY
 using System.Threading.Tasks;
+#endif
 
 namespace InTheHand.Devices.Bluetooth
 {
     partial class BluetoothDevice
     {
-        private static Task<BluetoothDevice> FromBluetoothAddressAsyncImpl(ulong address)
+        public static BluetoothDevice FromBluetoothAddress(ulong address)
         {
             BLUETOOTH_DEVICE_INFO info = new BLUETOOTH_DEVICE_INFO();
             info.dwSize = global::System.Runtime.InteropServices.Marshal.SizeOf(info);
@@ -24,11 +27,26 @@ namespace InTheHand.Devices.Bluetooth
             int result = NativeMethods.BluetoothGetDeviceInfo(IntPtr.Zero, ref info);
             if (result == 0)
             {
-                return Task.FromResult<BluetoothDevice>(new BluetoothDevice(info));
+                return new BluetoothDevice(info);
             }
 
-            return Task.FromResult<BluetoothDevice>(null);
+            return null;
         }
+
+        public static BluetoothDevice FromDeviceInformation(DeviceInformation deviceInformation)
+        {
+            return new BluetoothDevice(deviceInformation._deviceInfo);
+        }
+
+#if !UNITY
+        private static Task<BluetoothDevice> FromBluetoothAddressAsyncImpl(ulong address)
+        {
+            return Task.Run<BluetoothDevice>(() =>
+            {
+                return FromBluetoothAddress(address);
+            });
+        }
+
 
         private static async Task<BluetoothDevice> FromIdAsyncImpl(string deviceId)
         {
@@ -46,12 +64,12 @@ namespace InTheHand.Devices.Bluetooth
 
             return null;
         }
-
+   
         private static async Task<BluetoothDevice> FromDeviceInformationAsyncImpl(DeviceInformation deviceInformation)
         {
             return new BluetoothDevice(deviceInformation._deviceInfo);
         }
-
+#endif
         private static string GetDeviceSelectorImpl()
         {
             return string.Empty;
@@ -90,18 +108,15 @@ namespace InTheHand.Devices.Bluetooth
             return _info.fConnected ? BluetoothConnectionStatus.Connected : BluetoothConnectionStatus.Disconnected;
         }
 
+#if !UNITY
         private void ConnectionStatusChangedAdd()
         {
-            var t = BluetoothAdapter.GetDefaultAsync();
-            t.Wait();
-            t.Result.ConnectionStatusChanged += Result_ConnectionStatusChanged;
+            BluetoothAdapter.Default.ConnectionStatusChanged += Result_ConnectionStatusChanged;
         }
 
         private void ConnectionStatusChangedRemove()
         {
-            var t = BluetoothAdapter.GetDefaultAsync();
-            t.Wait();
-            t.Result.ConnectionStatusChanged -= Result_ConnectionStatusChanged;
+            BluetoothAdapter.Default.ConnectionStatusChanged -= Result_ConnectionStatusChanged;
         }
 
         private void Result_ConnectionStatusChanged(object sender, ulong e)
@@ -111,7 +126,7 @@ namespace InTheHand.Devices.Bluetooth
                 _connectionStatusChanged?.Invoke(this, EventArgs.Empty);
             }
         }
-
+#endif
         private void NameChangedAdd()
         {
         }
@@ -130,7 +145,8 @@ namespace InTheHand.Devices.Bluetooth
             return _info.szName;
         }
 
-        internal static IReadOnlyCollection<Guid> GetRfcommServices(ref BLUETOOTH_DEVICE_INFO info)
+
+        internal static ReadOnlyCollection<Guid> GetRfcommServices(ref BLUETOOTH_DEVICE_INFO info)
         {
             List<Guid> services = new List<Guid>();
 
@@ -156,6 +172,21 @@ namespace InTheHand.Devices.Bluetooth
             return services.AsReadOnly();
         }
 
+
+        public RfcommDeviceServicesResult GetRfcommServices(BluetoothCacheMode cacheMode)
+        {
+            BluetoothError error = BluetoothError.Success;
+            List<RfcommDeviceService> services = new List<RfcommDeviceService>();
+
+            foreach (Guid g in GetRfcommServices(ref _info))
+            {
+                services.Add(new Rfcomm.RfcommDeviceService(this, RfcommServiceId.FromUuid(g)));
+            }
+
+            return new RfcommDeviceServicesResult(error, services.AsReadOnly());
+        }
+
+#if !UNITY
         private async Task<RfcommDeviceServicesResult> GetRfcommServicesAsyncImpl(BluetoothCacheMode cacheMode)
         {
             BluetoothError error = BluetoothError.Success;
@@ -168,7 +199,6 @@ namespace InTheHand.Devices.Bluetooth
 
             return new Rfcomm.RfcommDeviceServicesResult(error, services.AsReadOnly());
         }
-
-        
+#endif
     }
 }
