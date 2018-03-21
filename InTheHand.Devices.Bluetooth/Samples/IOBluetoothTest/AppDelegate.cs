@@ -1,4 +1,6 @@
-﻿using AppKit;
+﻿using System;
+using System.Runtime.InteropServices;
+using AppKit;
 using Foundation;
 using ObjCRuntime;
 
@@ -22,7 +24,11 @@ namespace IOBluetoothTest
 
             foreach(IOBluetooth.IOBluetoothDevice dev in IOBluetooth.IOBluetoothDevice.PairedDevices)
             {
-                System.Diagnostics.Debug.WriteLine(dev.Address.ToString("x6"));
+                IntPtr paddr = dev.GetAddress();
+                IntPtr pbytes = Marshal.ReadIntPtr(paddr);
+                byte[] daddr = new byte[6];
+                Marshal.Copy(pbytes, daddr, 0, 6);
+                //System.Diagnostics.Debug.WriteLine(dev.Address.ToString("x6"));
                 System.Diagnostics.Debug.WriteLine(dev.AddressString);
                 System.Diagnostics.Debug.WriteLine(dev.NameOrAddress);
             }
