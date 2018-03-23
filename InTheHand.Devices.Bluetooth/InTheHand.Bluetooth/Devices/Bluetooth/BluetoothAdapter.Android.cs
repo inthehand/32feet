@@ -29,6 +29,14 @@ namespace InTheHand.Devices.Bluetooth
 
         private Android.Bluetooth.BluetoothAdapter _adapter;
 
+        internal Android.Bluetooth.BluetoothAdapter Adapter
+        {
+            get
+            {
+                return _adapter;
+            }
+        }
+
         internal BluetoothAdapter(Android.Bluetooth.BluetoothAdapter adapter)
         {
             _adapter = adapter;

@@ -24,12 +24,12 @@ namespace InTheHand.Devices.Enumeration
             return _device.BondState == Android.Bluetooth.Bond.Bonded;
         }
 
-        private DevicePairingResult DoPair()
+        private DevicePairingResult Pair()
         {
             return new DevicePairingResult(_device.CreateBond());
         }
 
-        private DeviceUnpairingResult DoUnpair()
+        private DeviceUnpairingResult Unpair()
         {
             return new DeviceUnpairingResult();
         }

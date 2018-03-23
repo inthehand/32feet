@@ -225,6 +225,12 @@
     <Compile Include="..\InTheHand.Bluetooth\Devices\Bluetooth\Rfcomm\RfcommServiceId.uwp.cs">
       <Link>Bluetooth\Rfcomm\RfcommServiceId.uwp.cs</Link>
     </Compile>
+    <Compile Include="..\InTheHand.Bluetooth\Devices\Bluetooth\Rfcomm\RfcommServiceProvider.cs">
+      <Link>Bluetooth\Rfcomm\RfcommServiceProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Bluetooth\Devices\Bluetooth\Rfcomm\RfcommServiceProvider.uwp.cs">
+      <Link>Bluetooth\Rfcomm\RfcommServiceProvider.uwp.cs</Link>
+    </Compile>
     <Compile Include="..\InTheHand.Bluetooth\Devices\Enumeration\DeviceAccessState.cs">
       <Link>Enumeration\DeviceAccessState.cs</Link>
     </Compile>
@@ -305,7 +311,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="InTheHand.Pontoon">
-      <Version>10.2018.1.4</Version>
+      <Version>10.2018.3.19</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.0.5</Version>

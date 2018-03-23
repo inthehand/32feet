@@ -488,7 +488,7 @@ namespace InTheHand.Net.Bluetooth
         /// The service class UUID in the 16-bit UUID short form as a <see cref="T:System.Int16"/>.
         /// </param>
         /// <returns>
-        /// A string containing the name of the service class whose UUID value is <paramref name="uuid"/>,
+        /// A string containing the name of the service class whose UUID value is <paramref name="uuid16"/>,
         /// or a null reference (<c>Nothing</c> in Visual Basic) if no such constant is found.
         /// </returns>
         public static String GetName(Int16 uuid16)
@@ -503,7 +503,7 @@ namespace InTheHand.Net.Bluetooth
         /// The service class UUID in the 16-bit short UUID form as a <see cref="T:System.UInt16"/>.
         /// </param>
         /// <returns>
-        /// A string containing the name of the service class whose UUID value is <paramref name="uuid"/>,
+        /// A string containing the name of the service class whose UUID value is <paramref name="uuid16"/>,
         /// or a null reference (<c>Nothing</c> in Visual Basic) if no such constant is found.
         /// </returns>
         [CLSCompliant(false)] //use Int32 overload instead
@@ -519,7 +519,7 @@ namespace InTheHand.Net.Bluetooth
         /// The service class UUID in the 32-bit short UUID form as a <see cref="T:System.Int32"/>.
         /// </param>
         /// <returns>
-        /// A string containing the name of the service class whose UUID value is <paramref name="uuid"/>,
+        /// A string containing the name of the service class whose UUID value is <paramref name="uuid32"/>,
         /// or a null reference (<c>Nothing</c> in Visual Basic) if no such constant is found.
         /// </returns>
         public static String GetName(Int32 uuid32)
@@ -534,7 +534,7 @@ namespace InTheHand.Net.Bluetooth
         /// The service class UUID in the 32-bit UUID short form as a <see cref="T:System.UInt32"/>.
         /// </param>
         /// <returns>
-        /// A string containing the name of the service class whose UUID value is <paramref name="uuid"/>,
+        /// A string containing the name of the service class whose UUID value is <paramref name="uuid32"/>,
         /// or a null reference (<c>Nothing</c> in Visual Basic) if no such constant is found.
         /// </returns>
         [CLSCompliant(false)] //use Int32 overload instead

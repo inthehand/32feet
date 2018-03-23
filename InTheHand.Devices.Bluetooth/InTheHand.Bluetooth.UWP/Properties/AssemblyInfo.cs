@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("InTheHand.Devices.Bluetooth.UWP")]
+[assembly: AssemblyTitle("InTheHand.Devices.Bluetooth")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("InTheHand.Devices.Bluetooth.UWP")]
-[assembly: AssemblyCopyright("Copyright ©  2017")]
+[assembly: AssemblyProduct("32feet.NET")]
+[assembly: AssemblyCopyright("Copyright © In The Hand Ltd 2018")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

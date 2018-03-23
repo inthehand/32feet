@@ -12,11 +12,12 @@
     <Description>32feet.NET is a shared-source project to make personal area networking technologies such as Bluetooth, Infrared (IrDA) and more, easily accessible from .NET code.</Description>
     <FileVersion>4.2018.2.8</FileVersion>
     <AssemblyVersion>4.0.0.0</AssemblyVersion>
+    <AssemblyName>InTheHand.Devices.Bluetooth</AssemblyName>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <OutputPath>C:\Users\peter\Source\Repos\32feet\InTheHand.Devices.Bluetooth\NuGet\lib\</OutputPath>
-    <DocumentationFile>C:\Users\peter\Source\Repos\32feet\InTheHand.Devices.Bluetooth\InTheHand.Devices.Bluetooth\InTheHand.Devices.Bluetooth.xml</DocumentationFile>
+    <DocumentationFile>C:\Users\Peter\Source\Repos\32feet\InTheHand.Devices.Bluetooth\InTheHand.Bluetooth\InTheHand.Devices.Bluetooth.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
@@ -50,6 +51,9 @@
     <Compile Remove="Devices\Bluetooth\Rfcomm\RfcommDeviceService.uwp.cs" />
     <Compile Remove="Devices\Bluetooth\Rfcomm\RfcommDeviceService.Win32.cs" />
     <Compile Remove="Devices\Bluetooth\Rfcomm\RfcommServiceId.uwp.cs" />
+    <Compile Remove="Devices\Bluetooth\Rfcomm\RfcommServiceProvider.Android.cs" />
+    <Compile Remove="Devices\Bluetooth\Rfcomm\RfcommServiceProvider.uwp.cs" />
+    <Compile Remove="Devices\Bluetooth\Rfcomm\RfcommServiceProvider.Win32.cs" />
     <Compile Remove="Devices\Enumeration\DeviceInformation.Android.cs" />
     <Compile Remove="Devices\Enumeration\DeviceInformation.Unified.cs" />
     <Compile Remove="Devices\Enumeration\DeviceInformation.uwp.cs" />
@@ -80,12 +84,11 @@
 
   <ItemGroup>
     <Folder Include="Devices\Enumeration\" />
-    <Folder Include="Devices\Bluetooth\" />
     <Folder Include="Devices\Radios\" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="InTheHand.Pontoon" Version="10.2018.1.4" />
+    <PackageReference Include="InTheHand.Pontoon" Version="10.2018.3.19" />
   </ItemGroup>
 
 </Project>

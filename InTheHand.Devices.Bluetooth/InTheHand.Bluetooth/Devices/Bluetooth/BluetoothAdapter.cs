@@ -25,15 +25,7 @@ namespace InTheHand.Devices.Bluetooth
     {
         private static BluetoothAdapter s_default;
 
-#if UNITY
-        /// <summary>
-        /// Gets the default BluetoothAdapter.
-        /// </summary>
-        public static BluetoothAdapter GetDefault()
-        {
-            return GetDefaultImpl();
-        }
-#else
+#if !UNITY
         /// <summary>
         /// Gets the default BluetoothAdapter.
         /// </summary>
@@ -48,7 +40,7 @@ namespace InTheHand.Devices.Bluetooth
             get
             {
 #if WIN32 || UNITY
-                return GetDefaultImpl();
+                return GetDefault();
 #else
                 if(s_default == null)
                 {

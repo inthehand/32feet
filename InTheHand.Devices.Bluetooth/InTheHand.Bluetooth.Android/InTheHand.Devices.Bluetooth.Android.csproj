@@ -10,7 +10,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>InTheHand.Devices.Bluetooth</RootNamespace>
-    <AssemblyName>InTheHand.Devices.Bluetooth.Android</AssemblyName>
+    <AssemblyName>InTheHand.Devices.Bluetooth</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <AndroidResgenFile>Resources\Resource.Designer.cs</AndroidResgenFile>
     <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
@@ -165,6 +165,12 @@
     <Compile Include="..\InTheHand.Bluetooth\Devices\Bluetooth\Rfcomm\RfcommServiceId.Portable.cs">
       <Link>Bluetooth\Rfcomm\RfcommServiceId.Portable.cs</Link>
     </Compile>
+    <Compile Include="..\InTheHand.Bluetooth\Devices\Bluetooth\Rfcomm\RfcommServiceProvider.Android.cs">
+      <Link>Bluetooth\Rfcomm\RfcommServiceProvider.Android.cs</Link>
+    </Compile>
+    <Compile Include="..\InTheHand.Bluetooth\Devices\Bluetooth\Rfcomm\RfcommServiceProvider.cs">
+      <Link>Bluetooth\Rfcomm\RfcommServiceProvider.cs</Link>
+    </Compile>
     <Compile Include="..\InTheHand.Bluetooth\Devices\Enumeration\DeviceAccessState.cs">
       <Link>Enumeration\DeviceAccessState.cs</Link>
     </Compile>
@@ -240,7 +246,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="InTheHand.Pontoon">
-      <Version>10.2018.1.4</Version>
+      <Version>10.2018.3.19</Version>
     </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />

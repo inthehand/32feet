@@ -81,10 +81,6 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
-    <Reference Include="System.Core">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
@@ -303,6 +299,7 @@
     <Compile Include="Net.Sockets\ISocketOptionHelper.cs" />
     <Compile Include="Net.Sockets\L2CapClient.cs" />
     <Compile Include="Net.Sockets\L2CapListener.cs" />
+    <Compile Include="Net.Sockets\MonoBluetoothSocket.cs" />
     <Compile Include="Net.Sockets\SocketAdapter.cs" />
     <Compile Include="Net.Sockets\SocketClientAdapter.cs" />
     <Compile Include="Net.Sockets\SocketStreamIOAdapter.cs" />

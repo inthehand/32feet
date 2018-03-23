@@ -212,7 +212,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="InTheHand.Pontoon">
-      <Version>10.2018.1.4</Version>
+      <Version>10.2018.3.19</Version>
     </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />

@@ -37,7 +37,7 @@ using System.Runtime.InteropServices;
 
 [assembly: AssemblyCompany("In The Hand Ltd")]
 [assembly: AssemblyProduct("32feet.NET")]
-[assembly: AssemblyCopyright("Copyright © In The Hand Ltd 2003-2017")]
+[assembly: AssemblyCopyright("Copyright © In The Hand Ltd 2003-2018")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 [assembly: Guid("f8b087d0-bc47-48ca-958c-8fc6a41c1b65")]
@@ -53,8 +53,8 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Revision and Build Numbers 
 // by using the '*' as shown below:
 
-[assembly: AssemblyVersion("3.8.0502.0")]
-[assembly: AssemblyInformationalVersion("3.8.0502.0")]
+[assembly: AssemblyVersion("3.8.0320.0")]
+[assembly: AssemblyInformationalVersion("3.8.0320.0")]
 [assembly: System.CLSCompliant(true)]
 [assembly: System.Resources.NeutralResourcesLanguage("en-US")]
 
