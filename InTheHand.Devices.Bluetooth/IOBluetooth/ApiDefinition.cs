@@ -58,7 +58,7 @@ namespace IOBluetooth
         // +(instancetype)deviceWithAddress:(const BluetoothDeviceAddress *)address;
         [Static]
         [Export("deviceWithAddress:")]
-        unsafe IOBluetoothDevice DeviceWithAddress(ulong address);
+        IOBluetoothDevice DeviceWithAddress(IntPtr address);
 
         // +(instancetype)deviceWithAddressString:(NSString *)address;
         [Static]
@@ -208,9 +208,9 @@ namespace IOBluetooth
         //[Export("performSDPQuery:uuids:")]
         //int PerformSDPQuery(NSObject target, IOBluetoothSDPUUID[] uuidArray);
 
-        //// @property (readonly, retain) NSArray * services;
-        //[Export("services", ArgumentSemantic.Retain)]
-        //IOBluetoothSDPServiceRecord[] Services { get; }
+        // @property (readonly, retain) NSArray * services;
+        [Export("services", ArgumentSemantic.Retain)]
+        IOBluetoothSDPServiceRecord[] Services { get; }
 
         // -(NSDate *)getLastServicesUpdate;
         [Export("getLastServicesUpdate")]
@@ -578,27 +578,27 @@ namespace IOBluetooth
     {
         // @optional -(void)l2capChannelData:(IOBluetoothL2CAPChannel *)l2capChannel data:(void *)dataPointer length:(size_t)dataLength;
         [Export("l2capChannelData:data:length:")]
-        void L2capChannelData(IOBluetoothL2CAPChannel l2capChannel, IntPtr dataPointer, nuint dataLength);
+        void L2CAPChannelData(IOBluetoothL2CAPChannel l2capChannel, IntPtr dataPointer, nuint dataLength);
 
         // @optional -(void)l2capChannelOpenComplete:(IOBluetoothL2CAPChannel *)l2capChannel status:(IOReturn)error;
         [Export("l2capChannelOpenComplete:status:")]
-        void L2capChannelOpenComplete(IOBluetoothL2CAPChannel l2capChannel, int error);
+        void L2CAPChannelOpenComplete(IOBluetoothL2CAPChannel l2capChannel, int error);
 
         // @optional -(void)l2capChannelClosed:(IOBluetoothL2CAPChannel *)l2capChannel;
         [Export("l2capChannelClosed:")]
-        void L2capChannelClosed(IOBluetoothL2CAPChannel l2capChannel);
+        void L2CAPChannelClosed(IOBluetoothL2CAPChannel l2capChannel);
 
         // @optional -(void)l2capChannelReconfigured:(IOBluetoothL2CAPChannel *)l2capChannel;
         [Export("l2capChannelReconfigured:")]
-        void L2capChannelReconfigured(IOBluetoothL2CAPChannel l2capChannel);
+        void L2CAPChannelReconfigured(IOBluetoothL2CAPChannel l2capChannel);
 
         // @optional -(void)l2capChannelWriteComplete:(IOBluetoothL2CAPChannel *)l2capChannel refcon:(void *)refcon status:(IOReturn)error;
         [Export("l2capChannelWriteComplete:refcon:status:")]
-        void L2capChannelWriteComplete(IOBluetoothL2CAPChannel l2capChannel, IntPtr refcon, int error);
+        void L2CAPChannelWriteComplete(IOBluetoothL2CAPChannel l2capChannel, IntPtr refcon, int error);
 
         // @optional -(void)l2capChannelQueueSpaceAvailable:(IOBluetoothL2CAPChannel *)l2capChannel;
         [Export("l2capChannelQueueSpaceAvailable:")]
-        void L2capChannelQueueSpaceAvailable(IOBluetoothL2CAPChannel l2capChannel);
+        void L2CAPChannelQueueSpaceAvailable(IOBluetoothL2CAPChannel l2capChannel);
     }
 
     ////[Static]
@@ -738,251 +738,251 @@ namespace IOBluetooth
         void RfcommChannelQueueSpaceAvailable(IOBluetoothRFCOMMChannel rfcommChannel);
     }
 
-    //// @interface IOBluetoothSDPDataElement : NSObject <NSCoding, NSSecureCoding>
-    //[BaseType(typeof(NSObject))]
-    //interface IOBluetoothSDPDataElement : INSCoding, INSSecureCoding
-    //{
-    //    // +(instancetype)withElementValue:(NSObject *)element;
-    //    [Static]
-    //    [Export("withElementValue:")]
-    //    IOBluetoothSDPDataElement WithElementValue(NSObject element);
+    // @interface IOBluetoothSDPDataElement : NSObject <NSCoding, NSSecureCoding>
+    [BaseType(typeof(NSObject))]
+    interface IOBluetoothSDPDataElement : INSCoding, INSSecureCoding
+    {
+        // +(instancetype)withElementValue:(NSObject *)element;
+        [Static]
+        [Export("withElementValue:")]
+        IOBluetoothSDPDataElement WithElementValue(NSObject element);
 
-    //    // +(instancetype)withType:(BluetoothSDPDataElementTypeDescriptor)type sizeDescriptor:(BluetoothSDPDataElementSizeDescriptor)newSizeDescriptor size:(uint32_t)newSize value:(NSObject *)newValue;
-    //    [Static]
-    //    [Export("withType:sizeDescriptor:size:value:")]
-    //    IOBluetoothSDPDataElement WithType(byte type, byte newSizeDescriptor, uint newSize, NSObject newValue);
+        // +(instancetype)withType:(BluetoothSDPDataElementTypeDescriptor)type sizeDescriptor:(BluetoothSDPDataElementSizeDescriptor)newSizeDescriptor size:(uint32_t)newSize value:(NSObject *)newValue;
+        [Static]
+        [Export("withType:sizeDescriptor:size:value:")]
+        IOBluetoothSDPDataElement WithType(byte type, byte newSizeDescriptor, uint newSize, NSObject newValue);
 
-    //    // +(instancetype)withSDPDataElementRef:(IOBluetoothSDPDataElementRef)sdpDataElementRef;
-    //    //[Static]
-    //    //[Export ("withSDPDataElementRef:")]
-    //    //unsafe IOBluetoothSDPDataElement WithSDPDataElementRef (IOBluetoothSDPDataElementRef* sdpDataElementRef);
+        // +(instancetype)withSDPDataElementRef:(IOBluetoothSDPDataElementRef)sdpDataElementRef;
+        //[Static]
+        //[Export ("withSDPDataElementRef:")]
+        //unsafe IOBluetoothSDPDataElement WithSDPDataElementRef (IOBluetoothSDPDataElementRef* sdpDataElementRef);
 
-    //    // -(instancetype)initWithElementValue:(NSObject *)element;
-    //    [Export("initWithElementValue:")]
-    //    IntPtr Constructor(NSObject element);
+        // -(instancetype)initWithElementValue:(NSObject *)element;
+        [Export("initWithElementValue:")]
+        IntPtr Constructor(NSObject element);
 
-    //    // -(instancetype)initWithType:(BluetoothSDPDataElementTypeDescriptor)newType sizeDescriptor:(BluetoothSDPDataElementSizeDescriptor)newSizeDescriptor size:(uint32_t)newSize value:(NSObject *)newValue;
-    //    [Export("initWithType:sizeDescriptor:size:value:")]
-    //    IntPtr Constructor(byte newType, byte newSizeDescriptor, uint newSize, NSObject newValue);
+        // -(instancetype)initWithType:(BluetoothSDPDataElementTypeDescriptor)newType sizeDescriptor:(BluetoothSDPDataElementSizeDescriptor)newSizeDescriptor size:(uint32_t)newSize value:(NSObject *)newValue;
+        [Export("initWithType:sizeDescriptor:size:value:")]
+        IntPtr Constructor(byte newType, byte newSizeDescriptor, uint newSize, NSObject newValue);
 
-    //    // -(IOBluetoothSDPDataElementRef)getSDPDataElementRef;
-    //    //[Export ("getSDPDataElementRef")]
-    //    //[Verify (MethodToProperty)]
-    //    //unsafe IOBluetoothSDPDataElementRef* SDPDataElementRef { get; }
+        // -(IOBluetoothSDPDataElementRef)getSDPDataElementRef;
+        //[Export ("getSDPDataElementRef")]
+        //[Verify (MethodToProperty)]
+        //unsafe IOBluetoothSDPDataElementRef* SDPDataElementRef { get; }
 
-    //    // -(BluetoothSDPDataElementTypeDescriptor)getTypeDescriptor;
-    //    [Export("getTypeDescriptor")]
-    //    byte TypeDescriptor { get; }
+        // -(BluetoothSDPDataElementTypeDescriptor)getTypeDescriptor;
+        [Export("getTypeDescriptor")]
+        byte TypeDescriptor { get; }
 
-    //    // -(BluetoothSDPDataElementSizeDescriptor)getSizeDescriptor;
-    //    [Export("getSizeDescriptor")]
-    //    byte SizeDescriptor { get; }
+        // -(BluetoothSDPDataElementSizeDescriptor)getSizeDescriptor;
+        [Export("getSizeDescriptor")]
+        byte SizeDescriptor { get; }
 
-    //    // -(uint32_t)getSize;
-    //    [Export("getSize")]
-    //    uint Size { get; }
+        // -(uint32_t)getSize;
+        [Export("getSize")]
+        uint Size { get; }
 
-    //    // -(NSNumber *)getNumberValue;
-    //    [Export("getNumberValue")]
-    //    NSNumber NumberValue { get; }
+        // -(NSNumber *)getNumberValue;
+        [Export("getNumberValue")]
+        NSNumber NumberValue { get; }
 
-    //    // -(NSData *)getDataValue;
-    //    [Export("getDataValue")]
-    //    NSData DataValue { get; }
+        // -(NSData *)getDataValue;
+        [Export("getDataValue")]
+        NSData DataValue { get; }
 
-    //    // -(NSString *)getStringValue;
-    //    [Export("getStringValue")]
-    //    string StringValue { get; }
+        // -(NSString *)getStringValue;
+        [Export("getStringValue")]
+        string StringValue { get; }
 
-    //    // -(NSArray *)getArrayValue;
-    //    [Export("getArrayValue")]
-    //    NSObject[] ArrayValue { get; }
+        // -(NSArray *)getArrayValue;
+        [Export("getArrayValue")]
+        NSObject[] ArrayValue { get; }
 
-    //    // -(IOBluetoothSDPUUID *)getUUIDValue;
-    //    [Export("getUUIDValue")]
-    //    IOBluetoothSDPUUID UUIDValue { get; }
+        // -(IOBluetoothSDPUUID *)getUUIDValue;
+        [Export("getUUIDValue")]
+        IOBluetoothSDPUUID UUIDValue { get; }
 
-    //    // -(NSObject *)getValue;
-    //    [Export("getValue")]
-    //    NSObject Value { get; }
+        // -(NSObject *)getValue;
+        [Export("getValue")]
+        NSObject Value { get; }
 
-    //    // -(BOOL)containsDataElement:(IOBluetoothSDPDataElement *)dataElement;
-    //    [Export("containsDataElement:")]
-    //    bool ContainsDataElement(IOBluetoothSDPDataElement dataElement);
+        // -(BOOL)containsDataElement:(IOBluetoothSDPDataElement *)dataElement;
+        [Export("containsDataElement:")]
+        bool ContainsDataElement(IOBluetoothSDPDataElement dataElement);
 
-    //    // -(BOOL)containsValue:(NSObject *)cmpValue;
-    //    [Export("containsValue:")]
-    //    bool ContainsValue(NSObject cmpValue);
-    //}
+        // -(BOOL)containsValue:(NSObject *)cmpValue;
+        [Export("containsValue:")]
+        bool ContainsValue(NSObject cmpValue);
+    }
 
-    //// @interface IOBluetoothSDPServiceAttribute : NSObject <NSCoding, NSSecureCoding>
-    //[BaseType(typeof(NSObject))]
-    //interface IOBluetoothSDPServiceAttribute : INSCoding, INSSecureCoding
-    //{
-    //    // +(instancetype)withID:(BluetoothSDPServiceAttributeID)newAttributeID attributeElementValue:(NSObject *)attributeElementValue;
-    //    [Static]
-    //    [Export("withID:attributeElementValue:")]
-    //    IOBluetoothSDPServiceAttribute WithID(ushort newAttributeID, NSObject attributeElementValue);
+    // @interface IOBluetoothSDPServiceAttribute : NSObject <NSCoding, NSSecureCoding>
+    [BaseType(typeof(NSObject))]
+    interface IOBluetoothSDPServiceAttribute : INSCoding, INSSecureCoding
+    {
+        // +(instancetype)withID:(BluetoothSDPServiceAttributeID)newAttributeID attributeElementValue:(NSObject *)attributeElementValue;
+        [Static]
+        [Export("withID:attributeElementValue:")]
+        IOBluetoothSDPServiceAttribute WithID(ushort newAttributeID, NSObject attributeElementValue);
 
-    //    // +(instancetype)withID:(BluetoothSDPServiceAttributeID)newAttributeID attributeElement:(IOBluetoothSDPDataElement *)attributeElement;
-    //    [Static]
-    //    [Export("withID:attributeElement:")]
-    //    IOBluetoothSDPServiceAttribute WithID(ushort newAttributeID, IOBluetoothSDPDataElement attributeElement);
+        // +(instancetype)withID:(BluetoothSDPServiceAttributeID)newAttributeID attributeElement:(IOBluetoothSDPDataElement *)attributeElement;
+        [Static]
+        [Export("withID:attributeElement:")]
+        IOBluetoothSDPServiceAttribute WithID(ushort newAttributeID, IOBluetoothSDPDataElement attributeElement);
 
-    //    // -(instancetype)initWithID:(BluetoothSDPServiceAttributeID)newAttributeID attributeElementValue:(NSObject *)attributeElementValue;
-    //    [Export("initWithID:attributeElementValue:")]
-    //    IntPtr Constructor(ushort newAttributeID, NSObject attributeElementValue);
+        // -(instancetype)initWithID:(BluetoothSDPServiceAttributeID)newAttributeID attributeElementValue:(NSObject *)attributeElementValue;
+        [Export("initWithID:attributeElementValue:")]
+        IntPtr Constructor(ushort newAttributeID, NSObject attributeElementValue);
 
-    //    // -(instancetype)initWithID:(BluetoothSDPServiceAttributeID)newAttributeID attributeElement:(IOBluetoothSDPDataElement *)attributeElement;
-    //    [Export("initWithID:attributeElement:")]
-    //    IntPtr Constructor(ushort newAttributeID, IOBluetoothSDPDataElement attributeElement);
+        // -(instancetype)initWithID:(BluetoothSDPServiceAttributeID)newAttributeID attributeElement:(IOBluetoothSDPDataElement *)attributeElement;
+        [Export("initWithID:attributeElement:")]
+        IntPtr Constructor(ushort newAttributeID, IOBluetoothSDPDataElement attributeElement);
 
-    //    // -(BluetoothSDPServiceAttributeID)getAttributeID;
-    //    [Export("getAttributeID")]
-    //    ushort AttributeID { get; }
+        // -(BluetoothSDPServiceAttributeID)getAttributeID;
+        [Export("getAttributeID")]
+        ushort AttributeID { get; }
 
-    //    // -(IOBluetoothSDPDataElement *)getDataElement;
-    //    [Export("getDataElement")]
-    //    IOBluetoothSDPDataElement DataElement { get; }
+        // -(IOBluetoothSDPDataElement *)getDataElement;
+        [Export("getDataElement")]
+        IOBluetoothSDPDataElement DataElement { get; }
 
-    //    // -(IOBluetoothSDPDataElement *)getIDDataElement;
-    //    [Export("getIDDataElement")]
-    //    IOBluetoothSDPDataElement IDDataElement { get; }
-    //}
+        // -(IOBluetoothSDPDataElement *)getIDDataElement;
+        [Export("getIDDataElement")]
+        IOBluetoothSDPDataElement IDDataElement { get; }
+    }
 
-    //// @interface IOBluetoothSDPServiceRecord : NSObject <NSCoding, NSSecureCoding>
-    //[BaseType(typeof(NSObject))]
-    //interface IOBluetoothSDPServiceRecord : INSCoding, INSSecureCoding
-    //{
-    //    // +(instancetype)publishedServiceRecordWithDictionary:(NSDictionary *)serviceDict;
-    //    [Static]
-    //    [Export("publishedServiceRecordWithDictionary:")]
-    //    IOBluetoothSDPServiceRecord PublishedServiceRecordWithDictionary(NSDictionary serviceDict);
+    // @interface IOBluetoothSDPServiceRecord : NSObject <NSCoding, NSSecureCoding>
+    [BaseType(typeof(NSObject))]
+    interface IOBluetoothSDPServiceRecord : INSCoding, INSSecureCoding
+    {
+        // +(instancetype)publishedServiceRecordWithDictionary:(NSDictionary *)serviceDict;
+        [Static]
+        [Export("publishedServiceRecordWithDictionary:")]
+        IOBluetoothSDPServiceRecord PublishedServiceRecordWithDictionary(NSDictionary serviceDict);
 
-    //    // -(IOReturn)removeServiceRecord;
-    //    [Export("removeServiceRecord")]
-    //    int RemoveServiceRecord();
+        // -(IOReturn)removeServiceRecord;
+        [Export("removeServiceRecord")]
+        int RemoveServiceRecord();
 
-    //    // +(instancetype)withServiceDictionary:(NSDictionary *)serviceDict device:(IOBluetoothDevice *)device;
-    //    [Static]
-    //    [Export("withServiceDictionary:device:")]
-    //    IOBluetoothSDPServiceRecord WithServiceDictionary(NSDictionary serviceDict, IOBluetoothDevice device);
+        // +(instancetype)withServiceDictionary:(NSDictionary *)serviceDict device:(IOBluetoothDevice *)device;
+        [Static]
+        [Export("withServiceDictionary:device:")]
+        IOBluetoothSDPServiceRecord WithServiceDictionary(NSDictionary serviceDict, IOBluetoothDevice device);
 
-    //    // -(instancetype)initWithServiceDictionary:(NSDictionary *)serviceDict device:(IOBluetoothDevice *)device;
-    //    [Export("initWithServiceDictionary:device:")]
-    //    IntPtr Constructor(NSDictionary serviceDict, IOBluetoothDevice device);
+        // -(instancetype)initWithServiceDictionary:(NSDictionary *)serviceDict device:(IOBluetoothDevice *)device;
+        [Export("initWithServiceDictionary:device:")]
+        IntPtr Constructor(NSDictionary serviceDict, IOBluetoothDevice device);
 
-    //    // +(instancetype)withSDPServiceRecordRef:(IOBluetoothSDPServiceRecordRef)sdpServiceRecordRef;
-    //    //[Static]
-    //    //[Export ("withSDPServiceRecordRef:")]
-    //    //unsafe IOBluetoothSDPServiceRecord WithSDPServiceRecordRef (IOBluetoothSDPServiceRecordRef* sdpServiceRecordRef);
+        // +(instancetype)withSDPServiceRecordRef:(IOBluetoothSDPServiceRecordRef)sdpServiceRecordRef;
+        //[Static]
+        //[Export ("withSDPServiceRecordRef:")]
+        //unsafe IOBluetoothSDPServiceRecord WithSDPServiceRecordRef (IOBluetoothSDPServiceRecordRef* sdpServiceRecordRef);
 
-    //    // -(IOBluetoothSDPServiceRecordRef)getSDPServiceRecordRef;
-    //    //[Export ("getSDPServiceRecordRef")]
-    //    //[Verify (MethodToProperty)]
-    //    //unsafe IOBluetoothSDPServiceRecordRef* SDPServiceRecordRef { get; }
+        // -(IOBluetoothSDPServiceRecordRef)getSDPServiceRecordRef;
+        //[Export ("getSDPServiceRecordRef")]
+        //[Verify (MethodToProperty)]
+        //unsafe IOBluetoothSDPServiceRecordRef* SDPServiceRecordRef { get; }
 
-    //    // @property (readonly, retain) IOBluetoothDevice * device;
-    //    [Export("device", ArgumentSemantic.Retain)]
-    //    IOBluetoothDevice Device { get; }
+        // @property (readonly, retain) IOBluetoothDevice * device;
+        [Export("device", ArgumentSemantic.Retain)]
+        IOBluetoothDevice Device { get; }
 
-    //    // @property (readonly, copy) NSDictionary * attributes;
-    //    [Export("attributes", ArgumentSemantic.Copy)]
-    //    NSDictionary Attributes { get; }
+        // @property (readonly, copy) NSDictionary * attributes;
+        [Export("attributes", ArgumentSemantic.Copy)]
+        NSDictionary Attributes { get; }
 
-    //    // -(IOBluetoothSDPDataElement *)getAttributeDataElement:(BluetoothSDPServiceAttributeID)attributeID;
-    //    [Export("getAttributeDataElement:")]
-    //    IOBluetoothSDPDataElement GetAttributeDataElement(ushort attributeID);
+        // -(IOBluetoothSDPDataElement *)getAttributeDataElement:(BluetoothSDPServiceAttributeID)attributeID;
+        [Export("getAttributeDataElement:")]
+        IOBluetoothSDPDataElement GetAttributeDataElement(ushort attributeID);
 
-    //    // -(NSString *)getServiceName;
-    //    [Export("getServiceName")]
-    //    string ServiceName { get; }
+        // -(NSString *)getServiceName;
+        [Export("getServiceName")]
+        string ServiceName { get; }
 
-    //    // -(IOReturn)getRFCOMMChannelID:(BluetoothRFCOMMChannelID *)rfcommChannelID;
-    //    [Export("getRFCOMMChannelID:")]
-    //    int GetRFCOMMChannelID(out byte rfcommChannelID);
+        // -(IOReturn)getRFCOMMChannelID:(BluetoothRFCOMMChannelID *)rfcommChannelID;
+        [Export("getRFCOMMChannelID:")]
+        int GetRFCOMMChannelID(out byte rfcommChannelID);
 
-    //    // -(IOReturn)getL2CAPPSM:(BluetoothL2CAPPSM *)outPSM;
-    //    [Export("getL2CAPPSM:")]
-    //    int GetL2CAPPSM(out ushort outPSM);
+        // -(IOReturn)getL2CAPPSM:(BluetoothL2CAPPSM *)outPSM;
+        [Export("getL2CAPPSM:")]
+        int GetL2CAPPSM(out ushort outPSM);
 
-    //    // -(IOReturn)getServiceRecordHandle:(BluetoothSDPServiceRecordHandle *)outServiceRecordHandle;
-    //    [Export("getServiceRecordHandle:")]
-    //    int GetServiceRecordHandle(IntPtr outServiceRecordHandle);
+        // -(IOReturn)getServiceRecordHandle:(BluetoothSDPServiceRecordHandle *)outServiceRecordHandle;
+        [Export("getServiceRecordHandle:")]
+        int GetServiceRecordHandle(IntPtr outServiceRecordHandle);
 
-    //    // -(BOOL)matchesUUID16:(BluetoothSDPUUID16)uuid16;
-    //    [Export("matchesUUID16:")]
-    //    bool MatchesUUID16(ushort uuid16);
+        // -(BOOL)matchesUUID16:(BluetoothSDPUUID16)uuid16;
+        [Export("matchesUUID16:")]
+        bool MatchesUUID16(ushort uuid16);
 
-    //    // -(BOOL)matchesUUIDArray:(NSArray *)uuidArray;
-    //    [Export("matchesUUIDArray:")]
-    //    bool MatchesUUIDArray(IOBluetoothSDPUUID[] uuidArray);
+        // -(BOOL)matchesUUIDArray:(NSArray *)uuidArray;
+        [Export("matchesUUIDArray:")]
+        bool MatchesUUIDArray(IOBluetoothSDPUUID[] uuidArray);
 
-    //    // -(BOOL)matchesSearchArray:(NSArray *)searchArray;
-    //    [Export("matchesSearchArray:")]
-    //    bool MatchesSearchArray(IOBluetoothSDPUUID[] searchArray);
+        // -(BOOL)matchesSearchArray:(NSArray *)searchArray;
+        [Export("matchesSearchArray:")]
+        bool MatchesSearchArray(IOBluetoothSDPUUID[] searchArray);
 
-    //    // -(BOOL)hasServiceFromArray:(NSArray *)array;
-    //    [Export("hasServiceFromArray:")]
-    //    bool HasServiceFromArray(IOBluetoothSDPUUID[] array);
+        // -(BOOL)hasServiceFromArray:(NSArray *)array;
+        [Export("hasServiceFromArray:")]
+        bool HasServiceFromArray(IOBluetoothSDPUUID[] array);
 
-    //    // @property (readonly, copy) NSArray * sortedAttributes;
-    //    [Export("sortedAttributes", ArgumentSemantic.Copy)]
-    //    IOBluetoothSDPServiceAttribute[] SortedAttributes { get; }
-    //}
+        // @property (readonly, copy) NSArray * sortedAttributes;
+        [Export("sortedAttributes", ArgumentSemantic.Copy)]
+        IOBluetoothSDPServiceAttribute[] SortedAttributes { get; }
+    }
 
-    //// @interface IOBluetoothSDPUUID : NSData
-    //[BaseType(typeof(NSData))]
-    //interface IOBluetoothSDPUUID
-    //{
-    //    // +(instancetype)uuidWithBytes:(const void *)bytes length:(unsigned int)length;
-    //    [Static]
-    //    [Export("uuidWithBytes:length:")]
-    //    IOBluetoothSDPUUID UuidWithBytes(IntPtr bytes, uint length);
+    // @interface IOBluetoothSDPUUID : NSData
+    [BaseType(typeof(NSData))]
+    interface IOBluetoothSDPUUID
+    {
+        // +(instancetype)uuidWithBytes:(const void *)bytes length:(unsigned int)length;
+        [Static]
+        [Export("uuidWithBytes:length:")]
+        IOBluetoothSDPUUID UuidWithBytes(IntPtr bytes, uint length);
 
-    //    // +(instancetype)uuidWithData:(NSData *)data;
-    //    [Static]
-    //    [Export("uuidWithData:")]
-    //    IOBluetoothSDPUUID UuidWithData(NSData data);
+        // +(instancetype)uuidWithData:(NSData *)data;
+        [Static]
+        [Export("uuidWithData:")]
+        IOBluetoothSDPUUID UuidWithData(NSData data);
 
-    //    // +(instancetype)uuid16:(BluetoothSDPUUID16)uuid16;
-    //    [Static]
-    //    [Export("uuid16:")]
-    //    IOBluetoothSDPUUID Uuid16(ushort uuid16);
+        // +(instancetype)uuid16:(BluetoothSDPUUID16)uuid16;
+        [Static]
+        [Export("uuid16:")]
+        IOBluetoothSDPUUID Uuid16(ushort uuid16);
 
-    //    // +(instancetype)uuid32:(BluetoothSDPUUID32)uuid32;
-    //    [Static]
-    //    [Export("uuid32:")]
-    //    IOBluetoothSDPUUID Uuid32(uint uuid32);
+        // +(instancetype)uuid32:(BluetoothSDPUUID32)uuid32;
+        [Static]
+        [Export("uuid32:")]
+        IOBluetoothSDPUUID Uuid32(uint uuid32);
 
-    //    // -(instancetype)initWithUUID16:(BluetoothSDPUUID16)uuid16;
-    //    [Export("initWithUUID16:")]
-    //    IntPtr Constructor(ushort uuid16);
+        // -(instancetype)initWithUUID16:(BluetoothSDPUUID16)uuid16;
+        [Export("initWithUUID16:")]
+        IntPtr Constructor(ushort uuid16);
 
-    //    // -(instancetype)initWithUUID32:(BluetoothSDPUUID32)uuid32;
-    //    [Export("initWithUUID32:")]
-    //    IntPtr Constructor(uint uuid32);
+        // -(instancetype)initWithUUID32:(BluetoothSDPUUID32)uuid32;
+        [Export("initWithUUID32:")]
+        IntPtr Constructor(uint uuid32);
 
-    //    // -(instancetype)getUUIDWithLength:(unsigned int)newLength;
-    //    [Export("getUUIDWithLength:")]
-    //    IOBluetoothSDPUUID GetUUIDWithLength(uint newLength);
+        // -(instancetype)getUUIDWithLength:(unsigned int)newLength;
+        [Export("getUUIDWithLength:")]
+        IOBluetoothSDPUUID GetUUIDWithLength(uint newLength);
 
-    //    // -(BOOL)isEqualToUUID:(IOBluetoothSDPUUID *)otherUUID;
-    //    [Export("isEqualToUUID:")]
-    //    bool IsEqualToUUID(IOBluetoothSDPUUID otherUUID);
+        // -(BOOL)isEqualToUUID:(IOBluetoothSDPUUID *)otherUUID;
+        [Export("isEqualToUUID:")]
+        bool IsEqualToUUID(IOBluetoothSDPUUID otherUUID);
 
-    //    // -(Class)classForCoder;
-    //    [Export("classForCoder")]
-    //    Class ClassForCoder { get; }
+        // -(Class)classForCoder;
+        [Export("classForCoder")]
+        Class ClassForCoder { get; }
 
-    //    // -(Class)classForArchiver;
-    //    [Export("classForArchiver")]
-    //    Class ClassForArchiver { get; }
+        // -(Class)classForArchiver;
+        [Export("classForArchiver")]
+        Class ClassForArchiver { get; }
 
-    //    // -(Class)classForPortCoder;
-    //    [Export("classForPortCoder")]
-    //    Class ClassForPortCoder { get; }
-    //}
+        // -(Class)classForPortCoder;
+        [Export("classForPortCoder")]
+        Class ClassForPortCoder { get; }
+    }
 
     /*[Static]
     [Verify (ConstantsInterfaceAssociation)]
