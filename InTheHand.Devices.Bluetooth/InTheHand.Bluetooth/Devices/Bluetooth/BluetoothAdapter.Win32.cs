@@ -16,7 +16,7 @@ namespace InTheHand.Devices.Bluetooth
 {
     partial class BluetoothAdapter
     {    
-        private static BluetoothAdapter GetDefaultImpl()
+        public static BluetoothAdapter GetDefault()
         {
             if (s_default == null)
             {
@@ -45,7 +45,7 @@ namespace InTheHand.Devices.Bluetooth
         {
             return Task.Run(() =>
             {
-                return GetDefaultImpl();
+                return GetDefault();
             });
         }
 #endif

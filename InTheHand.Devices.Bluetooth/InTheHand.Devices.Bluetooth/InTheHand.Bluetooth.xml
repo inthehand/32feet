@@ -1766,33 +1766,6 @@
             </summary>
             <returns>Returns the string representation of the 128-bit service id.</returns>
         </member>
-        <member name="T:InTheHand.Devices.Bluetooth.Rfcomm.RfcommServiceProvider">
-            <summary>
-            Represents an instance of a local RFCOMM service.
-            </summary>
-        </member>
-        <member name="M:InTheHand.Devices.Bluetooth.Rfcomm.RfcommServiceProvider.CreateAsync(InTheHand.Devices.Bluetooth.Rfcomm.RfcommServiceId)">
-            <summary>
-            Gets a RfcommServiceProvider object from an RFCOMM service id.
-            </summary>
-            <param name="serviceId"></param>
-            <returns></returns>
-        </member>
-        <member name="M:InTheHand.Devices.Bluetooth.Rfcomm.RfcommServiceProvider.StartAdvertising">
-            <summary>
-            Begins advertising the SDP attributes.
-            </summary>
-        </member>
-        <member name="E:InTheHand.Devices.Bluetooth.Rfcomm.RfcommServiceProvider.ConnectionReceived">
-            <summary>
-            Event raised when an incoming connection is received.
-            </summary>
-        </member>
-        <member name="M:InTheHand.Devices.Bluetooth.Rfcomm.RfcommServiceProvider.StopAdvertising">
-            <summary>
-            Stops advertising the SDP attributes.
-            </summary>
-        </member>
         <member name="T:InTheHand.Devices.Enumeration.DeviceInformation">
             <summary>
             Represents a picker flyout that contains a list of devices for the user to choose from.

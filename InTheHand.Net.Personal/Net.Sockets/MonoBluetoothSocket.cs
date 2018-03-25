@@ -5,6 +5,9 @@ using System.Text;
 
 namespace InTheHand.Net.Sockets
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class MonoBluetoothSocket : IDisposable
     {
         private int _socket = 0;
@@ -52,19 +55,17 @@ namespace InTheHand.Net.Sockets
 
             int result = NativeMethods.bind(_socket, SocketAddressToArray(sockAddr), sockAddr.Size);
 
-            if (result < 0)
+            if(result < 0)
                 throw new System.Net.Sockets.SocketException(NativeMethods.WSAGetLastError());
         }
 
         private static byte[] SocketAddressToArray(System.Net.SocketAddress socketAddress)
         {
-            byte[] buffer = new byte[socketAddress.Size];
+            byte[] buffer = new byte[socketAddress.Size+1];
             buffer[0] = (byte)socketAddress.Family;
-            System.Diagnostics.Debug.WriteLine(buffer[0]);
-            for (int i = 1; i < buffer.Length; i++)
+            for(int i = 1; i <buffer.Length; i++)
             {
                 buffer[i] = socketAddress[i];
-                System.Diagnostics.Debug.WriteLine(buffer[i]);
             }
 
             return buffer;
@@ -85,13 +86,11 @@ namespace InTheHand.Net.Sockets
 
             if (remoteEP == null)
                 throw new ArgumentNullException("remoteEP");
-
+            
             var sockAddr = remoteEP.Serialize();
-            System.Diagnostics.Debug.WriteLine(sockAddr.Family);
-            System.Diagnostics.Debug.WriteLine(sockAddr.Size);
 
             int result = NativeMethods.connect(_socket, SocketAddressToArray(sockAddr), sockAddr.Size);
-            System.Diagnostics.Debug.WriteLine(result);
+
             if (result < 0)
                 throw new System.Net.Sockets.SocketException(NativeMethods.WSAGetLastError());
         }
@@ -168,26 +167,9 @@ namespace InTheHand.Net.Sockets
             Dispose(false);
         }
 
-        public int Available
-        {
-            get
-            {
-                ThrowIfSocketClosed();
-
-                int bytes = 0;
-                int result = NativeMethods.ioctlsocket(_socket, NativeMethods.FIONREAD, ref bytes);
-
-                if (result != 0)
-                    throw new System.Net.Sockets.SocketException(NativeMethods.WSAGetLastError());
-
-                return bytes;
-            }
-        }
-
         private static class NativeMethods
         {
             private const string winsockDll = "ws2_32.dll";
-            internal const int FIONREAD = 0x40040f7f;
 
             [DllImport(winsockDll)]
             internal static extern int socket(int af, int type, int protocol);
@@ -210,10 +192,6 @@ namespace InTheHand.Net.Sockets
 
             [DllImport(winsockDll)]
             internal static extern int accept(int s, IntPtr addr, IntPtr addrlen);
-
-            [DllImport(winsockDll)]
-            internal static extern int ioctlsocket(int s, int cmd, ref int argp);
-
 
             [DllImport(winsockDll)]
             internal static extern int WSAGetLastError();

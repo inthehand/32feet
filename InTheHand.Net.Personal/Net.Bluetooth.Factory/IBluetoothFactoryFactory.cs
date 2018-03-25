@@ -27,6 +27,7 @@ namespace InTheHand.Net.Bluetooth.Factory
     /// instead <strong>returns</strong> a list of factory instances.
     /// </para>
     /// </remarks>
+    [CLSCompliant(false)]
     public interface IBluetoothFactoryFactory
     {
         /// <summary>

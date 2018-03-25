@@ -11,13 +11,23 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Threading.Tasks;
+using IOBluetooth;
 
 namespace InTheHand.Devices.Bluetooth
 {
     partial class BluetoothDevice
     {
+        private IOBluetoothDevice _device;
+
+        internal BluetoothDevice(IOBluetoothDevice device)
+        {
+            _device = device;
+        }
+
         private static async Task<BluetoothDevice> FromBluetoothAddressAsyncImpl(ulong bluetoothAddress)
         {
+            byte[] addressBytes = BitConverter.GetBytes(bluetoothAddress);
+
             return null;
         }
 
@@ -28,7 +38,7 @@ namespace InTheHand.Devices.Bluetooth
 
         private static async Task<BluetoothDevice> FromDeviceInformationAsyncImpl(DeviceInformation deviceInformation)
         {
-            return deviceInformation._device;
+            return null;
         }
 
         private static string GetDeviceSelectorImpl()

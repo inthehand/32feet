@@ -112,7 +112,7 @@ namespace InTheHand.Devices.Enumeration
         public Task<DevicePairingResult> PairAsync()
         {
 #if __ANDROID__ || WIN32
-            return Task.FromResult<DevicePairingResult>(DoPair());
+            return Task.FromResult<DevicePairingResult>(Pair());
 
 #elif WINDOWS_UWP
             return DoPairAsync();
@@ -135,7 +135,7 @@ namespace InTheHand.Devices.Enumeration
         public Task<DeviceUnpairingResult> UnpairAsync()
         {
 #if __ANDROID__ || WIN32
-            return Task.FromResult<DeviceUnpairingResult>(DoUnpair());
+            return Task.FromResult<DeviceUnpairingResult>(Unpair());
 
 #elif WINDOWS_UWP
             return DoUnpairAsync();

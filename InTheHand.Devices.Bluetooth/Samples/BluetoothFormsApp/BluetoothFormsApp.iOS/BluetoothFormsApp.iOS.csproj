@@ -149,9 +149,9 @@
     <BundleResource Include="Resources\xamarin_logo%403x.png" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\InTheHand.Bluetooth.iOS\InTheHand.Bluetooth.iOS.csproj">
+    <ProjectReference Include="..\..\..\InTheHand.Bluetooth.iOS\InTheHand.Devices.Bluetooth.iOS.csproj">
       <Project>{33149b35-24e1-4f2d-9b8b-1fc89a894dd2}</Project>
-      <Name>InTheHand.Bluetooth.iOS</Name>
+      <Name>InTheHand.Devices.Bluetooth.iOS</Name>
       <IsAppExtension>false</IsAppExtension>
       <IsWatchApp>false</IsWatchApp>
     </ProjectReference>

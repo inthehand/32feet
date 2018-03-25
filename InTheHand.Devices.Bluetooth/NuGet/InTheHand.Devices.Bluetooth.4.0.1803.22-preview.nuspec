@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/10/nuspec.xsd">
+  <metadata>
+    <id>InTheHand.Devices.Bluetooth</id>
+    <version>4.0.1803.22-preview</version>
+    <title>32feet .NET</title>
+    <authors>peterfoot</authors>
+    <owners>peterfoot</owners>
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <licenseUrl>https://github.com/inthehand/32feet/blob/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/inthehand/32feet</projectUrl>
+    <description>32feet.NET is an open-source project to make Bluetooth networking easily accessible from .NET code across platforms.</description>
+    <summary>32feet.NET is an open-source project to make Bluetooth networking easily accessible from .NET code across platforms.</summary>
+    <releaseNotes>Pre-release version</releaseNotes>
+    <copyright>Copyright (c) 2003-2018 In The Hand Ltd</copyright>
+    <tags>bluetooth, uwp, ios, android, windows</tags>
+    <dependencies>
+      <dependency id="InTheHand.Pontoon" version="10.2018.3.19" />
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="lib\monoandroid\InTheHand.Devices.Bluetooth.dll" target="lib\monoandroid\InTheHand.Devices.Bluetooth.dll" />
+    <file src="lib\monoandroid\InTheHand.Devices.Bluetooth.pdb" target="lib\monoandroid\InTheHand.Devices.Bluetooth.pdb" />
+    <file src="lib\monoandroid\InTheHand.Devices.Bluetooth.xml" target="lib\monoandroid\InTheHand.Devices.Bluetooth.xml" />
+    <file src="lib\net35\InTheHand.Devices.Bluetooth.dll" target="lib\net35\InTheHand.Devices.Bluetooth.dll" />
+    <file src="lib\net35\InTheHand.Devices.Bluetooth.pdb" target="lib\net35\InTheHand.Devices.Bluetooth.pdb" />
+    <file src="lib\net35\InTheHand.Devices.Bluetooth.xml" target="lib\net35\InTheHand.Devices.Bluetooth.xml" />
+    <file src="lib\net461\InTheHand.Devices.Bluetooth.dll" target="lib\net461\InTheHand.Devices.Bluetooth.dll" />
+    <file src="lib\net461\InTheHand.Devices.Bluetooth.pdb" target="lib\net461\InTheHand.Devices.Bluetooth.pdb" />
+    <file src="lib\net461\InTheHand.Devices.Bluetooth.xml" target="lib\net461\InTheHand.Devices.Bluetooth.xml" />
+    <file src="lib\netstandard1.4\InTheHand.Devices.Bluetooth.deps.json" target="lib\netstandard1.4\InTheHand.Devices.Bluetooth.deps.json" />
+    <file src="lib\netstandard1.4\InTheHand.Devices.Bluetooth.dll" target="lib\netstandard1.4\InTheHand.Devices.Bluetooth.dll" />
+    <file src="lib\netstandard1.4\InTheHand.Devices.Bluetooth.pdb" target="lib\netstandard1.4\InTheHand.Devices.Bluetooth.pdb" />
+    <file src="lib\netstandard1.4\InTheHand.Devices.Bluetooth.xml" target="lib\netstandard1.4\InTheHand.Devices.Bluetooth.xml" />
+    <file src="lib\uap10.0\InTheHand.Devices.Bluetooth.dll" target="lib\uap10.0\InTheHand.Devices.Bluetooth.dll" />
+    <file src="lib\uap10.0\InTheHand.Devices.Bluetooth.pdb" target="lib\uap10.0\InTheHand.Devices.Bluetooth.pdb" />
+    <file src="lib\uap10.0\InTheHand.Devices.Bluetooth.pri" target="lib\uap10.0\InTheHand.Devices.Bluetooth.pri" />
+    <file src="lib\uap10.0\InTheHand.Devices.Bluetooth.XML" target="lib\uap10.0\InTheHand.Devices.Bluetooth.XML" />
+    <file src="lib\xamarinios\InTheHand.Devices.Bluetooth.dll" target="lib\xamarinios\InTheHand.Devices.Bluetooth.dll" />
+    <file src="lib\xamarinios\InTheHand.Devices.Bluetooth.pdb" target="lib\xamarinios\InTheHand.Devices.Bluetooth.pdb" />
+    <file src="lib\xamarinios\InTheHand.Devices.Bluetooth.xml" target="lib\xamarinios\InTheHand.Devices.Bluetooth.xml" />
+  </files>
+</package>

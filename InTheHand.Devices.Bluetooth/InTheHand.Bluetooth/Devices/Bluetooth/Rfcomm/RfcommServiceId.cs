@@ -319,6 +319,32 @@ namespace InTheHand.Devices.Bluetooth.Rfcomm
             return base.Equals(obj);
         }
 
+        public static bool operator ==(RfcommServiceId i1, RfcommServiceId i2)
+        {
+            bool rc;
+
+            if (object.ReferenceEquals(i1, i2))
+            {
+                rc = true;
+            }
+            else if (((object)i1 == null) || ((object)i2 == null))
+            {
+                rc = false;
+            }
+            else
+            {
+                rc = (i1.Uuid == i2.Uuid);
+            }
+
+            return rc;
+        }
+
+        public static bool operator !=(RfcommServiceId  i1, RfcommServiceId i2)
+        {
+            return !(i1 == i2);
+        }
+
+
         public override string ToString()
         {
             return AsString();
