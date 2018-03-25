@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27130.2036
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InTheHand.Bluetooth", "InTheHand.Bluetooth\InTheHand.Bluetooth.csproj", "{D7C44908-581A-4523-91EC-4079B20E34C7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InTheHand.Bluetooth", "InTheHand.Bluetooth\InTheHand.Bluetooth.csproj", "{D7C44908-581A-4523-91EC-4079B20E34C7}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InTheHand.Bluetooth.Win32", "InTheHand.Bluetooth.Win32\InTheHand.Bluetooth.Win32.csproj", "{15851D1E-6757-49EA-9A28-BEBAF5C9A3E0}"
 EndProject
@@ -23,13 +23,15 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BluetoothFormsApp.iOS", "Sa
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BluetoothFormsApp.UWP", "Samples\BluetoothFormsApp\BluetoothFormsApp.UWP\BluetoothFormsApp.UWP.csproj", "{B3A3E28B-33E8-4A88-B3EE-14F56E8C6303}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BluetoothFormsApp", "Samples\BluetoothFormsApp\BluetoothFormsApp\BluetoothFormsApp.csproj", "{0395637C-EEF1-4B06-9E4F-D340E23BF437}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BluetoothFormsApp", "Samples\BluetoothFormsApp\BluetoothFormsApp\BluetoothFormsApp.csproj", "{0395637C-EEF1-4B06-9E4F-D340E23BF437}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InTheHand.Bluetooth.Unity", "InTheHand.Bluetooth.Unity\InTheHand.Bluetooth.Unity.csproj", "{6238F1F6-6826-46C2-A419-7A230B65CECC}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InTheHand.IOBluetooth", "IOBluetooth\InTheHand.IOBluetooth.csproj", "{6A36006A-6B32-4B53-A692-782C89786EB1}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IOBluetoothTest", "Samples\IOBluetoothTest\IOBluetoothTest.csproj", "{1549E15A-A0D7-47CB-A439-A042AB864CC2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InTheHand.IOBluetoothUI", "InTheHand.IOBluetoothUI\InTheHand.IOBluetoothUI.csproj", "{4DED8B64-10C4-4AF7-AC96-4A255F6D1F58}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -718,6 +720,54 @@ Global
 		{6238F1F6-6826-46C2-A419-7A230B65CECC}.Release|x64.Build.0 = Release|Any CPU
 		{6238F1F6-6826-46C2-A419-7A230B65CECC}.Release|x86.ActiveCfg = Release|Any CPU
 		{6238F1F6-6826-46C2-A419-7A230B65CECC}.Release|x86.Build.0 = Release|Any CPU
+		{4DED8B64-10C4-4AF7-AC96-4A255F6D1F58}.Ad-Hoc|Any CPU.ActiveCfg = Release|Any CPU
+		{4DED8B64-10C4-4AF7-AC96-4A255F6D1F58}.Ad-Hoc|Any CPU.Build.0 = Release|Any CPU
+		{4DED8B64-10C4-4AF7-AC96-4A255F6D1F58}.Ad-Hoc|ARM.ActiveCfg = Release|Any CPU
+		{4DED8B64-10C4-4AF7-AC96-4A255F6D1F58}.Ad-Hoc|ARM.Build.0 = Release|Any CPU
+		{4DED8B64-10C4-4AF7-AC96-4A255F6D1F58}.Ad-Hoc|iPhone.ActiveCfg = Release|Any CPU
+		{4DED8B64-10C4-4AF7-AC96-4A255F6D1F58}.Ad-Hoc|iPhone.Build.0 = Release|Any CPU
+		{4DED8B64-10C4-4AF7-AC96-4A255F6D1F58}.Ad-Hoc|iPhoneSimulator.ActiveCfg = Release|Any CPU
+		{4DED8B64-10C4-4AF7-AC96-4A255F6D1F58}.Ad-Hoc|iPhoneSimulator.Build.0 = Release|Any CPU
+		{4DED8B64-10C4-4AF7-AC96-4A255F6D1F58}.Ad-Hoc|x64.ActiveCfg = Release|Any CPU
+		{4DED8B64-10C4-4AF7-AC96-4A255F6D1F58}.Ad-Hoc|x64.Build.0 = Release|Any CPU
+		{4DED8B64-10C4-4AF7-AC96-4A255F6D1F58}.Ad-Hoc|x86.ActiveCfg = Release|Any CPU
+		{4DED8B64-10C4-4AF7-AC96-4A255F6D1F58}.Ad-Hoc|x86.Build.0 = Release|Any CPU
+		{4DED8B64-10C4-4AF7-AC96-4A255F6D1F58}.AppStore|Any CPU.ActiveCfg = Release|Any CPU
+		{4DED8B64-10C4-4AF7-AC96-4A255F6D1F58}.AppStore|Any CPU.Build.0 = Release|Any CPU
+		{4DED8B64-10C4-4AF7-AC96-4A255F6D1F58}.AppStore|ARM.ActiveCfg = Release|Any CPU
+		{4DED8B64-10C4-4AF7-AC96-4A255F6D1F58}.AppStore|ARM.Build.0 = Release|Any CPU
+		{4DED8B64-10C4-4AF7-AC96-4A255F6D1F58}.AppStore|iPhone.ActiveCfg = Release|Any CPU
+		{4DED8B64-10C4-4AF7-AC96-4A255F6D1F58}.AppStore|iPhone.Build.0 = Release|Any CPU
+		{4DED8B64-10C4-4AF7-AC96-4A255F6D1F58}.AppStore|iPhoneSimulator.ActiveCfg = Release|Any CPU
+		{4DED8B64-10C4-4AF7-AC96-4A255F6D1F58}.AppStore|iPhoneSimulator.Build.0 = Release|Any CPU
+		{4DED8B64-10C4-4AF7-AC96-4A255F6D1F58}.AppStore|x64.ActiveCfg = Release|Any CPU
+		{4DED8B64-10C4-4AF7-AC96-4A255F6D1F58}.AppStore|x64.Build.0 = Release|Any CPU
+		{4DED8B64-10C4-4AF7-AC96-4A255F6D1F58}.AppStore|x86.ActiveCfg = Release|Any CPU
+		{4DED8B64-10C4-4AF7-AC96-4A255F6D1F58}.AppStore|x86.Build.0 = Release|Any CPU
+		{4DED8B64-10C4-4AF7-AC96-4A255F6D1F58}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4DED8B64-10C4-4AF7-AC96-4A255F6D1F58}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4DED8B64-10C4-4AF7-AC96-4A255F6D1F58}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{4DED8B64-10C4-4AF7-AC96-4A255F6D1F58}.Debug|ARM.Build.0 = Debug|Any CPU
+		{4DED8B64-10C4-4AF7-AC96-4A255F6D1F58}.Debug|iPhone.ActiveCfg = Debug|Any CPU
+		{4DED8B64-10C4-4AF7-AC96-4A255F6D1F58}.Debug|iPhone.Build.0 = Debug|Any CPU
+		{4DED8B64-10C4-4AF7-AC96-4A255F6D1F58}.Debug|iPhoneSimulator.ActiveCfg = Debug|Any CPU
+		{4DED8B64-10C4-4AF7-AC96-4A255F6D1F58}.Debug|iPhoneSimulator.Build.0 = Debug|Any CPU
+		{4DED8B64-10C4-4AF7-AC96-4A255F6D1F58}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{4DED8B64-10C4-4AF7-AC96-4A255F6D1F58}.Debug|x64.Build.0 = Debug|Any CPU
+		{4DED8B64-10C4-4AF7-AC96-4A255F6D1F58}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{4DED8B64-10C4-4AF7-AC96-4A255F6D1F58}.Debug|x86.Build.0 = Debug|Any CPU
+		{4DED8B64-10C4-4AF7-AC96-4A255F6D1F58}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4DED8B64-10C4-4AF7-AC96-4A255F6D1F58}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4DED8B64-10C4-4AF7-AC96-4A255F6D1F58}.Release|ARM.ActiveCfg = Release|Any CPU
+		{4DED8B64-10C4-4AF7-AC96-4A255F6D1F58}.Release|ARM.Build.0 = Release|Any CPU
+		{4DED8B64-10C4-4AF7-AC96-4A255F6D1F58}.Release|iPhone.ActiveCfg = Release|Any CPU
+		{4DED8B64-10C4-4AF7-AC96-4A255F6D1F58}.Release|iPhone.Build.0 = Release|Any CPU
+		{4DED8B64-10C4-4AF7-AC96-4A255F6D1F58}.Release|iPhoneSimulator.ActiveCfg = Release|Any CPU
+		{4DED8B64-10C4-4AF7-AC96-4A255F6D1F58}.Release|iPhoneSimulator.Build.0 = Release|Any CPU
+		{4DED8B64-10C4-4AF7-AC96-4A255F6D1F58}.Release|x64.ActiveCfg = Release|Any CPU
+		{4DED8B64-10C4-4AF7-AC96-4A255F6D1F58}.Release|x64.Build.0 = Release|Any CPU
+		{4DED8B64-10C4-4AF7-AC96-4A255F6D1F58}.Release|x86.ActiveCfg = Release|Any CPU
+		{4DED8B64-10C4-4AF7-AC96-4A255F6D1F58}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

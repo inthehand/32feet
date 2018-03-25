@@ -25,9 +25,8 @@ namespace IOBluetoothTest
             foreach(IOBluetooth.IOBluetoothDevice dev in IOBluetooth.IOBluetoothDevice.PairedDevices)
             {
                 IntPtr paddr = dev.GetAddress();
-                IntPtr pbytes = Marshal.ReadIntPtr(paddr);
-                byte[] daddr = new byte[6];
-                Marshal.Copy(pbytes, daddr, 0, 6);
+                byte[] daddr = new byte[16];
+                Marshal.Copy(paadr, daddr, 0, 16);
                 //System.Diagnostics.Debug.WriteLine(dev.Address.ToString("x6"));
                 System.Diagnostics.Debug.WriteLine(dev.AddressString);
                 System.Diagnostics.Debug.WriteLine(dev.NameOrAddress);

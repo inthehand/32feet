@@ -275,7 +275,8 @@ public enum BluetoothCompanyIdentifers : uint
 	InteropIdentifier = 65535
 }
 
-public enum BluetoothServiceClassMajor : uint
+[Native]
+public enum BluetoothServiceClassMajor : ulong
 {
 	LimitedDiscoverableMode = 1,
 	Reserved1 = 2,
@@ -3173,36 +3174,35 @@ public enum BluetoothRFCOMMLineStatus : uint
 //	ServiceSearchAttributeResponse = 7
 //}
 
-//[Verify (InferredFromMemberPrefix)]
-//public enum kBluetoothSDPErrorCode : uint
-//{
-//	Success = 0,
-//	Reserved = 0,
-//	InvalidSDPVersion = 1,
-//	InvalidServiceRecordHandle = 2,
-//	InvalidRequestSyntax = 3,
-//	InvalidPDUSize = 4,
-//	InvalidContinuationState = 5,
-//	InsufficientResources = 6,
-//	ReservedStart = 7,
-//	ReservedEnd = 65535
-//}
+public enum BluetoothSDPErrorCode : uint
+{
+	Success = 0,
+	Reserved = 0,
+	InvalidSDPVersion = 1,
+	InvalidServiceRecordHandle = 2,
+	InvalidRequestSyntax = 3,
+	InvalidPDUSize = 4,
+	InvalidContinuationState = 5,
+	InsufficientResources = 6,
+	ReservedStart = 7,
+	ReservedEnd = 65535
+}
 
-//[Verify (InferredFromMemberPrefix)]
-//public enum kBluetoothSDPDataElementType : uint
-//{
-//	Nil = 0,
-//	UnsignedInt = 1,
-//	SignedInt = 2,
-//	Uuid = 3,
-//	String = 4,
-//	Boolean = 5,
-//	DataElementSequence = 6,
-//	DataElementAlternative = 7,
-//	Url = 8,
-//	ReservedStart = 9,
-//	ReservedEnd = 31
-//}
+[Native]
+public enum BluetoothSDPDataElementType : ulong
+{
+	Nil = 0,
+	UnsignedInt = 1,
+	SignedInt = 2,
+	Uuid = 3,
+	String = 4,
+	Boolean = 5,
+	DataElementSequence = 6,
+	DataElementAlternative = 7,
+	Url = 8,
+	ReservedStart = 9,
+	ReservedEnd = 31
+}
 
 public enum BluetoothLEScanType : uint
 {
@@ -3492,7 +3492,7 @@ public struct IOBluetoothDeviceSearchDeviceAttributes
 
 	public byte[] name;
 
-	public uint serviceClassMajor;
+	public BluetoothServiceClassMajor serviceClassMajor;
 
 	public uint deviceClassMajor;
 
@@ -4077,7 +4077,7 @@ public enum IOBluetoothHandsFreeAudioGatewayFeatures : uint
 }
 
 [Native]
-public enum IOBluetoothHandsFreeCallHoldModes : uint
+public enum IOBluetoothHandsFreeCallHoldModes : ulong
 {
 	IOBluetoothHandsFreeCallHoldMode0 = 1 << 0,
 	IOBluetoothHandsFreeCallHoldMode1 = 1 << 1,
@@ -4095,11 +4095,12 @@ public enum IOBluetoothHandsFreeCodecID : byte
 	Aaceld = 128
 }
 
-public enum SMSMode
-{
-	Pdu,
-	Text
-}
+    [Native]
+    public enum IOBluetoothSMSMode :ulong
+    {
+	    Pdu,
+	    Text
+    }
 
 [Native]
 public enum IOBluetoothHandsFreeSMSSupport : ulong

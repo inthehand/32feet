@@ -93,6 +93,10 @@
       <Project>{6A36006A-6B32-4B53-A692-782C89786EB1}</Project>
       <Name>InTheHand.IOBluetooth</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\InTheHand.IOBluetoothUI\InTheHand.IOBluetoothUI.csproj">
+      <Project>{4DED8B64-10C4-4AF7-AC96-4A255F6D1F58}</Project>
+      <Name>InTheHand.IOBluetoothUI</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Mac\Xamarin.Mac.CSharp.targets" />
 </Project>

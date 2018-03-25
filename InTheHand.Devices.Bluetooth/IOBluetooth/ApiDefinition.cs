@@ -203,10 +203,10 @@ namespace IOBluetooth
         [Export("performSDPQuery:")]
         int PerformSDPQuery(NSObject target);
 
-        //// -(IOReturn)performSDPQuery:(id)target uuids:(NSArray *)uuidArray __attribute__((availability(macos, introduced=10.7)));
-        //[Introduced(PlatformName.MacOSX, 10, 7)]
-        //[Export("performSDPQuery:uuids:")]
-        //int PerformSDPQuery(NSObject target, IOBluetoothSDPUUID[] uuidArray);
+        // -(IOReturn)performSDPQuery:(id)target uuids:(NSArray *)uuidArray __attribute__((availability(macos, introduced=10.7)));
+        [Introduced(PlatformName.MacOSX, 10, 7)]
+        [Export("performSDPQuery:uuids:")]
+        int PerformSDPQuery(NSObject target, IOBluetoothSDPUUID[] uuidArray);
 
         // @property (readonly, retain) NSArray * services;
         [Export("services", ArgumentSemantic.Retain)]
@@ -216,9 +216,9 @@ namespace IOBluetooth
         [Export("getLastServicesUpdate")]
         NSDate LastServicesUpdate { get; }
 
-        //// -(IOBluetoothSDPServiceRecord *)getServiceRecordForUUID:(IOBluetoothSDPUUID *)sdpUUID;
-        //[Export("getServiceRecordForUUID:")]
-        //IOBluetoothSDPServiceRecord GetServiceRecordForUUID(IOBluetoothSDPUUID sdpUUID);
+        // -(IOBluetoothSDPServiceRecord *)getServiceRecordForUUID:(IOBluetoothSDPUUID *)sdpUUID;
+        [Export("getServiceRecordForUUID:")]
+        IOBluetoothSDPServiceRecord GetServiceRecordForUUID(IOBluetoothSDPUUID sdpUUID);
 
         // +(NSArray *)favoriteDevices;
         [Static]
@@ -739,18 +739,18 @@ namespace IOBluetooth
     }
 
     // @interface IOBluetoothSDPDataElement : NSObject <NSCoding, NSSecureCoding>
-    [BaseType(typeof(NSObject))]
-    interface IOBluetoothSDPDataElement : INSCoding, INSSecureCoding
+    [BaseType(typeof(NSObject), Name ="IOBluetoothSDPDataElement")]
+    interface SDPDataElement : INSCoding, INSSecureCoding
     {
         // +(instancetype)withElementValue:(NSObject *)element;
         [Static]
         [Export("withElementValue:")]
-        IOBluetoothSDPDataElement WithElementValue(NSObject element);
+        SDPDataElement WithElementValue(NSObject element);
 
         // +(instancetype)withType:(BluetoothSDPDataElementTypeDescriptor)type sizeDescriptor:(BluetoothSDPDataElementSizeDescriptor)newSizeDescriptor size:(uint32_t)newSize value:(NSObject *)newValue;
         [Static]
         [Export("withType:sizeDescriptor:size:value:")]
-        IOBluetoothSDPDataElement WithType(byte type, byte newSizeDescriptor, uint newSize, NSObject newValue);
+        SDPDataElement WithType(BluetoothSDPDataElementType type, byte newSizeDescriptor, uint newSize, NSObject newValue);
 
         // +(instancetype)withSDPDataElementRef:(IOBluetoothSDPDataElementRef)sdpDataElementRef;
         //[Static]
@@ -763,7 +763,7 @@ namespace IOBluetooth
 
         // -(instancetype)initWithType:(BluetoothSDPDataElementTypeDescriptor)newType sizeDescriptor:(BluetoothSDPDataElementSizeDescriptor)newSizeDescriptor size:(uint32_t)newSize value:(NSObject *)newValue;
         [Export("initWithType:sizeDescriptor:size:value:")]
-        IntPtr Constructor(byte newType, byte newSizeDescriptor, uint newSize, NSObject newValue);
+        IntPtr Constructor(BluetoothSDPDataElementType newType, byte newSizeDescriptor, uint newSize, NSObject newValue);
 
         // -(IOBluetoothSDPDataElementRef)getSDPDataElementRef;
         //[Export ("getSDPDataElementRef")]
@@ -772,7 +772,7 @@ namespace IOBluetooth
 
         // -(BluetoothSDPDataElementTypeDescriptor)getTypeDescriptor;
         [Export("getTypeDescriptor")]
-        byte TypeDescriptor { get; }
+        BluetoothSDPDataElementType TypeDescriptor { get; }
 
         // -(BluetoothSDPDataElementSizeDescriptor)getSizeDescriptor;
         [Export("getSizeDescriptor")]
@@ -808,7 +808,7 @@ namespace IOBluetooth
 
         // -(BOOL)containsDataElement:(IOBluetoothSDPDataElement *)dataElement;
         [Export("containsDataElement:")]
-        bool ContainsDataElement(IOBluetoothSDPDataElement dataElement);
+        bool ContainsDataElement(SDPDataElement dataElement);
 
         // -(BOOL)containsValue:(NSObject *)cmpValue;
         [Export("containsValue:")]
@@ -827,7 +827,7 @@ namespace IOBluetooth
         // +(instancetype)withID:(BluetoothSDPServiceAttributeID)newAttributeID attributeElement:(IOBluetoothSDPDataElement *)attributeElement;
         [Static]
         [Export("withID:attributeElement:")]
-        IOBluetoothSDPServiceAttribute WithID(ushort newAttributeID, IOBluetoothSDPDataElement attributeElement);
+        IOBluetoothSDPServiceAttribute WithID(ushort newAttributeID, SDPDataElement attributeElement);
 
         // -(instancetype)initWithID:(BluetoothSDPServiceAttributeID)newAttributeID attributeElementValue:(NSObject *)attributeElementValue;
         [Export("initWithID:attributeElementValue:")]
@@ -835,7 +835,7 @@ namespace IOBluetooth
 
         // -(instancetype)initWithID:(BluetoothSDPServiceAttributeID)newAttributeID attributeElement:(IOBluetoothSDPDataElement *)attributeElement;
         [Export("initWithID:attributeElement:")]
-        IntPtr Constructor(ushort newAttributeID, IOBluetoothSDPDataElement attributeElement);
+        IntPtr Constructor(ushort newAttributeID, SDPDataElement attributeElement);
 
         // -(BluetoothSDPServiceAttributeID)getAttributeID;
         [Export("getAttributeID")]
@@ -843,11 +843,11 @@ namespace IOBluetooth
 
         // -(IOBluetoothSDPDataElement *)getDataElement;
         [Export("getDataElement")]
-        IOBluetoothSDPDataElement DataElement { get; }
+        SDPDataElement DataElement { get; }
 
         // -(IOBluetoothSDPDataElement *)getIDDataElement;
         [Export("getIDDataElement")]
-        IOBluetoothSDPDataElement IDDataElement { get; }
+        SDPDataElement IDDataElement { get; }
     }
 
     // @interface IOBluetoothSDPServiceRecord : NSObject <NSCoding, NSSecureCoding>
@@ -892,7 +892,7 @@ namespace IOBluetooth
 
         // -(IOBluetoothSDPDataElement *)getAttributeDataElement:(BluetoothSDPServiceAttributeID)attributeID;
         [Export("getAttributeDataElement:")]
-        IOBluetoothSDPDataElement GetAttributeDataElement(ushort attributeID);
+        SDPDataElement GetAttributeDataElement(ushort attributeID);
 
         // -(NSString *)getServiceName;
         [Export("getServiceName")]
@@ -1081,10 +1081,10 @@ namespace IOBluetooth
         unsafe CFStringRef* kOBEXHeaderIDKeyUserDefined { get; }
     }*/
 
-    //// @interface OBEXSession : NSObject
-    //[BaseType(typeof(NSObject))]
-    //interface OBEXSession
-    //{
+    // @interface OBEXSession : NSObject
+    [BaseType(typeof(NSObject))]
+    interface OBEXSession
+    {
     //    // -(OBEXError)OBEXConnect:(OBEXFlags)inFlags maxPacketLength:(OBEXMaxPacketLength)inMaxPacketLength optionalHeaders:(void *)inOptionalHeaders optionalHeadersLength:(size_t)inOptionalHeadersLength eventSelector:(SEL)inSelector selectorTarget:(id)inTarget refCon:(void *)inUserRefCon;
     //    [Export("OBEXConnect:maxPacketLength:optionalHeaders:optionalHeadersLength:eventSelector:selectorTarget:refCon:")]
     //    int OBEXConnect(byte inFlags, ushort inMaxPacketLength, byte[] inOptionalHeaders, nuint inOptionalHeadersLength, Selector inSelector, NSObject inTarget, IntPtr inUserRefCon);
@@ -1141,13 +1141,13 @@ namespace IOBluetooth
     //    [Export("getAvailableCommandResponsePayloadLength:")]
     //    ushort GetAvailableCommandResponsePayloadLength(byte inOpCode);
 
-    //    // -(OBEXMaxPacketLength)getMaxPacketLength;
-    //    [Export("getMaxPacketLength")]
-    //    ushort MaxPacketLength { get; }
+        // -(OBEXMaxPacketLength)getMaxPacketLength;
+        [Export("getMaxPacketLength")]
+        ushort MaxPacketLength { get; }
 
-    //    // -(BOOL)hasOpenOBEXConnection;
-    //    [Export("hasOpenOBEXConnection")]
-    //    bool HasOpenOBEXConnection { get; }
+        // -(BOOL)hasOpenOBEXConnection;
+        [Export("hasOpenOBEXConnection")]
+        bool HasOpenOBEXConnection { get; }
 
     //    // -(void)setEventCallback:(OBEXSessionEventCallback)inEventCallback;
     //    //[Export ("setEventCallback:")]
@@ -1171,25 +1171,25 @@ namespace IOBluetooth
 
     //    // -(OBEXError)sendDataToTransport:(void *)inDataToSend dataLength:(size_t)inDataLength;
     //    [Export("sendDataToTransport:dataLength:")]
-    //    int SendDataToTransport(byte[] inDataToSend, nuint inDataLength);
+    //    int SendDataToTransport(IntPtr inDataToSend, nuint inDataLength);
 
     //    // -(OBEXError)openTransportConnection:(SEL)inSelector selectorTarget:(id)inTarget refCon:(void *)inUserRefCon;
     //    [Export("openTransportConnection:selectorTarget:refCon:")]
     //    int OpenTransportConnection(Selector inSelector, NSObject inTarget, IntPtr inUserRefCon);
 
-    //    // -(Boolean)hasOpenTransportConnection;
-    //    [Export("hasOpenTransportConnection")]
-    //    byte HasOpenTransportConnection { get; }
+        // -(Boolean)hasOpenTransportConnection;
+        [Export("hasOpenTransportConnection")]
+        byte HasOpenTransportConnection { get; }
 
-    //    // -(OBEXError)closeTransportConnection;
-    //    [Export("closeTransportConnection")]
-    //    int CloseTransportConnection();
-    //}
+        // -(OBEXError)closeTransportConnection;
+        [Export("closeTransportConnection")]
+        int CloseTransportConnection();
+    }
 
-    //// @interface IOBluetoothOBEXSession : OBEXSession <IOBluetoothRFCOMMChannelDelegate>
-    //[BaseType(typeof(OBEXSession))]
-    //interface IOBluetoothOBEXSession : IOBluetoothRFCOMMChannelDelegate
-    //{
+    // @interface IOBluetoothOBEXSession : OBEXSession <IOBluetoothRFCOMMChannelDelegate>
+    [BaseType(typeof(OBEXSession))]
+    interface IOBluetoothOBEXSession : IOBluetoothRFCOMMChannelDelegate
+    {
     //    // +(instancetype)withSDPServiceRecord:(IOBluetoothSDPServiceRecord *)inSDPServiceRecord;
     //    [Static]
     //    [Export("withSDPServiceRecord:")]
@@ -1209,202 +1209,203 @@ namespace IOBluetooth
     //    [Export("initWithSDPServiceRecord:")]
     //    IntPtr Constructor(IOBluetoothSDPServiceRecord inSDPServiceRecord);
 
-    //    // -(instancetype)initWithDevice:(IOBluetoothDevice *)inDevice channelID:(BluetoothRFCOMMChannelID)inChannelID;
-    //    [Export("initWithDevice:channelID:")]
-    //    IntPtr Constructor(IOBluetoothDevice inDevice, byte inChannelID);
+        // -(instancetype)initWithDevice:(IOBluetoothDevice *)inDevice channelID:(BluetoothRFCOMMChannelID)inChannelID;
+        [Export("initWithDevice:channelID:")]
+        IntPtr Constructor(IOBluetoothDevice inDevice, byte inChannelID);
 
     //    // -(instancetype)initWithIncomingRFCOMMChannel:(IOBluetoothRFCOMMChannel *)inChannel eventSelector:(SEL)inEventSelector selectorTarget:(id)inEventSelectorTarget refCon:(void *)inUserRefCon;
     //    [Export("initWithIncomingRFCOMMChannel:eventSelector:selectorTarget:refCon:")]
     //    IntPtr Constructor(IOBluetoothRFCOMMChannel inChannel, Selector inEventSelector, NSObject inEventSelectorTarget, IntPtr inUserRefCon);
 
-    //    // -(IOBluetoothRFCOMMChannel *)getRFCOMMChannel;
-    //    [Export("getRFCOMMChannel")]
-    //    IOBluetoothRFCOMMChannel RFCOMMChannel { get; }
+        // -(IOBluetoothRFCOMMChannel *)getRFCOMMChannel;
+        [Export("getRFCOMMChannel")]
+        IOBluetoothRFCOMMChannel RFCOMMChannel { get; }
 
-    //    // -(IOBluetoothDevice *)getDevice;
-    //    [Export("getDevice")]
-    //    IOBluetoothDevice Device { get; }
+        // -(IOBluetoothDevice *)getDevice;
+        [Export("getDevice")]
+        IOBluetoothDevice Device { get; }
 
-    //    // -(IOReturn)sendBufferTroughChannel;
-    //    [Export("sendBufferTroughChannel")]
-    //    int SendBufferTroughChannel();
+        // -(IOReturn)sendBufferTroughChannel;
+        [Export("sendBufferTroughChannel")]
+        int SendBufferTroughChannel();
 
-    //    // -(void)restartTransmission;
-    //    [Export("restartTransmission")]
-    //    void RestartTransmission();
+        // -(void)restartTransmission;
+        [Export("restartTransmission")]
+        void RestartTransmission();
 
-    //    // -(BOOL)isSessionTargetAMac;
-    //    [Export("isSessionTargetAMac")]
-    //    bool IsSessionTargetAMac { get; }
+        // -(BOOL)isSessionTargetAMac;
+        [Export("isSessionTargetAMac")]
+        bool IsSessionTargetAMac { get; }
 
-    //    // -(OBEXError)openTransportConnection:(SEL)inSelector selectorTarget:(id)inTarget refCon:(void *)inUserRefCon;
-    //    [Export("openTransportConnection:selectorTarget:refCon:")]
-    //    int OpenTransportConnection(Selector inSelector, NSObject inTarget, byte[] inUserRefCon);
+        // -(OBEXError)openTransportConnection:(SEL)inSelector selectorTarget:(id)inTarget refCon:(void *)inUserRefCon;
+        [Export("openTransportConnection:selectorTarget:refCon:")]
+        int OpenTransportConnection(Selector inSelector, NSObject inTarget, IntPtr inUserRefCon);
 
-    //    // -(BOOL)hasOpenTransportConnection;
-    //    [Export("hasOpenTransportConnection")]
-    //    bool HasOpenTransportConnection { get; }
+        // -(BOOL)hasOpenTransportConnection;
+        [Export("hasOpenTransportConnection")]
+        [New]
+        bool HasOpenTransportConnection { get; }
 
-    //    // -(OBEXError)closeTransportConnection;
-    //    [Export("closeTransportConnection")]
-    //    int CloseTransportConnection();
+        // -(OBEXError)closeTransportConnection;
+        [Export("closeTransportConnection")]
+        [New]
+        int CloseTransportConnection();
 
     //    // -(OBEXError)sendDataToTransport:(void *)inDataToSend dataLength:(size_t)inDataLength;
     //    [Export("sendDataToTransport:dataLength:")]
-    //    int SendDataToTransport(byte[] inDataToSend, nuint inDataLength);
+    //    int SendDataToTransport(IntPtr inDataToSend, nuint inDataLength);
 
-    //    // -(void)setOpenTransportConnectionAsyncSelector:(SEL)inSelector target:(id)inSelectorTarget refCon:(id)inUserRefCon;
-    //    [Export("setOpenTransportConnectionAsyncSelector:target:refCon:")]
-    //    void SetOpenTransportConnectionAsyncSelector(Selector inSelector, NSObject inSelectorTarget, NSObject inUserRefCon);
+        // -(void)setOpenTransportConnectionAsyncSelector:(SEL)inSelector target:(id)inSelectorTarget refCon:(id)inUserRefCon;
+        [Export("setOpenTransportConnectionAsyncSelector:target:refCon:")]
+        void SetOpenTransportConnectionAsyncSelector(Selector inSelector, NSObject inSelectorTarget, NSObject inUserRefCon);
 
     //    // -(void)setOBEXSessionOpenConnectionCallback:(IOBluetoothOBEXSessionOpenConnectionCallback)inCallback refCon:(void *)inUserRefCon;
     //    //[Export ("setOBEXSessionOpenConnectionCallback:refCon:")]
     //    //unsafe void SetOBEXSessionOpenConnectionCallback (IOBluetoothOBEXSessionOpenConnectionCallback* inCallback, void* inUserRefCon);
-    //}
+    }
 
     // @interface OBEXFileTransferServices : NSObject
-    //[BaseType(typeof(NSObject))]
-    //interface OBEXFileTransferServices
-    //{
-    //    [Wrap("WeakDelegate")]
-    //    NSObject Delegate { get; set; }
+    [BaseType(typeof(NSObject))]
+    interface OBEXFileTransferServices
+    {
+        [Wrap("WeakDelegate")]
+        OBEXFileTransferServicesDelegate Delegate { get; set; }
 
-    //    // @property (assign) id delegate;
-    //    [NullAllowed, Export("delegate", ArgumentSemantic.Assign)]
-    //    NSObject WeakDelegate { get; set; }
+        // @property (assign) id delegate;
+        [NullAllowed, Export("delegate", ArgumentSemantic.Assign)]
+        NSObject WeakDelegate { get; set; }
 
-    //    // +(instancetype)withOBEXSession:(IOBluetoothOBEXSession *)inOBEXSession;
-    //    [Static]
-    //    [Export("withOBEXSession:")]
-    //    OBEXFileTransferServices WithOBEXSession(IOBluetoothOBEXSession inOBEXSession);
+        // +(instancetype)withOBEXSession:(IOBluetoothOBEXSession *)inOBEXSession;
+        [Static]
+        [Export("withOBEXSession:")]
+        OBEXFileTransferServices WithOBEXSession(IOBluetoothOBEXSession inOBEXSession);
 
-    //    // -(instancetype)initWithOBEXSession:(IOBluetoothOBEXSession *)inOBEXSession;
-    //    [Export("initWithOBEXSession:")]
-    //    IntPtr Constructor(IOBluetoothOBEXSession inOBEXSession);
+        // -(instancetype)initWithOBEXSession:(IOBluetoothOBEXSession *)inOBEXSession;
+        [Export("initWithOBEXSession:")]
+        IntPtr Constructor(IOBluetoothOBEXSession inOBEXSession);
 
-    //    // -(NSString *)currentPath;
-    //    [Export("currentPath")]
-    //    string CurrentPath { get; }
+        // -(NSString *)currentPath;
+        [Export("currentPath")]
+        string CurrentPath { get; }
 
-    //    // -(BOOL)isBusy;
-    //    [Export("isBusy")]
-    //    bool IsBusy { get; }
+        // -(BOOL)isBusy;
+        [Export("isBusy")]
+        bool IsBusy { get; }
 
-    //    // -(BOOL)isConnected;
-    //    [Export("isConnected")]
-    //    bool IsConnected { get; }
+        // -(BOOL)isConnected;
+        [Export("isConnected")]
+        bool IsConnected { get; }
 
-    //    // -(OBEXError)connectToFTPService;
-    //    [Export("connectToFTPService")]
-    //    int ConnectToFTPService();
+        // -(OBEXError)connectToFTPService;
+        [Export("connectToFTPService")]
+        int ConnectToFTPService();
 
-    //    // -(OBEXError)connectToObjectPushService;
-    //    [Export("connectToObjectPushService")]
-    //    int ConnectToObjectPushService();
+        // -(OBEXError)connectToObjectPushService;
+        [Export("connectToObjectPushService")]
+        int ConnectToObjectPushService();
 
-    //    // -(OBEXError)disconnect;
-    //    [Export("disconnect")]
-    //    int Disconnect();
+        // -(OBEXError)disconnect;
+        [Export("disconnect")]
+        int Disconnect();
 
-    //    // -(OBEXError)changeCurrentFolderToRoot;
-    //    [Export("changeCurrentFolderToRoot")]
-    //    int ChangeCurrentFolderToRoot();
+        // -(OBEXError)changeCurrentFolderToRoot;
+        [Export("changeCurrentFolderToRoot")]
+        int ChangeCurrentFolderToRoot();
 
-    //    // -(OBEXError)changeCurrentFolderBackward;
-    //    [Export("changeCurrentFolderBackward")]
-    //    int ChangeCurrentFolderBackward();
+        // -(OBEXError)changeCurrentFolderBackward;
+        [Export("changeCurrentFolderBackward")]
+        int ChangeCurrentFolderBackward();
 
-    //    // -(OBEXError)changeCurrentFolderForwardToPath:(NSString *)inDirName;
-    //    [Export("changeCurrentFolderForwardToPath:")]
-    //    int ChangeCurrentFolderForwardToPath(string inDirName);
+        // -(OBEXError)changeCurrentFolderForwardToPath:(NSString *)inDirName;
+        [Export("changeCurrentFolderForwardToPath:")]
+        int ChangeCurrentFolderForwardToPath(string inDirName);
 
-    //    // -(OBEXError)createFolder:(NSString *)inDirName;
-    //    [Export("createFolder:")]
-    //    int CreateFolder(string inDirName);
+        // -(OBEXError)createFolder:(NSString *)inDirName;
+        [Export("createFolder:")]
+        int CreateFolder(string inDirName);
 
-    //    // -(OBEXError)removeItem:(NSString *)inItemName;
-    //    [Export("removeItem:")]
-    //    int RemoveItem(string inItemName);
+        // -(OBEXError)removeItem:(NSString *)inItemName;
+        [Export("removeItem:")]
+        int RemoveItem(string inItemName);
 
-    //    // -(OBEXError)retrieveFolderListing;
-    //    [Export("retrieveFolderListing")]
-    //    int RetrieveFolderListing();
+        // -(OBEXError)retrieveFolderListing;
+        [Export("retrieveFolderListing")]
+        int RetrieveFolderListing();
 
-    //    // -(OBEXError)sendFile:(NSString *)inLocalPathAndName;
-    //    [Export("sendFile:")]
-    //    int SendFile(string inLocalPathAndName);
+        // -(OBEXError)sendFile:(NSString *)inLocalPathAndName;
+        [Export("sendFile:")]
+        int SendFile(string inLocalPathAndName);
 
-    //    // -(OBEXError)copyRemoteFile:(NSString *)inRemoteFileName toLocalPath:(NSString *)inLocalPathAndName;
-    //    [Export("copyRemoteFile:toLocalPath:")]
-    //    int CopyRemoteFile(string inRemoteFileName, string inLocalPathAndName);
+        // -(OBEXError)copyRemoteFile:(NSString *)inRemoteFileName toLocalPath:(NSString *)inLocalPathAndName;
+        [Export("copyRemoteFile:toLocalPath:")]
+        int CopyRemoteFile(string inRemoteFileName, string inLocalPathAndName);
 
-    //    // -(OBEXError)sendData:(NSData *)inData type:(NSString *)inType name:(NSString *)inName;
-    //    [Export("sendData:type:name:")]
-    //    int SendData(NSData inData, string inType, string inName);
+        // -(OBEXError)sendData:(NSData *)inData type:(NSString *)inType name:(NSString *)inName;
+        [Export("sendData:type:name:")]
+        int SendData(NSData inData, string inType, string inName);
 
-    //    // -(OBEXError)getDefaultVCard:(NSString *)inLocalPathAndName;
-    //    [Export("getDefaultVCard:")]
-    //    int GetDefaultVCard(string inLocalPathAndName);
+        // -(OBEXError)getDefaultVCard:(NSString *)inLocalPathAndName;
+        [Export("getDefaultVCard:")]
+        int GetDefaultVCard(string inLocalPathAndName);
 
-    //    // -(OBEXError)abort;
-    //    [Export("abort")]
-    //    int Abort();
-    //}
+        // -(OBEXError)abort;
+        [Export("abort")]
+        int Abort();
+    }
 
     // @interface OBEXFileTransferServicesDelegate (NSObject)
-    //[Category]
-    //[BaseType (typeof(NSObject))]
-    //interface OBEXFileTransferServicesDelegate
-    //{
-    //	// -(void)fileTransferServicesConnectionComplete:(OBEXFileTransferServices *)inServices error:(OBEXError)inError;
-    //	[Export ("fileTransferServicesConnectionComplete:error:")]
-    //	void FileTransferServicesConnectionComplete (OBEXFileTransferServices inServices, int inError);
+    [BaseType (typeof(NSObject))]
+    [Protocol]
+    interface OBEXFileTransferServicesDelegate
+    {
+    	// -(void)fileTransferServicesConnectionComplete:(OBEXFileTransferServices *)inServices error:(OBEXError)inError;
+    	[Export ("fileTransferServicesConnectionComplete:error:")]
+    	void FileTransferServicesConnectionComplete (OBEXFileTransferServices inServices, int inError);
 
-    //	// -(void)fileTransferServicesDisconnectionComplete:(OBEXFileTransferServices *)inServices error:(OBEXError)inError;
-    //	[Export ("fileTransferServicesDisconnectionComplete:error:")]
-    //	void FileTransferServicesDisconnectionComplete (OBEXFileTransferServices inServices, int inError);
+    	// -(void)fileTransferServicesDisconnectionComplete:(OBEXFileTransferServices *)inServices error:(OBEXError)inError;
+    	[Export ("fileTransferServicesDisconnectionComplete:error:")]
+    	void FileTransferServicesDisconnectionComplete (OBEXFileTransferServices inServices, int inError);
 
-    //	// -(void)fileTransferServicesAbortComplete:(OBEXFileTransferServices *)inServices error:(OBEXError)inError;
-    //	[Export ("fileTransferServicesAbortComplete:error:")]
-    //	void FileTransferServicesAbortComplete (OBEXFileTransferServices inServices, int inError);
+    	// -(void)fileTransferServicesAbortComplete:(OBEXFileTransferServices *)inServices error:(OBEXError)inError;
+    	[Export ("fileTransferServicesAbortComplete:error:")]
+    	void FileTransferServicesAbortComplete (OBEXFileTransferServices inServices, int inError);
 
-    //	// -(void)fileTransferServicesRemoveItemComplete:(OBEXFileTransferServices *)inServices error:(OBEXError)inError removedItem:(NSString *)inItemName;
-    //	[Export ("fileTransferServicesRemoveItemComplete:error:removedItem:")]
-    //	void FileTransferServicesRemoveItemComplete (OBEXFileTransferServices inServices, int inError, string inItemName);
+    	// -(void)fileTransferServicesRemoveItemComplete:(OBEXFileTransferServices *)inServices error:(OBEXError)inError removedItem:(NSString *)inItemName;
+    	[Export ("fileTransferServicesRemoveItemComplete:error:removedItem:")]
+    	void FileTransferServicesRemoveItemComplete (OBEXFileTransferServices inServices, int inError, string inItemName);
 
-    //	// -(void)fileTransferServicesCreateFolderComplete:(OBEXFileTransferServices *)inServices error:(OBEXError)inError folder:(NSString *)inFolderName;
-    //	[Export ("fileTransferServicesCreateFolderComplete:error:folder:")]
-    //	void FileTransferServicesCreateFolderComplete (OBEXFileTransferServices inServices, int inError, string inFolderName);
+    	// -(void)fileTransferServicesCreateFolderComplete:(OBEXFileTransferServices *)inServices error:(OBEXError)inError folder:(NSString *)inFolderName;
+    	[Export ("fileTransferServicesCreateFolderComplete:error:folder:")]
+    	void FileTransferServicesCreateFolderComplete (OBEXFileTransferServices inServices, int inError, string inFolderName);
 
-    //	// -(void)fileTransferServicesPathChangeComplete:(OBEXFileTransferServices *)inServices error:(OBEXError)inError finalPath:(NSString *)inPath;
-    //	[Export ("fileTransferServicesPathChangeComplete:error:finalPath:")]
-    //	void FileTransferServicesPathChangeComplete (OBEXFileTransferServices inServices, int inError, string inPath);
+    	// -(void)fileTransferServicesPathChangeComplete:(OBEXFileTransferServices *)inServices error:(OBEXError)inError finalPath:(NSString *)inPath;
+    	[Export ("fileTransferServicesPathChangeComplete:error:finalPath:")]
+    	void FileTransferServicesPathChangeComplete (OBEXFileTransferServices inServices, int inError, string inPath);
 
-    //	// -(void)fileTransferServicesRetrieveFolderListingComplete:(OBEXFileTransferServices *)inServices error:(OBEXError)inError listing:(NSArray *)inListing;
-    //	[Export ("fileTransferServicesRetrieveFolderListingComplete:error:listing:")]
-    //	[Verify (StronglyTypedNSArray)]
-    //	void FileTransferServicesRetrieveFolderListingComplete (OBEXFileTransferServices inServices, int inError, NSObject[] inListing);
+    	// -(void)fileTransferServicesRetrieveFolderListingComplete:(OBEXFileTransferServices *)inServices error:(OBEXError)inError listing:(NSArray *)inListing;
+    	[Export ("fileTransferServicesRetrieveFolderListingComplete:error:listing:")]
+    	void FileTransferServicesRetrieveFolderListingComplete (OBEXFileTransferServices inServices, int inError, NSString[] inListing);
 
-    //	// -(void)fileTransferServicesFilePreparationComplete:(OBEXFileTransferServices *)inServices error:(OBEXError)inError;
-    //	[Export ("fileTransferServicesFilePreparationComplete:error:")]
-    //	void FileTransferServicesFilePreparationComplete (OBEXFileTransferServices inServices, int inError);
+    	// -(void)fileTransferServicesFilePreparationComplete:(OBEXFileTransferServices *)inServices error:(OBEXError)inError;
+    	[Export ("fileTransferServicesFilePreparationComplete:error:")]
+    	void FileTransferServicesFilePreparationComplete (OBEXFileTransferServices inServices, int inError);
 
-    //	// -(void)fileTransferServicesSendFileProgress:(OBEXFileTransferServices *)inServices transferProgress:(NSDictionary *)inProgressDescription;
-    //	[Export ("fileTransferServicesSendFileProgress:transferProgress:")]
-    //	void FileTransferServicesSendFileProgress (OBEXFileTransferServices inServices, NSDictionary inProgressDescription);
+    	// -(void)fileTransferServicesSendFileProgress:(OBEXFileTransferServices *)inServices transferProgress:(NSDictionary *)inProgressDescription;
+    	[Export ("fileTransferServicesSendFileProgress:transferProgress:")]
+    	void FileTransferServicesSendFileProgress (OBEXFileTransferServices inServices, NSDictionary inProgressDescription);
 
-    //	// -(void)fileTransferServicesSendFileComplete:(OBEXFileTransferServices *)inServices error:(OBEXError)inError;
-    //	[Export ("fileTransferServicesSendFileComplete:error:")]
-    //	void FileTransferServicesSendFileComplete (OBEXFileTransferServices inServices, int inError);
+    	// -(void)fileTransferServicesSendFileComplete:(OBEXFileTransferServices *)inServices error:(OBEXError)inError;
+    	[Export ("fileTransferServicesSendFileComplete:error:")]
+    	void FileTransferServicesSendFileComplete (OBEXFileTransferServices inServices, int inError);
 
-    //	// -(void)fileTransferServicesCopyRemoteFileProgress:(OBEXFileTransferServices *)inServices transferProgress:(NSDictionary *)inProgressDescription;
-    //	[Export ("fileTransferServicesCopyRemoteFileProgress:transferProgress:")]
-    //	void FileTransferServicesCopyRemoteFileProgress (OBEXFileTransferServices inServices, NSDictionary inProgressDescription);
+    	// -(void)fileTransferServicesCopyRemoteFileProgress:(OBEXFileTransferServices *)inServices transferProgress:(NSDictionary *)inProgressDescription;
+    	[Export ("fileTransferServicesCopyRemoteFileProgress:transferProgress:")]
+    	void FileTransferServicesCopyRemoteFileProgress (OBEXFileTransferServices inServices, NSDictionary inProgressDescription);
 
-    //	// -(void)fileTransferServicesCopyRemoteFileComplete:(OBEXFileTransferServices *)inServices error:(OBEXError)inError;
-    //	[Export ("fileTransferServicesCopyRemoteFileComplete:error:")]
-    //	void FileTransferServicesCopyRemoteFileComplete (OBEXFileTransferServices inServices, int inError);
-    //}
+    	// -(void)fileTransferServicesCopyRemoteFileComplete:(OBEXFileTransferServices *)inServices error:(OBEXError)inError;
+    	[Export ("fileTransferServicesCopyRemoteFileComplete:error:")]
+    	void FileTransferServicesCopyRemoteFileComplete (OBEXFileTransferServices inServices, int inError);
+    }
 
     /*[Static]
     [Verify (ConstantsInterfaceAssociation)]
@@ -1453,103 +1454,103 @@ namespace IOBluetooth
 
     //// @interface NSDictionaryOBEXExtensions (NSMutableDictionary)
     //[Category]
-    //[BaseType (typeof(NSMutableDictionary))]
-    //interface NSDictionaryOBEXExtensions
-    //{
-    //	// +(instancetype)dictionaryWithOBEXHeadersData:(const void *)inHeadersData headersDataSize:(size_t)inDataSize;
-    //	[Static]
-    //	[Export ("dictionaryWithOBEXHeadersData:headersDataSize:")]
-    //	NSMutableDictionary DictionaryWithOBEXHeadersData (byte[] inHeadersData, nuint inDataSize);
+    [BaseType (typeof(NSMutableDictionary))]
+    interface NSDictionaryOBEXExtensions
+    {
+    	//// +(instancetype)dictionaryWithOBEXHeadersData:(const void *)inHeadersData headersDataSize:(size_t)inDataSize;
+    	[Static]
+    	[Export ("dictionaryWithOBEXHeadersData:headersDataSize:")]
+    	unsafe NSMutableDictionary DictionaryWithOBEXHeadersData (IntPtr inHeadersData, nuint inDataSize);
 
-    //	// +(instancetype)dictionaryWithOBEXHeadersData:(NSData *)inHeadersData;
-    //	[Static]
-    //	[Export ("dictionaryWithOBEXHeadersData:")]
-    //	NSMutableDictionary DictionaryWithOBEXHeadersData (NSData inHeadersData);
+    	// +(instancetype)dictionaryWithOBEXHeadersData:(NSData *)inHeadersData;
+    	[Static]
+    	[Export ("dictionaryWithOBEXHeadersData:")]
+    	NSMutableDictionary DictionaryWithOBEXHeadersData (NSData inHeadersData);
 
-    //	// -(NSMutableData *)getHeaderBytes;
-    //	[Export ("getHeaderBytes")]
-    //	NSMutableData HeaderBytes { get; }
+    	// -(NSMutableData *)getHeaderBytes;
+    	[Export ("getHeaderBytes")]
+    	NSMutableData HeaderBytes { get; }
 
-    //	// -(OBEXError)addTargetHeader:(const void *)inHeaderData length:(uint32_t)inHeaderDataLength;
-    //	[Export ("addTargetHeader:length:")]
-    //	unsafe int AddTargetHeader (void* inHeaderData, uint inHeaderDataLength);
+    	// -(OBEXError)addTargetHeader:(const void *)inHeaderData length:(uint32_t)inHeaderDataLength;
+    	[Export ("addTargetHeader:length:")]
+    	int AddTargetHeader (IntPtr inHeaderData, uint inHeaderDataLength);
 
-    //	// -(OBEXError)addHTTPHeader:(const void *)inHeaderData length:(uint32_t)inHeaderDataLength;
-    //	[Export ("addHTTPHeader:length:")]
-    //	unsafe int AddHTTPHeader (void* inHeaderData, uint inHeaderDataLength);
+    	// -(OBEXError)addHTTPHeader:(const void *)inHeaderData length:(uint32_t)inHeaderDataLength;
+    	[Export ("addHTTPHeader:length:")]
+    	int AddHTTPHeader (IntPtr inHeaderData, uint inHeaderDataLength);
 
-    //	// -(OBEXError)addBodyHeader:(const void *)inHeaderData length:(uint32_t)inHeaderDataLength endOfBody:(BOOL)isEndOfBody;
-    //	[Export ("addBodyHeader:length:endOfBody:")]
-    //	unsafe int AddBodyHeader (void* inHeaderData, uint inHeaderDataLength, bool isEndOfBody);
+    	// -(OBEXError)addBodyHeader:(const void *)inHeaderData length:(uint32_t)inHeaderDataLength endOfBody:(BOOL)isEndOfBody;
+    	[Export ("addBodyHeader:length:endOfBody:")]
+    	int AddBodyHeader (IntPtr inHeaderData, uint inHeaderDataLength, bool isEndOfBody);
 
-    //	// -(OBEXError)addWhoHeader:(const void *)inHeaderData length:(uint32_t)inHeaderDataLength;
-    //	[Export ("addWhoHeader:length:")]
-    //	unsafe int AddWhoHeader (void* inHeaderData, uint inHeaderDataLength);
+    	// -(OBEXError)addWhoHeader:(const void *)inHeaderData length:(uint32_t)inHeaderDataLength;
+    	[Export ("addWhoHeader:length:")]
+    	int AddWhoHeader (IntPtr inHeaderData, uint inHeaderDataLength);
 
-    //	// -(OBEXError)addConnectionIDHeader:(const void *)inHeaderData length:(uint32_t)inHeaderDataLength;
-    //	[Export ("addConnectionIDHeader:length:")]
-    //	unsafe int AddConnectionIDHeader (void* inHeaderData, uint inHeaderDataLength);
+    	// -(OBEXError)addConnectionIDHeader:(const void *)inHeaderData length:(uint32_t)inHeaderDataLength;
+    	[Export ("addConnectionIDHeader:length:")]
+    	int AddConnectionIDHeader (IntPtr inHeaderData, uint inHeaderDataLength);
 
-    //	// -(OBEXError)addApplicationParameterHeader:(const void *)inHeaderData length:(uint32_t)inHeaderDataLength;
-    //	[Export ("addApplicationParameterHeader:length:")]
-    //	unsafe int AddApplicationParameterHeader (void* inHeaderData, uint inHeaderDataLength);
+    	// -(OBEXError)addApplicationParameterHeader:(const void *)inHeaderData length:(uint32_t)inHeaderDataLength;
+    	[Export ("addApplicationParameterHeader:length:")]
+    	int AddApplicationParameterHeader (IntPtr inHeaderData, uint inHeaderDataLength);
 
-    //	// -(OBEXError)addByteSequenceHeader:(const void *)inHeaderData length:(uint32_t)inHeaderDataLength;
-    //	[Export ("addByteSequenceHeader:length:")]
-    //	unsafe int AddByteSequenceHeader (void* inHeaderData, uint inHeaderDataLength);
+    	// -(OBEXError)addByteSequenceHeader:(const void *)inHeaderData length:(uint32_t)inHeaderDataLength;
+    	[Export ("addByteSequenceHeader:length:")]
+    	int AddByteSequenceHeader (IntPtr inHeaderData, uint inHeaderDataLength);
 
-    //	// -(OBEXError)addObjectClassHeader:(const void *)inHeaderData length:(uint32_t)inHeaderDataLength;
-    //	[Export ("addObjectClassHeader:length:")]
-    //	unsafe int AddObjectClassHeader (void* inHeaderData, uint inHeaderDataLength);
+    	// -(OBEXError)addObjectClassHeader:(const void *)inHeaderData length:(uint32_t)inHeaderDataLength;
+    	[Export ("addObjectClassHeader:length:")]
+    	int AddObjectClassHeader (IntPtr inHeaderData, uint inHeaderDataLength);
 
-    //	// -(OBEXError)addAuthorizationChallengeHeader:(const void *)inHeaderData length:(uint32_t)inHeaderDataLength;
-    //	[Export ("addAuthorizationChallengeHeader:length:")]
-    //	unsafe int AddAuthorizationChallengeHeader (void* inHeaderData, uint inHeaderDataLength);
+    	// -(OBEXError)addAuthorizationChallengeHeader:(const void *)inHeaderData length:(uint32_t)inHeaderDataLength;
+    	[Export ("addAuthorizationChallengeHeader:length:")]
+    	int AddAuthorizationChallengeHeader (IntPtr inHeaderData, uint inHeaderDataLength);
 
-    //	// -(OBEXError)addAuthorizationResponseHeader:(const void *)inHeaderData length:(uint32_t)inHeaderDataLength;
-    //	[Export ("addAuthorizationResponseHeader:length:")]
-    //	unsafe int AddAuthorizationResponseHeader (void* inHeaderData, uint inHeaderDataLength);
+    	// -(OBEXError)addAuthorizationResponseHeader:(const void *)inHeaderData length:(uint32_t)inHeaderDataLength;
+    	[Export ("addAuthorizationResponseHeader:length:")]
+    	int AddAuthorizationResponseHeader (IntPtr inHeaderData, uint inHeaderDataLength);
 
-    //	// -(OBEXError)addTimeISOHeader:(const void *)inHeaderData length:(uint32_t)inHeaderDataLength;
-    //	[Export ("addTimeISOHeader:length:")]
-    //	unsafe int AddTimeISOHeader (void* inHeaderData, uint inHeaderDataLength);
+    	// -(OBEXError)addTimeISOHeader:(const void *)inHeaderData length:(uint32_t)inHeaderDataLength;
+    	[Export ("addTimeISOHeader:length:")]
+    	int AddTimeISOHeader (IntPtr inHeaderData, uint inHeaderDataLength);
 
-    //	// -(OBEXError)addTypeHeader:(NSString *)type;
-    //	[Export ("addTypeHeader:")]
-    //	int AddTypeHeader (string type);
+    	// -(OBEXError)addTypeHeader:(NSString *)type;
+    	[Export ("addTypeHeader:")]
+    	int AddTypeHeader (string type);
 
-    //	// -(OBEXError)addLengthHeader:(uint32_t)length;
-    //	[Export ("addLengthHeader:")]
-    //	int AddLengthHeader (uint length);
+    	// -(OBEXError)addLengthHeader:(uint32_t)length;
+    	[Export ("addLengthHeader:")]
+    	int AddLengthHeader (uint length);
 
-    //	// -(OBEXError)addTime4ByteHeader:(uint32_t)time4Byte;
-    //	[Export ("addTime4ByteHeader:")]
-    //	int AddTime4ByteHeader (uint time4Byte);
+    	// -(OBEXError)addTime4ByteHeader:(uint32_t)time4Byte;
+    	[Export ("addTime4ByteHeader:")]
+    	int AddTime4ByteHeader (uint time4Byte);
 
-    //	// -(OBEXError)addCountHeader:(uint32_t)inCount;
-    //	[Export ("addCountHeader:")]
-    //	int AddCountHeader (uint inCount);
+    	// -(OBEXError)addCountHeader:(uint32_t)inCount;
+    	[Export ("addCountHeader:")]
+    	int AddCountHeader (uint inCount);
 
-    //	// -(OBEXError)addDescriptionHeader:(NSString *)inDescriptionString;
-    //	[Export ("addDescriptionHeader:")]
-    //	int AddDescriptionHeader (string inDescriptionString);
+    	// -(OBEXError)addDescriptionHeader:(NSString *)inDescriptionString;
+    	[Export ("addDescriptionHeader:")]
+    	int AddDescriptionHeader (string inDescriptionString);
 
-    //	// -(OBEXError)addNameHeader:(NSString *)inNameString;
-    //	[Export ("addNameHeader:")]
-    //	int AddNameHeader (string inNameString);
+    	// -(OBEXError)addNameHeader:(NSString *)inNameString;
+    	[Export ("addNameHeader:")]
+    	int AddNameHeader (string inNameString);
 
-    //	// -(OBEXError)addUserDefinedHeader:(const void *)inHeaderData length:(uint32_t)inHeaderDataLength;
-    //	[Export ("addUserDefinedHeader:length:")]
-    //	unsafe int AddUserDefinedHeader (void* inHeaderData, uint inHeaderDataLength);
+    	// -(OBEXError)addUserDefinedHeader:(const void *)inHeaderData length:(uint32_t)inHeaderDataLength;
+    	[Export ("addUserDefinedHeader:length:")]
+    	unsafe int AddUserDefinedHeader (IntPtr inHeaderData, uint inHeaderDataLength);
 
-    //	// -(OBEXError)addImageHandleHeader:(NSString *)type;
-    //	[Export ("addImageHandleHeader:")]
-    //	int AddImageHandleHeader (string type);
+    	// -(OBEXError)addImageHandleHeader:(NSString *)type;
+    	[Export ("addImageHandleHeader:")]
+    	int AddImageHandleHeader (string type);
 
-    //	// -(OBEXError)addImageDescriptorHeader:(const void *)inHeaderData length:(uint32_t)inHeaderDataLength;
-    //	[Export ("addImageDescriptorHeader:length:")]
-    //	unsafe int AddImageDescriptorHeader (void* inHeaderData, uint inHeaderDataLength);
-    //}
+    	// -(OBEXError)addImageDescriptorHeader:(const void *)inHeaderData length:(uint32_t)inHeaderDataLength;
+    	[Export ("addImageDescriptorHeader:length:")]
+    	int AddImageDescriptorHeader (IntPtr inHeaderData, uint inHeaderDataLength);
+    }
 
     /*[Static]
     [Verify (ConstantsInterfaceAssociation)]
@@ -1657,145 +1658,145 @@ namespace IOBluetooth
         NSString IOBluetoothPDUUserData { get; }
     }*/
 
-    //// @interface IOBluetoothHandsFree : NSObject
-    //[Introduced(PlatformName.MacOSX, 10, 7)]
-    //[BaseType(typeof(NSObject))]
-    //interface IOBluetoothHandsFree
-    //{
-    //    // @property (assign) uint32_t supportedFeatures __attribute__((availability(macos, introduced=10.7)));
-    //    [Introduced(PlatformName.MacOSX, 10, 7)]
-    //    [Export("supportedFeatures")]
-    //    uint SupportedFeatures { get; set; }
+    // @interface IOBluetoothHandsFree : NSObject
+    [Introduced(PlatformName.MacOSX, 10, 7)]
+    [BaseType(typeof(NSObject))]
+    interface IOBluetoothHandsFree
+    {
+        // @property (assign) uint32_t supportedFeatures __attribute__((availability(macos, introduced=10.7)));
+        [Introduced(PlatformName.MacOSX, 10, 7)]
+        [Export("supportedFeatures")]
+        uint SupportedFeatures { get; set; }
 
-    //    // @property (assign) float inputVolume __attribute__((availability(macos, introduced=10.7)));
-    //    [Introduced(PlatformName.MacOSX, 10, 7)]
-    //    [Export("inputVolume")]
-    //    float InputVolume { get; set; }
+        // @property (assign) float inputVolume __attribute__((availability(macos, introduced=10.7)));
+        [Introduced(PlatformName.MacOSX, 10, 7)]
+        [Export("inputVolume")]
+        float InputVolume { get; set; }
 
-    //    // @property (getter = isInputMuted, assign) BOOL inputMuted __attribute__((availability(macos, introduced=10.7)));
-    //    [Introduced(PlatformName.MacOSX, 10, 7)]
-    //    [Export("inputMuted")]
-    //    bool InputMuted { [Bind("isInputMuted")] get; set; }
+        // @property (getter = isInputMuted, assign) BOOL inputMuted __attribute__((availability(macos, introduced=10.7)));
+        [Introduced(PlatformName.MacOSX, 10, 7)]
+        [Export("inputMuted")]
+        bool InputMuted { [Bind("isInputMuted")] get; set; }
 
-    //    // @property (assign) float outputVolume __attribute__((availability(macos, introduced=10.7)));
-    //    [Introduced(PlatformName.MacOSX, 10, 7)]
-    //    [Export("outputVolume")]
-    //    float OutputVolume { get; set; }
+        // @property (assign) float outputVolume __attribute__((availability(macos, introduced=10.7)));
+        [Introduced(PlatformName.MacOSX, 10, 7)]
+        [Export("outputVolume")]
+        float OutputVolume { get; set; }
 
-    //    // @property (getter = isOutputMuted, assign) BOOL outputMuted __attribute__((availability(macos, introduced=10.7)));
-    //    [Introduced(PlatformName.MacOSX, 10, 7)]
-    //    [Export("outputMuted")]
-    //    bool OutputMuted { [Bind("isOutputMuted")] get; set; }
+        // @property (getter = isOutputMuted, assign) BOOL outputMuted __attribute__((availability(macos, introduced=10.7)));
+        [Introduced(PlatformName.MacOSX, 10, 7)]
+        [Export("outputMuted")]
+        bool OutputMuted { [Bind("isOutputMuted")] get; set; }
 
-    //    // @property (readonly, retain) IOBluetoothDevice * device __attribute__((availability(macos, introduced=10.7)));
-    //    [Introduced(PlatformName.MacOSX, 10, 7)]
-    //    [Export("device", ArgumentSemantic.Retain)]
-    //    IOBluetoothDevice Device { get; }
+        // @property (readonly, retain) IOBluetoothDevice * device __attribute__((availability(macos, introduced=10.7)));
+        [Introduced(PlatformName.MacOSX, 10, 7)]
+        [Export("device", ArgumentSemantic.Retain)]
+        IOBluetoothDevice Device { get; }
 
-    //    // @property (readonly) uint32_t deviceSupportedFeatures __attribute__((availability(macos, introduced=10.7)));
-    //    [Introduced(PlatformName.MacOSX, 10, 7)]
-    //    [Export("deviceSupportedFeatures")]
-    //    uint DeviceSupportedFeatures { get; }
+        // @property (readonly) uint32_t deviceSupportedFeatures __attribute__((availability(macos, introduced=10.7)));
+        [Introduced(PlatformName.MacOSX, 10, 7)]
+        [Export("deviceSupportedFeatures")]
+        uint DeviceSupportedFeatures { get; }
 
-    //    // @property (readonly) uint32_t deviceSupportedSMSServices __attribute__((availability(macos, introduced=10.7)));
-    //    [Introduced(PlatformName.MacOSX, 10, 7)]
-    //    [Export("deviceSupportedSMSServices")]
-    //    uint DeviceSupportedSMSServices { get; }
+        // @property (readonly) uint32_t deviceSupportedSMSServices __attribute__((availability(macos, introduced=10.7)));
+        [Introduced(PlatformName.MacOSX, 10, 7)]
+        [Export("deviceSupportedSMSServices")]
+        uint DeviceSupportedSMSServices { get; }
 
-    //    // @property (readonly) uint32_t deviceCallHoldModes __attribute__((availability(macos, introduced=10.7)));
-    //    [Introduced(PlatformName.MacOSX, 10, 7)]
-    //    [Export("deviceCallHoldModes")]
-    //    uint DeviceCallHoldModes { get; }
+        // @property (readonly) uint32_t deviceCallHoldModes __attribute__((availability(macos, introduced=10.7)));
+        [Introduced(PlatformName.MacOSX, 10, 7)]
+        [Export("deviceCallHoldModes")]
+        IOBluetoothHandsFreeCallHoldModes DeviceCallHoldModes { get; }
 
-    //    // @property (readonly) IOBluetoothSMSMode SMSMode __attribute__((availability(macos, introduced=10.7)));
-    //    [Introduced(PlatformName.MacOSX, 10, 7)]
-    //    [Export("SMSMode")]
-    //    SMSMode SMSMode { get; }
+        // @property (readonly) IOBluetoothSMSMode SMSMode __attribute__((availability(macos, introduced=10.7)));
+        [Introduced(PlatformName.MacOSX, 10, 7)]
+        [Export("SMSMode")]
+        IOBluetoothSMSMode SMSMode { get; }
 
-    //    // @property (readonly, getter = isSMSEnabled) BOOL SMSEnabled __attribute__((availability(macos, introduced=10.7)));
-    //    [Introduced(PlatformName.MacOSX, 10, 7)]
-    //    [Export("SMSEnabled")]
-    //    bool SMSEnabled { [Bind("isSMSEnabled")] get; }
+        // @property (readonly, getter = isSMSEnabled) BOOL SMSEnabled __attribute__((availability(macos, introduced=10.7)));
+        [Introduced(PlatformName.MacOSX, 10, 7)]
+        [Export("SMSEnabled")]
+        bool SMSEnabled { [Bind("isSMSEnabled")] get; }
 
-    //    [Wrap("WeakDelegate")]
-    //    IOBluetoothHandsFreeDelegate Delegate { get; set; }
+        [Wrap("WeakDelegate")]
+        IOBluetoothHandsFreeDelegate Delegate { get; set; }
 
-    //    // @property (assign) id<IOBluetoothHandsFreeDelegate> delegate __attribute__((availability(macos, introduced=10.7)));
-    //    [Introduced(PlatformName.MacOSX, 10, 7)]
-    //    [NullAllowed, Export("delegate", ArgumentSemantic.Assign)]
-    //    NSObject WeakDelegate { get; set; }
+        // @property (assign) id<IOBluetoothHandsFreeDelegate> delegate __attribute__((availability(macos, introduced=10.7)));
+        [Introduced(PlatformName.MacOSX, 10, 7)]
+        [NullAllowed, Export("delegate", ArgumentSemantic.Assign)]
+        NSObject WeakDelegate { get; set; }
 
-    //    // -(int)indicator:(NSString *)indicatorName __attribute__((availability(macos, introduced=10.7)));
-    //    [Introduced(PlatformName.MacOSX, 10, 7)]
-    //    [Export("indicator:")]
-    //    int Indicator(string indicatorName);
+        // -(int)indicator:(NSString *)indicatorName __attribute__((availability(macos, introduced=10.7)));
+        [Introduced(PlatformName.MacOSX, 10, 7)]
+        [Export("indicator:")]
+        int Indicator(string indicatorName);
 
-    //    // -(void)setIndicator:(NSString *)indicatorName value:(int)indicatorValue __attribute__((availability(macos, introduced=10.7)));
-    //    [Introduced(PlatformName.MacOSX, 10, 7)]
-    //    [Export("setIndicator:value:")]
-    //    void SetIndicator(string indicatorName, int indicatorValue);
+        // -(void)setIndicator:(NSString *)indicatorName value:(int)indicatorValue __attribute__((availability(macos, introduced=10.7)));
+        [Introduced(PlatformName.MacOSX, 10, 7)]
+        [Export("setIndicator:value:")]
+        void SetIndicator(string indicatorName, int indicatorValue);
 
-    //    // -(instancetype)initWithDevice:(IOBluetoothDevice *)device delegate:(id<IOBluetoothHandsFreeDelegate>)inDelegate __attribute__((availability(macos, introduced=10.7)));
-    //    [Introduced(PlatformName.MacOSX, 10, 7)]
-    //    [Export("initWithDevice:delegate:")]
-    //    IntPtr Constructor(IOBluetoothDevice device, IOBluetoothHandsFreeDelegate inDelegate);
+        // -(instancetype)initWithDevice:(IOBluetoothDevice *)device delegate:(id<IOBluetoothHandsFreeDelegate>)inDelegate __attribute__((availability(macos, introduced=10.7)));
+        [Introduced(PlatformName.MacOSX, 10, 7)]
+        [Export("initWithDevice:delegate:")]
+        IntPtr Constructor(IOBluetoothDevice device, IOBluetoothHandsFreeDelegate inDelegate);
 
-    //    // -(void)connect __attribute__((availability(macos, introduced=10.7)));
-    //    [Introduced(PlatformName.MacOSX, 10, 7)]
-    //    [Export("connect")]
-    //    void Connect();
+        // -(void)connect __attribute__((availability(macos, introduced=10.7)));
+        [Introduced(PlatformName.MacOSX, 10, 7)]
+        [Export("connect")]
+        void Connect();
 
-    //    // -(void)disconnect __attribute__((availability(macos, introduced=10.7)));
-    //    [Introduced(PlatformName.MacOSX, 10, 7)]
-    //    [Export("disconnect")]
-    //    void Disconnect();
+        // -(void)disconnect __attribute__((availability(macos, introduced=10.7)));
+        [Introduced(PlatformName.MacOSX, 10, 7)]
+        [Export("disconnect")]
+        void Disconnect();
 
-    //    // @property (readonly, getter = isConnected) BOOL connected __attribute__((availability(macos, introduced=10.7)));
-    //    [Introduced(PlatformName.MacOSX, 10, 7)]
-    //    [Export("connected")]
-    //    bool Connected { [Bind("isConnected")] get; }
+        // @property (readonly, getter = isConnected) BOOL connected __attribute__((availability(macos, introduced=10.7)));
+        [Introduced(PlatformName.MacOSX, 10, 7)]
+        [Export("connected")]
+        bool Connected { [Bind("isConnected")] get; }
 
-    //    // -(void)connectSCO __attribute__((availability(macos, introduced=10.7)));
-    //    [Introduced(PlatformName.MacOSX, 10, 7)]
-    //    [Export("connectSCO")]
-    //    void ConnectSCO();
+        // -(void)connectSCO __attribute__((availability(macos, introduced=10.7)));
+        [Introduced(PlatformName.MacOSX, 10, 7)]
+        [Export("connectSCO")]
+        void ConnectSCO();
 
-    //    // -(void)disconnectSCO __attribute__((availability(macos, introduced=10.7)));
-    //    [Introduced(PlatformName.MacOSX, 10, 7)]
-    //    [Export("disconnectSCO")]
-    //    void DisconnectSCO();
+        // -(void)disconnectSCO __attribute__((availability(macos, introduced=10.7)));
+        [Introduced(PlatformName.MacOSX, 10, 7)]
+        [Export("disconnectSCO")]
+        void DisconnectSCO();
 
-    //    // -(BOOL)isSCOConnected __attribute__((availability(macos, introduced=10.7)));
-    //    [Introduced(PlatformName.MacOSX, 10, 7)]
-    //    [Export("isSCOConnected")]
-    //    bool IsSCOConnected { get; }
-    //}
+        // -(BOOL)isSCOConnected __attribute__((availability(macos, introduced=10.7)));
+        [Introduced(PlatformName.MacOSX, 10, 7)]
+        [Export("isSCOConnected")]
+        bool IsSCOConnected { get; }
+    }
 
-    //// @protocol IOBluetoothHandsFreeDelegate <NSObject>
-    //[Protocol, Model]
-    //[BaseType(typeof(NSObject))]
-    //interface IOBluetoothHandsFreeDelegate
-    //{
-    //    // @optional -(void)handsFree:(IOBluetoothHandsFree *)device connected:(NSNumber *)status __attribute__((availability(macos, introduced=10.7)));
-    //    [Introduced(PlatformName.MacOSX, 10, 7)]
-    //    [Export("handsFree:connected:")]
-    //    void Connected(IOBluetoothHandsFree device, NSNumber status);
+    // @protocol IOBluetoothHandsFreeDelegate <NSObject>
+    [Protocol, Model]
+    [BaseType(typeof(NSObject))]
+    interface IOBluetoothHandsFreeDelegate
+    {
+        // @optional -(void)handsFree:(IOBluetoothHandsFree *)device connected:(NSNumber *)status __attribute__((availability(macos, introduced=10.7)));
+        [Introduced(PlatformName.MacOSX, 10, 7)]
+        [Export("handsFree:connected:")]
+        void Connected(IOBluetoothHandsFree device, NSNumber status);
 
-    //    // @optional -(void)handsFree:(IOBluetoothHandsFree *)device disconnected:(NSNumber *)status __attribute__((availability(macos, introduced=10.7)));
-    //    [Introduced(PlatformName.MacOSX, 10, 7)]
-    //    [Export("handsFree:disconnected:")]
-    //    void Disconnected(IOBluetoothHandsFree device, NSNumber status);
+        // @optional -(void)handsFree:(IOBluetoothHandsFree *)device disconnected:(NSNumber *)status __attribute__((availability(macos, introduced=10.7)));
+        [Introduced(PlatformName.MacOSX, 10, 7)]
+        [Export("handsFree:disconnected:")]
+        void Disconnected(IOBluetoothHandsFree device, NSNumber status);
 
-    //    // @optional -(void)handsFree:(IOBluetoothHandsFree *)device scoConnectionOpened:(NSNumber *)status __attribute__((availability(macos, introduced=10.7)));
-    //    [Introduced(PlatformName.MacOSX, 10, 7)]
-    //    [Export("handsFree:scoConnectionOpened:")]
-    //    void ScoConnectionOpened(IOBluetoothHandsFree device, NSNumber status);
+        // @optional -(void)handsFree:(IOBluetoothHandsFree *)device scoConnectionOpened:(NSNumber *)status __attribute__((availability(macos, introduced=10.7)));
+        [Introduced(PlatformName.MacOSX, 10, 7)]
+        [Export("handsFree:scoConnectionOpened:")]
+        void ScoConnectionOpened(IOBluetoothHandsFree device, NSNumber status);
 
-    //    // @optional -(void)handsFree:(IOBluetoothHandsFree *)device scoConnectionClosed:(NSNumber *)status __attribute__((availability(macos, introduced=10.7)));
-    //    [Introduced(PlatformName.MacOSX, 10, 7)]
-    //    [Export("handsFree:scoConnectionClosed:")]
-    //    void ScoConnectionClosed(IOBluetoothHandsFree device, NSNumber status);
-    //}
+        // @optional -(void)handsFree:(IOBluetoothHandsFree *)device scoConnectionClosed:(NSNumber *)status __attribute__((availability(macos, introduced=10.7)));
+        [Introduced(PlatformName.MacOSX, 10, 7)]
+        [Export("handsFree:scoConnectionClosed:")]
+        void ScoConnectionClosed(IOBluetoothHandsFree device, NSNumber status);
+    }
 
     //// @interface HandsFreeDeviceAdditions (IOBluetoothDevice)
     //[Category]
@@ -1810,7 +1811,7 @@ namespace IOBluetooth
     //    // @property (readonly, getter = isHandsFreeAudioGateway) BOOL handsFreeAudioGateway __attribute__((availability(macos, introduced=10.7)));
     //    [Introduced(PlatformName.MacOSX, 10, 7)]
     //    [Export("handsFreeAudioGateway")]
-    //    bool HandsFreeAudioGateway { [Bind("isHandsFreeAudioGateway")] get; }
+    //    bool IsHandsFreeAudioGateway { [Bind("isHandsFreeAudioGateway")] get; }
 
     //    // -(IOBluetoothSDPServiceRecord *)handsFreeDeviceServiceRecord __attribute__((availability(macos, introduced=10.7)));
     //    [Introduced(PlatformName.MacOSX, 10, 7)]
@@ -1834,240 +1835,240 @@ namespace IOBluetooth
     //    ushort HandsFreeSupportedFeatures { get; }
     //}
 
-    //// @interface IOBluetoothHandsFreeAudioGateway : IOBluetoothHandsFree
-    //[Introduced(PlatformName.MacOSX, 10, 7)]
-    //[BaseType(typeof(IOBluetoothHandsFree))]
-    //interface IOBluetoothHandsFreeAudioGateway
-    //{
-    //    // -(instancetype)initWithDevice:(IOBluetoothDevice *)device delegate:(id)inDelegate __attribute__((availability(macos, introduced=10.7)));
-    //    [Introduced(PlatformName.MacOSX, 10, 7)]
-    //    [Export("initWithDevice:delegate:")]
-    //    IntPtr Constructor(IOBluetoothDevice device, NSObject inDelegate);
+    // @interface IOBluetoothHandsFreeAudioGateway : IOBluetoothHandsFree
+    [Introduced(PlatformName.MacOSX, 10, 7)]
+    [BaseType(typeof(IOBluetoothHandsFree))]
+    interface IOBluetoothHandsFreeAudioGateway
+    {
+        // -(instancetype)initWithDevice:(IOBluetoothDevice *)device delegate:(id)inDelegate __attribute__((availability(macos, introduced=10.7)));
+        [Introduced(PlatformName.MacOSX, 10, 7)]
+        [Export("initWithDevice:delegate:")]
+        IntPtr Constructor(IOBluetoothDevice device, NSObject inDelegate);
 
-    //    // -(void)createIndicator:(NSString *)indicatorName min:(int)minValue max:(int)maxValue currentValue:(int)currentValue __attribute__((availability(macos, introduced=10.7)));
-    //    [Introduced(PlatformName.MacOSX, 10, 7)]
-    //    [Export("createIndicator:min:max:currentValue:")]
-    //    void CreateIndicator(string indicatorName, int minValue, int maxValue, int currentValue);
+        // -(void)createIndicator:(NSString *)indicatorName min:(int)minValue max:(int)maxValue currentValue:(int)currentValue __attribute__((availability(macos, introduced=10.7)));
+        [Introduced(PlatformName.MacOSX, 10, 7)]
+        [Export("createIndicator:min:max:currentValue:")]
+        void CreateIndicator(string indicatorName, int minValue, int maxValue, int currentValue);
 
-    //    // -(void)processATCommand:(NSString *)atCommand __attribute__((availability(macos, introduced=10.7)));
-    //    [Introduced(PlatformName.MacOSX, 10, 7)]
-    //    [Export("processATCommand:")]
-    //    void ProcessATCommand(string atCommand);
+        // -(void)processATCommand:(NSString *)atCommand __attribute__((availability(macos, introduced=10.7)));
+        [Introduced(PlatformName.MacOSX, 10, 7)]
+        [Export("processATCommand:")]
+        void ProcessATCommand(string atCommand);
 
-    //    // -(void)sendOKResponse __attribute__((availability(macos, introduced=10.7)));
-    //    [Introduced(PlatformName.MacOSX, 10, 7)]
-    //    [Export("sendOKResponse")]
-    //    void SendOKResponse();
+        // -(void)sendOKResponse __attribute__((availability(macos, introduced=10.7)));
+        [Introduced(PlatformName.MacOSX, 10, 7)]
+        [Export("sendOKResponse")]
+        void SendOKResponse();
 
-    //    // -(void)sendResponse:(NSString *)response __attribute__((availability(macos, introduced=10.7)));
-    //    [Introduced(PlatformName.MacOSX, 10, 7)]
-    //    [Export("sendResponse:")]
-    //    void SendResponse(string response);
+        // -(void)sendResponse:(NSString *)response __attribute__((availability(macos, introduced=10.7)));
+        [Introduced(PlatformName.MacOSX, 10, 7)]
+        [Export("sendResponse:")]
+        void SendResponse(string response);
 
-    //    // -(void)sendResponse:(NSString *)response withOK:(BOOL)withOK __attribute__((availability(macos, introduced=10.7)));
-    //    [Introduced(PlatformName.MacOSX, 10, 7)]
-    //    [Export("sendResponse:withOK:")]
-    //    void SendResponse(string response, bool withOK);
-    //}
+        // -(void)sendResponse:(NSString *)response withOK:(BOOL)withOK __attribute__((availability(macos, introduced=10.7)));
+        [Introduced(PlatformName.MacOSX, 10, 7)]
+        [Export("sendResponse:withOK:")]
+        void SendResponse(string response, bool withOK);
+    }
 
-    //// @protocol IOBluetoothHandsFreeAudioGatewayDelegate
-    //[Protocol]
-    //interface IOBluetoothHandsFreeAudioGatewayDelegate
-    //{
-    //    // @optional -(void)handsFree:(IOBluetoothHandsFreeAudioGateway *)device hangup:(NSNumber *)hangup __attribute__((availability(macos, introduced=10.7)));
-    //    [Introduced(PlatformName.MacOSX, 10, 7)]
-    //    [Export("handsFree:hangup:")]
-    //    void Hangup(IOBluetoothHandsFreeAudioGateway device, NSNumber hangup);
+    // @protocol IOBluetoothHandsFreeAudioGatewayDelegate
+    [Protocol]
+    interface IOBluetoothHandsFreeAudioGatewayDelegate
+    {
+        // @optional -(void)handsFree:(IOBluetoothHandsFreeAudioGateway *)device hangup:(NSNumber *)hangup __attribute__((availability(macos, introduced=10.7)));
+        [Introduced(PlatformName.MacOSX, 10, 7)]
+        [Export("handsFree:hangup:")]
+        void Hangup(IOBluetoothHandsFreeAudioGateway device, NSNumber hangup);
 
-    //    // @optional -(void)handsFree:(IOBluetoothHandsFreeAudioGateway *)device redial:(NSNumber *)redial __attribute__((availability(macos, introduced=10.7)));
-    //    [Introduced(PlatformName.MacOSX, 10, 7)]
-    //    [Export("handsFree:redial:")]
-    //    void Redial(IOBluetoothHandsFreeAudioGateway device, NSNumber redial);
-    //}
+        // @optional -(void)handsFree:(IOBluetoothHandsFreeAudioGateway *)device redial:(NSNumber *)redial __attribute__((availability(macos, introduced=10.7)));
+        [Introduced(PlatformName.MacOSX, 10, 7)]
+        [Export("handsFree:redial:")]
+        void Redial(IOBluetoothHandsFreeAudioGateway device, NSNumber redial);
+    }
 
-    //// @interface IOBluetoothHandsFreeDevice : IOBluetoothHandsFree
-    //[Introduced(PlatformName.MacOSX, 10, 7)]
-    //[BaseType(typeof(IOBluetoothHandsFree))]
-    //interface IOBluetoothHandsFreeDevice
-    //{
-    //    // -(instancetype)initWithDevice:(IOBluetoothDevice *)device delegate:(id)delegate __attribute__((availability(macos, introduced=10.7)));
-    //    [Introduced(PlatformName.MacOSX, 10, 7)]
-    //    [Export("initWithDevice:delegate:")]
-    //    IntPtr Constructor(IOBluetoothDevice device, NSObject @delegate);
+    // @interface IOBluetoothHandsFreeDevice : IOBluetoothHandsFree
+    [Introduced(PlatformName.MacOSX, 10, 7)]
+    [BaseType(typeof(IOBluetoothHandsFree))]
+    interface IOBluetoothHandsFreeDevice
+    {
+        // -(instancetype)initWithDevice:(IOBluetoothDevice *)device delegate:(id)delegate __attribute__((availability(macos, introduced=10.7)));
+        [Introduced(PlatformName.MacOSX, 10, 7)]
+        [Export("initWithDevice:delegate:")]
+        IntPtr Constructor(IOBluetoothDevice device, NSObject @delegate);
 
-    //    // -(void)dialNumber:(NSString *)aNumber __attribute__((availability(macos, introduced=10.7)));
-    //    [Introduced(PlatformName.MacOSX, 10, 7)]
-    //    [Export("dialNumber:")]
-    //    void DialNumber(string aNumber);
+        // -(void)dialNumber:(NSString *)aNumber __attribute__((availability(macos, introduced=10.7)));
+        [Introduced(PlatformName.MacOSX, 10, 7)]
+        [Export("dialNumber:")]
+        void DialNumber(string aNumber);
 
-    //    // -(void)memoryDial:(int)memoryLocation __attribute__((availability(macos, introduced=10.7)));
-    //    [Introduced(PlatformName.MacOSX, 10, 7)]
-    //    [Export("memoryDial:")]
-    //    void MemoryDial(int memoryLocation);
+        // -(void)memoryDial:(int)memoryLocation __attribute__((availability(macos, introduced=10.7)));
+        [Introduced(PlatformName.MacOSX, 10, 7)]
+        [Export("memoryDial:")]
+        void MemoryDial(int memoryLocation);
 
-    //    // -(void)redial __attribute__((availability(macos, introduced=10.7)));
-    //    [Introduced(PlatformName.MacOSX, 10, 7)]
-    //    [Export("redial")]
-    //    void Redial();
+        // -(void)redial __attribute__((availability(macos, introduced=10.7)));
+        [Introduced(PlatformName.MacOSX, 10, 7)]
+        [Export("redial")]
+        void Redial();
 
-    //    // -(void)endCall __attribute__((availability(macos, introduced=10.7)));
-    //    [Introduced(PlatformName.MacOSX, 10, 7)]
-    //    [Export("endCall")]
-    //    void EndCall();
+        // -(void)endCall __attribute__((availability(macos, introduced=10.7)));
+        [Introduced(PlatformName.MacOSX, 10, 7)]
+        [Export("endCall")]
+        void EndCall();
 
-    //    // -(void)acceptCall __attribute__((availability(macos, introduced=10.7)));
-    //    [Introduced(PlatformName.MacOSX, 10, 7)]
-    //    [Export("acceptCall")]
-    //    void AcceptCall();
+        // -(void)acceptCall __attribute__((availability(macos, introduced=10.7)));
+        [Introduced(PlatformName.MacOSX, 10, 7)]
+        [Export("acceptCall")]
+        void AcceptCall();
 
-    //    // -(void)acceptCallOnPhone __attribute__((availability(macos, introduced=10.7)));
-    //    [Introduced(PlatformName.MacOSX, 10, 7)]
-    //    [Export("acceptCallOnPhone")]
-    //    void AcceptCallOnPhone();
+        // -(void)acceptCallOnPhone __attribute__((availability(macos, introduced=10.7)));
+        [Introduced(PlatformName.MacOSX, 10, 7)]
+        [Export("acceptCallOnPhone")]
+        void AcceptCallOnPhone();
 
-    //    // -(void)sendDTMF:(NSString *)character __attribute__((availability(macos, introduced=10.7)));
-    //    [Introduced(PlatformName.MacOSX, 10, 7)]
-    //    [Export("sendDTMF:")]
-    //    void SendDTMF(string character);
+        // -(void)sendDTMF:(NSString *)character __attribute__((availability(macos, introduced=10.7)));
+        [Introduced(PlatformName.MacOSX, 10, 7)]
+        [Export("sendDTMF:")]
+        void SendDTMF(string character);
 
-    //    // -(void)subscriberNumber __attribute__((availability(macos, introduced=10.7)));
-    //    [Introduced(PlatformName.MacOSX, 10, 7)]
-    //    [Export("subscriberNumber")]
-    //    void SubscriberNumber();
+        // -(void)subscriberNumber __attribute__((availability(macos, introduced=10.7)));
+        [Introduced(PlatformName.MacOSX, 10, 7)]
+        [Export("subscriberNumber")]
+        void SubscriberNumber();
 
-    //    // -(void)currentCallList __attribute__((availability(macos, introduced=10.7)));
-    //    [Introduced(PlatformName.MacOSX, 10, 7)]
-    //    [Export("currentCallList")]
-    //    void CurrentCallList();
+        // -(void)currentCallList __attribute__((availability(macos, introduced=10.7)));
+        [Introduced(PlatformName.MacOSX, 10, 7)]
+        [Export("currentCallList")]
+        void CurrentCallList();
 
-    //    // -(void)releaseHeldCalls __attribute__((availability(macos, introduced=10.7)));
-    //    [Introduced(PlatformName.MacOSX, 10, 7)]
-    //    [Export("releaseHeldCalls")]
-    //    void ReleaseHeldCalls();
+        // -(void)releaseHeldCalls __attribute__((availability(macos, introduced=10.7)));
+        [Introduced(PlatformName.MacOSX, 10, 7)]
+        [Export("releaseHeldCalls")]
+        void ReleaseHeldCalls();
 
-    //    // -(void)releaseActiveCalls __attribute__((availability(macos, introduced=10.7)));
-    //    [Introduced(PlatformName.MacOSX, 10, 7)]
-    //    [Export("releaseActiveCalls")]
-    //    void ReleaseActiveCalls();
+        // -(void)releaseActiveCalls __attribute__((availability(macos, introduced=10.7)));
+        [Introduced(PlatformName.MacOSX, 10, 7)]
+        [Export("releaseActiveCalls")]
+        void ReleaseActiveCalls();
 
-    //    // -(void)releaseCall:(int)index __attribute__((availability(macos, introduced=10.7)));
-    //    [Introduced(PlatformName.MacOSX, 10, 7)]
-    //    [Export("releaseCall:")]
-    //    void ReleaseCall(int index);
+        // -(void)releaseCall:(int)index __attribute__((availability(macos, introduced=10.7)));
+        [Introduced(PlatformName.MacOSX, 10, 7)]
+        [Export("releaseCall:")]
+        void ReleaseCall(int index);
 
-    //    // -(void)holdCall __attribute__((availability(macos, introduced=10.7)));
-    //    [Introduced(PlatformName.MacOSX, 10, 7)]
-    //    [Export("holdCall")]
-    //    void HoldCall();
+        // -(void)holdCall __attribute__((availability(macos, introduced=10.7)));
+        [Introduced(PlatformName.MacOSX, 10, 7)]
+        [Export("holdCall")]
+        void HoldCall();
 
-    //    // -(void)placeAllOthersOnHold:(int)index __attribute__((availability(macos, introduced=10.7)));
-    //    [Introduced(PlatformName.MacOSX, 10, 7)]
-    //    [Export("placeAllOthersOnHold:")]
-    //    void PlaceAllOthersOnHold(int index);
+        // -(void)placeAllOthersOnHold:(int)index __attribute__((availability(macos, introduced=10.7)));
+        [Introduced(PlatformName.MacOSX, 10, 7)]
+        [Export("placeAllOthersOnHold:")]
+        void PlaceAllOthersOnHold(int index);
 
-    //    // -(void)addHeldCall __attribute__((availability(macos, introduced=10.7)));
-    //    [Introduced(PlatformName.MacOSX, 10, 7)]
-    //    [Export("addHeldCall")]
-    //    void AddHeldCall();
+        // -(void)addHeldCall __attribute__((availability(macos, introduced=10.7)));
+        [Introduced(PlatformName.MacOSX, 10, 7)]
+        [Export("addHeldCall")]
+        void AddHeldCall();
 
-    //    // -(void)callTransfer __attribute__((availability(macos, introduced=10.7)));
-    //    [Introduced(PlatformName.MacOSX, 10, 7)]
-    //    [Export("callTransfer")]
-    //    void CallTransfer();
+        // -(void)callTransfer __attribute__((availability(macos, introduced=10.7)));
+        [Introduced(PlatformName.MacOSX, 10, 7)]
+        [Export("callTransfer")]
+        void CallTransfer();
 
-    //    // -(void)transferAudioToComputer __attribute__((availability(macos, introduced=10.7)));
-    //    [Introduced(PlatformName.MacOSX, 10, 7)]
-    //    [Export("transferAudioToComputer")]
-    //    void TransferAudioToComputer();
+        // -(void)transferAudioToComputer __attribute__((availability(macos, introduced=10.7)));
+        [Introduced(PlatformName.MacOSX, 10, 7)]
+        [Export("transferAudioToComputer")]
+        void TransferAudioToComputer();
 
-    //    // -(void)transferAudioToPhone __attribute__((availability(macos, introduced=10.7)));
-    //    [Introduced(PlatformName.MacOSX, 10, 7)]
-    //    [Export("transferAudioToPhone")]
-    //    void TransferAudioToPhone();
+        // -(void)transferAudioToPhone __attribute__((availability(macos, introduced=10.7)));
+        [Introduced(PlatformName.MacOSX, 10, 7)]
+        [Export("transferAudioToPhone")]
+        void TransferAudioToPhone();
 
-    //    // -(void)sendSMS:(NSString *)aNumber message:(NSString *)aMessage __attribute__((availability(macos, introduced=10.7)));
-    //    [Introduced(PlatformName.MacOSX, 10, 7)]
-    //    [Export("sendSMS:message:")]
-    //    void SendSMS(string aNumber, string aMessage);
+        // -(void)sendSMS:(NSString *)aNumber message:(NSString *)aMessage __attribute__((availability(macos, introduced=10.7)));
+        [Introduced(PlatformName.MacOSX, 10, 7)]
+        [Export("sendSMS:message:")]
+        void SendSMS(string aNumber, string aMessage);
 
-    //    // -(void)sendATCommand:(NSString *)atCommand __attribute__((availability(macos, introduced=10.7)));
-    //    [Introduced(PlatformName.MacOSX, 10, 7)]
-    //    [Export("sendATCommand:")]
-    //    void SendATCommand(string atCommand);
+        // -(void)sendATCommand:(NSString *)atCommand __attribute__((availability(macos, introduced=10.7)));
+        [Introduced(PlatformName.MacOSX, 10, 7)]
+        [Export("sendATCommand:")]
+        void SendATCommand(string atCommand);
 
-    //    // -(void)sendATCommand:(NSString *)atCommand timeout:(float)timeout selector:(SEL)selector target:(id)target __attribute__((availability(macos, introduced=10.7)));
-    //    [Introduced(PlatformName.MacOSX, 10, 7)]
-    //    [Export("sendATCommand:timeout:selector:target:")]
-    //    void SendATCommand(string atCommand, float timeout, Selector selector, NSObject target);
-    //}
+        // -(void)sendATCommand:(NSString *)atCommand timeout:(float)timeout selector:(SEL)selector target:(id)target __attribute__((availability(macos, introduced=10.7)));
+        [Introduced(PlatformName.MacOSX, 10, 7)]
+        [Export("sendATCommand:timeout:selector:target:")]
+        void SendATCommand(string atCommand, float timeout, Selector selector, NSObject target);
+    }
 
-    //// @protocol IOBluetoothHandsFreeDeviceDelegate <IOBluetoothHandsFreeDelegate>
-    //[Protocol]
-    //interface IOBluetoothHandsFreeDeviceDelegate : IOBluetoothHandsFreeDelegate
-    //{
-    //    // @optional -(void)handsFree:(IOBluetoothHandsFreeDevice *)device isServiceAvailable:(NSNumber *)isServiceAvailable __attribute__((availability(macos, introduced=10.7)));
-    //    [Introduced(PlatformName.MacOSX, 10, 7)]
-    //    [Export("handsFree:isServiceAvailable:")]
-    //    void IsServiceAvailable(IOBluetoothHandsFreeDevice device, NSNumber isServiceAvailable);
+    // @protocol IOBluetoothHandsFreeDeviceDelegate <IOBluetoothHandsFreeDelegate>
+    [Protocol]
+    interface IOBluetoothHandsFreeDeviceDelegate : IOBluetoothHandsFreeDelegate
+    {
+        // @optional -(void)handsFree:(IOBluetoothHandsFreeDevice *)device isServiceAvailable:(NSNumber *)isServiceAvailable __attribute__((availability(macos, introduced=10.7)));
+        [Introduced(PlatformName.MacOSX, 10, 7)]
+        [Export("handsFree:isServiceAvailable:")]
+        void IsServiceAvailable(IOBluetoothHandsFreeDevice device, NSNumber isServiceAvailable);
 
-    //    // @optional -(void)handsFree:(IOBluetoothHandsFreeDevice *)device isCallActive:(NSNumber *)isCallActive __attribute__((availability(macos, introduced=10.7)));
-    //    [Introduced(PlatformName.MacOSX, 10, 7)]
-    //    [Export("handsFree:isCallActive:")]
-    //    void IsCallActive(IOBluetoothHandsFreeDevice device, NSNumber isCallActive);
+        // @optional -(void)handsFree:(IOBluetoothHandsFreeDevice *)device isCallActive:(NSNumber *)isCallActive __attribute__((availability(macos, introduced=10.7)));
+        [Introduced(PlatformName.MacOSX, 10, 7)]
+        [Export("handsFree:isCallActive:")]
+        void IsCallActive(IOBluetoothHandsFreeDevice device, NSNumber isCallActive);
 
-    //    // @optional -(void)handsFree:(IOBluetoothHandsFreeDevice *)device callSetupMode:(NSNumber *)callSetupMode __attribute__((availability(macos, introduced=10.7)));
-    //    [Introduced(PlatformName.MacOSX, 10, 7)]
-    //    [Export("handsFree:callSetupMode:")]
-    //    void CallSetupMode(IOBluetoothHandsFreeDevice device, NSNumber callSetupMode);
+        // @optional -(void)handsFree:(IOBluetoothHandsFreeDevice *)device callSetupMode:(NSNumber *)callSetupMode __attribute__((availability(macos, introduced=10.7)));
+        [Introduced(PlatformName.MacOSX, 10, 7)]
+        [Export("handsFree:callSetupMode:")]
+        void CallSetupMode(IOBluetoothHandsFreeDevice device, NSNumber callSetupMode);
 
-    //    // @optional -(void)handsFree:(IOBluetoothHandsFreeDevice *)device callHoldState:(NSNumber *)callHoldState __attribute__((availability(macos, introduced=10.7)));
-    //    [Introduced(PlatformName.MacOSX, 10, 7)]
-    //    [Export("handsFree:callHoldState:")]
-    //    void CallHoldState(IOBluetoothHandsFreeDevice device, NSNumber callHoldState);
+        // @optional -(void)handsFree:(IOBluetoothHandsFreeDevice *)device callHoldState:(NSNumber *)callHoldState __attribute__((availability(macos, introduced=10.7)));
+        [Introduced(PlatformName.MacOSX, 10, 7)]
+        [Export("handsFree:callHoldState:")]
+        void CallHoldState(IOBluetoothHandsFreeDevice device, NSNumber callHoldState);
 
-    //    // @optional -(void)handsFree:(IOBluetoothHandsFreeDevice *)device signalStrength:(NSNumber *)signalStrength __attribute__((availability(macos, introduced=10.7)));
-    //    [Introduced(PlatformName.MacOSX, 10, 7)]
-    //    [Export("handsFree:signalStrength:")]
-    //    void SignalStrength(IOBluetoothHandsFreeDevice device, NSNumber signalStrength);
+        // @optional -(void)handsFree:(IOBluetoothHandsFreeDevice *)device signalStrength:(NSNumber *)signalStrength __attribute__((availability(macos, introduced=10.7)));
+        [Introduced(PlatformName.MacOSX, 10, 7)]
+        [Export("handsFree:signalStrength:")]
+        void SignalStrength(IOBluetoothHandsFreeDevice device, NSNumber signalStrength);
 
-    //    // @optional -(void)handsFree:(IOBluetoothHandsFreeDevice *)device isRoaming:(NSNumber *)isRoaming __attribute__((availability(macos, introduced=10.7)));
-    //    [Introduced(PlatformName.MacOSX, 10, 7)]
-    //    [Export("handsFree:isRoaming:")]
-    //    void IsRoaming(IOBluetoothHandsFreeDevice device, NSNumber isRoaming);
+        // @optional -(void)handsFree:(IOBluetoothHandsFreeDevice *)device isRoaming:(NSNumber *)isRoaming __attribute__((availability(macos, introduced=10.7)));
+        [Introduced(PlatformName.MacOSX, 10, 7)]
+        [Export("handsFree:isRoaming:")]
+        void IsRoaming(IOBluetoothHandsFreeDevice device, NSNumber isRoaming);
 
-    //    // @optional -(void)handsFree:(IOBluetoothHandsFreeDevice *)device batteryCharge:(NSNumber *)batteryCharge __attribute__((availability(macos, introduced=10.7)));
-    //    [Introduced(PlatformName.MacOSX, 10, 7)]
-    //    [Export("handsFree:batteryCharge:")]
-    //    void BatteryCharge(IOBluetoothHandsFreeDevice device, NSNumber batteryCharge);
+        // @optional -(void)handsFree:(IOBluetoothHandsFreeDevice *)device batteryCharge:(NSNumber *)batteryCharge __attribute__((availability(macos, introduced=10.7)));
+        [Introduced(PlatformName.MacOSX, 10, 7)]
+        [Export("handsFree:batteryCharge:")]
+        void BatteryCharge(IOBluetoothHandsFreeDevice device, NSNumber batteryCharge);
 
-    //    // @optional -(void)handsFree:(IOBluetoothHandsFreeDevice *)device incomingCallFrom:(NSString *)number __attribute__((availability(macos, introduced=10.7)));
-    //    [Introduced(PlatformName.MacOSX, 10, 7)]
-    //    [Export("handsFree:incomingCallFrom:")]
-    //    void IncomingCallFrom(IOBluetoothHandsFreeDevice device, string number);
+        // @optional -(void)handsFree:(IOBluetoothHandsFreeDevice *)device incomingCallFrom:(NSString *)number __attribute__((availability(macos, introduced=10.7)));
+        [Introduced(PlatformName.MacOSX, 10, 7)]
+        [Export("handsFree:incomingCallFrom:")]
+        void IncomingCallFrom(IOBluetoothHandsFreeDevice device, string number);
 
-    //    // @optional -(void)handsFree:(IOBluetoothHandsFreeDevice *)device ringAttempt:(NSNumber *)ringAttempt __attribute__((availability(macos, introduced=10.7)));
-    //    [Introduced(PlatformName.MacOSX, 10, 7)]
-    //    [Export("handsFree:ringAttempt:")]
-    //    void RingAttempt(IOBluetoothHandsFreeDevice device, NSNumber ringAttempt);
+        // @optional -(void)handsFree:(IOBluetoothHandsFreeDevice *)device ringAttempt:(NSNumber *)ringAttempt __attribute__((availability(macos, introduced=10.7)));
+        [Introduced(PlatformName.MacOSX, 10, 7)]
+        [Export("handsFree:ringAttempt:")]
+        void RingAttempt(IOBluetoothHandsFreeDevice device, NSNumber ringAttempt);
 
-    //    // @optional -(void)handsFree:(IOBluetoothHandsFreeDevice *)device currentCall:(NSDictionary *)currentCall __attribute__((availability(macos, introduced=10.7)));
-    //    [Introduced(PlatformName.MacOSX, 10, 7)]
-    //    [Export("handsFree:currentCall:")]
-    //    void CurrentCall(IOBluetoothHandsFreeDevice device, NSDictionary currentCall);
+        // @optional -(void)handsFree:(IOBluetoothHandsFreeDevice *)device currentCall:(NSDictionary *)currentCall __attribute__((availability(macos, introduced=10.7)));
+        [Introduced(PlatformName.MacOSX, 10, 7)]
+        [Export("handsFree:currentCall:")]
+        void CurrentCall(IOBluetoothHandsFreeDevice device, NSDictionary currentCall);
 
-    //    // @optional -(void)handsFree:(IOBluetoothHandsFreeDevice *)device subscriberNumber:(NSString *)subscriberNumber __attribute__((availability(macos, introduced=10.7)));
-    //    [Introduced(PlatformName.MacOSX, 10, 7)]
-    //    [Export("handsFree:subscriberNumber:")]
-    //    void SubscriberNumber(IOBluetoothHandsFreeDevice device, string subscriberNumber);
+        // @optional -(void)handsFree:(IOBluetoothHandsFreeDevice *)device subscriberNumber:(NSString *)subscriberNumber __attribute__((availability(macos, introduced=10.7)));
+        [Introduced(PlatformName.MacOSX, 10, 7)]
+        [Export("handsFree:subscriberNumber:")]
+        void SubscriberNumber(IOBluetoothHandsFreeDevice device, string subscriberNumber);
 
-    //    // @optional -(void)handsFree:(IOBluetoothHandsFreeDevice *)device incomingSMS:(NSDictionary *)sms __attribute__((availability(macos, introduced=10.7)));
-    //    [Introduced(PlatformName.MacOSX, 10, 7)]
-    //    [Export("handsFree:incomingSMS:")]
-    //    void IncomingSMS(IOBluetoothHandsFreeDevice device, NSDictionary sms);
+        // @optional -(void)handsFree:(IOBluetoothHandsFreeDevice *)device incomingSMS:(NSDictionary *)sms __attribute__((availability(macos, introduced=10.7)));
+        [Introduced(PlatformName.MacOSX, 10, 7)]
+        [Export("handsFree:incomingSMS:")]
+        void IncomingSMS(IOBluetoothHandsFreeDevice device, NSDictionary sms);
 
-    //    // @optional -(void)handsFree:(IOBluetoothHandsFreeDevice *)device unhandledResultCode:(NSString *)resultCode __attribute__((availability(macos, introduced=10.7)));
-    //    [Introduced(PlatformName.MacOSX, 10, 7)]
-    //    [Export("handsFree:unhandledResultCode:")]
-    //    void UnhandledResultCode(IOBluetoothHandsFreeDevice device, string resultCode);
-    //}
+        // @optional -(void)handsFree:(IOBluetoothHandsFreeDevice *)device unhandledResultCode:(NSString *)resultCode __attribute__((availability(macos, introduced=10.7)));
+        [Introduced(PlatformName.MacOSX, 10, 7)]
+        [Export("handsFree:unhandledResultCode:")]
+        void UnhandledResultCode(IOBluetoothHandsFreeDevice device, string resultCode);
+    }
 }
