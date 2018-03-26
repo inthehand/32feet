@@ -7,34 +7,58 @@ using ObjCRuntime;
 
 namespace IOBluetoothUI
 {
+    /// <summary>
+    /// An NSWindowController subclass to display a window to initiate pairing to other bluetooth devices.
+    /// </summary>
     // @interface IOBluetoothDeviceSelectorController : NSWindowController
     [BaseType(typeof(NSWindowController))]
     interface IOBluetoothDeviceSelectorController
     {
         // +(IOBluetoothDeviceSelectorController *)deviceSelector;
+        /// <summary>
+        /// Method call to instantiate a new IOBluetoothDeviceSelectorController object.
+        /// </summary>
+        /// <value>Success - a new instance of the device selector Controller Failure - nil.</value>
         [Static]
         [Export("deviceSelector")]
         IOBluetoothDeviceSelectorController DeviceSelector { get; }
 
         // -(int)runModal;
+        /// <summary>
+        /// Runs the device selector panel in a modal session to allow the user to select a Bluetooth device.
+        /// </summary>
+        /// <returns>The modal.</returns>
         [Export("runModal")]
         int RunModal();
 
         // -(IOReturn)beginSheetModalForWindow:(NSWindow *)sheetWindow modalDelegate:(id)modalDelegate didEndSelector:(SEL)didEndSelector contextInfo:(void *)contextInfo;
+        /// <summary>
+        /// Runs the device selector panel as a sheet on the target window.
+        /// </summary>
+        /// <returns>The sheet modal for window.</returns>
+        /// <param name="sheetWindow">Sheet window.</param>
+        /// <param name="modalDelegate">Modal delegate.</param>
+        /// <param name="didEndSelector">Did end selector.</param>
+        /// <param name="contextInfo">Context info.</param>
         [Export("beginSheetModalForWindow:modalDelegate:didEndSelector:contextInfo:")]
-        unsafe int BeginSheetModalForWindow(NSWindow sheetWindow, NSObject modalDelegate, Selector didEndSelector, void* contextInfo);
+        unsafe int BeginSheetModalForWindow(NSWindow sheetWindow, NSObject modalDelegate, Selector didEndSelector, IntPtr contextInfo);
 
         // -(NSArray *)getResults;
+        /// <summary>
+        /// Returns the result of the user's selection.
+        /// </summary>
+        /// <value>The results.</value>
         [Export("getResults")]
         IOBluetoothDevice[] Results { get; }
 
         // -(void)setOptions:(IOBluetoothServiceBrowserControllerOptions)options;
-        [Export("setOptions:")]
-        void SetOptions(IOBluetoothServiceBrowserControllerOptions options);
-
         // -(IOBluetoothServiceBrowserControllerOptions)getOptions;
-        [Export("getOptions")]
-        IOBluetoothServiceBrowserControllerOptions Options { get; }
+        /// <summary>
+        /// Gets or sets the option bits that control the panel's behavior.
+        /// </summary>
+        /// <value>The options.</value>
+        [Export("options")]
+        IOBluetoothServiceBrowserControllerOptions Options { [Bind("getOptions")] get; set; }
 
         // -(void)setSearchAttributes:(const IOBluetoothDeviceSearchAttributes *)searchAttributes;
         //[Export("setSearchAttributes:")]
@@ -46,56 +70,73 @@ namespace IOBluetoothUI
         //unsafe IOBluetoothDeviceSearchAttributes* SearchAttributes { get; }
 
         // -(void)addAllowedUUID:(IOBluetoothSDPUUID *)allowedUUID;
+        /// <summary>
+        /// Adds a UUID to the list of UUIDs that are used to validate the user's selection.
+        /// </summary>
+        /// <param name="allowedUUID">Allowed UUID.</param>
         [Export("addAllowedUUID:")]
         void AddAllowedUUID(IOBluetoothSDPUUID allowedUUID);
 
         // -(void)addAllowedUUIDArray:(NSArray *)allowedUUIDArray;
+        /// <summary>
+        /// Adds an array of UUIDs to the list of UUIDs that are used to validate the user's selection.
+        /// </summary>
+        /// <param name="allowedUUIDArray">Allowed UUIDA rray.</param>
         [Export("addAllowedUUIDArray:")]
         void AddAllowedUUIDArray(IOBluetoothSDPUUID[] allowedUUIDArray);
 
         // -(void)clearAllowedUUIDs;
+        /// <summary>
+        /// Resets the controller back to the default state where it will accept any device the user selects.
+        /// </summary>
         [Export("clearAllowedUUIDs")]
         void ClearAllowedUUIDs();
 
         // -(void)setTitle:(NSString *)windowTitle;
-        [Export("setTitle:")]
-        void SetTitle(string windowTitle);
-
         // -(NSString *)getTitle;
-        [Export("getTitle")]
-        string Title { get; }
+        /// <summary>
+        /// Gets or sets the title of the panel when not run as a sheet.
+        /// </summary>
+        /// <value>The title.</value>
+        [Export("title")]
+        string Title { [Bind("getTitle")] get; set; }
 
         // -(void)setHeader:(NSString *)headerText;
-        [Export("setHeader:")]
-        void SetHeader(string headerText);
-
         // -(NSString *)getHeader;
-        [Export("getHeader")]
-        string Header { get; }
+
+        /// <summary>
+        /// Gets or sets the header text that appears in the device selector panel.
+        /// </summary>
+        /// <value>The header.</value>
+        [Export("header")]
+        string Header { [Bind("getHeader")] get; set; }
 
         // -(void)setDescriptionText:(NSString *)descriptionText;
-        [Export("setDescriptionText:")]
-        void SetDescriptionText(string descriptionText);
-
         // -(NSString *)getDescriptionText;
-        [Export("getDescriptionText")]
-        string DescriptionText { get; }
+        /// <summary>
+        /// Gets or sets the description text that appears in the device selector panel.
+        /// </summary>
+        /// <value>The description text.</value>
+        [Export("descriptionText")]
+        string DescriptionText { [Bind("getDescriptionText")] get; set; }
 
         // -(void)setPrompt:(NSString *)prompt;
-        [Export("setPrompt:")]
-        void SetPrompt(string prompt);
-
         // -(NSString *)getPrompt;
-        [Export("getPrompt")]
-        string Prompt { get; }
+        /// <summary>
+        /// Gets or sets the title of the default/select button in the device selector panel.
+        /// </summary>
+        /// <value>The prompt.</value>
+        [Export("prompt")]
+        string Prompt { [Bind("getPrompt")] get; set; }
 
         // -(void)setCancel:(NSString *)prompt;
-        [Export("setCancel:")]
-        void SetCancel(string prompt);
-
         // -(NSString *)getCancel;
-        [Export("getCancel")]
-        string Cancel { get; }
+        /// <summary>
+        /// Gets or sets the title of the default/cancel button in the device selector panel.
+        /// </summary>
+        /// <value>String that appears in the default/cancel button in the device selector panel.</value>
+        [Export("cancel")]
+        string Cancel { [Bind("getCancel")] get; set; }
     }
 
     // @interface IOBluetoothPairingController : NSWindowController
@@ -116,12 +157,9 @@ namespace IOBluetoothUI
         IOBluetoothDevice[] Results { get; }
 
         // -(void)setOptions:(IOBluetoothServiceBrowserControllerOptions)options;
-        [Export("setOptions:")]
-        void SetOptions(IOBluetoothServiceBrowserControllerOptions options);
-
         // -(IOBluetoothServiceBrowserControllerOptions)getOptions;
-        [Export("getOptions")]
-        IOBluetoothServiceBrowserControllerOptions Options { get; }
+        [Export("options")]
+        IOBluetoothServiceBrowserControllerOptions Options { [Bind("getOptions")] get; set; }
 
         // -(void)setSearchAttributes:(const IOBluetoothDeviceSearchAttributes *)searchAttributes;
         //[Export("setSearchAttributes:")]
@@ -137,36 +175,26 @@ namespace IOBluetoothUI
 
         // -(void)addAllowedUUIDArray:(NSArray *)allowedUUIDArray;
         [Export("addAllowedUUIDArray:")]
-        [Verify(StronglyTypedNSArray)]
         void AddAllowedUUIDArray(IOBluetoothSDPUUID[] allowedUUIDArray);
 
         // -(void)clearAllowedUUIDs;
         [Export("clearAllowedUUIDs")]
         void ClearAllowedUUIDs();
 
-        // -(void)setTitle:(NSString *)windowTitle;
-        [Export("setTitle:")]
-        void SetTitle(string windowTitle);
-
         // -(NSString *)getTitle;
-        [Export("getTitle")]
-        string Title { get; }
-
-        // -(void)setDescriptionText:(NSString *)descriptionText;
-        [Export("setDescriptionText:")]
-        void SetDescriptionText(string descriptionText);
+        // -(void)setTitle:(NSString *)windowTitle;
+        [Export("title")]
+        string Title { [Bind("getTitle")]get; set; }
 
         // -(NSString *)getDescriptionText;
-        [Export("getDescriptionText")]
-        string DescriptionText { get; }
-
-        // -(void)setPrompt:(NSString *)prompt;
-        [Export("setPrompt:")]
-        void SetPrompt(string prompt);
+        // -(void)setDescriptionText:(NSString *)descriptionText;
+        [Export("descriptionText")]
+        string DescriptionText { [Bind("getDescriptionText")] get; set; }
 
         // -(NSString *)getPrompt;
-        [Export("getPrompt")]
-        string Prompt { get; }
+        // -(void)setPrompt:(NSString *)prompt;
+        [Export("prompt")]
+        string Prompt { [Bind("getPrompt")] get; set; }
     }
 
     // @interface IOBluetoothServiceBrowserController : NSWindowController
@@ -198,7 +226,7 @@ namespace IOBluetoothUI
 
         // -(IOReturn)beginSheetModalForWindow:(NSWindow *)sheetWindow modalDelegate:(id)modalDelegate didEndSelector:(SEL)didEndSelector contextInfo:(void *)contextInfo;
         [Export("beginSheetModalForWindow:modalDelegate:didEndSelector:contextInfo:")]
-        unsafe int BeginSheetModalForWindow(NSWindow sheetWindow, NSObject modalDelegate, Selector didEndSelector, void* contextInfo);
+        unsafe int BeginSheetModalForWindow(NSWindow sheetWindow, NSObject modalDelegate, Selector didEndSelector, IntPtr contextInfo);
 
         // -(NSArray *)getResults;
         [Export("getResults")]
@@ -208,13 +236,13 @@ namespace IOBluetoothUI
         [Export("getOptions")]
         IOBluetoothServiceBrowserControllerOptions Options { get; }
 
-        // -(void)setSearchAttributes:(const IOBluetoothDeviceSearchAttributes *)searchAttributes;
-        [Export("setSearchAttributes:")]
-        unsafe void SetSearchAttributes(IOBluetoothDeviceSearchAttributes* searchAttributes);
+        //// -(void)setSearchAttributes:(const IOBluetoothDeviceSearchAttributes *)searchAttributes;
+        //[Export("setSearchAttributes:")]
+        //unsafe void SetSearchAttributes(IOBluetoothDeviceSearchAttributes* searchAttributes);
 
-        // -(const IOBluetoothDeviceSearchAttributes *)getSearchAttributes;
-        [Export("getSearchAttributes")]
-        unsafe IOBluetoothDeviceSearchAttributes* SearchAttributes { get; }
+        //// -(const IOBluetoothDeviceSearchAttributes *)getSearchAttributes;
+        //[Export("getSearchAttributes")]
+        //unsafe IOBluetoothDeviceSearchAttributes* SearchAttributes { get; }
 
         // -(void)addAllowedUUID:(IOBluetoothSDPUUID *)allowedUUID;
         [Export("addAllowedUUID:")]
@@ -229,28 +257,19 @@ namespace IOBluetoothUI
         void ClearAllowedUUIDs();
 
         // -(void)setTitle:(NSString *)windowTitle;
-        [Export("setTitle:")]
-        void SetTitle(string windowTitle);
-
         // -(NSString *)getTitle;
-        [Export("getTitle")]
-        string Title { get; }
+        [Export("title")]
+        string Title { [Bind("getTitle")] get; set; }
 
         // -(void)setDescriptionText:(NSString *)descriptionText;
-        [Export("setDescriptionText:")]
-        void SetDescriptionText(string descriptionText);
-
         // -(NSString *)getDescriptionText;
-        [Export("getDescriptionText")]
-        string DescriptionText { get; }
+        [Export("descriptionText")]
+        string DescriptionText { [Bind("getDescriptionText")] get; set; }
 
         // -(void)setPrompt:(NSString *)prompt;
-        [Export("setPrompt:")]
-        void SetPrompt(string prompt);
-
         // -(NSString *)getPrompt;
-        [Export("getPrompt")]
-        string Prompt { get; }
+        [Export("prompt")]
+        string Prompt { [Bind("getPrompt")] get; set; }
     }
 
     // @interface IOBluetoothObjectPushUIController : NSWindowController
@@ -271,19 +290,16 @@ namespace IOBluetoothUI
 
         // -(IOReturn)beginSheetModalForWindow:(NSWindow *)sheetWindow modalDelegate:(id)modalDelegate didEndSelector:(SEL)didEndSelector contextInfo:(void *)contextInfo;
         [Export("beginSheetModalForWindow:modalDelegate:didEndSelector:contextInfo:")]
-        unsafe int BeginSheetModalForWindow(NSWindow sheetWindow, NSObject modalDelegate, Selector didEndSelector, void* contextInfo);
+        unsafe int BeginSheetModalForWindow(NSWindow sheetWindow, NSObject modalDelegate, Selector didEndSelector, IntPtr contextInfo);
 
         // -(void)stop;
         [Export("stop")]
         void Stop();
 
         // -(void)setTitle:(NSString *)windowTitle;
-        [Export("setTitle:")]
-        void SetTitle(string windowTitle);
-
         // -(NSString *)getTitle;
-        [Export("getTitle")]
-        string Title { get; }
+        [Export("title")]
+        string Title { [Bind("getTitle")] get; set; }
 
         // -(void)setIconImage:(NSImage *)image;
         [Export("setIconImage:")]

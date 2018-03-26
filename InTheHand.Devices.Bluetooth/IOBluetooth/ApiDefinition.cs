@@ -65,17 +65,17 @@ namespace IOBluetooth
         [Export("deviceWithAddressString:")]
         IOBluetoothDevice DeviceWithAddressString(string address);
 
-        //// -(IOReturn)openL2CAPChannelSync:(IOBluetoothL2CAPChannel **)newChannel withPSM:(BluetoothL2CAPPSM)psm delegate:(id)channelDelegate;
-        //[Export("openL2CAPChannelSync:withPSM:delegate:")]
-        //int OpenL2CAPChannelSync(out IOBluetoothL2CAPChannel newChannel, ushort psm, NSObject channelDelegate);
+        // -(IOReturn)openL2CAPChannelSync:(IOBluetoothL2CAPChannel **)newChannel withPSM:(BluetoothL2CAPPSM)psm delegate:(id)channelDelegate;
+        [Export("openL2CAPChannelSync:withPSM:delegate:")]
+        int OpenL2CAPChannelSync(out IOBluetoothL2CAPChannel newChannel, ushort psm, NSObject channelDelegate);
 
-        //// -(IOReturn)openL2CAPChannelAsync:(IOBluetoothL2CAPChannel **)newChannel withPSM:(BluetoothL2CAPPSM)psm delegate:(id)channelDelegate;
-        //[Export("openL2CAPChannelAsync:withPSM:delegate:")]
-        //int OpenL2CAPChannelAsync(out IOBluetoothL2CAPChannel newChannel, ushort psm, NSObject channelDelegate);
+        // -(IOReturn)openL2CAPChannelAsync:(IOBluetoothL2CAPChannel **)newChannel withPSM:(BluetoothL2CAPPSM)psm delegate:(id)channelDelegate;
+        [Export("openL2CAPChannelAsync:withPSM:delegate:")]
+        int OpenL2CAPChannelAsync(out IOBluetoothL2CAPChannel newChannel, ushort psm, NSObject channelDelegate);
 
-        //// -(IOReturn)sendL2CAPEchoRequest:(void *)data length:(UInt16)length;
-        //[Export("sendL2CAPEchoRequest:length:")]
-        //int SendL2CAPEchoRequest(NSArray data, ushort length);
+        // -(IOReturn)sendL2CAPEchoRequest:(void *)data length:(UInt16)length;
+        [Export("sendL2CAPEchoRequest:length:")]
+        int SendL2CAPEchoRequest(NSArray data, ushort length);
 
         // -(IOReturn)openRFCOMMChannelSync:(IOBluetoothRFCOMMChannel **)rfcommChannel withChannelID:(BluetoothRFCOMMChannelID)channelID delegate:(id)channelDelegate;
         [Export("openRFCOMMChannelSync:withChannelID:delegate:")]
@@ -259,13 +259,13 @@ namespace IOBluetooth
         [Export("setSupervisionTimeout:")]
         int SetSupervisionTimeout(ushort timeout);
 
-        //// -(IOReturn)openL2CAPChannelSync:(IOBluetoothL2CAPChannel **)newChannel withPSM:(BluetoothL2CAPPSM)psm withConfiguration:(NSDictionary *)channelConfiguration delegate:(id)channelDelegate;
-        //[Export("openL2CAPChannelSync:withPSM:withConfiguration:delegate:")]
-        //int OpenL2CAPChannelSync(out IOBluetoothL2CAPChannel newChannel, ushort psm, NSDictionary channelConfiguration, NSObject channelDelegate);
+        // -(IOReturn)openL2CAPChannelSync:(IOBluetoothL2CAPChannel **)newChannel withPSM:(BluetoothL2CAPPSM)psm withConfiguration:(NSDictionary *)channelConfiguration delegate:(id)channelDelegate;
+        [Export("openL2CAPChannelSync:withPSM:withConfiguration:delegate:")]
+        int OpenL2CAPChannelSync(out IOBluetoothL2CAPChannel newChannel, ushort psm, NSDictionary channelConfiguration, NSObject channelDelegate);
 
-        //// -(IOReturn)openL2CAPChannelAsync:(IOBluetoothL2CAPChannel **)newChannel withPSM:(BluetoothL2CAPPSM)psm withConfiguration:(NSDictionary *)channelConfiguration delegate:(id)channelDelegate;
-        //[Export("openL2CAPChannelAsync:withPSM:withConfiguration:delegate:")]
-        //int OpenL2CAPChannelAsync(out IOBluetoothL2CAPChannel newChannel, ushort psm, NSDictionary channelConfiguration, NSObject channelDelegate);
+        // -(IOReturn)openL2CAPChannelAsync:(IOBluetoothL2CAPChannel **)newChannel withPSM:(BluetoothL2CAPPSM)psm withConfiguration:(NSDictionary *)channelConfiguration delegate:(id)channelDelegate;
+        [Export("openL2CAPChannelAsync:withPSM:withConfiguration:delegate:")]
+        int OpenL2CAPChannelAsync(out IOBluetoothL2CAPChannel newChannel, ushort psm, NSDictionary channelConfiguration, NSObject channelDelegate);
 
         // -(id)awakeAfterUsingCoder:(NSCoder *)coder __attribute__((ns_returns_retained)) __attribute__((ns_consumes_self));
         [Export("awakeAfterUsingCoder:")]
@@ -428,7 +428,7 @@ namespace IOBluetooth
     interface IOBluetoothHostController
     {
         [Wrap("WeakDelegate")]
-        NSObject Delegate { get; set; }
+        IOBluetoothHostControllerDelegate Delegate { get; set; }
 
         // @property (assign) id delegate;
         [NullAllowed, Export("delegate", ArgumentSemantic.Weak)]
@@ -460,32 +460,31 @@ namespace IOBluetooth
         string NameAsString { get; }
     }
 
-    //// @interface IOBluetoothHostControllerDelegate (NSObject)
-    //[Category]
-    //[BaseType(typeof(NSObject))]
-    //interface IOBluetoothHostControllerDelegate
-    //{
-    //    //// -(void)readRSSIForDeviceComplete:(id)controller device:(IOBluetoothDevice *)device info:(BluetoothHCIRSSIInfo *)info error:(IOReturn)error;
-    //    //[Export ("readRSSIForDeviceComplete:device:info:error:")]
-    //    //unsafe void ReadRSSIForDeviceComplete (NSObject controller, IOBluetoothDevice device, BluetoothHCIRSSIInfo* info, int error);
+    // @interface IOBluetoothHostControllerDelegate (NSObject)
+    [Protocol]
+    [BaseType(typeof(NSObject))]
+    interface IOBluetoothHostControllerDelegate
+    {
+        //// -(void)readRSSIForDeviceComplete:(id)controller device:(IOBluetoothDevice *)device info:(BluetoothHCIRSSIInfo *)info error:(IOReturn)error;
+        //[Export ("readRSSIForDeviceComplete:device:info:error:")]
+        //unsafe void ReadRSSIForDeviceComplete (NSObject controller, IOBluetoothDevice device, BluetoothHCIRSSIInfo* info, int error);
 
-    //    //// -(void)readLinkQualityForDeviceComplete:(id)controller device:(IOBluetoothDevice *)device info:(BluetoothHCILinkQualityInfo *)info error:(IOReturn)error;
-    //    //[Export ("readLinkQualityForDeviceComplete:device:info:error:")]
-    //    //unsafe void ReadLinkQualityForDeviceComplete (NSObject controller, IOBluetoothDevice device, BluetoothHCILinkQualityInfo* info, int error);
-    //}
+        //// -(void)readLinkQualityForDeviceComplete:(id)controller device:(IOBluetoothDevice *)device info:(BluetoothHCILinkQualityInfo *)info error:(IOReturn)error;
+        //[Export ("readLinkQualityForDeviceComplete:device:info:error:")]
+        //unsafe void ReadLinkQualityForDeviceComplete (NSObject controller, IOBluetoothDevice device, BluetoothHCILinkQualityInfo* info, int error);
+    }
 
-    //[Static]
-    //[Verify (ConstantsInterfaceAssociation)]
-    //partial interface Constants
-    //{
-    //	// extern NSString *const IOBluetoothHostControllerPoweredOnNotification;
-    //	[Field ("IOBluetoothHostControllerPoweredOnNotification")]
-    //	NSString IOBluetoothHostControllerPoweredOnNotification { get; }
+    [Static]
+    partial interface Constants
+    {
+    	// extern NSString *const IOBluetoothHostControllerPoweredOnNotification;
+        [Field ("IOBluetoothHostControllerPoweredOnNotification", LibraryName ="__Internal")]
+    	NSString IOBluetoothHostControllerPoweredOnNotification { get; }
 
-    //	// extern NSString *const IOBluetoothHostControllerPoweredOffNotification;
-    //	[Field ("IOBluetoothHostControllerPoweredOffNotification")]
-    //	NSString IOBluetoothHostControllerPoweredOffNotification { get; }
-    //}
+    	// extern NSString *const IOBluetoothHostControllerPoweredOffNotification;
+        [Field ("IOBluetoothHostControllerPoweredOffNotification", LibraryName = "__Internal")]
+    	NSString IOBluetoothHostControllerPoweredOffNotification { get; }
+    }
 
     // @interface IOBluetoothL2CAPChannel : IOBluetoothObject <NSPortDelegate>
     [BaseType(typeof(IOBluetoothObject))]
@@ -601,18 +600,17 @@ namespace IOBluetooth
         void L2CAPChannelQueueSpaceAvailable(IOBluetoothL2CAPChannel l2capChannel);
     }
 
-    ////[Static]
-    ////[Verify (ConstantsInterfaceAssociation)]
-    ////partial interface Constants
-    ////{
-    ////	// extern NSString *const IOBluetoothL2CAPChannelPublishedNotification;
-    ////	[Field ("IOBluetoothL2CAPChannelPublishedNotification")]
-    ////	NSString IOBluetoothL2CAPChannelPublishedNotification { get; }
 
-    ////	// extern NSString *const IOBluetoothL2CAPChannelTerminatedNotification;
-    ////	[Field ("IOBluetoothL2CAPChannelTerminatedNotification")]
-    ////	NSString IOBluetoothL2CAPChannelTerminatedNotification { get; }
-    ////}
+    partial interface Constants
+    {
+    	// extern NSString *const IOBluetoothL2CAPChannelPublishedNotification;
+        [Field ("IOBluetoothL2CAPChannelPublishedNotification", LibraryName = "__Internal")]
+    	NSString IOBluetoothL2CAPChannelPublishedNotification { get; }
+
+    	// extern NSString *const IOBluetoothL2CAPChannelTerminatedNotification;
+        [Field ("IOBluetoothL2CAPChannelTerminatedNotification", LibraryName = "__Internal")]
+    	NSString IOBluetoothL2CAPChannelTerminatedNotification { get; }
+    }
 
     // @interface IOBluetoothRFCOMMChannel : IOBluetoothObject <NSPortDelegate>
     [BaseType(typeof(IOBluetoothObject))]
@@ -1454,103 +1452,103 @@ namespace IOBluetooth
 
     //// @interface NSDictionaryOBEXExtensions (NSMutableDictionary)
     //[Category]
-    [BaseType (typeof(NSMutableDictionary))]
-    interface NSDictionaryOBEXExtensions
-    {
-    	//// +(instancetype)dictionaryWithOBEXHeadersData:(const void *)inHeadersData headersDataSize:(size_t)inDataSize;
-    	[Static]
-    	[Export ("dictionaryWithOBEXHeadersData:headersDataSize:")]
-    	unsafe NSMutableDictionary DictionaryWithOBEXHeadersData (IntPtr inHeadersData, nuint inDataSize);
+    //[BaseType (typeof(NSMutableDictionary))]
+    //interface NSDictionaryOBEXExtensions
+    //{
+    //	//// +(instancetype)dictionaryWithOBEXHeadersData:(const void *)inHeadersData headersDataSize:(size_t)inDataSize;
+    //	[Static]
+    //	[Export ("dictionaryWithOBEXHeadersData:headersDataSize:")]
+    //	unsafe NSMutableDictionary DictionaryWithOBEXHeadersData (IntPtr inHeadersData, nuint inDataSize);
 
-    	// +(instancetype)dictionaryWithOBEXHeadersData:(NSData *)inHeadersData;
-    	[Static]
-    	[Export ("dictionaryWithOBEXHeadersData:")]
-    	NSMutableDictionary DictionaryWithOBEXHeadersData (NSData inHeadersData);
+    //	// +(instancetype)dictionaryWithOBEXHeadersData:(NSData *)inHeadersData;
+    //	[Static]
+    //	[Export ("dictionaryWithOBEXHeadersData:")]
+    //	NSMutableDictionary DictionaryWithOBEXHeadersData (NSData inHeadersData);
 
-    	// -(NSMutableData *)getHeaderBytes;
-    	[Export ("getHeaderBytes")]
-    	NSMutableData HeaderBytes { get; }
+    //	// -(NSMutableData *)getHeaderBytes;
+    //	[Export ("getHeaderBytes")]
+    //	NSMutableData HeaderBytes { get; }
 
-    	// -(OBEXError)addTargetHeader:(const void *)inHeaderData length:(uint32_t)inHeaderDataLength;
-    	[Export ("addTargetHeader:length:")]
-    	int AddTargetHeader (IntPtr inHeaderData, uint inHeaderDataLength);
+    //	// -(OBEXError)addTargetHeader:(const void *)inHeaderData length:(uint32_t)inHeaderDataLength;
+    //	[Export ("addTargetHeader:length:")]
+    //	int AddTargetHeader (IntPtr inHeaderData, uint inHeaderDataLength);
 
-    	// -(OBEXError)addHTTPHeader:(const void *)inHeaderData length:(uint32_t)inHeaderDataLength;
-    	[Export ("addHTTPHeader:length:")]
-    	int AddHTTPHeader (IntPtr inHeaderData, uint inHeaderDataLength);
+    //	// -(OBEXError)addHTTPHeader:(const void *)inHeaderData length:(uint32_t)inHeaderDataLength;
+    //	[Export ("addHTTPHeader:length:")]
+    //	int AddHTTPHeader (IntPtr inHeaderData, uint inHeaderDataLength);
 
-    	// -(OBEXError)addBodyHeader:(const void *)inHeaderData length:(uint32_t)inHeaderDataLength endOfBody:(BOOL)isEndOfBody;
-    	[Export ("addBodyHeader:length:endOfBody:")]
-    	int AddBodyHeader (IntPtr inHeaderData, uint inHeaderDataLength, bool isEndOfBody);
+    //	// -(OBEXError)addBodyHeader:(const void *)inHeaderData length:(uint32_t)inHeaderDataLength endOfBody:(BOOL)isEndOfBody;
+    //	[Export ("addBodyHeader:length:endOfBody:")]
+    //	int AddBodyHeader (IntPtr inHeaderData, uint inHeaderDataLength, bool isEndOfBody);
 
-    	// -(OBEXError)addWhoHeader:(const void *)inHeaderData length:(uint32_t)inHeaderDataLength;
-    	[Export ("addWhoHeader:length:")]
-    	int AddWhoHeader (IntPtr inHeaderData, uint inHeaderDataLength);
+    //	// -(OBEXError)addWhoHeader:(const void *)inHeaderData length:(uint32_t)inHeaderDataLength;
+    //	[Export ("addWhoHeader:length:")]
+    //	int AddWhoHeader (IntPtr inHeaderData, uint inHeaderDataLength);
 
-    	// -(OBEXError)addConnectionIDHeader:(const void *)inHeaderData length:(uint32_t)inHeaderDataLength;
-    	[Export ("addConnectionIDHeader:length:")]
-    	int AddConnectionIDHeader (IntPtr inHeaderData, uint inHeaderDataLength);
+    //	// -(OBEXError)addConnectionIDHeader:(const void *)inHeaderData length:(uint32_t)inHeaderDataLength;
+    //	[Export ("addConnectionIDHeader:length:")]
+    //	int AddConnectionIDHeader (IntPtr inHeaderData, uint inHeaderDataLength);
 
-    	// -(OBEXError)addApplicationParameterHeader:(const void *)inHeaderData length:(uint32_t)inHeaderDataLength;
-    	[Export ("addApplicationParameterHeader:length:")]
-    	int AddApplicationParameterHeader (IntPtr inHeaderData, uint inHeaderDataLength);
+    //	// -(OBEXError)addApplicationParameterHeader:(const void *)inHeaderData length:(uint32_t)inHeaderDataLength;
+    //	[Export ("addApplicationParameterHeader:length:")]
+    //	int AddApplicationParameterHeader (IntPtr inHeaderData, uint inHeaderDataLength);
 
-    	// -(OBEXError)addByteSequenceHeader:(const void *)inHeaderData length:(uint32_t)inHeaderDataLength;
-    	[Export ("addByteSequenceHeader:length:")]
-    	int AddByteSequenceHeader (IntPtr inHeaderData, uint inHeaderDataLength);
+    //	// -(OBEXError)addByteSequenceHeader:(const void *)inHeaderData length:(uint32_t)inHeaderDataLength;
+    //	[Export ("addByteSequenceHeader:length:")]
+    //	int AddByteSequenceHeader (IntPtr inHeaderData, uint inHeaderDataLength);
 
-    	// -(OBEXError)addObjectClassHeader:(const void *)inHeaderData length:(uint32_t)inHeaderDataLength;
-    	[Export ("addObjectClassHeader:length:")]
-    	int AddObjectClassHeader (IntPtr inHeaderData, uint inHeaderDataLength);
+    //	// -(OBEXError)addObjectClassHeader:(const void *)inHeaderData length:(uint32_t)inHeaderDataLength;
+    //	[Export ("addObjectClassHeader:length:")]
+    //	int AddObjectClassHeader (IntPtr inHeaderData, uint inHeaderDataLength);
 
-    	// -(OBEXError)addAuthorizationChallengeHeader:(const void *)inHeaderData length:(uint32_t)inHeaderDataLength;
-    	[Export ("addAuthorizationChallengeHeader:length:")]
-    	int AddAuthorizationChallengeHeader (IntPtr inHeaderData, uint inHeaderDataLength);
+    //	// -(OBEXError)addAuthorizationChallengeHeader:(const void *)inHeaderData length:(uint32_t)inHeaderDataLength;
+    //	[Export ("addAuthorizationChallengeHeader:length:")]
+    //	int AddAuthorizationChallengeHeader (IntPtr inHeaderData, uint inHeaderDataLength);
 
-    	// -(OBEXError)addAuthorizationResponseHeader:(const void *)inHeaderData length:(uint32_t)inHeaderDataLength;
-    	[Export ("addAuthorizationResponseHeader:length:")]
-    	int AddAuthorizationResponseHeader (IntPtr inHeaderData, uint inHeaderDataLength);
+    //	// -(OBEXError)addAuthorizationResponseHeader:(const void *)inHeaderData length:(uint32_t)inHeaderDataLength;
+    //	[Export ("addAuthorizationResponseHeader:length:")]
+    //	int AddAuthorizationResponseHeader (IntPtr inHeaderData, uint inHeaderDataLength);
 
-    	// -(OBEXError)addTimeISOHeader:(const void *)inHeaderData length:(uint32_t)inHeaderDataLength;
-    	[Export ("addTimeISOHeader:length:")]
-    	int AddTimeISOHeader (IntPtr inHeaderData, uint inHeaderDataLength);
+    //	// -(OBEXError)addTimeISOHeader:(const void *)inHeaderData length:(uint32_t)inHeaderDataLength;
+    //	[Export ("addTimeISOHeader:length:")]
+    //	int AddTimeISOHeader (IntPtr inHeaderData, uint inHeaderDataLength);
 
-    	// -(OBEXError)addTypeHeader:(NSString *)type;
-    	[Export ("addTypeHeader:")]
-    	int AddTypeHeader (string type);
+    //	// -(OBEXError)addTypeHeader:(NSString *)type;
+    //	[Export ("addTypeHeader:")]
+    //	int AddTypeHeader (string type);
 
-    	// -(OBEXError)addLengthHeader:(uint32_t)length;
-    	[Export ("addLengthHeader:")]
-    	int AddLengthHeader (uint length);
+    //	// -(OBEXError)addLengthHeader:(uint32_t)length;
+    //	[Export ("addLengthHeader:")]
+    //	int AddLengthHeader (uint length);
 
-    	// -(OBEXError)addTime4ByteHeader:(uint32_t)time4Byte;
-    	[Export ("addTime4ByteHeader:")]
-    	int AddTime4ByteHeader (uint time4Byte);
+    //	// -(OBEXError)addTime4ByteHeader:(uint32_t)time4Byte;
+    //	[Export ("addTime4ByteHeader:")]
+    //	int AddTime4ByteHeader (uint time4Byte);
 
-    	// -(OBEXError)addCountHeader:(uint32_t)inCount;
-    	[Export ("addCountHeader:")]
-    	int AddCountHeader (uint inCount);
+    //	// -(OBEXError)addCountHeader:(uint32_t)inCount;
+    //	[Export ("addCountHeader:")]
+    //	int AddCountHeader (uint inCount);
 
-    	// -(OBEXError)addDescriptionHeader:(NSString *)inDescriptionString;
-    	[Export ("addDescriptionHeader:")]
-    	int AddDescriptionHeader (string inDescriptionString);
+    //	// -(OBEXError)addDescriptionHeader:(NSString *)inDescriptionString;
+    //	[Export ("addDescriptionHeader:")]
+    //	int AddDescriptionHeader (string inDescriptionString);
 
-    	// -(OBEXError)addNameHeader:(NSString *)inNameString;
-    	[Export ("addNameHeader:")]
-    	int AddNameHeader (string inNameString);
+    //	// -(OBEXError)addNameHeader:(NSString *)inNameString;
+    //	[Export ("addNameHeader:")]
+    //	int AddNameHeader (string inNameString);
 
-    	// -(OBEXError)addUserDefinedHeader:(const void *)inHeaderData length:(uint32_t)inHeaderDataLength;
-    	[Export ("addUserDefinedHeader:length:")]
-    	unsafe int AddUserDefinedHeader (IntPtr inHeaderData, uint inHeaderDataLength);
+    //	// -(OBEXError)addUserDefinedHeader:(const void *)inHeaderData length:(uint32_t)inHeaderDataLength;
+    //	[Export ("addUserDefinedHeader:length:")]
+    //	unsafe int AddUserDefinedHeader (IntPtr inHeaderData, uint inHeaderDataLength);
 
-    	// -(OBEXError)addImageHandleHeader:(NSString *)type;
-    	[Export ("addImageHandleHeader:")]
-    	int AddImageHandleHeader (string type);
+    //	// -(OBEXError)addImageHandleHeader:(NSString *)type;
+    //	[Export ("addImageHandleHeader:")]
+    //	int AddImageHandleHeader (string type);
 
-    	// -(OBEXError)addImageDescriptorHeader:(const void *)inHeaderData length:(uint32_t)inHeaderDataLength;
-    	[Export ("addImageDescriptorHeader:length:")]
-    	int AddImageDescriptorHeader (IntPtr inHeaderData, uint inHeaderDataLength);
-    }
+    //	// -(OBEXError)addImageDescriptorHeader:(const void *)inHeaderData length:(uint32_t)inHeaderDataLength;
+    //	[Export ("addImageDescriptorHeader:length:")]
+    //	int AddImageDescriptorHeader (IntPtr inHeaderData, uint inHeaderDataLength);
+    //}
 
     /*[Static]
     [Verify (ConstantsInterfaceAssociation)]

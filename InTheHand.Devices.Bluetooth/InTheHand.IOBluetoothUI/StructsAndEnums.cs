@@ -2,6 +2,7 @@ using System.Runtime.InteropServices;
 using CoreFoundation;
 using IOBluetooth;
 using ObjCRuntime;
+using Foundation;
 
 namespace IOBluetoothUI
 {
@@ -26,19 +27,16 @@ static class CFunctions
 	// extern IOReturn IOBluetoothValidateHardwareWithDescription (CFStringRef cancelButtonTitle, CFStringRef descriptionText) __attribute__((availability(macos, introduced=10.7)));
     [Introduced (PlatformName.MacOSX, 10, 7)]
 	[DllImport ("__Internal")]
-	[Verify (PlatformInvoke)]
-	static extern unsafe int IOBluetoothValidateHardwareWithDescription (CFStringRef* cancelButtonTitle, CFStringRef* descriptionText);
+	static extern int IOBluetoothValidateHardwareWithDescription (NSString cancelButtonTitle, NSString descriptionText);
 
 	
 	// extern IOBluetoothPairingControllerRef IOBluetoothGetPairingController ();
 	[DllImport ("__Internal")]
-	[Verify (PlatformInvoke)]
-	static extern unsafe IOBluetoothPairingControllerRef* IOBluetoothGetPairingController ();
+	static extern IOBluetoothPairingController IOBluetoothGetPairingController ();
 
 	// extern IOBluetoothDeviceSelectorControllerRef IOBluetoothGetDeviceSelectorController ();
 	[DllImport ("__Internal")]
-	[Verify (PlatformInvoke)]
-	static extern unsafe IOBluetoothDeviceSelectorControllerRef* IOBluetoothGetDeviceSelectorController ();
+	static extern IOBluetoothDeviceSelectorController IOBluetoothGetDeviceSelectorController ();
 
 	}
 

@@ -6,7 +6,7 @@
     <ProjectGuid>{4DED8B64-10C4-4AF7-AC96-4A255F6D1F58}</ProjectGuid>
     <ProjectTypeGuids>{810C163F-4746-4721-8B8E-88A3673A62EA};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
-    <RootNamespace>InTheHand.IOBluetoothUI</RootNamespace>
+    <RootNamespace>IOBluetoothUI</RootNamespace>
     <AssemblyName>InTheHand.IOBluetoothUI</AssemblyName>
     <MacResourcePrefix>Resources</MacResourcePrefix>
   </PropertyGroup>
@@ -26,6 +26,7 @@
     <DefineConstants></DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Release\InTheHand.IOBluetoothUI.xml</DocumentationFile>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
