@@ -93,7 +93,7 @@ namespace InTheHand.Net
                                 }
 
                                 if (headerString != string.Empty) {
-                                    headers.Add(header.ToString().ToUpper(), headerString);
+                                    headers.Add(header.ToString().ToUpper(), Uri.EscapeDataString(headerString));
                                 }
                             }
                         }
