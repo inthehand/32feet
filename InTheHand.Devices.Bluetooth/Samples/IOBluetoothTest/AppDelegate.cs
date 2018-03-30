@@ -17,6 +17,7 @@ namespace IOBluetoothTest
         public override void DidFinishLaunching(NSNotification notification)
         {
             // Insert code here to initialize your application
+            ObjCRuntime.Dlfcn.dlopen("/System.Library/Frameworks/CoreFoundation.framework/CoreFoundation", 0);
             ObjCRuntime.Dlfcn.dlopen("/System.Library/Frameworks/IOBluetooth.framework/IOBluetooth", 0);
             ObjCRuntime.Dlfcn.dlopen("/System.Library/Frameworks/IOBluetoothUI.framework/IOBluetoothUI", 0);
             var controller = new IOBluetooth.IOBluetoothHostController();
