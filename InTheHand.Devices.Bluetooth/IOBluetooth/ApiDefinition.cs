@@ -14,10 +14,16 @@ namespace IOBluetooth
     }
 
     // @interface IOBluetoothUserNotification : NSObject
+    /// <summary>
+    /// Represents a registered notification.
+    /// </summary>
     [BaseType(typeof(NSObject))]
     interface IOBluetoothUserNotification
     {
         // -(void)unregister;
+        /// <summary>
+        /// Called to unregister the target notification.
+        /// </summary>
         [Export("unregister")]
         void Unregister();
     }
@@ -43,6 +49,9 @@ namespace IOBluetooth
     //}
 
     // @interface IOBluetoothDevice : IOBluetoothObject <NSCoding, NSSecureCoding>
+    /// <summary>
+    /// An instance of IOBluetoothDevice represents a single remote Bluetooth device.
+    /// </summary>
     [BaseType(typeof(IOBluetoothObject))]
     interface IOBluetoothDevice : INSCoding, INSSecureCoding
     {
@@ -61,6 +70,11 @@ namespace IOBluetooth
         IOBluetoothDevice DeviceWithAddress(IntPtr address);
 
         // +(instancetype)deviceWithAddressString:(NSString *)address;
+        /// <summary>
+        /// Returns the IOBluetoothDevice object for the given BluetoothDeviceAddress.
+        /// </summary>
+        /// <returns>The with address string.</returns>
+        /// <param name="address">Address.</param>
         [Static]
         [Export("deviceWithAddressString:")]
         IOBluetoothDevice DeviceWithAddressString(string address);
@@ -78,6 +92,18 @@ namespace IOBluetooth
         int SendL2CAPEchoRequest(NSArray data, ushort length);
 
         // -(IOReturn)openRFCOMMChannelSync:(IOBluetoothRFCOMMChannel **)rfcommChannel withChannelID:(BluetoothRFCOMMChannelID)channelID delegate:(id)channelDelegate;
+        /// <summary>
+        /// Opens a new RFCOMM channel to the target device. Returns only once the channel is open or failed to open.
+        /// </summary>
+        /// <returns>Returns kIOReturnSuccess if the open process was successfully started (or if an existing RFCOMM channel was found). 
+        /// The channel must be released when the caller is done with it.</returns>
+        /// <param name="rfcommChannel">A pointer to an IOBluetoothRFCOMMChannel object to receive the RFCOMM channel requested to be opened. 
+        /// The rfcommChannel pointer will only be set if kIOReturnSuccess is returned.</param>
+        /// <param name="channelID">The RFCOMM channel ID for the new channel.</param>
+        /// <param name="channelDelegate">the object that will play the role of delegate for the channel. 
+        /// A channel delegate is the object the rfcomm uses as target for data and events. 
+        /// The developer will implement only the the methods he/she is interested in. 
+        /// A list of the possible methods is at the end of the file "IOBluetoothRFCOMMChannel.h" in the definition of the protocol IOBluetoothRFCOMMChannelDelegate.</param>
         [Export("openRFCOMMChannelSync:withChannelID:delegate:")]
         int OpenRFCOMMChannelSync(out IOBluetoothRFCOMMChannel rfcommChannel, byte channelID, NSObject channelDelegate);
 
@@ -86,30 +112,59 @@ namespace IOBluetooth
         int OpenRFCOMMChannelAsync(out IOBluetoothRFCOMMChannel rfcommChannel, byte channelID, NSObject channelDelegate);
 
         // @property (readonly) BluetoothClassOfDevice classOfDevice;
+        /// <summary>
+        /// Gets the full class of device value for the remote device.
+        /// </summary>
+        /// <value>The class of device.</value>
         [Export("classOfDevice")]
         uint ClassOfDevice { get; }
 
         // @property (readonly) BluetoothServiceClassMajor serviceClassMajor;
+        /// <summary>
+        /// Get the major service class of the device.
+        /// </summary>
+        /// <value>The service class major.</value>
         [Export("serviceClassMajor")]
-        uint ServiceClassMajor { get; }
+        BluetoothServiceClassMajor ServiceClassMajor { get; }
 
         // @property (readonly) BluetoothDeviceClassMajor deviceClassMajor;
+        /// <summary>
+        /// Get the major device class of the device.
+        /// </summary>
+        /// <value>The device class major.</value>
         [Export("deviceClassMajor")]
-        uint DeviceClassMajor { get; }
+        BluetoothDeviceClassMajor DeviceClassMajor { get; }
 
         // @property (readonly) BluetoothDeviceClassMinor deviceClassMinor;
+        /// <summary>
+        /// Get the minor service class of the device.
+        /// </summary>
+        /// <value>The device class minor.</value>
         [Export("deviceClassMinor")]
-        uint DeviceClassMinor { get; }
+        BluetoothDeviceClassMinor DeviceClassMinor { get; }
 
         // @property (readonly, copy) NSString * name;
+        /// <summary>
+        /// Get the human readable name of the remote device.
+        /// </summary>
+        /// <value>The name.</value>
         [Export("name")]
         string Name { get; }
 
         // @property (readonly) NSString * nameOrAddress;
+        /// <summary>
+        /// Get the human readable name of the remote device. 
+        /// If the name is not present, it will return a string containing the device's address.
+        /// </summary>
+        /// <value>The name or address.</value>
         [Export("nameOrAddress")]
         string NameOrAddress { get; }
 
         // @property (readonly, retain) NSDate * lastNameUpdate;
+        /// <summary>
+        /// Get the date/time of the last successful remote name request.
+        /// </summary>
+        /// <value>The last name update.</value>
         [Export("lastNameUpdate", ArgumentSemantic.Retain)]
         NSDate LastNameUpdate { get; }
 
@@ -118,6 +173,11 @@ namespace IOBluetooth
         IntPtr GetAddress();
 
         // @property (readonly) NSString * addressString;
+        /// <summary>
+        /// Get a string representation of the Bluetooth device address for the target device. 
+        /// The format of the string is the same as returned by IOBluetoothNSStringFromDeviceAddress().
+        /// </summary>
+        /// <value>The address string.</value>
         [Export("addressString")]
         string AddressString { get; }
 
@@ -152,6 +212,10 @@ namespace IOBluetooth
         sbyte RawRSSI { get; }
 
         // -(BOOL)isConnected;
+        /// <summary>
+        /// Indicates whether a baseband connection to the device exists.
+        /// </summary>
+        /// <value><c>true</c> if is connected; otherwise, <c>false</c>.</value>
         [Export("isConnected")]
         bool IsConnected { get; }
 
@@ -188,6 +252,10 @@ namespace IOBluetooth
         ushort ConnectionHandle { get; }
 
         // -(BOOL)isIncoming;
+        /// <summary>
+        /// Returns TRUE if the device connection was generated by the remote host.
+        /// </summary>
+        /// <value><c>true</c> if is incoming; otherwise, <c>false</c>.</value>
         [Export("isIncoming")]
         bool IsIncoming { get; }
 
@@ -213,6 +281,10 @@ namespace IOBluetooth
         IOBluetoothSDPServiceRecord[] Services { get; }
 
         // -(NSDate *)getLastServicesUpdate;
+        /// <summary>
+        /// Get the date/time of the last SDP query.
+        /// </summary>
+        /// <value>The last services update.</value>
         [Export("getLastServicesUpdate")]
         NSDate LastServicesUpdate { get; }
 
@@ -221,41 +293,78 @@ namespace IOBluetooth
         IOBluetoothSDPServiceRecord GetServiceRecordForUUID(IOBluetoothSDPUUID sdpUUID);
 
         // +(NSArray *)favoriteDevices;
+        /// <summary>
+        /// Gets an array of the user's favorite devices.
+        /// </summary>
+        /// <value>The favorite devices.</value>
         [Static]
         [Export("favoriteDevices")]
         IOBluetoothDevice[] FavoriteDevices { get; }
 
         // -(BOOL)isFavorite;
+        /// <summary>
+        /// Reports whether the target device is a favorite for the user.
+        /// </summary>
+        /// <value><c>true</c> if is favorite; otherwise, <c>false</c>.</value>
         [Export("isFavorite")]
         bool IsFavorite { get; }
 
         // -(IOReturn)addToFavorites;
+        /// <summary>
+        /// Adds the target device to the user's favorite devices list.
+        /// </summary>
+        /// <returns>The to favorites.</returns>
         [Export("addToFavorites")]
         int AddToFavorites();
 
         // -(IOReturn)removeFromFavorites;
+        /// <summary>
+        /// Removes the target device from the user's favorite devices list.
+        /// </summary>
+        /// <returns>The from favorites.</returns>
         [Export("removeFromFavorites")]
         int RemoveFromFavorites();
 
         // +(NSArray *)recentDevices:(unsigned long)numDevices;
+        /// <summary>
+        /// Gets an array of recently used Bluetooth devices.
+        /// </summary>
+        /// <returns>Returns an array of device objects recently used by the system. 
+        /// If no devices have been accessed, nil is returned.</returns>
+        /// <param name="numDevices">The number of devices to return.</param>
         [Static]
         [Export("recentDevices:")]
-        IOBluetoothDevice[] RecentDevices(nuint numDevices);
+        IOBluetoothDevice[] GetRecentDevices(nuint numDevices);
 
         // -(NSDate *)recentAccessDate;
         [Export("recentAccessDate")]
         NSDate RecentAccessDate { get; }
 
         // +(NSArray *)pairedDevices;
+        /// <summary>
+        /// Gets an array of all of the paired devices on the system.
+        /// </summary>
+        /// <value>The paired devices.</value>
         [Static]
         [Export("pairedDevices")]
         IOBluetoothDevice[] PairedDevices { get; }
 
         // -(BOOL)isPaired;
+        /// <summary>
+        /// Returns whether the target device is paired.
+        /// </summary>
+        /// <value><c>true</c> if is paired; otherwise, <c>false</c>.</value>
         [Export("isPaired")]
         bool IsPaired { get; }
 
         // -(IOReturn)setSupervisionTimeout:(UInt16)timeout;
+        /// <summary>
+        /// Sets the connection supervision timeout.
+        /// </summary>
+        /// <returns>Returns kIOReturnSuccess if it was possible to set the connection supervision timeout.</returns>
+        /// <param name="timeout">A client-supplied link supervision timeout value to use to monitor the connection. 
+        /// The timeout value should be specified in slots, so you can use the BluetoothGetSlotsFromSeconds macro to get the proper value. 
+        /// e.g. BluetoothGetSlotsFromSeconds( 5.0 ) will give yield the proper number of slots (8000) for 5 seconds.</param>
         [Export("setSupervisionTimeout:")]
         int SetSupervisionTimeout(ushort timeout);
 

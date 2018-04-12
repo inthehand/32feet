@@ -6,16 +6,19 @@ using Foundation;
 
 namespace IOBluetoothUI
 {
-
+    
 [Native]
 public enum IOBluetoothServiceBrowserControllerOptions : ulong
 {
 	None = 0,
+        //automatically start an inquiry when the panel is displayed. This has been deprecated in 10.5
+
 	AutoStartInquiry = (1 << 0),
 	DisconnectWhenDone = (1 << 1)
 }
 
-public enum IOBluetoothUI
+[Native]
+    public enum IOBluetoothUI : ulong
 {
 	Success = (-1000),
 	UserCanceledErr = (-1001)

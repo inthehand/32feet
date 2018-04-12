@@ -294,7 +294,8 @@ public enum BluetoothServiceClassMajor : ulong
 	End
 }
 
-public enum BluetoothDeviceClassMajor : uint
+[Native]
+public enum BluetoothDeviceClassMajor : ulong
 {
 	Miscellaneous = 0,
 	Computer = 1,
@@ -312,7 +313,8 @@ public enum BluetoothDeviceClassMajor : uint
 	End
 }
 
-public enum BluetoothDeviceClassMinor : uint
+[Native]
+public enum BluetoothDeviceClassMinor : ulong
 {
 	ComputerUnclassified = 0,
 	ComputerDesktopWorkstation = 1,
