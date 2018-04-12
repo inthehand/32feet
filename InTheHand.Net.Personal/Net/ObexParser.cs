@@ -81,6 +81,28 @@ namespace InTheHand.Net
                         pos += bodySize;
                         break;
 
+                    case ObexHeader.Type:
+                        int typeSize = IPAddress.NetworkToHostOrder(BitConverter.ToInt16(packet, pos + 1));
+                        if (typeSize > 3)
+                        {
+                            string typeString = System.Text.Encoding.ASCII.GetString(packet, pos + 3, typeSize - 4);
+                            if (typeString != null)
+                            {
+                                int nullindex = typeString.IndexOf('\0');
+                                if (nullindex > -1)
+                                {
+                                    typeString = typeString.Substring(0, nullindex);
+                                }
+
+                                if (typeString != string.Empty)
+                                {
+                                    headers.Add(header.ToString().ToUpper(), typeString);
+                                }
+                            }
+                        }
+                        pos += typeSize;
+                        break;
+
                     default:
                         int headerSize = IPAddress.NetworkToHostOrder(BitConverter.ToInt16(packet, pos + 1));
 
@@ -93,7 +115,7 @@ namespace InTheHand.Net
                                 }
 
                                 if (headerString != string.Empty) {
-                                    headers.Add(header.ToString().ToUpper(), headerString);
+                                    headers.Add(header.ToString().ToUpper(), Uri.EscapeDataString(headerString));
                                 }
                             }
                         }
