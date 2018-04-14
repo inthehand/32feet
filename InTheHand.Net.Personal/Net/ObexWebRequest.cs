@@ -831,9 +831,30 @@ namespace InTheHand.Net
                     if (len > 0) {
                         byte[] receivePacket2 = new byte[len];
                         StreamReadBlockMust(ns, receivePacket2, 0, len);
-                        if (len == 5 && ((ObexHeader)receivePacket2[0] == ObexHeader.ConnectionID)) {
-                            // ignore ConnectionId
-                        } else {
+                        bool validObexHeader = false;
+                        if ((ObexHeader)receivePacket2[0] == ObexHeader.ConnectionID) {
+                            if (len == 5) {
+                                // ignore ConnectionId
+                                validObexHeader = true;
+                            } else
+                            if (len >= 8 && ((ObexHeader)receivePacket2[5] == ObexHeader.EndOfBody)) {
+                                // End of Body Header
+                                short eobLen = (short)(IPAddress.NetworkToHostOrder(BitConverter.ToInt16(receivePacket2, 6)));
+                                Debug.Assert(len >= 3, "not got eobLen!");
+
+                                // ex. len = 8, eobLen = 3
+                                if (eobLen != (len - 5)) {
+                                    // receive packet length and End-of-Body length are mismatch
+                                    Debug.Fail("invalid packet length...");
+                                    // return false;
+                                }
+
+                                // ignore ConnectionId and EndOfBody
+                                validObexHeader = true;
+                            }
+                        }
+
+                        if (!validObexHeader) {
                             Debug.Fail("unused headers...");
                         }
                     }
