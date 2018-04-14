@@ -24,14 +24,32 @@ namespace IOBluetoothTest
             var cod = controller.ClassOfDevice.ToString("x8");
             var addr = controller.AddressAsString;
 
+            IOBluetooth.IOBluetoothRFCOMMChannel channel = null;
+
             foreach(IOBluetooth.IOBluetoothDevice dev in IOBluetooth.IOBluetoothDevice.PairedDevices)
             {
-                IntPtr paddr = dev.GetAddress();
-                byte[] daddr = new byte[16];
-                Marshal.Copy(paddr, daddr, 0, 16);
+                var addrstruct = Marshal.PtrToStructure(dev.GetAddress(), typeof(IOBluetooth.BluetoothDeviceAddress));
+
+
                 //System.Diagnostics.Debug.WriteLine(dev.Address.ToString("x6"));
                 System.Diagnostics.Debug.WriteLine(dev.AddressString);
                 System.Diagnostics.Debug.WriteLine(dev.NameOrAddress);
+
+                if(dev.ServiceClassMajor == IOBluetooth.BluetoothServiceClassMajor.Rendering)
+                {
+                    int res = dev.OpenRFCOMMChannelSync(out channel, 1, null);
+                    if(channel != null)
+                    {
+                        byte[] buffer = System.Text.Encoding.ASCII.GetBytes("hello world!\r\n");
+
+                        int len = buffer.Length;
+                        IntPtr buff = Marshal.AllocHGlobal(len);
+                        Marshal.StructureToPtr(buffer, buff, true);
+
+                        res = channel.WriteSync(buff, (ushort)len);
+                        channel.CloseChannel();
+                    }
+                }
             }
 
             var c = IOBluetoothUI.IOBluetoothDeviceSelectorController.DeviceSelector;
@@ -46,5 +64,11 @@ namespace IOBluetoothTest
         {
             // Insert code here to tear down your application
         }
+
+
+    }
+
+    public class Deleg : IOBluetooth.IOBluetoothRFCOMMChannelDelegate
+    {
     }
 }

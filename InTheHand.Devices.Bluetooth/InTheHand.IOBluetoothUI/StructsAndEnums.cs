@@ -17,8 +17,8 @@ public enum IOBluetoothServiceBrowserControllerOptions : ulong
 	DisconnectWhenDone = (1 << 1)
 }
 
-[Native]
-    public enum IOBluetoothUI : ulong
+
+    public enum IOBluetoothUI
 {
 	Success = (-1000),
 	UserCanceledErr = (-1001)

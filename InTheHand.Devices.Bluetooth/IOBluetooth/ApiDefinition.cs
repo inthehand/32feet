@@ -67,7 +67,7 @@ namespace IOBluetooth
         // +(instancetype)deviceWithAddress:(const BluetoothDeviceAddress *)address;
         [Static]
         [Export("deviceWithAddress:")]
-        IOBluetoothDevice DeviceWithAddress(IntPtr address);
+        IOBluetoothDevice DeviceWithAddress(ref BluetoothDeviceAddress address);
 
         // +(instancetype)deviceWithAddressString:(NSString *)address;
         /// <summary>

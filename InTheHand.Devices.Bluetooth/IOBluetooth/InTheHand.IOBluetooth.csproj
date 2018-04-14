@@ -11,7 +11,7 @@
     <AssemblyName>IOBluetooth</AssemblyName>
     <MacResourcePrefix>Resources</MacResourcePrefix>
     <PackageId>InTheHand.IOBluetooth</PackageId>
-    <PackageVersion>0.1.330</PackageVersion>
+    <PackageVersion>0.1.412</PackageVersion>
     <Authors>peterfoot</Authors>
     <Title>IOBluetooth</Title>
     <Description>IOBluetooth bindings for Xamarin Mac</Description>
@@ -20,7 +20,6 @@
     <PackageLicenseUrl>http://github.com/InTheHand/32feet/blob/master/LICENSE</PackageLicenseUrl>
     <Owners>peterfoot</Owners>
     <PackageProjectUrl>http://github.com/InTheHand/32feet</PackageProjectUrl>
-    <PackageReleaseNotes>Initial pre-release. Incomplete and API subject to change.</PackageReleaseNotes>
     <Summary>IOBluetooth bindings for Xamarin Mac</Summary>
     <PackageTags>Bluetooth macOS Xamarin.Mac</PackageTags>
   </PropertyGroup>

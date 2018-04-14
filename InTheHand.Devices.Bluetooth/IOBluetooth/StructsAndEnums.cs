@@ -675,18 +675,18 @@ public enum BluetoothHCIExtendedInquiryResponseDataTypes : uint
 	ManufacturerSpecificData = 255
 }
 
-public enum BluetoothHCIVersions : uint
+public enum BluetoothHCIVersion : uint
 {
-	kBluetoothHCIVersionCoreSpecification1_0b = 0,
-	kBluetoothHCIVersionCoreSpecification1_1 = 1,
-	kBluetoothHCIVersionCoreSpecification1_2 = 2,
-	kBluetoothHCIVersionCoreSpecification2_0EDR = 3,
-	kBluetoothHCIVersionCoreSpecification2_1EDR = 4,
-	kBluetoothHCIVersionCoreSpecification3_0HS = 5,
-	kBluetoothHCIVersionCoreSpecification4_0 = 6,
-	kBluetoothHCIVersionCoreSpecification4_1 = 7,
-	kBluetoothHCIVersionCoreSpecification4_2 = 8,
-	kBluetoothHCIVersionCoreSpecification5_0 = 9
+	CoreSpecification1_0b = 0,
+	CoreSpecification1_1 = 1,
+	CoreSpecification1_2 = 2,
+	CoreSpecification2_0EDR = 3,
+	CoreSpecification2_1EDR = 4,
+	CoreSpecification3_0HS = 5,
+	CoreSpecification4_0 = 6,
+	CoreSpecification4_1 = 7,
+	CoreSpecification4_2 = 8,
+	CoreSpecification5_0 = 9
 }
 
 public enum BluetoothLMPVersions : uint
@@ -703,6 +703,7 @@ public enum BluetoothLMPVersions : uint
 	kBluetoothLMPVersionCoreSpecification5_0 = 9
 }
 
+    //TODO: this should be a const
 public enum BluetoothConnectionHandle : uint
 {
 	None = 65535
@@ -827,28 +828,32 @@ public enum BluetoothHCIErroneousDataReporting : uint
 	ReservedEnd = 255
 }
 
-[StructLayout (LayoutKind.Sequential)]
+[StructLayout(LayoutKind.Sequential)]
 public struct BluetoothDeviceAddress
 {
-	public byte[] data;
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst =6)]
+        public byte[] data;
 }
 
 [StructLayout (LayoutKind.Sequential)]
 public struct BluetoothKey
 {
-	public byte[] data;
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst=16)]
+        public byte[] data;
 }
 
 [StructLayout (LayoutKind.Sequential)]
 public struct BluetoothIRK
 {
-	public byte[] data;
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst=16)]
+        public byte[] data;
 }
 
 [StructLayout (LayoutKind.Sequential)]
 public struct BluetoothPINCode
 {
-	public byte[] data;
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst=16)]
+        public byte[] data;
 }
 
 public static class BluetoothConstants
@@ -876,7 +881,8 @@ public static class BluetoothConstants
 [StructLayout (LayoutKind.Sequential)]
 public struct BluetoothSetEventMask
 {
-	public byte[] data;
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst=8)]
+        public byte[] data;
 }
 
 public enum BluetoothACLLogicalChannel : uint
@@ -1131,106 +1137,106 @@ public enum BluetoothL2CAPSupervisoryFuctionType : uint
 //	OctetsMax = 251
 //}
 
-public enum BluetoothLESecurityManagerKeyDistributionFormat : uint
-{
-	EncryptionKey = (1 << 0),
-	IDKey = (1 << 1),
-	SignKey = (1 << 2),
-	LinkKey = (1 << 3)
-}
+//public enum BluetoothLESecurityManagerKeyDistributionFormat : uint
+//{
+//	EncryptionKey = (1 << 0),
+//	IDKey = (1 << 1),
+//	SignKey = (1 << 2),
+//	LinkKey = (1 << 3)
+//}
 
-public enum BluetoothLESecurityManagerCommandCode : uint
-{
-	Reserved = 0,
-	PairingRequest = 1,
-	PairingResponse = 2,
-	PairingConfirm = 3,
-	PairingRandom = 4,
-	PairingFailed = 5,
-	EncryptionInfo = 6,
-	MasterIdentification = 7,
-	IdentityInfo = 8,
-	IdentityAddressInfo = 9,
-	SigningInfo = 10,
-	SecurityRequest = 11,
-	PairingPublicKey = 12,
-	PairingDHKeyCheck = 13,
-	PairingKeypressNotification = 14,
-	ReservedStart = 15,
-	ReservedEnd = 255
-}
+//public enum BluetoothLESecurityManagerCommandCode : uint
+//{
+//	Reserved = 0,
+//	PairingRequest = 1,
+//	PairingResponse = 2,
+//	PairingConfirm = 3,
+//	PairingRandom = 4,
+//	PairingFailed = 5,
+//	EncryptionInfo = 6,
+//	MasterIdentification = 7,
+//	IdentityInfo = 8,
+//	IdentityAddressInfo = 9,
+//	SigningInfo = 10,
+//	SecurityRequest = 11,
+//	PairingPublicKey = 12,
+//	PairingDHKeyCheck = 13,
+//	PairingKeypressNotification = 14,
+//	ReservedStart = 15,
+//	ReservedEnd = 255
+//}
 
-public enum BluetoothLESecurityManagerUserInputCapability : uint
-{
-	NoInput = 1,
-	YesNo = 2,
-	Keyboard = 3
-}
+//public enum BluetoothLESecurityManagerUserInputCapability : uint
+//{
+//	NoInput = 1,
+//	YesNo = 2,
+//	Keyboard = 3
+//}
 
-public enum BluetoothLESecurityManagerUserOutputCapability : uint
-{
-	oOutput = 1,
-	umericOutput = 2
-}
+//public enum BluetoothLESecurityManagerUserOutputCapability : uint
+//{
+//	oOutput = 1,
+//	umericOutput = 2
+//}
 
-public enum BluetoothLESecurityManagerIOCapability : uint
-{
-	DisplayOnly = 0,
-	DisplayYesNo = 1,
-	KeyboardOnly = 2,
-	NoInputNoOutput = 3,
-	KeyboardDisplay = 4,
-	ReservedStart = 5,
-	ReservedEnd = 255
-}
+//public enum BluetoothLESecurityManagerIOCapability : uint
+//{
+//	DisplayOnly = 0,
+//	DisplayYesNo = 1,
+//	KeyboardOnly = 2,
+//	NoInputNoOutput = 3,
+//	KeyboardDisplay = 4,
+//	ReservedStart = 5,
+//	ReservedEnd = 255
+//}
 
-public enum BluetoothLESecurityManagerOOBData : uint
-{
-	AuthenticationDataNotPresent = 0,
-	AuthenticationDataPresent = 1,
-	DataReservedStart = 2,
-	DataReservedEnd = 255
-}
+//public enum BluetoothLESecurityManagerOOBData : uint
+//{
+//	AuthenticationDataNotPresent = 0,
+//	AuthenticationDataPresent = 1,
+//	DataReservedStart = 2,
+//	DataReservedEnd = 255
+//}
 
-public enum BluetoothLESecurityManager : uint
-{
-	NoBonding = 0,
-	Bonding = 1,
-	ReservedStart = 2,
-	ReservedEnd = 3
-}
+//public enum BluetoothLESecurityManager : uint
+//{
+//	NoBonding = 0,
+//	Bonding = 1,
+//	ReservedStart = 2,
+//	ReservedEnd = 3
+//}
 
-public enum BluetoothLESecurityManagerPairingFailedReasonCode : uint
-{
-	Reserved = 0,
-	PasskeyEntryFailed = 1,
-	OOBNotAvailbale = 2,
-	AuthenticationRequirements = 3,
-	ConfirmValueFailed = 4,
-	PairingNotSupported = 5,
-	EncryptionKeySize = 6,
-	CommandNotSupported = 7,
-	UnspecifiedReason = 8,
-	RepeatedAttempts = 9,
-	InvalidParameters = 10,
-	DHKeyCheckFailed = 11,
-	NumericComparisonFailed = 12,
-	BREDRPairingInProgress = 13,
-	CrossTransportKeyDerivationGenerationNotAllowed = 14,
-	ReservedStart = 15,
-	ReservedEnd = 255
-}
+//public enum BluetoothLESecurityManagerPairingFailedReasonCode : uint
+//{
+//	Reserved = 0,
+//	PasskeyEntryFailed = 1,
+//	OOBNotAvailbale = 2,
+//	AuthenticationRequirements = 3,
+//	ConfirmValueFailed = 4,
+//	PairingNotSupported = 5,
+//	EncryptionKeySize = 6,
+//	CommandNotSupported = 7,
+//	UnspecifiedReason = 8,
+//	RepeatedAttempts = 9,
+//	InvalidParameters = 10,
+//	DHKeyCheckFailed = 11,
+//	NumericComparisonFailed = 12,
+//	BREDRPairingInProgress = 13,
+//	CrossTransportKeyDerivationGenerationNotAllowed = 14,
+//	ReservedStart = 15,
+//	ReservedEnd = 255
+//}
 
-public enum BluetoothLESecurityManagerKeypressNotificationType : uint
-{
-	PasskeyEntryStarted = 0,
-	PasskeyDigitEntered = 1,
-	PasskeyDigitErased = 2,
-	PasskeyCleared = 3,
-	PasskeyEntryCompleted = 4,
-	ReservedStart = 5,
-	ReservedEnd = 255
-}
+//public enum BluetoothLESecurityManagerKeypressNotificationType : uint
+//{
+//	PasskeyEntryStarted = 0,
+//	PasskeyDigitEntered = 1,
+//	PasskeyDigitErased = 2,
+//	PasskeyCleared = 3,
+//	PasskeyEntryCompleted = 4,
+//	ReservedStart = 5,
+//	ReservedEnd = 255
+//}
 
 public enum BluetoothAMPManagerCode : uint
 {
@@ -1572,7 +1578,8 @@ public enum BluetoothHCIConnectionModes : uint
 [StructLayout (LayoutKind.Sequential)]
 public struct BluetoothHCISupportedCommands
 {
-	public byte[] data;
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst=64)]
+        public byte[] data;
 }
 
 [StructLayout (LayoutKind.Sequential)]

@@ -13,14 +13,13 @@
     <PackOnBuild>true</PackOnBuild>
     <PackageId>InTheHand.IOBluetoothUI</PackageId>
     <Authors>peterfoot</Authors>
-    <PackageVersion>0.1.330</PackageVersion>
+    <PackageVersion>0.1.412</PackageVersion>
     <Owners>peterfoot</Owners>
     <PackageProjectUrl>https://github.com/inthehand/32feet</PackageProjectUrl>
     <Title>IOBluetoothUI</Title>
     <Description>IOBluetoothUI bindings for Xamarin Mac</Description>
     <PackageIconUrl>https://avatars3.githubusercontent.com/u/11249648</PackageIconUrl>
     <PackageLicenseUrl>https://github.com/InTheHand/32feet/blob/master/LICENSE</PackageLicenseUrl>
-    <PackageReleaseNotes>Initial pre-release</PackageReleaseNotes>
     <Summary>IOBluetoothUI bindings for Xamarin Mac</Summary>
     <PackageTags>Bluetooth macOS Xamarin.Mac</PackageTags>
   </PropertyGroup>
