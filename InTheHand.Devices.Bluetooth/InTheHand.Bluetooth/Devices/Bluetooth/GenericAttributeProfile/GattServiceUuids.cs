@@ -1,6 +1,6 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="GattServiceUuids.cs" company="In The Hand Ltd">
-//   Copyright (c) 2015-17 In The Hand Ltd, All rights reserved.
+//   Copyright (c) 2015-18 In The Hand Ltd, All rights reserved.
 //   This source code is licensed under the MIT License - see License.txt
 // </copyright>
 //-----------------------------------------------------------------------
@@ -12,13 +12,17 @@ namespace InTheHand.Devices.Bluetooth.GenericAttributeProfile
     /// <summary>
     /// Provides service UUIDs for common GATT services.
     /// </summary>
+    /// <remarks>To view a list of all Bluetooth SIG-defined service UUIDs, see <a href="https://www.bluetooth.com/specifications/gatt/services">Bluetooth SIG-defined Service UUIDs</a>.</remarks>
     public static class GattServiceUuids
     {
         /// <summary>
         /// Gets the Bluetooth SIG-defined AlertNotification Service UUID.
         /// </summary>
+        [BluetoothUti("org.bluetooth.service.alert_notification")]
         public static readonly Guid AlertNotification = new Guid(0x00001811, 0x0000, 0x1000, 0x80, 0x00, 0x00, 0x80, 0x5F, 0x9B, 0x34, 0xFB);
 
+
+        [BluetoothUti("org.bluetooth.service.automation_io")]
         public static readonly Guid AutomationIO = new Guid(0x00001815, 0x0000, 0x1000, 0x80, 0x00, 0x00, 0x80, 0x5F, 0x9B, 0x34, 0xFB);
 
         /// <summary>
@@ -57,11 +61,15 @@ namespace InTheHand.Devices.Bluetooth.GenericAttributeProfile
         /// </summary>
         public static readonly Guid DeviceInformation = new Guid(0x0000180A, 0x0000, 0x1000, 0x80, 0x00, 0x00, 0x80, 0x5F, 0x9B, 0x34, 0xFB);
 
+        /// <summary>
+        /// Gets the Bluetooth SIG-defined EnvironmentalSensing service UUID.
+        /// </summary>
         public static readonly Guid EnvironmentalSensing = new Guid(0x0000181A, 0x0000, 0x1000, 0x80, 0x00, 0x00, 0x80, 0x5F, 0x9B, 0x34, 0xFB);
 
         /// <summary>
         /// Gets the Bluetooth SIG-defined UUID for the Generic Access Service.
         /// </summary>
+        [BluetoothUti("org.bluetooth.service.generic_access")]
         public static readonly Guid GenericAccess = new Guid(0x00001800, 0x0000, 0x1000, 0x80, 0x00, 0x00, 0x80, 0x5F, 0x9B, 0x34, 0xFB);
 
         /// <summary>

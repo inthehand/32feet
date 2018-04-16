@@ -1,6 +1,6 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="GattCharacteristicUuids.cs" company="In The Hand Ltd">
-//   Copyright (c) 2015-17 In The Hand Ltd, All rights reserved.
+//   Copyright (c) 2015-18 In The Hand Ltd, All rights reserved.
 //   This source code is licensed under the MIT License - see License.txt
 // </copyright>
 //-----------------------------------------------------------------------
@@ -12,9 +12,13 @@ namespace InTheHand.Devices.Bluetooth.GenericAttributeProfile
     /// <summary>
     /// Provides characteristic UUIDs for common GATT characteristics.
     /// </summary>
-    /// <remarks>To view a list of all Bluetooth SIG-defined characteristic UUIDs, see <a href="http://go.microsoft.com/fwlink/p/?LinkId=391800">Bluetooth SIG-defined Characteristic UUIDs</a>.</remarks>
+    /// <remarks>To view a list of all Bluetooth SIG-defined characteristic UUIDs, see <a href="https://www.bluetooth.com/specifications/gatt/characteristics">Bluetooth SIG-defined Characteristic UUIDs</a>.</remarks>
     public static class GattCharacteristicUuids
     {
+        /// <summary>
+        /// Lower limit of the heart rate where the user enhances his endurance while exercising.
+        /// </summary>
+        [BluetoothUti("org.bluetooth.characteristic.aerobic_heart_rate_lower_limit")]
         public static readonly Guid AerobicHeartRateLowerLimit = new Guid(0x00002A7E, 0x0000, 0x1000, 0x80, 0x00, 0x00, 0x80, 0x5F, 0x9B, 0x34, 0xFB);
 
         public static readonly Guid AerobicHeartRateUpperLimit = new Guid(0x00002A84, 0x0000, 0x1000, 0x80, 0x00, 0x00, 0x80, 0x5F, 0x9B, 0x34, 0xFB);
