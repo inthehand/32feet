@@ -32,19 +32,17 @@ namespace InTheHand.Devices.Bluetooth
             });
         }
 
-        private CBCentralManager _manager;
-
+        private CentralManagerDelegate _delegate = new CentralManagerDelegate();
+        
         internal BluetoothAdapter()
         {
-            _manager = new CBCentralManager(new CentralManagerDelegate(), CoreFoundation.DispatchQueue.MainQueue);
+            Manager = new CBCentralManager(_delegate, null);
         }
 
         internal CBCentralManager Manager
         {
-            get
-            {
-                return _manager;
-            }
+            get;
+            private set;
         }
 
         internal event EventHandler<CBPeripheral> ConnectionStateChanged;

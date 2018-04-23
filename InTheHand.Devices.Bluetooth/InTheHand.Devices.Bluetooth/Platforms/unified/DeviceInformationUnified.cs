@@ -103,9 +103,11 @@ namespace InTheHand.Devices.Enumeration
                     {
                         BluetoothAdapter.Default.Manager.ScanForPeripherals(new CBUUID[] { });
                     }
-                    await Task.Delay(5000);
-                    BluetoothAdapter.Default.DiscoveredDevice -= Default_DiscoveredDevice;
-                    BluetoothAdapter.Default.Manager.StopScan();
+
+                    global::System.Diagnostics.Debug.WriteLine(BluetoothAdapter.Default.Manager.IsScanning);
+                    //await Task.Delay(5000);
+                    //BluetoothAdapter.Default.DiscoveredDevice -= Default_DiscoveredDevice;
+                    //BluetoothAdapter.Default.Manager.StopScan();
                 }
                 else
                 {

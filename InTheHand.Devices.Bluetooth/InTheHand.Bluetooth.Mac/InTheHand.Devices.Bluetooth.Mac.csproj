@@ -102,6 +102,9 @@
     <Compile Include="..\InTheHand.Bluetooth\Devices\Bluetooth\BluetoothServiceCapabilities.cs">
       <Link>Bluetooth\BluetoothServiceCapabilities.cs</Link>
     </Compile>
+    <Compile Include="..\InTheHand.Bluetooth\Devices\Bluetooth\BluetoothUtiAttribute.cs">
+      <Link>Bluetooth\BluetoothUtiAttribute.cs</Link>
+    </Compile>
     <Compile Include="..\InTheHand.Bluetooth\Devices\Bluetooth\BluetoothUuidHelper.cs">
       <Link>Bluetooth\BluetoothUuidHelper.cs</Link>
     </Compile>

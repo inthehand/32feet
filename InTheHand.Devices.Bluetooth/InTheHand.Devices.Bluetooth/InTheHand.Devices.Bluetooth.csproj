@@ -1,0 +1,86 @@
+﻿<Project Sdk="MSBuild.Sdk.Extras/1.2.2">
+
+  <PropertyGroup>
+    <TargetFrameworks>netstandard1.4;uap10.0;monoandroid80;xamarin.ios10</TargetFrameworks>
+    <Company>In The Hand Ltd</Company>
+    <Authors>Peter Foot</Authors>
+    <Product>32feet.NET</Product>
+    <Version>4.2018.4.23</Version>
+    <RepositoryUrl>https://github.com/inthehand/32feet</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/inthehand/32feet</PackageProjectUrl>
+    <PackageLicenseUrl>https://github.com/inthehand/32feet/blob/master/LICENSE</PackageLicenseUrl>
+    <Copyright>Copyright © 2004-2018 In The Hand Ltd</Copyright>
+    <Description>32feet.NET is a shared-source project to make personal area networking technologies such as Bluetooth, Infrared (IrDA) and more, easily accessible from .NET code.</Description>
+    <FileVersion>4.2018.4.23</FileVersion>
+    <AssemblyVersion>4.0.0.0</AssemblyVersion>
+    <AssemblyName>InTheHand.Devices.Bluetooth</AssemblyName>
+    <GenerateDocumentationFile Condition=" '$(Configuration)' == 'Release' ">true</GenerateDocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <OutputPath>C:\Users\peter\Source\Repos\32feet\InTheHand.Devices.Bluetooth\NuGet\lib\</OutputPath>
+    <DocumentationFile>C:\Users\Peter\Source\Repos\32feet\InTheHand.Devices.Bluetooth\NuGet\lib\InTheHand.Devices.Bluetooth.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'uap10.0' ">
+    <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.15063.0</TargetPlatformVersion>
+    <TargetPlatformMinVersion>10.0.14393.0</TargetPlatformMinVersion>
+  </PropertyGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'uap10.0' ">
+    <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform" Version="5.4.0" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'tizen30' ">
+    <PackageReference Include="Tizen.NET" Version="3.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Platforms\**\*.*" />
+    <None Include="Platforms\**\*.*" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard1.4' ">
+    <Compile Include="Platforms\netstandard\*.cs" />
+    <Compile Include="Platforms\bytes\*.cs" />  
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'uap10.0' ">
+    <Compile Include="Platforms\uap\*.cs" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'monoandroid80' ">
+    <Compile Include="Platforms\android\*.cs" />
+    <Compile Include="Platforms\bytes\*.cs" />  
+    <Compile Include="Platforms\netstandard\RfcommServiceId.portable.cs" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'xamarin.ios10' ">
+    <Compile Remove="Devices\Bluetooth\Rfcomm\*.*" />
+    <Compile Remove="Devices\Bluetooth\BluetoothDevice.cs" />
+    <Compile Include="Platforms\unified\*.cs" />
+    <Compile Include="Platforms\bytes\*.cs" />
+    <Compile Include="Platforms\ios\*.cs" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'xamarin.mac20' ">
+    <Compile Remove="Devices\Bluetooth\Rfcomm\*.*" />
+    <Compile Remove="Devices\Bluetooth\BluetoothDevice.cs" />
+    <Compile Include="Platforms\unified\*.cs" />
+    <Compile Include="Platforms\mac\*.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Devices\Enumeration\DeviceWatcher.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Devices\Enumeration\DeviceWatcher.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="InTheHand.Pontoon" Version="10.2018.3.19" />
+    <PackageReference Include="MSBuild.Sdk.Extras" Version="1.3.1" />
+  </ItemGroup>
+
+</Project>
