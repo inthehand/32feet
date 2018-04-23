@@ -12,6 +12,7 @@ using System.Net.Sockets;
 #if !UNITY
 using System.Threading.Tasks;
 #endif
+using InTheHand.Devices.Enumeration;
 
 namespace InTheHand.Devices.Bluetooth.Rfcomm
 {
@@ -34,6 +35,11 @@ namespace InTheHand.Devices.Bluetooth.Rfcomm
             return null;
         }
 #endif
+
+        public static RfcommDeviceService FromDeviceInformation(DeviceInformation device)
+        {
+            return new RfcommDeviceService(device);
+        }
         
         private static string GetDeviceSelectorImpl(RfcommServiceId serviceId)
         {
@@ -42,6 +48,12 @@ namespace InTheHand.Devices.Bluetooth.Rfcomm
 
         private BluetoothDevice _device;
         private RfcommServiceId _service;
+
+        internal RfcommDeviceService(DeviceInformation deviceInformation)
+        {
+            _device = new BluetoothDevice(deviceInformation._deviceInfo);
+            _service = RfcommServiceId.FromUuid(deviceInformation._service);
+        }
 
         internal RfcommDeviceService(BluetoothDevice device, RfcommServiceId service)
         {
