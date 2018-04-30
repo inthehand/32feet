@@ -1,0 +1,2630 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>InTheHand.Devices.Bluetooth</name>
+    </assembly>
+    <members>
+        <member name="T:InTheHand.Devices.Bluetooth.BluetoothAdapter">
+            <summary>
+            Represents a local Bluetooth adapter.
+            </summary>
+            <remarks>
+            <para/><list type="table">
+            <listheader><term>Platform</term><description>Version supported</description></listheader>
+            <item><term>Windows (Desktop Apps)</term><description>Windows 7 or later</description></item></list>
+            </remarks>
+        </member>
+        <member name="M:InTheHand.Devices.Bluetooth.BluetoothAdapter.GetDefaultAsync">
+            <summary>
+            Gets the default BluetoothAdapter.
+            </summary>
+            <returns>An asynchronous operation that completes with a BluetoothAdapter.</returns>
+        </member>
+        <member name="P:InTheHand.Devices.Bluetooth.BluetoothAdapter.BluetoothAddress">
+            <summary>
+            Gets the device address.
+            </summary>
+        </member>
+        <member name="P:InTheHand.Devices.Bluetooth.BluetoothAdapter.IsClassicSupported">
+            <summary>
+            Gets a boolean indicating if the adapter supports the Bluetooth Classic transport type.
+            </summary>
+            <remarks>Always returns false for iOS, macOS and tvOS.</remarks>
+        </member>
+        <member name="P:InTheHand.Devices.Bluetooth.BluetoothAdapter.IsLowEnergySupported">
+            <summary>
+            Gets a boolean indicating if the adapater supports Low Energy Bluetooth Transport type.
+            </summary>
+            <remarks>Always returns false for Windows Desktop.</remarks>
+        </member>
+        <member name="P:InTheHand.Devices.Bluetooth.BluetoothAdapter.Name">
+            <summary>
+            Gets the Name of the adapter.
+            </summary>
+            <value>The name of the adapter.</value>
+            <remarks>On most platforms this is not separately editable from the machine name.</remarks>
+        </member>
+        <member name="T:InTheHand.Devices.Bluetooth.BluetoothAddressType">
+            <summary>
+            Describes the Bluetooth address type.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.BluetoothAddressType.Public">
+            <summary>
+            Public address.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.BluetoothAddressType.Random">
+            <summary>
+            Random address.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.BluetoothAddressType.Unspecified">
+            <summary>
+            Unspecified type.
+            </summary>
+        </member>
+        <member name="T:InTheHand.Devices.Bluetooth.BluetoothCacheMode">
+            <summary>
+            Indicates whether certain Bluetooth API methods should operate on values cached in the system or retrieve those values from the Bluetooth device.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.BluetoothCacheMode.Cached">
+            <summary>
+            Use system-cached values.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.BluetoothCacheMode.Uncached">
+            <summary>
+            Retrieve values from the Bluetooth device.
+            </summary>
+        </member>
+        <member name="T:InTheHand.Devices.Bluetooth.BluetoothClassOfDevice">
+            <summary>
+            Provides functionality to determine the Bluetooth Class Of Device (Bluetooth COD) information for a device.
+            </summary>
+            <remarks>
+            <para/><list type="table">
+            <listheader><term>Platform</term><description>Version supported</description></listheader>
+            <item><term>Windows UWP</term><description>Windows 10</description></item>
+            <item><term>Windows Store</term><description>Windows 8.1 or later</description></item>
+            <item><term>Windows Phone Store</term><description>Windows Phone 8.1 or later</description></item>
+            <item><term>Windows Phone Silverlight</term><description>Windows Phone 8.1 or later</description></item>
+            <item><term>Windows (Desktop Apps)</term><description>Windows 7 or later</description></item></list>
+            </remarks>
+            <seealso cref="!:InTheHand.Net.Bluetooth.ClassOfDevice"/>
+        </member>
+        <member name="M:InTheHand.Devices.Bluetooth.BluetoothClassOfDevice.FromRawValue(System.UInt32)">
+            <summary>
+            Creates a BluetoothClassOfDevice object from a raw integer value representing the Major Class, Minor Class and Service Capabilities of the device.
+            </summary>
+            <param name="rawValue">The raw integer value from which to create the BluetoothClassOfDevice object.</param>
+            <returns>A BluetoothClassOfDevice object.</returns>
+        </member>
+        <member name="P:InTheHand.Devices.Bluetooth.BluetoothClassOfDevice.RawValue">
+            <summary>
+            Gets the Bluetooth Class Of Device information, represented as an integer value.
+            </summary>
+            <value>The Bluetooth Class Of Device information, represented as a raw integer value.</value>
+        </member>
+        <member name="P:InTheHand.Devices.Bluetooth.BluetoothClassOfDevice.MajorClass">
+            <summary>
+            Gets the Major Class code of the Bluetooth device.
+            </summary>
+            <value>One of the enumeration values that specifies the device's Major Class code.</value>
+        </member>
+        <member name="P:InTheHand.Devices.Bluetooth.BluetoothClassOfDevice.MinorClass">
+            <summary>
+            Gets the Minor Class code of the Bluetooth device.
+            </summary>
+            <value>One of the enumeration values that specifies the device's Minor Class code.</value>
+        </member>
+        <member name="P:InTheHand.Devices.Bluetooth.BluetoothClassOfDevice.ServiceCapabilities">
+            <summary>
+            Gets the service capabilities of the device.
+            </summary>
+        </member>
+        <member name="M:InTheHand.Devices.Bluetooth.BluetoothClassOfDevice.GetHashCode">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:InTheHand.Devices.Bluetooth.BluetoothClassOfDevice.Equals(System.Object)">
+            <summary>
+            
+            </summary>
+            <param name="obj"></param>
+            <returns></returns>
+        </member>
+        <member name="M:InTheHand.Devices.Bluetooth.BluetoothClassOfDevice.ToString">
+            <summary>
+            Returns the Major/Minor device class as a string.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:InTheHand.Devices.Bluetooth.BluetoothCompanyId">
+            <summary>
+            Company identifiers are unique numbers assigned by the Bluetooth SIG to member companies requesting one.
+            </summary>
+            <remarks>The full list is maintained on the <a href="https://www.bluetooth.com/specifications/assigned-numbers/company-identifiers">Bluetooth SIG website</a>.</remarks>
+        </member>
+        <member name="T:InTheHand.Devices.Bluetooth.BluetoothConnectionStatus">
+            <summary>
+            Indicates the connection status of the device.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.BluetoothConnectionStatus.Disconnected">
+            <summary>
+            The device is disconnected.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.BluetoothConnectionStatus.Connected">
+            <summary>
+            The device is connected.
+            </summary>
+        </member>
+        <member name="T:InTheHand.Devices.Bluetooth.BluetoothDevice">
+            <summary>
+            Represents a Bluetooth device.
+            </summary>
+            <remarks>
+            <para/><list type="table">
+            <listheader><term>Platform</term><description>Version supported</description></listheader>
+            <item><term>Android</term><description>Android 4.4 and later</description></item>
+            <item><term>Windows UWP</term><description>Windows 10</description></item>
+            <item><term>Windows Store</term><description>Windows 8.1 or later</description></item>
+            <item><term>Windows Phone Store</term><description>Windows Phone 8.1 or later</description></item>
+            <item><term>Windows Phone Silverlight</term><description>Windows Phone 8.1 or later</description></item>
+            <item><term>Windows (Desktop Apps)</term><description>Windows 7 or later</description></item></list>
+            </remarks>
+        </member>
+        <member name="M:InTheHand.Devices.Bluetooth.BluetoothDevice.FromBluetoothAddressAsync(System.UInt64)">
+            <summary>
+            Returns a <see cref="T:InTheHand.Devices.Bluetooth.BluetoothDevice"/> object for the given BluetoothAddress.
+            </summary>
+            <param name="address">The address of the Bluetooth device.</param>
+            <returns>After the asynchronous operation completes, returns the BluetoothDevice object with the given BluetoothAddress or null if the address does not resolve to a valid device.</returns>
+            <remarks>
+            <para/><list type="table">
+            <listheader><term>Platform</term><description>Version supported</description></listheader>
+            <item><term>Android</term><description>Android 4.4 and later</description></item>
+            <item><term>Windows UWP</term><description>Windows 10</description></item>
+            <item><term>Windows Phone Store</term><description>Windows Phone 8.1 or later</description></item>
+            <item><term>Windows Phone Silverlight</term><description>Windows Phone 8.1 or later</description></item>
+            <item><term>Windows (Desktop Apps)</term><description>Windows 7 or later</description></item></list>
+            </remarks>
+        </member>
+        <member name="M:InTheHand.Devices.Bluetooth.BluetoothDevice.FromIdAsync(System.String)">
+            <summary>
+            Returns a <see cref="T:InTheHand.Devices.Bluetooth.BluetoothDevice"/> object for the given Id.
+            </summary>
+            <param name="deviceId">The DeviceId value that identifies the <see cref="T:InTheHand.Devices.Bluetooth.BluetoothDevice"/> instance.</param>
+            <returns>After the asynchronous operation completes, returns the <see cref="T:InTheHand.Devices.Bluetooth.BluetoothDevice"/> object identified by the given DeviceId.</returns>
+        </member>
+        <member name="M:InTheHand.Devices.Bluetooth.BluetoothDevice.FromDeviceInformationAsync(InTheHand.Devices.Enumeration.DeviceInformation)">
+            <summary>
+            Returns a <see cref="T:InTheHand.Devices.Bluetooth.BluetoothDevice"/> object for the given DeviceInformation.
+            </summary>
+            <param name="deviceInformation">The <see cref="T:InTheHand.Devices.Enumeration.DeviceInformation"/> value that identifies the BluetoothDevice instance.</param>
+            <returns>After the asynchronous operation completes, returns the BluetoothDevice object identified by the given DeviceInformation.</returns>
+        </member>
+        <member name="M:InTheHand.Devices.Bluetooth.BluetoothDevice.GetDeviceSelector">
+            <summary>
+            Gets an Advanced Query Syntax (AQS) string for identifying all Bluetooth devices.
+            This string is passed to the <see cref="M:InTheHand.Devices.Enumeration.DeviceInformation.FindAllAsync(System.String)"/> or CreateWatcher method in order to get a list of Bluetooth devices.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:InTheHand.Devices.Bluetooth.BluetoothDevice.GetDeviceSelectorFromClassOfDevice(InTheHand.Devices.Bluetooth.BluetoothClassOfDevice)">
+            <summary>
+            Creates an Advanced Query Syntax (AQS) filter string from a BluetoothClassOfDevice object.
+            The AQS string is passed into the CreateWatcher method to return a collection of DeviceInformation objects.
+            </summary>
+            <param name="classOfDevice">The class of device used for constructing the AQS string.</param>
+            <returns>An AQS string that can be passed as a parameter to the CreateWatcher method.</returns>
+        </member>
+        <member name="M:InTheHand.Devices.Bluetooth.BluetoothDevice.GetDeviceSelectorFromPairingState(System.Boolean)">
+            <summary>
+            Creates an Advanced Query Syntax (AQS) filter string that contains a query for Bluetooth devices that are either paired or unpaired.
+            The AQS string is passed into the CreateWatcher method to return a collection of <see cref="T:InTheHand.Devices.Enumeration.DeviceInformation"/> objects.
+            </summary>
+            <param name="pairingState">The current pairing state for Bluetooth devices used for constructing the AQS string.
+            Bluetooth devices can be either paired (true) or unpaired (false).
+            The AQS Filter string will request scanning to be performed when the pairingState is false.</param>
+            <returns>An AQS string that can be passed as a parameter to the CreateWatcher method.</returns>
+        </member>
+        <member name="P:InTheHand.Devices.Bluetooth.BluetoothDevice.BluetoothAddress">
+            <summary>
+            Gets the device address.
+            </summary>
+        </member>
+        <member name="P:InTheHand.Devices.Bluetooth.BluetoothDevice.ClassOfDevice">
+            <summary>
+            Gets the Bluetooth Class Of Device information of the device.
+            </summary>
+        </member>
+        <member name="P:InTheHand.Devices.Bluetooth.BluetoothDevice.ConnectionStatus">
+            <summary>
+            Gets the connection status of the device.
+            </summary>
+        </member>
+        <member name="E:InTheHand.Devices.Bluetooth.BluetoothDevice.ConnectionStatusChanged">
+            <summary>
+            Occurs when the connection status for the device has changed.
+            </summary>
+        </member>
+        <member name="P:InTheHand.Devices.Bluetooth.BluetoothDevice.DeviceId">
+            <summary>
+            Gets the device Id.
+            </summary>
+            <value>The ID of the device.</value>
+        </member>
+        <member name="P:InTheHand.Devices.Bluetooth.BluetoothDevice.Name">
+            <summary>
+            Gets the Name of the device.
+            </summary>
+            <value>The name of the device.</value>
+        </member>
+        <member name="E:InTheHand.Devices.Bluetooth.BluetoothDevice.NameChanged">
+            <summary>
+            Occurs when the name of the device has changed.
+            </summary>
+        </member>
+        <member name="M:InTheHand.Devices.Bluetooth.BluetoothDevice.GetRfcommServicesAsync">
+            <summary>
+            Retrieves all Rfcomm Services on the remote Bluetooth Device.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:InTheHand.Devices.Bluetooth.BluetoothDevice.GetRfcommServicesAsync(InTheHand.Devices.Bluetooth.BluetoothCacheMode)">
+            <summary>
+            Retrieves all cached Rfcomm Services on the remote Bluetooth Device.
+            </summary>
+            <param name="cacheMode">The cache mode.</param>
+            <returns></returns>
+        </member>
+        <member name="M:InTheHand.Devices.Bluetooth.BluetoothDevice.ToString">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:InTheHand.Devices.Bluetooth.BluetoothError">
+            <summary>
+            Specifies common Bluetooth error cases.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.BluetoothError.Success">
+            <summary>
+            The operation was successfully completed or serviced.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.BluetoothError.RadioNotAvailable">
+            <summary>
+            The Bluetooth radio was not available.
+            This error occurs when the Bluetooth radio has been turned off.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.BluetoothError.ResourceInUse">
+            <summary>
+            The operation cannot be serviced because the necessary resources are currently in use.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.BluetoothError.DeviceNotConnected">
+            <summary>
+            The operation cannot be completed because the remote device is not connected.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.BluetoothError.OtherError">
+            <summary>
+            An unexpected error has occurred.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.BluetoothError.DisabledByPolicy">
+            <summary>
+            The operation is disabled by policy.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.BluetoothError.NotSupported">
+            <summary>
+            The operation is not supported on the current Bluetooth radio hardware.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.BluetoothError.DisabledByUser">
+            <summary>
+            The operation is disabled by the user.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.BluetoothError.ConsentRequired">
+            <summary>
+            The operation requires consent.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.BluetoothError.TransportNotSupported">
+            <summary>
+            Not supported.
+            </summary>
+        </member>
+        <member name="T:InTheHand.Devices.Bluetooth.BluetoothLEDevice">
+            <summary>
+            Represents a Bluetooth LE device.
+            </summary>
+            <remarks>
+            <para/><list type="table">
+            <listheader><term>Platform</term><description>Version supported</description></listheader>
+            <item><term>Android</term><description>Android 4.4 and later</description></item>
+            <item><term>iOS</term><description>iOS 9.0 and later</description></item>
+            <item><term>macOS</term><description>OS X 10.7 and later</description></item>
+            <item><term>tvOS</term><description>tvOS 9.0 and later</description></item>
+            <item><term>watchOS</term><description>watchOS 2.0 and later</description></item>
+            <item><term>Windows UWP</term><description>Windows 10</description></item>
+            <item><term>Windows Store</term><description>Windows 8.1 or later</description></item>
+            <item><term>Windows Phone Store</term><description>Windows Phone 8.1 or later</description></item>
+            <item><term>Windows Phone Silverlight</term><description>Windows Phone 8.1 or later</description></item></list>
+            </remarks>
+        </member>
+        <member name="M:InTheHand.Devices.Bluetooth.BluetoothLEDevice.FromBluetoothAddressAsync(System.UInt64)">
+            <summary>
+            Returns a BluetoothLEDevice object for the given BluetoothAddress.
+            </summary>
+            <param name="bluetoothAddress">The address of the Bluetooth LE device.</param>
+            <returns>After the asynchronous operation completes, returns the BluetoothLEDevice object with the given BluetoothAddress.</returns>
+        </member>
+        <member name="M:InTheHand.Devices.Bluetooth.BluetoothLEDevice.FromIdAsync(System.String)">
+            <summary>
+            Returns a <see cref="T:InTheHand.Devices.Bluetooth.BluetoothLEDevice"/> object for the given Id.
+            </summary>
+            <param name="deviceId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:InTheHand.Devices.Bluetooth.BluetoothLEDevice.FromDeviceInformationAsync(InTheHand.Devices.Enumeration.DeviceInformation)">
+            <summary>
+            Returns a <see cref="T:InTheHand.Devices.Bluetooth.BluetoothLEDevice"/> object for the given DeviceInformation.
+            </summary>
+            <param name="deviceInformation">The DeviceInformation value that identifies the <see cref="T:InTheHand.Devices.Bluetooth.BluetoothLEDevice"/> instance.</param>
+            <returns>After the asynchronous operation completes, returns the BluetoothDevice object identified by the given DeviceInformation.</returns>
+        </member>
+        <member name="M:InTheHand.Devices.Bluetooth.BluetoothLEDevice.GetDeviceSelector">
+            <summary>
+            Gets an Advanced Query Syntax (AQS) string for identifying all Bluetooth Low Energy (LE) devices.
+            This string is passed to the <see cref="M:InTheHand.Devices.Enumeration.DeviceInformation.FindAllAsync(System.String)"/> or CreateWatcher method in order to get a list of Bluetooth LE devices.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:InTheHand.Devices.Bluetooth.BluetoothLEDevice.GetDeviceSelectorFromConnectionStatus(InTheHand.Devices.Bluetooth.BluetoothConnectionStatus)">
+            <summary>
+            Creates a filter string that contains a query for Bluetooth LE devices with the indicated BluetoothConnectionStatus.
+            The string is passed into the CreateWatcher method to return a collection of DeviceInformation objects with the indicated Bluetooth connection status.
+            </summary>
+            <param name="connectionStatus">The connection status used for constructing the AQS string.</param>
+            <returns></returns>
+        </member>
+        <member name="E:InTheHand.Devices.Bluetooth.BluetoothLEDevice.NameChanged">
+            <summary>
+            Occurs when the name of the device has changed.
+            </summary>
+        </member>
+        <member name="P:InTheHand.Devices.Bluetooth.BluetoothLEDevice.BluetoothAddress">
+            <summary>
+            Gets the device address.
+            </summary>
+        </member>
+        <member name="P:InTheHand.Devices.Bluetooth.BluetoothLEDevice.BluetoothAddressType">
+            <summary>
+            Gets the address type for the Bluetooth LE device.
+            </summary>
+        </member>
+        <member name="P:InTheHand.Devices.Bluetooth.BluetoothLEDevice.ConnectionStatus">
+            <summary>
+            Gets the connection status of the device.
+            </summary>
+        </member>
+        <member name="E:InTheHand.Devices.Bluetooth.BluetoothLEDevice.ConnectionStatusChanged">
+            <summary>
+            Occurs when the connection status for the device has changed.
+            </summary>
+        </member>
+        <member name="P:InTheHand.Devices.Bluetooth.BluetoothLEDevice.DeviceId">
+            <summary>
+            Gets the device Id.
+            </summary>
+        </member>
+        <member name="P:InTheHand.Devices.Bluetooth.BluetoothLEDevice.GattServices">
+            <summary>
+            Gets the read-only list of GATT services supported by the device.
+            </summary>
+        </member>
+        <member name="T:InTheHand.Devices.Bluetooth.BluetoothMajorClass">
+            <summary>
+            Indicates the Major Class code of the device, which is the general family of device with which the device is associated.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.BluetoothMajorClass.Miscellaneous">
+            <summary>
+            Used when a more specific Major Class code is not suitable.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.BluetoothMajorClass.Computer">
+            <summary>
+            A computer. 
+            Example devices are desktop, notebook, PDA and organizer.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.BluetoothMajorClass.Phone">
+            <summary>
+            A phone. 
+            Example devices are cellular, cordless, pay phone and modem.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.BluetoothMajorClass.NetworkAccessPoint">
+            <summary>
+            A LAN or network Access Point.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.BluetoothMajorClass.AudioVideo">
+            <summary>
+            An audio or video device. 
+            Example devices are headset, speaker, stereo, video display and VCR.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.BluetoothMajorClass.Peripheral">
+            <summary>
+            A peripheral device. 
+            Examples are mouse, joystick and keyboard.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.BluetoothMajorClass.Imaging">
+            <summary>
+            An imaging device. 
+            Examples are printer, scanner, camera and display.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.BluetoothMajorClass.Wearable">
+            <summary>
+            A wearable device.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.BluetoothMajorClass.Toy">
+            <summary>
+            A toy.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.BluetoothMajorClass.Health">
+            <summary>
+            A health device. 
+            An example is a heart rate monitor.
+            </summary>
+        </member>
+        <member name="T:InTheHand.Devices.Bluetooth.BluetoothMinorClass">
+            <summary>
+            Indicates the Minor Class code of the device, which is the general family of device with which the device is associated.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.BluetoothMinorClass.Uncategorized">
+            <summary>
+            Use when a Minor Class code has not been assigned.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.BluetoothMinorClass.ComputerDesktop">
+            <summary>
+            A desktop computer.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.BluetoothMinorClass.ComputerServer">
+            <summary>
+            A server computer.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.BluetoothMinorClass.ComputerLaptop">
+            <summary>
+            A laptop computer.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.BluetoothMinorClass.ComputerHandheld">
+            <summary>
+            A handheld PC/PDA.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.BluetoothMinorClass.ComputerPalmSize">
+            <summary>
+            A palm-sized PC/PDA.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.BluetoothMinorClass.ComputerWearable">
+            <summary>
+            A wearable, watch-sized, computer.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.BluetoothMinorClass.ComputerTablet">
+            <summary>
+            A tablet computer.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.BluetoothMinorClass.PhoneCellular">
+            <summary>
+            A cell phone.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.BluetoothMinorClass.PhoneCordless">
+            <summary>
+            A cordless phone.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.BluetoothMinorClass.PhoneSmartPhone">
+            <summary>
+            A smartphone.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.BluetoothMinorClass.PhoneWired">
+            <summary>
+            A wired modem or voice gateway.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.BluetoothMinorClass.PhoneIsdn">
+            <summary>
+            Common ISDN access.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.BluetoothMinorClass.NetworkFullyAvailable">
+            <summary>
+            Fully available.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.BluetoothMinorClass.NetworkUsed01To17Percent">
+            <summary>
+            1% to 17% utilized.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.BluetoothMinorClass.NetworkUsed17To33Percent">
+            <summary>
+            17% to 33% utilized.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.BluetoothMinorClass.NetworkUsed33To50Percent">
+            <summary>
+            33% to 50% utilized.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.BluetoothMinorClass.NetworkUsed50To67Percent">
+            <summary>
+            50% to 67% utilized.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.BluetoothMinorClass.NetworkUsed67To83Percent">
+            <summary>
+            67% to 83% utilized.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.BluetoothMinorClass.NetworkUsed83To99Percent">
+            <summary>
+            83% to 99% utilized.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.BluetoothMinorClass.NetworkUsedNoServiceAvailable">
+            <summary>
+            Network service is not available.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.BluetoothMinorClass.AudioVideoWearableHeadset">
+            <summary>
+            A wearable headset device.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.BluetoothMinorClass.AudioVideoHandsFree">
+            <summary>
+            A hands-free device.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.BluetoothMinorClass.AudioVideoMicrophone">
+            <summary>
+            A microphone.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.BluetoothMinorClass.AudioVideoLoudspeaker">
+            <summary>
+            A loudspeaker.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.BluetoothMinorClass.AudioVideoHeadphones">
+            <summary>
+            Headphones.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.BluetoothMinorClass.AudioVideoPortableAudio">
+            <summary>
+            Portable audio device.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.BluetoothMinorClass.AudioVideoCarAudio">
+            <summary>
+            A car audio device.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.BluetoothMinorClass.AudioVideoSetTopBox">
+            <summary>
+            A set-top box.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.BluetoothMinorClass.AudioVideoHiFiAudioDevice">
+            <summary>
+            A HiFi audio device.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.BluetoothMinorClass.AudioVideoVcr">
+            <summary>
+            A VCR.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.BluetoothMinorClass.AudioVideoVideoCamera">
+            <summary>
+            A video camera.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.BluetoothMinorClass.AudioVideoCamcorder">
+            <summary>
+            A camcorder.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.BluetoothMinorClass.AudioVideoVideoMonitor">
+            <summary>
+            A video monitor.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.BluetoothMinorClass.AudioVideoVideoDisplayAndLoudspeaker">
+            <summary>
+            A video display and loudspeaker.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.BluetoothMinorClass.AudioVideoVideoConferencing">
+            <summary>
+            A video conferencing device.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.BluetoothMinorClass.AudioVideoGamingOrToy">
+            <summary>
+            A gaming console or toy.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.BluetoothMinorClass.PeripheralJoystick">
+            <summary>
+            A joystick.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.BluetoothMinorClass.PeripheralGamepad">
+            <summary>
+            A gamepad.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.BluetoothMinorClass.PeripheralRemoteControl">
+            <summary>
+            A remote control.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.BluetoothMinorClass.PeripheralSensing">
+            <summary>
+            A sensing device.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.BluetoothMinorClass.PeripheralDigitizerTablet">
+            <summary>
+            A digitizer tablet.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.BluetoothMinorClass.PeripheralCardReader">
+            <summary>
+            A card reader.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.BluetoothMinorClass.PeripheralDigitalPen">
+            <summary>
+            A digital pen.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.BluetoothMinorClass.PeripheralHandheldScanner">
+            <summary>
+            A handheld scanner for bar codes, RFID, etc.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.BluetoothMinorClass.PeripheralHandheldGesture">
+            <summary>
+            A handheld gesture input device, such as a "wand" form factor device.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.BluetoothMinorClass.ImagingDisplay">
+            <summary>
+            A display.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.BluetoothMinorClass.ImagingCamera">
+            <summary>
+            A camera.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.BluetoothMinorClass.ImagingScanner">
+            <summary>
+            A scanner.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.BluetoothMinorClass.ImagingPrinter">
+            <summary>
+            A printer;
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.BluetoothMinorClass.WearableWristwatch">
+            <summary>
+            A wristwatch.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.BluetoothMinorClass.WearablePager">
+            <summary>
+            A pager.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.BluetoothMinorClass.WearableJacket">
+            <summary>
+            A jacket.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.BluetoothMinorClass.WearableHelmet">
+            <summary>
+            A helmet.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.BluetoothMinorClass.WearableGlasses">
+            <summary>
+            Glasses.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.BluetoothMinorClass.ToyRobot">
+            <summary>
+            A robot.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.BluetoothMinorClass.ToyVehicle">
+            <summary>
+            A vehicle.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.BluetoothMinorClass.ToyDoll">
+            <summary>
+            A doll or action figure.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.BluetoothMinorClass.ToyController">
+            <summary>
+            A controller.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.BluetoothMinorClass.ToyGame">
+            <summary>
+            A game.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.BluetoothMinorClass.HealthBloodPressureMonitor">
+            <summary>
+            A blood pressure monitor.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.BluetoothMinorClass.HealthThermometer">
+            <summary>
+            A thermometer.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.BluetoothMinorClass.HealthWeighingScale">
+            <summary>
+            A weighing scale.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.BluetoothMinorClass.HealthGlucoseMeter">
+            <summary>
+            A glucose meter.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.BluetoothMinorClass.HealthPulseOximeter">
+            <summary>
+            A pulse oximeter.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.BluetoothMinorClass.HealthHeartRateMonitor">
+            <summary>
+            A heart rate or pulse monitor.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.BluetoothMinorClass.HealthHealthDataDisplay">
+            <summary>
+            A health data display.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.BluetoothMinorClass.HealthStepCounter">
+            <summary>
+            A step counter.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.BluetoothMinorClass.HealthBodyCompositionAnalyzer">
+            <summary>
+            A body composition analyzer.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.BluetoothMinorClass.HealthPeakFlowMonitor">
+            <summary>
+            A peak flow monitor.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.BluetoothMinorClass.HealthMedicationMonitor">
+            <summary>
+            A medication monitor.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.BluetoothMinorClass.HealthKneeProsthesis">
+            <summary>
+            A knee prosthesis.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.BluetoothMinorClass.HealthAnkleProsthesis">
+            <summary>
+            An ankle prosthesis.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.BluetoothMinorClass.HealthGenericHealthManager">
+            <summary>
+            A generic health manager.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.BluetoothMinorClass.HealthPersonalMobilityDevice">
+            <summary>
+            A personal mobility device.
+            </summary>
+        </member>
+        <member name="T:InTheHand.Devices.Bluetooth.BluetoothServiceCapabilities">
+            <summary>
+            Indicates the service capabilities of a device.
+            </summary>
+            <remarks>
+            <para>Defined in Bluetooth Specifications <see href="https://www.bluetooth.com/specifications/assigned-numbers/baseband"/>.</para>
+            </remarks>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.BluetoothServiceCapabilities.None">
+            <summary>
+            None.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.BluetoothServiceCapabilities.LimitedDiscoverableMode">
+            <summary>
+            Limited Discoverable Mode.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.BluetoothServiceCapabilities.PositioningService">
+            <summary>
+            Positioning or location identification.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.BluetoothServiceCapabilities.NetworkingService">
+            <summary>
+            Networking, for example, LAN, Ad hoc.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.BluetoothServiceCapabilities.RenderingService">
+            <summary>
+            Rendering, for example, printer, speakers.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.BluetoothServiceCapabilities.CapturingService">
+            <summary>
+            Capturing, for example, scanner, microphone.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.BluetoothServiceCapabilities.ObjectTransferService">
+            <summary>
+            Object Transfer, for example, v-Inbox, v-folder.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.BluetoothServiceCapabilities.AudioService">
+            <summary>
+            Audio, for example, speaker, microphone, headset service.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.BluetoothServiceCapabilities.TelephoneService">
+            <summary>
+            Telephony, for example cordless, modem, headset service.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.BluetoothServiceCapabilities.InformationService">
+            <summary>
+            Information, for example, web server, WAP server.
+            </summary>
+        </member>
+        <member name="T:InTheHand.Devices.Bluetooth.BluetoothUuidHelper">
+            <summary>
+            A helper class that provides methods to convert between bluetooth device UUID and short ID.
+            </summary>
+        </member>
+        <member name="M:InTheHand.Devices.Bluetooth.BluetoothUuidHelper.FromShortId(System.UInt32)">
+            <summary>
+            Returns the bluetooth device UUID from a short ID.
+            </summary>
+            <param name="shortId">The short ID.</param>
+            <returns>Returns the UUID.</returns>
+        </member>
+        <member name="M:InTheHand.Devices.Bluetooth.BluetoothUuidHelper.TryGetShortId(System.Guid)">
+            <summary>
+            Attempts to get the short bluetooth device ID from a UUID.
+            </summary>
+            <param name="uuid">The UUID.</param>
+            <returns>Returns the short ID.</returns>
+        </member>
+        <member name="T:InTheHand.Devices.Bluetooth.GenericAttributeProfile.GattCharacteristic">
+            <summary>
+            Represents a Characteristic of a GATT service.
+            </summary>
+            <remarks>
+            <para/><list type="table">
+            <listheader><term>Platform</term><description>Version supported</description></listheader>
+            <item><term>Android</term><description>Android 4.4 and later</description></item>
+            <item><term>iOS</term><description>iOS 9.0 and later</description></item>
+            <item><term>macOS</term><description>OS X 10.7 and later</description></item>
+            <item><term>tvOS</term><description>tvOS 9.0 and later</description></item>
+            <item><term>watchOS</term><description>watchOS 2.0 and later</description></item>
+            <item><term>Windows UWP</term><description>Windows 10</description></item>
+            <item><term>Windows Store</term><description>Windows 8.1 or later</description></item>
+            <item><term>Windows Phone Store</term><description>Windows Phone 8.1 or later</description></item>
+            <item><term>Windows Phone Silverlight</term><description>Windows Phone 8.1 or later</description></item></list>
+            </remarks>
+        </member>
+        <member name="M:InTheHand.Devices.Bluetooth.GenericAttributeProfile.GattCharacteristic.ReadValueAsync">
+            <summary>
+            Performs a Characteristic Value read from the value cache maintained by the system.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:InTheHand.Devices.Bluetooth.GenericAttributeProfile.GattCharacteristic.ReadValueAsync(InTheHand.Devices.Bluetooth.BluetoothCacheMode)">
+            <summary>
+            Performs a Characteristic Value read either from the value cache maintained by the system, or directly from the device.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:InTheHand.Devices.Bluetooth.GenericAttributeProfile.GattCharacteristic.WriteValueAsync(System.Byte[])">
+            <summary>
+            Performs a Characteristic Value write to a Bluetooth LE device.
+            </summary>
+            <param name="value">A byte array object which contains the data to be written to the Bluetooth LE device.</param>
+            <returns>The object that manages the asynchronous operation, which, upon completion, returns the status with which the operation completed.</returns>
+        </member>
+        <member name="M:InTheHand.Devices.Bluetooth.GenericAttributeProfile.GattCharacteristic.WriteValueAsync(System.Byte[],InTheHand.Devices.Bluetooth.GenericAttributeProfile.GattWriteOption)">
+            <summary>
+            Performs a Characteristic Value write to a Bluetooth LE device.
+            </summary>
+            <param name="value">A byte array object which contains the data to be written to the Bluetooth LE device.</param>
+            <param name="writeOption">Specifies what type of GATT write should be performed.</param>
+            <returns>The object that manages the asynchronous operation, which, upon completion, returns the status with which the operation completed.</returns>
+        </member>
+        <member name="P:InTheHand.Devices.Bluetooth.GenericAttributeProfile.GattCharacteristic.CharacteristicProperties">
+            <summary>
+            Gets the GATT characteristic properties, as defined by the GATT profile.
+            </summary>
+        </member>
+        <member name="P:InTheHand.Devices.Bluetooth.GenericAttributeProfile.GattCharacteristic.Service">
+            <summary>
+            Gets the <see cref="T:InTheHand.Devices.Bluetooth.GenericAttributeProfile.GattDeviceService"/> of which this characteristic is a member.
+            </summary>
+        </member>
+        <member name="P:InTheHand.Devices.Bluetooth.GenericAttributeProfile.GattCharacteristic.UserDescription">
+            <summary>
+            Get the user friendly description for this GattCharacteristic, if the User Description Descriptor is present, otherwise this will be an empty string.
+            </summary>
+        </member>
+        <member name="P:InTheHand.Devices.Bluetooth.GenericAttributeProfile.GattCharacteristic.Uuid">
+            <summary>
+            Gets the GATT Characteristic UUID for this GattCharacteristic.
+            </summary>
+        </member>
+        <member name="E:InTheHand.Devices.Bluetooth.GenericAttributeProfile.GattCharacteristic.ValueChanged">
+            <summary>
+            An App can register an event handler in order to receive events when notification or indications are received from a device, after setting the Client Characteristic Configuration Descriptor.
+            </summary>
+        </member>
+        <member name="T:InTheHand.Devices.Bluetooth.GenericAttributeProfile.GattCharacteristicProperties">
+            <summary>
+            Specifies the values for the GATT characteristic properties as well as the GATT Extended Characteristic Properties Descriptor.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.GenericAttributeProfile.GattCharacteristicProperties.None">
+            <summary>
+            The characteristic doesn’t have any properties that apply.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.GenericAttributeProfile.GattCharacteristicProperties.Broadcast">
+            <summary>
+            The characteristic supports broadcasting
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.GenericAttributeProfile.GattCharacteristicProperties.Read">
+            <summary>
+            The characteristic is readable
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.GenericAttributeProfile.GattCharacteristicProperties.WriteWithoutResponse">
+            <summary>
+            The characteristic supports Write Without Response
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.GenericAttributeProfile.GattCharacteristicProperties.Write">
+            <summary>
+            The characteristic is writable
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.GenericAttributeProfile.GattCharacteristicProperties.Notify">
+            <summary>
+            The characteristic is notifiable
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.GenericAttributeProfile.GattCharacteristicProperties.Indicate">
+            <summary>
+            The characteristic is indicatable
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.GenericAttributeProfile.GattCharacteristicProperties.AuthenticatedSignedWrites">
+            <summary>
+            The characteristic supports signed writes
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.GenericAttributeProfile.GattCharacteristicProperties.ExtendedProperties">
+            <summary>
+            The ExtendedProperties Descriptor is present
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.GenericAttributeProfile.GattCharacteristicProperties.ReliableWrites">
+            <summary>
+            The characteristic supports reliable writes
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.GenericAttributeProfile.GattCharacteristicProperties.WriteableAuxiliaries">
+            <summary>
+            The characteristic has writable auxiliaries
+            </summary>
+        </member>
+        <member name="T:InTheHand.Devices.Bluetooth.GenericAttributeProfile.GattCharacteristicUuids">
+            <summary>
+            Provides characteristic UUIDs for common GATT characteristics.
+            </summary>
+            <remarks>To view a list of all Bluetooth SIG-defined characteristic UUIDs, see <a href="http://go.microsoft.com/fwlink/p/?LinkId=391800">Bluetooth SIG-defined Characteristic UUIDs</a>.</remarks>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.GenericAttributeProfile.GattCharacteristicUuids.AlertCategoryId">
+            <summary>
+            Gets the Bluetooth SIG-defined AlertCategoryId characteristic UUID.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.GenericAttributeProfile.GattCharacteristicUuids.AlertCategoryIdBitMask">
+            <summary>
+            Gets the Bluetooth SIG-Defined AlertCategoryIdBitMask characteristic UUID
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.GenericAttributeProfile.GattCharacteristicUuids.AlertLevel">
+            <summary>
+            Gets the Bluetooth SIG-defined AlertLevel characteristic UUID.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.GenericAttributeProfile.GattCharacteristicUuids.AlertNotificationControlPoint">
+            <summary>
+            Gets the Bluetooth SIG-defined AlertNotificationControlPoint characteristic UUID.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.GenericAttributeProfile.GattCharacteristicUuids.AlertStatus">
+            <summary>
+            Gets the Bluetooth SIG-defined AlertStatus characteristic UUID.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.GenericAttributeProfile.GattCharacteristicUuids.BatteryLevel">
+            <summary>
+            Gets the Bluetooth SIG-defined Battery Level Characteristic UUID.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.GenericAttributeProfile.GattCharacteristicUuids.BloodPressureFeature">
+            <summary>
+            Gets the Bluetooth SIG-defined Blood Pressure Feature Characteristic UUID.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.GenericAttributeProfile.GattCharacteristicUuids.BloodPressureMeasurement">
+            <summary>
+            Gets the Bluetooth SIG-defined Blood Pressure Measurement Characteristic UUID.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.GenericAttributeProfile.GattCharacteristicUuids.BodySensorLocation">
+            <summary>
+            Gets the Bluetooth SIG-defined Body Sensor Location Characteristic UUID.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.GenericAttributeProfile.GattCharacteristicUuids.BootKeyboardInputReport">
+            <summary>
+            Gets the Bluetooth SIG-defined BootKeyboardInputReport characteristic UUID.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.GenericAttributeProfile.GattCharacteristicUuids.BootKeyboardOutputReport">
+            <summary>
+            Gets the Bluetooth SIG-defined BootKeyboardOutputReport characteristic UUID.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.GenericAttributeProfile.GattCharacteristicUuids.BootMouseInputReport">
+            <summary>
+            Gets the Bluetooth SIG-defined BootMouseInputReport characteristic UUID.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.GenericAttributeProfile.GattCharacteristicUuids.CscFeature">
+            <summary>
+            Gets the Bluetooth SIG-defined Csc Feature Characteristic UUID.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.GenericAttributeProfile.GattCharacteristicUuids.CscMeasurement">
+            <summary>
+            Gets the Bluetooth SIG-defined Csc Measurement Characteristic UUID.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.GenericAttributeProfile.GattCharacteristicUuids.CurrentTime">
+            <summary>
+            Gets the Bluetooth SIG-defined CurrentTime characteristic UUID.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.GenericAttributeProfile.GattCharacteristicUuids.CyclingPowerControlPoint">
+            <summary>
+            Gets the Bluetooth SIG-defined CyclingPowerControlPoint characteristic UUID.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.GenericAttributeProfile.GattCharacteristicUuids.CyclingPowerFeature">
+            <summary>
+            Gets the Bluetooth SIG-defined CyclingPowerFeature characteristic UUID.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.GenericAttributeProfile.GattCharacteristicUuids.CyclingPowerMeasurement">
+            <summary>
+            Gets the Bluetooth SIG-defined CyclingPowerMeasurement characteristic UUID.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.GenericAttributeProfile.GattCharacteristicUuids.CyclingPowerVector">
+            <summary>
+            Gets the Bluetooth SIG-defined CyclingPowerVector characteristic UUID.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.GenericAttributeProfile.GattCharacteristicUuids.DateOfBirth">
+            <summary>
+            Gets the Bluetooth SIG-defined DateTime characteristic UUID.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.GenericAttributeProfile.GattCharacteristicUuids.DayDateTime">
+            <summary>
+            Gets the Bluetooth SIG-defined DayDateTime characteristic UUID.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.GenericAttributeProfile.GattCharacteristicUuids.DayOfWeek">
+            <summary>
+            Gets the Bluetooth SIG-defined DayOfWeek characteristic UUID.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.GenericAttributeProfile.GattCharacteristicUuids.DstOffset">
+            <summary>
+            Gets the Bluetooth SIG-defined DstOffset characteristic UUID.
+            </summary>
+        </member>
+        <member name="T:InTheHand.Devices.Bluetooth.GenericAttributeProfile.GattCommunicationStatus">
+            <summary>
+            Represents the return status of a WinRT GATT API related Async operation.
+            Indicates the status of the asynchronous operation.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.GenericAttributeProfile.GattCommunicationStatus.Success">
+            <summary>
+            The operation completed successfully.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.GenericAttributeProfile.GattCommunicationStatus.Unreachable">
+            <summary>
+            No communication can be performed with the device, at this time.
+            </summary>
+        </member>
+        <member name="T:InTheHand.Devices.Bluetooth.GenericAttributeProfile.GattDescriptor">
+            <summary>
+            Represents a Descriptor of a GATT Characteristic.
+            </summary>
+            <remarks>
+            <para/><list type="table">
+            <listheader><term>Platform</term><description>Version supported</description></listheader>
+            <item><term>Android</term><description>Android 4.4 and later</description></item>
+            <item><term>iOS</term><description>iOS 9.0 and later</description></item>
+            <item><term>macOS</term><description>OS X 10.7 and later</description></item>
+            <item><term>tvOS</term><description>tvOS 9.0 and later</description></item>
+            <item><term>watchOS</term><description>watchOS 2.0 and later</description></item>
+            <item><term>Windows UWP</term><description>Windows 10</description></item>
+            <item><term>Windows Store</term><description>Windows 8.1 or later</description></item>
+            <item><term>Windows Phone Store</term><description>Windows Phone 8.1 or later</description></item>
+            <item><term>Windows Phone Silverlight</term><description>Windows Phone 8.1 or later</description></item></list>
+            </remarks>
+        </member>
+        <member name="M:InTheHand.Devices.Bluetooth.GenericAttributeProfile.GattDescriptor.ReadValueAsync">
+            <summary>
+            Performs a Descriptor Value read from a value cache maintained by the system.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:InTheHand.Devices.Bluetooth.GenericAttributeProfile.GattDescriptor.ReadValueAsync(InTheHand.Devices.Bluetooth.BluetoothCacheMode)">
+            <summary>
+            Performs a Descriptor Value read either from the value cache maintained by the system, or directly from the device.
+            </summary>
+            <param name="cacheMode">Specifies whether to read the value directly from the device or from a value cache maintained by the system.</param>
+            <returns></returns>
+        </member>
+        <member name="P:InTheHand.Devices.Bluetooth.GenericAttributeProfile.GattDescriptor.Uuid">
+            <summary>
+            Gets the GATT Descriptor UUID for this GattDescriptor.
+            </summary>
+        </member>
+        <member name="T:InTheHand.Devices.Bluetooth.GenericAttributeProfile.GattDescriptorsResult">
+            <summary>
+            The result of descriptor operations like <see cref="M:InTheHand.Devices.Bluetooth.GenericAttributeProfile.GattCharacteristic.GetDescriptorsAsync"/>.
+            </summary>
+            <remarks>
+            <para/><list type="table">
+            <listheader><term>Platform</term><description>Version supported</description></listheader>
+            <item><term>Android</term><description>Android 4.4 and later</description></item>
+            <item><term>iOS</term><description>iOS 9.0 and later</description></item>
+            <item><term>macOS</term><description>OS X 10.7 and later</description></item>
+            <item><term>tvOS</term><description>tvOS 9.0 and later</description></item>
+            <item><term>watchOS</term><description>watchOS 2.0 and later</description></item>
+            <item><term>Windows UWP</term><description>Windows 10</description></item>
+            <item><term>Windows Store</term><description>Windows 8.1 or later</description></item>
+            <item><term>Windows Phone Store</term><description>Windows Phone 8.1 or later</description></item>
+            <item><term>Windows Phone Silverlight</term><description>Windows Phone 8.1 or later</description></item></list>
+            </remarks>
+        </member>
+        <member name="P:InTheHand.Devices.Bluetooth.GenericAttributeProfile.GattDescriptorsResult.Descriptors">
+            <summary>
+            Gets a vector of the GATT descriptors.
+            </summary>
+        </member>
+        <member name="P:InTheHand.Devices.Bluetooth.GenericAttributeProfile.GattDescriptorsResult.Status">
+            <summary>
+            Gets the status of the operation.
+            </summary>
+        </member>
+        <member name="T:InTheHand.Devices.Bluetooth.GenericAttributeProfile.GattDescriptorUuids">
+            <summary>
+            Represents an enumeration of the most well known Descriptor UUID values.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.GenericAttributeProfile.GattDescriptorUuids.CharacteristicAggregateFormat">
+            <summary>
+            Gets the Bluetooth SIG-defined Characteristic Aggregate Format Descriptor UUID.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.GenericAttributeProfile.GattDescriptorUuids.CharacteristicExtendedProperties">
+            <summary>
+            Gets the Bluetooth SIG-defined Characteristic Extended Properties Descriptor UUID.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.GenericAttributeProfile.GattDescriptorUuids.CharacteristicPresentationFormat">
+            <summary>
+            Gets the Bluetooth SIG-defined Characteristic Presentation Format Descriptor UUID.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.GenericAttributeProfile.GattDescriptorUuids.CharacteristicUserDescription">
+            <summary>
+            Gets the Bluetooth SIG-defined Characteristic User Description Descriptor UUID.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.GenericAttributeProfile.GattDescriptorUuids.ClientCharacteristicConfiguration">
+            <summary>
+            Gets the Bluetooth SIG-defined Client Characteristic Configuration Descriptor UUID.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.GenericAttributeProfile.GattDescriptorUuids.EnvironmentalSensingConfiguration">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.GenericAttributeProfile.GattDescriptorUuids.ServerCharacteristicConfiguration">
+            <summary>
+            Gets the Bluetooth SIG-defined Server Characteristic Configuration Descriptor UUID.
+            </summary>
+        </member>
+        <member name="T:InTheHand.Devices.Bluetooth.GenericAttributeProfile.GattDeviceService">
+             <summary>
+            
+             </summary>
+             <remarks>
+             <para/><list type="table">
+             <listheader><term>Platform</term><description>Version supported</description></listheader>
+             <item><term>iOS</term><description>iOS 9.0 and later</description></item>
+             <item><term>macOS</term><description>OS X 10.7 and later</description></item>
+             <item><term>tvOS</term><description>tvOS 9.0 and later</description></item>
+             <item><term>watchOS</term><description>watchOS 2.0 and later</description></item>
+             <item><term>Windows UWP</term><description>Windows 10</description></item>
+             <item><term>Windows Store</term><description>Windows 8.1 or later</description></item>
+             <item><term>Windows Phone Store</term><description>Windows Phone 8.1 or later</description></item>
+             <item><term>Windows Phone Silverlight</term><description>Windows Phone 8.1 or later</description></item></list>
+             </remarks>
+        </member>
+        <member name="M:InTheHand.Devices.Bluetooth.GenericAttributeProfile.GattDeviceService.GetDeviceSelectorFromShortId(System.UInt16)">
+            <summary>
+            Creates a suitable AQS Filter string for use with the CreateWatcher method, from a 16-bit Bluetooth GATT Service UUID.
+            </summary>
+            <param name="serviceShortId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:InTheHand.Devices.Bluetooth.GenericAttributeProfile.GattDeviceService.GetDeviceSelectorFromUuid(System.Guid)">
+            <summary>
+            Creates a suitable AQS Filter string for use with the CreateWatcher method, from a Bluetooth service UUID.
+            </summary>
+            <param name="serviceUuid"></param>
+            <returns></returns>
+        </member>
+        <member name="M:InTheHand.Devices.Bluetooth.GenericAttributeProfile.GattDeviceService.GetAllCharacteristics">
+            <summary>
+            Gets the collection of all characteristics belonging to this GattDeviceService instance.
+            </summary>
+            <returns>The collection of all characteristics belonging to this GattDeviceService instance.</returns>
+        </member>
+        <member name="M:InTheHand.Devices.Bluetooth.GenericAttributeProfile.GattDeviceService.GetCharacteristics(System.Guid)">
+            <summary>
+            Returns a vector of characteristics, that are identified by the specified UUID and belong to this GattDeviceService instance.
+            </summary>
+            <param name="characteristicUuid">The UUID for the characteristics to be retrieved.</param>
+            <returns>A collection of GattCharacteristic objects whose UUIDs match characteristicUuid.</returns>
+        </member>
+        <member name="P:InTheHand.Devices.Bluetooth.GenericAttributeProfile.GattDeviceService.Device">
+            <summary>
+            Gets the <see cref="T:InTheHand.Devices.Bluetooth.BluetoothLEDevice"/> object describing the device associated with the current <see cref="T:InTheHand.Devices.Bluetooth.GenericAttributeProfile.GattDeviceService"/> object.
+            </summary>
+        </member>
+        <member name="P:InTheHand.Devices.Bluetooth.GenericAttributeProfile.GattDeviceService.Uuid">
+            <summary>
+            The GATT Service UUID associated with this GattDeviceService.
+            </summary>
+        </member>
+        <member name="T:InTheHand.Devices.Bluetooth.GenericAttributeProfile.GattPresentationFormatTypes">
+            <summary>
+            Represents the different well-known values that the GattPresentationFormat.FormatType property can take.
+            </summary>
+        </member>
+        <member name="T:InTheHand.Devices.Bluetooth.GenericAttributeProfile.GattReadResult">
+            <summary>
+            Represents the result of an asynchronous read operation of a GATT Characteristic or Descriptor value.
+            </summary>
+            <remarks>
+            <para/><list type="table">
+            <listheader><term>Platform</term><description>Version supported</description></listheader>
+            <item><term>iOS</term><description>iOS 9.0 and later</description></item>
+            <item><term>macOS</term><description>OS X 10.7 and later</description></item>
+            <item><term>tvOS</term><description>tvOS 9.0 and later</description></item>
+            <item><term>watchOS</term><description>watchOS 2.0 and later</description></item>
+            <item><term>Windows UWP</term><description>Windows 10</description></item>
+            <item><term>Windows Store</term><description>Windows 8.1 or later</description></item>
+            <item><term>Windows Phone Store</term><description>Windows Phone 8.1 or later</description></item>
+            <item><term>Windows Phone Silverlight</term><description>Windows Phone 8.1 or later</description></item></list>
+            </remarks>
+            <summary>
+            Represents the result of an asynchronous read operation of a GATT Characteristic or Descriptor value.
+            </summary>
+            <remarks>
+            <para/><list type="table">
+            <listheader><term>Platform</term><description>Version supported</description></listheader>
+            <item><term>iOS</term><description>iOS 9.0 and later</description></item>
+            <item><term>macOS</term><description>OS X 10.7 and later</description></item>
+            <item><term>tvOS</term><description>tvOS 9.0 and later</description></item>
+            <item><term>watchOS</term><description>watchOS 2.0 and later</description></item>
+            <item><term>Windows UWP</term><description>Windows 10</description></item>
+            <item><term>Windows Store</term><description>Windows 8.1 or later</description></item>
+            <item><term>Windows Phone Store</term><description>Windows Phone 8.1 or later</description></item>
+            <item><term>Windows Phone Silverlight</term><description>Windows Phone 8.1 or later</description></item></list>
+            </remarks>
+        </member>
+        <member name="P:InTheHand.Devices.Bluetooth.GenericAttributeProfile.GattReadResult.Status">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:InTheHand.Devices.Bluetooth.GenericAttributeProfile.GattReadResult.Value">
+            <summary>
+            Gets the GATT Descriptor UUID for this GattDescriptor.
+            </summary>
+        </member>
+        <member name="T:InTheHand.Devices.Bluetooth.GenericAttributeProfile.GattServiceUuids">
+            <summary>
+            Provides service UUIDs for common GATT services.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.GenericAttributeProfile.GattServiceUuids.AlertNotification">
+            <summary>
+            Gets the Bluetooth SIG-defined AlertNotification Service UUID.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.GenericAttributeProfile.GattServiceUuids.Battery">
+            <summary>
+            Gets the Bluetooth SIG-defined Battery Service UUID.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.GenericAttributeProfile.GattServiceUuids.BloodPressure">
+            <summary>
+            Gets the Bluetooth SIG-defined Blood Pressure Service UUID.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.GenericAttributeProfile.GattServiceUuids.CurrentTime">
+            <summary>
+            Gets the Bluetooth SIG-defined CurrentTime service UUID.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.GenericAttributeProfile.GattServiceUuids.CyclingPower">
+            <summary>
+            Gets the Bluetooth SIG-defined CyclingPower service UUID.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.GenericAttributeProfile.GattServiceUuids.CyclingSpeedAndCadence">
+            <summary>
+            Gets the Bluetooth SIG-defined Cycling Speed And Cadence Service UUID.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.GenericAttributeProfile.GattServiceUuids.DeviceInformation">
+            <summary>
+            Gets the Bluetooth SIG-defined DeviceInformation service UUID.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.GenericAttributeProfile.GattServiceUuids.GenericAccess">
+            <summary>
+            Gets the Bluetooth SIG-defined UUID for the Generic Access Service.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.GenericAttributeProfile.GattServiceUuids.GenericAttribute">
+            <summary>
+            Gets the Bluetooth SIG-defined UUID for the Generic Attribute Service.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.GenericAttributeProfile.GattServiceUuids.Glucose">
+            <summary>
+            Gets the Bluetooth SIG-defined Glucose Service UUID.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.GenericAttributeProfile.GattServiceUuids.HealthThermometer">
+            <summary>
+            Gets the Bluetooth SIG-defined Health Thermometer Service UUID.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.GenericAttributeProfile.GattServiceUuids.HeartRate">
+            <summary>
+            Gets the Bluetooth SIG-defined Heart Rate Service UUID.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.GenericAttributeProfile.GattServiceUuids.HumanInterfaceDevice">
+            <summary>
+            Gets the Bluetooth SIG-defined HumanInterfaceDevice service UUID.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.GenericAttributeProfile.GattServiceUuids.ImmediateAlert">
+            <summary>
+            Gets the Bluetooth SIG-defined ImmediateAlert service UUID.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.GenericAttributeProfile.GattServiceUuids.LinkLoss">
+            <summary>
+            Gets the Bluetooth SIG-defined LinkLoss service UUID.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.GenericAttributeProfile.GattServiceUuids.LocationAndNavigation">
+            <summary>
+            Gets the Bluetooth SIG-defined LocationAndNavigation service UUID.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.GenericAttributeProfile.GattServiceUuids.NextDstChange">
+            <summary>
+            Gets the Bluetooth SIG-defined NextDstChange service UUID.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.GenericAttributeProfile.GattServiceUuids.PhoneAlertStatus">
+            <summary>
+            Gets the Bluetooth SIG-defined PhoneAlertStatus service UUID.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.GenericAttributeProfile.GattServiceUuids.ReferenceTimeUpdate">
+            <summary>
+            Gets the Bluetooth SIG-defined ReferenceTimeUpdate service UUID.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.GenericAttributeProfile.GattServiceUuids.RunningSpeedAndCadence">
+            <summary>
+            Gets the Bluetooth SIG-defined Running Speed And Cadence Service UUID.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.GenericAttributeProfile.GattServiceUuids.ScanParameters">
+            <summary>
+            Gets the Bluetooth SIG-defined ScanParameters service UUID.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.GenericAttributeProfile.GattServiceUuids.TxPower">
+            <summary>
+            Gets the Bluetooth SIG-defined TxPower service UUID.
+            </summary>
+        </member>
+        <member name="T:InTheHand.Devices.Bluetooth.GenericAttributeProfile.GattValueChangedEventArgs">
+            <summary>
+            Represents the result of an asynchronous read operation of a GATT Characteristic or Descriptor value.
+            </summary>
+            <remarks>
+            <para/><list type="table">
+            <listheader><term>Platform</term><description>Version supported</description></listheader>
+            <item><term>iOS</term><description>iOS 9.0 and later</description></item>
+            <item><term>macOS</term><description>OS X 10.7 and later</description></item>
+            <item><term>tvOS</term><description>tvOS 9.0 and later</description></item>
+            <item><term>watchOS</term><description>watchOS 2.0 and later</description></item>
+            <item><term>Windows UWP</term><description>Windows 10</description></item>
+            <item><term>Windows Store</term><description>Windows 8.1 or later</description></item>
+            <item><term>Windows Phone Store</term><description>Windows Phone 8.1 or later</description></item>
+            <item><term>Windows Phone Silverlight</term><description>Windows Phone 8.1 or later</description></item></list>
+            </remarks>
+        </member>
+        <member name="P:InTheHand.Devices.Bluetooth.GenericAttributeProfile.GattValueChangedEventArgs.CharacteristicValue">
+            <summary>
+            Gets the new Characteristic Value.
+            </summary>
+        </member>
+        <member name="P:InTheHand.Devices.Bluetooth.GenericAttributeProfile.GattValueChangedEventArgs.Timestamp">
+            <summary>
+            Gets the time at which the system was notified of the Characteristic Value change.
+            </summary>
+        </member>
+        <member name="T:InTheHand.Devices.Bluetooth.GenericAttributeProfile.GattWriteOption">
+            <summary>
+            Indicates what type of write operation is to be performed.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.GenericAttributeProfile.GattWriteOption.WriteWithResponse">
+            <summary>
+            The default GATT write procedure shall be used.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Bluetooth.GenericAttributeProfile.GattWriteOption.WriteWithoutResponse">
+            <summary>
+            The Write Without Response procedure shall be used.
+            </summary>
+        </member>
+        <member name="T:InTheHand.Devices.Bluetooth.Rfcomm.RfcommDeviceService">
+            <summary>
+            Represents an instance of a service on a remote Bluetooth device.
+            </summary>
+        </member>
+        <member name="M:InTheHand.Devices.Bluetooth.Rfcomm.RfcommDeviceService.GetDeviceSelector(InTheHand.Devices.Bluetooth.Rfcomm.RfcommServiceId)">
+            <summary>
+            Gets an Advanced Query Syntax (AQS) string for identifying instances of an RFCOMM service.
+            </summary>
+            <param name="serviceId">The service id for which to query.</param>
+            <returns>An AQS string for identifying RFCOMM service instances.</returns>
+        </member>
+        <member name="P:InTheHand.Devices.Bluetooth.Rfcomm.RfcommDeviceService.Device">
+            <summary>
+            Gets the <see cref="T:InTheHand.Devices.Bluetooth.BluetoothDevice"/> object describing the device associated with the current <see cref="T:InTheHand.Devices.Bluetooth.Rfcomm.RfcommDeviceService"/> object.
+            </summary>
+        </member>
+        <member name="P:InTheHand.Devices.Bluetooth.Rfcomm.RfcommDeviceService.ServiceId">
+            <summary>
+            Gets the RfcommServiceId of this RFCOMM service instance.
+            </summary>
+            <value>The RfcommServiceId of the RFCOMM service instance.</value>
+        </member>
+        <member name="M:InTheHand.Devices.Bluetooth.Rfcomm.RfcommDeviceService.OpenStreamAsync">
+            <summary>
+            Connects to the remote service and returns a read/write Stream to communicate over.
+            </summary>
+            <returns>A <see cref="T:System.IO.Stream"/> for reading and writing from the remote service. 
+            Remember to Dispose of this Stream when you've finished working.</returns>
+        </member>
+        <member name="M:InTheHand.Devices.Bluetooth.Rfcomm.RfcommDeviceService.ToString">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:InTheHand.Devices.Bluetooth.Rfcomm.RfcommDeviceServicesResult">
+            <summary>
+            The result of an Rfcomm device service request.
+            </summary>
+        </member>
+        <member name="P:InTheHand.Devices.Bluetooth.Rfcomm.RfcommDeviceServicesResult.Error">
+            <summary>
+            Indicates that an error occurred.
+            </summary>
+        </member>
+        <member name="P:InTheHand.Devices.Bluetooth.Rfcomm.RfcommDeviceServicesResult.Services">
+            <summary>
+            The collection of returned services.
+            </summary>
+        </member>
+        <member name="T:InTheHand.Devices.Bluetooth.Rfcomm.RfcommServiceId">
+            <summary>
+            Represents an RFCOMM service ID.
+            </summary>
+        </member>
+        <member name="P:InTheHand.Devices.Bluetooth.Rfcomm.RfcommServiceId.SerialPort">
+            <summary>
+            Creates a <see cref="T:InTheHand.Devices.Bluetooth.Rfcomm.RfcommServiceId"/> object corresponding to the service id for the standardized Serial Port (SPP) service (with short id 0x1101).
+            </summary>
+        </member>
+        <member name="P:InTheHand.Devices.Bluetooth.Rfcomm.RfcommServiceId.DialupNetworking">
+            <summary>
+            Creates a <see cref="T:InTheHand.Devices.Bluetooth.Rfcomm.RfcommServiceId"/> object corresponding to the service id for the standardized Dial-up Networking (DUN) service (with short id 0x1103).
+            </summary>
+        </member>
+        <member name="P:InTheHand.Devices.Bluetooth.Rfcomm.RfcommServiceId.IrMCSync">
+            <summary>
+            Creates a <see cref="T:InTheHand.Devices.Bluetooth.Rfcomm.RfcommServiceId"/> object corresponding to the service id for the standardized Synchronization service (with short id 0x1104).
+            </summary>
+        </member>
+        <member name="P:InTheHand.Devices.Bluetooth.Rfcomm.RfcommServiceId.ObexObjectPush">
+            <summary>
+            Creates a <see cref="T:InTheHand.Devices.Bluetooth.Rfcomm.RfcommServiceId"/> object corresponding to the service id for the standardized OBEX Object Push service (with short id 0x1105).
+            </summary>
+        </member>
+        <member name="P:InTheHand.Devices.Bluetooth.Rfcomm.RfcommServiceId.ObexFileTransfer">
+            <summary>
+            Creates a <see cref="T:InTheHand.Devices.Bluetooth.Rfcomm.RfcommServiceId"/> object corresponding to the service id for the standardized OBEX File Transfer service (with short id 0x1106).
+            </summary>
+        </member>
+        <member name="P:InTheHand.Devices.Bluetooth.Rfcomm.RfcommServiceId.Headset">
+            <summary>
+            Creates a <see cref="T:InTheHand.Devices.Bluetooth.Rfcomm.RfcommServiceId"/> object corresponding to the service id for the standardized Headset Profile (HSP) (with short id 0x1108).
+            </summary>
+        </member>
+        <member name="P:InTheHand.Devices.Bluetooth.Rfcomm.RfcommServiceId.AVRemoteControl">
+            <summary>
+            Creates a <see cref="T:InTheHand.Devices.Bluetooth.Rfcomm.RfcommServiceId"/> object corresponding to the service id for the standardized Audio/Video Remote Control Profile (AVRCP) (with short id 0x110E).
+            </summary>
+        </member>
+        <member name="P:InTheHand.Devices.Bluetooth.Rfcomm.RfcommServiceId.BasicImaging">
+            <summary>
+            Creates a <see cref="T:InTheHand.Devices.Bluetooth.Rfcomm.RfcommServiceId"/> object corresponding to the service id for the standardized Basic Imaging service (with short id 0x111A).
+            </summary>
+        </member>
+        <member name="P:InTheHand.Devices.Bluetooth.Rfcomm.RfcommServiceId.Handsfree">
+            <summary>
+            Creates a <see cref="T:InTheHand.Devices.Bluetooth.Rfcomm.RfcommServiceId"/> object corresponding to the service id for the standardized Hands-free Profile (HFP) (with short id 0x111E).
+            </summary>
+        </member>
+        <member name="P:InTheHand.Devices.Bluetooth.Rfcomm.RfcommServiceId.DirectPrinting">
+            <summary>
+            Creates a <see cref="T:InTheHand.Devices.Bluetooth.Rfcomm.RfcommServiceId"/> object corresponding to the service id for the standardized Basic Printing service (with short id 0x1118).
+            </summary>
+        </member>
+        <member name="P:InTheHand.Devices.Bluetooth.Rfcomm.RfcommServiceId.ReferencePrinting">
+            <summary>
+            Creates a <see cref="T:InTheHand.Devices.Bluetooth.Rfcomm.RfcommServiceId"/> object corresponding to the service id for the standardized Basic Printing service (with short id 0x1119).
+            </summary>
+        </member>
+        <member name="P:InTheHand.Devices.Bluetooth.Rfcomm.RfcommServiceId.PrintingStatus">
+            <summary>
+            Creates a <see cref="T:InTheHand.Devices.Bluetooth.Rfcomm.RfcommServiceId"/> object corresponding to the service id for the printing status service for the Basic Printing Profile (BPP) (with short id 0x1123).
+            </summary>
+        </member>
+        <member name="P:InTheHand.Devices.Bluetooth.Rfcomm.RfcommServiceId.HcrPrint">
+            <summary>
+            Creates a <see cref="T:InTheHand.Devices.Bluetooth.Rfcomm.RfcommServiceId"/> object corresponding to the service id for the standardized Hardcopy Cable Replacement Profile (HCRP) for printing (with short id 0x1126).
+            </summary>
+        </member>
+        <member name="P:InTheHand.Devices.Bluetooth.Rfcomm.RfcommServiceId.HcrScan">
+            <summary>
+            Creates a <see cref="T:InTheHand.Devices.Bluetooth.Rfcomm.RfcommServiceId"/> object corresponding to the service id for the standardized Hardcopy Cable Replacement Profile (HCRP) for scanning (with short id 0x1127).
+            </summary>
+        </member>
+        <member name="P:InTheHand.Devices.Bluetooth.Rfcomm.RfcommServiceId.SimAccess">
+            <summary>
+            Creates a <see cref="T:InTheHand.Devices.Bluetooth.Rfcomm.RfcommServiceId"/> object corresponding to the service id for the standardized SIM Access Profile (SAP) (with short id 0x112D).
+            </summary>
+        </member>
+        <member name="P:InTheHand.Devices.Bluetooth.Rfcomm.RfcommServiceId.PhoneBookAccessPce">
+            <summary>
+            Creates a <see cref="T:InTheHand.Devices.Bluetooth.Rfcomm.RfcommServiceId"/> object corresponding to the service id for the standardized Phone Book Access (PCE) service (with short id 0x112E).
+            </summary>
+        </member>
+        <member name="P:InTheHand.Devices.Bluetooth.Rfcomm.RfcommServiceId.PhoneBookAccessPse">
+            <summary>
+            Creates a <see cref="T:InTheHand.Devices.Bluetooth.Rfcomm.RfcommServiceId"/> object corresponding to the service id for the standardized Phone Book Access (PSE) service (with short id 0x112F).
+            </summary>
+        </member>
+        <member name="P:InTheHand.Devices.Bluetooth.Rfcomm.RfcommServiceId.GenericFileTransfer">
+            <summary>
+            Creates a <see cref="T:InTheHand.Devices.Bluetooth.Rfcomm.RfcommServiceId"/> object corresponding to the service id for the standardized Generic File Transfer service (with short id 0x1202).
+            </summary>
+        </member>
+        <member name="P:InTheHand.Devices.Bluetooth.Rfcomm.RfcommServiceId.HealthDeviceSource">
+            <summary>
+            Creates a <see cref="T:InTheHand.Devices.Bluetooth.Rfcomm.RfcommServiceId"/> object corresponding to the service id for the standardized Health Device Source service for Health Device Profile (HDP) (with short id 0x1401).
+            </summary>
+        </member>
+        <member name="P:InTheHand.Devices.Bluetooth.Rfcomm.RfcommServiceId.HealthDeviceSink">
+            <summary>
+            Creates a <see cref="T:InTheHand.Devices.Bluetooth.Rfcomm.RfcommServiceId"/> object corresponding to the service id for the standardized Health Device Sink service for Health Device Profile (HDP) (with short id 0x1402).
+            </summary>
+        </member>
+        <member name="M:InTheHand.Devices.Bluetooth.Rfcomm.RfcommServiceId.FromShortId(System.UInt32)">
+            <summary>
+            Creates a <see cref="T:InTheHand.Devices.Bluetooth.Rfcomm.RfcommServiceId"/> object from a 32-bit service id.
+            </summary>
+            <param name="shortId">The 32-bit service id.</param>
+            <returns>The <see cref="T:InTheHand.Devices.Bluetooth.Rfcomm.RfcommServiceId"/> object.</returns>
+        </member>
+        <member name="M:InTheHand.Devices.Bluetooth.Rfcomm.RfcommServiceId.FromUuid(System.Guid)">
+            <summary>
+            Creates a <see cref="T:InTheHand.Devices.Bluetooth.Rfcomm.RfcommServiceId"/> object from a 128-bit service id.
+            </summary>
+            <param name="uuid">The 128-bit service id.</param>
+            <returns>The <see cref="T:InTheHand.Devices.Bluetooth.Rfcomm.RfcommServiceId"/> object.</returns>
+        </member>
+        <member name="M:InTheHand.Devices.Bluetooth.Rfcomm.RfcommServiceId.op_Implicit(InTheHand.Devices.Bluetooth.Rfcomm.RfcommServiceId)~System.Guid">
+            <summary>
+            Implicit conversion from RfcommServiceId to Guid.
+            </summary>
+            <param name="id"></param>
+        </member>
+        <member name="M:InTheHand.Devices.Bluetooth.Rfcomm.RfcommServiceId.op_Implicit(System.Guid)~InTheHand.Devices.Bluetooth.Rfcomm.RfcommServiceId">
+            <summary>
+            Implicit conversion from Guid to RfcommServiceId
+            </summary>
+            <param name="uuid"></param>
+        </member>
+        <member name="P:InTheHand.Devices.Bluetooth.Rfcomm.RfcommServiceId.Uuid">
+            <summary>
+            Retrieves the 128-bit service id.
+            </summary>
+        </member>
+        <member name="M:InTheHand.Devices.Bluetooth.Rfcomm.RfcommServiceId.AsShortId">
+            <summary>
+            Converts the RfcommServiceId to a 32-bit service id if possible.
+            </summary>
+            <returns>Returns the 32-bit service id if the RfcommServiceId represents a standardized service.</returns>
+        </member>
+        <member name="M:InTheHand.Devices.Bluetooth.Rfcomm.RfcommServiceId.AsString">
+            <summary>
+            Converts the RfcommServiceId to a string.
+            </summary>
+            <returns>Returns the string representation of the 128-bit service id.</returns>
+        </member>
+        <member name="T:InTheHand.Devices.Bluetooth.Rfcomm.RfcommServiceProvider">
+            <summary>
+            Represents an instance of a local RFCOMM service.
+            </summary>
+        </member>
+        <member name="M:InTheHand.Devices.Bluetooth.Rfcomm.RfcommServiceProvider.CreateAsync(InTheHand.Devices.Bluetooth.Rfcomm.RfcommServiceId)">
+            <summary>
+            Gets a RfcommServiceProvider object from an RFCOMM service id.
+            </summary>
+            <param name="serviceId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:InTheHand.Devices.Bluetooth.Rfcomm.RfcommServiceProvider.StartAdvertising">
+            <summary>
+            Begins advertising the SDP attributes.
+            </summary>
+        </member>
+        <member name="E:InTheHand.Devices.Bluetooth.Rfcomm.RfcommServiceProvider.ConnectionReceived">
+            <summary>
+            Event raised when an incoming connection is received.
+            </summary>
+        </member>
+        <member name="M:InTheHand.Devices.Bluetooth.Rfcomm.RfcommServiceProvider.StopAdvertising">
+            <summary>
+            Stops advertising the SDP attributes.
+            </summary>
+        </member>
+        <member name="T:InTheHand.Devices.Enumeration.DeviceInformation">
+            <summary>
+            Represents a picker flyout that contains a list of devices for the user to choose from.
+            </summary>
+            <remarks>
+            <para/><list type="table">
+            <listheader><term>Platform</term><description>Version supported</description></listheader>
+            <item><term>Android</term><description>Android 4.4 and later</description></item>
+            <item><term>Windows UWP</term><description>Windows 10</description></item>
+            <item><term>Windows Phone Store</term><description>Windows Phone 8.1 or later</description></item>
+            <item><term>Windows Phone Silverlight</term><description>Windows Phone 8.1 or later</description></item>
+            <item><term>Windows (Desktop Apps)</term><description>Windows 7 or later</description></item></list>
+            </remarks>
+        </member>
+        <member name="M:InTheHand.Devices.Enumeration.DeviceInformation.FindAllAsync(System.String)">
+            <summary>
+            Enumerates DeviceInformation objects matching the specified query string.
+            </summary>
+            <param name="aqsFilter"></param>
+            <returns></returns>
+        </member>
+        <member name="P:InTheHand.Devices.Enumeration.DeviceInformation.Id">
+            <summary>
+            A string representing the identity of the device.
+            </summary>
+        </member>
+        <member name="P:InTheHand.Devices.Enumeration.DeviceInformation.Name">
+            <summary>
+            The name of the device.
+            </summary>
+        </member>
+        <member name="P:InTheHand.Devices.Enumeration.DeviceInformation.Pairing">
+            <summary>
+            Gets the information about the capabilities for this device to pair.
+            </summary>
+            <value>The pairing information for this device.</value>
+        </member>
+        <member name="M:InTheHand.Devices.Enumeration.DeviceInformation.ToString">
+            <summary>
+            Returns the Id of the <see cref="T:InTheHand.Devices.Enumeration.DeviceInformation"/>.
+            </summary>
+            <returns></returns>
+            <seealso cref="P:InTheHand.Devices.Enumeration.DeviceInformation.Id"/>
+        </member>
+        <member name="T:InTheHand.Devices.Enumeration.DeviceInformationCollection">
+            <summary>
+            Represents a picker flyout that contains a list of devices for the user to choose from.
+            </summary>
+        </member>
+        <member name="T:InTheHand.Devices.Enumeration.DeviceInformationCustomPairing">
+            <summary>
+            Represents a custom pairing for a DeviceInformation object.
+            </summary>
+        </member>
+        <member name="M:InTheHand.Devices.Enumeration.DeviceInformationCustomPairing.PairAsync(InTheHand.Devices.Enumeration.DevicePairingKinds)">
+            <summary>
+            Attempts to pair the device.
+            </summary>
+            <param name="pairingKindsSupported">The different pairing kinds supported by this DeviceInformation object.</param>
+            <returns>The result of the pairing action.</returns>
+        </member>
+        <member name="E:InTheHand.Devices.Enumeration.DeviceInformationCustomPairing.PairingRequested">
+            <summary>
+            Raised when a pairing action is requested.
+            </summary>
+        </member>
+        <member name="T:InTheHand.Devices.Enumeration.DeviceInformationPairing">
+            <summary>
+            Contains information and enables pairing for a device.
+            </summary>
+            <remarks>
+            <para/><list type="table">
+            <listheader><term>Platform</term><description>Version supported</description></listheader>
+            <item><term>Android</term><description>Android 4.4 and later</description></item>
+            <item><term>Windows UWP</term><description>Windows 10</description></item>
+            <item><term>Windows (Desktop Apps)</term><description>Windows 7 or later</description></item></list>
+            </remarks>
+        </member>
+        <member name="P:InTheHand.Devices.Enumeration.DeviceInformationPairing.CanPair">
+            <summary>
+            Gets a value that indicates whether the device can be paired.
+            </summary>
+            <value>True if the device can be paired, otherwise false.</value>
+            <remarks>
+            <para/><list type="table">
+            <listheader><term>Platform</term><description>Version supported</description></listheader>
+            <item><term>Android</term><description>Android 4.4 and later</description></item>
+            <item><term>Windows UWP</term><description>Windows 10</description></item>
+            <item><term>Windows (Desktop Apps)</term><description>Windows 7 or later</description></item></list>
+            </remarks>
+        </member>
+        <member name="P:InTheHand.Devices.Enumeration.DeviceInformationPairing.Custom">
+            <summary>
+            Gets the <see cref="T:InTheHand.Devices.Enumeration.DeviceInformationCustomPairing"/> object necessary for custom pairing.
+            </summary>
+            <remarks>
+            <para/><list type="table">
+            <listheader><term>Platform</term><description>Version supported</description></listheader>
+            <item><term>Windows UWP</term><description>Windows 10</description></item>
+            <item><term>Windows (Desktop Apps)</term><description>Windows 7 or later</description></item></list>
+            </remarks>
+        </member>
+        <member name="P:InTheHand.Devices.Enumeration.DeviceInformationPairing.IsPaired">
+            <summary>
+            Gets a value that indicates whether the device is currently paired.
+            </summary>
+            <value>True if the device is currently paired, otherwise false.</value>
+            <remarks>
+            <para/><list type="table">
+            <listheader><term>Platform</term><description>Version supported</description></listheader>
+            <item><term>Android</term><description>Android 4.4 and later</description></item>
+            <item><term>Windows UWP</term><description>Windows 10</description></item>
+            <item><term>Windows (Desktop Apps)</term><description>Windows 7 or later</description></item></list>
+            </remarks>
+        </member>
+        <member name="M:InTheHand.Devices.Enumeration.DeviceInformationPairing.PairAsync">
+            <summary>
+            Attempts to pair the device.
+            </summary>
+            <returns>The result of the pairing action.</returns>
+            <remarks>
+            <para/><list type="table">
+            <listheader><term>Platform</term><description>Version supported</description></listheader>
+            <item><term>Android</term><description>Android 4.4 and later (Requires BLUETOOTH_ADMIN permission)</description></item>
+            <item><term>Windows UWP</term><description>Windows 10</description></item>
+            <item><term>Windows (Desktop Apps)</term><description>Windows 7 or later</description></item></list>
+            </remarks>
+        </member>
+        <member name="M:InTheHand.Devices.Enumeration.DeviceInformationPairing.UnpairAsync">
+            <summary>
+            Attempts to unpair the device.
+            </summary>
+            <returns>The result of the unpairing action.</returns>
+            <remarks>
+            <para/><list type="table">
+            <listheader><term>Platform</term><description>Version supported</description></listheader>
+            <item><term>Windows UWP</term><description>Windows 10</description></item>
+            <item><term>Windows (Desktop Apps)</term><description>Windows 7 or later</description></item></list>
+            </remarks>
+        </member>
+        <member name="M:InTheHand.Devices.Enumeration.DeviceInformationPairing.GetCustom">
+            <summary>
+            Gets the <see cref="T:InTheHand.Devices.Enumeration.DeviceInformationCustomPairing"/> object necessary for custom pairing.
+            </summary>
+            <remarks>
+            <para/><list type="table">
+            <listheader><term>Platform</term><description>Version supported</description></listheader>
+            <item><term>Windows UWP</term><description>Windows 10</description></item>
+            <item><term>Windows (Desktop Apps)</term><description>Windows 7 or later</description></item></list>
+            </remarks>
+        </member>
+        <member name="T:InTheHand.Devices.Enumeration.DevicePairingKinds">
+            <summary>
+            Indicates the kinds of pairing supported by your application or requested by the system.
+            As an input value, use this value to indicate what kinds of pairing your application supports.
+            When this datatype is received as an output value, it indicates the kind of pairing requested by the system.
+            In this case, your code will need to respond accordingly.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Enumeration.DevicePairingKinds.None">
+            <summary>
+            No pairing is supported.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Enumeration.DevicePairingKinds.ConfirmOnly">
+            <summary>
+            The application must confirm they wish to perform the pairing action. 
+            You can present an optional confirmation dialog to the user. 
+            With a value of ConfirmOnly, Accept the pairing if you want it to complete.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Enumeration.DevicePairingKinds.DisplayPin">
+            <summary>
+            The application must display the given PIN to the user. 
+            The user will then need to enter or confirm that PIN on the device that is being paired. 
+            With a value of DisplayPin, Accept the pairing if you want it to complete. 
+            If your application cancels the pairing at this point, the device might still be paired. 
+            This is because the system and the target device don't need any confirmation for this DevicePairingKinds value.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Enumeration.DevicePairingKinds.ProvidePin">
+            <summary>
+            The application must request a PIN from the user. 
+            The PIN will typically be displayed on the target device. 
+            With a value of ProvidePin, Accept the pairing and pass in the PIN as a parameter.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Enumeration.DevicePairingKinds.ConfirmPinMatch">
+            <summary>
+            The application must display the given PIN to the user and ask the user to confirm that the PIN matches the one show on the target device. 
+            With a value of ConfirmPinMatch, Accept the pairing if you want it to complete.
+            </summary>
+        </member>
+        <member name="T:InTheHand.Devices.Enumeration.DevicePairingRequestedEventArgs">
+            <summary>
+            Contains information and enables pairing for a device.
+            </summary>
+        </member>
+        <member name="P:InTheHand.Devices.Enumeration.DevicePairingRequestedEventArgs.DeviceInformation">
+            <summary>
+            Gets the <see cref="P:InTheHand.Devices.Enumeration.DevicePairingRequestedEventArgs.DeviceInformation"/> object associated with this pairing request.
+            </summary>
+        </member>
+        <member name="P:InTheHand.Devices.Enumeration.DevicePairingRequestedEventArgs.PairingKind">
+            <summary>
+            Gets the kind of pairing associated with this pairing event.
+            </summary>
+        </member>
+        <member name="P:InTheHand.Devices.Enumeration.DevicePairingRequestedEventArgs.Pin">
+            <summary>
+            Gets the pin associated with a pairing request.
+            </summary>
+        </member>
+        <member name="M:InTheHand.Devices.Enumeration.DevicePairingRequestedEventArgs.Accept">
+            <summary>
+            Accepts a PairingRequested event and pairs the device with the application.
+            </summary>
+        </member>
+        <member name="M:InTheHand.Devices.Enumeration.DevicePairingRequestedEventArgs.Accept(System.String)">
+            <summary>
+            Accepts a PairingRequested event and pairs the device with the application. Requires a pin for pairing purposes.
+            </summary>
+            <param name="pin">The pin to use for attempting to pair a device.</param>
+        </member>
+        <member name="T:InTheHand.Devices.Enumeration.DevicePairingResult">
+            <summary>
+            Contains information about the result of attempting to pair a device.
+            </summary>
+        </member>
+        <member name="P:InTheHand.Devices.Enumeration.DevicePairingResult.Status">
+            <summary>
+            Gets the paired status of the device after the pairing action completed.
+            </summary>
+            <value>The paired status of the device.</value>
+        </member>
+        <member name="F:InTheHand.Devices.Enumeration.DevicePairingResultStatus.Paired">
+            <summary>
+            The device object is now paired.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Enumeration.DevicePairingResultStatus.NotReadyToPair">
+            <summary>
+            The device object is not in a state where it can be paired.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Enumeration.DevicePairingResultStatus.NotPaired">
+            <summary>
+            The device object is not currently paired.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Enumeration.DevicePairingResultStatus.AlreadyPaired">
+            <summary>
+            The device object has already been paired.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Enumeration.DevicePairingResultStatus.ConnectionRejected">
+            <summary>
+            The device object rejected the connection.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Enumeration.DevicePairingResultStatus.TooManyConnections">
+            <summary>
+            The device object indicated it cannot accept any more incoming connections.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Enumeration.DevicePairingResultStatus.HardwareFailure">
+            <summary>
+            The device object indicated there was a hardware failure.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Enumeration.DevicePairingResultStatus.AuthenticationTimeout">
+            <summary>
+            The authentication process timed out before it could complete.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Enumeration.DevicePairingResultStatus.AuthenticationNotAllowed">
+            <summary>
+            The authentication protocol is not supported, so the device is not paired.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Enumeration.DevicePairingResultStatus.AuthenticationFailure">
+            <summary>
+            Authentication failed, so the device is not paired.
+            Either the device object or the application rejected the authentication.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Enumeration.DevicePairingResultStatus.NoSupportedProfiles">
+            <summary>
+            There are no network profiles for this device object to use.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Enumeration.DevicePairingResultStatus.ProtectionLevelCouldNotBeMet">
+            <summary>
+            The minimum level of protection is not supported by the device object or the application.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Enumeration.DevicePairingResultStatus.AccessDenied">
+            <summary>
+            Your application does not have the appropriate permissions level to pair the device object.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Enumeration.DevicePairingResultStatus.InvalidCeremonyData">
+            <summary>
+            The ceremony data was incorrect.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Enumeration.DevicePairingResultStatus.PairingCanceled">
+            <summary>
+            The pairing action was canceled before completion.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Enumeration.DevicePairingResultStatus.OperationAlreadyInProgress">
+            <summary>
+            The device object is already attempting to pair or unpair.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Enumeration.DevicePairingResultStatus.RequiredHandlerNotRegistered">
+            <summary>
+            Either the event handler wasn't registered or a required DevicePairingKinds was not supported.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Enumeration.DevicePairingResultStatus.RejectedByHandler">
+            <summary>
+            The application handler rejected the pairing.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Enumeration.DevicePairingResultStatus.RemoteDeviceHasAssociation">
+            <summary>
+            The remove device already has an association.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Enumeration.DevicePairingResultStatus.Failed">
+            <summary>
+            An unknown failure occurred.
+            </summary>
+        </member>
+        <member name="T:InTheHand.Devices.Enumeration.DevicePicker">
+            <summary>
+            Represents a picker flyout that contains a list of devices for the user to choose from.
+            </summary>
+            <remarks>
+            <para/><list type="table">
+            <listheader><term>Platform</term><description>Version supported</description></listheader>
+            <item><term>Android</term><description>Android 4.4 and later</description></item>
+            <item><term>Windows UWP</term><description>Windows 10</description></item>
+            <item><term>Windows Store</term><description>Windows 8.1 or later</description></item>
+            <item><term>Windows Phone Store</term><description>Windows Phone 8.1 or later</description></item>
+            <item><term>Windows (Desktop Apps)</term><description>Windows 7 or later</description></item></list>
+            </remarks>
+        </member>
+        <member name="M:InTheHand.Devices.Enumeration.DevicePicker.#ctor">
+            <summary>
+            Creates a <see cref="T:InTheHand.Devices.Enumeration.DevicePicker"/> object.
+            </summary>
+        </member>
+        <member name="P:InTheHand.Devices.Enumeration.DevicePicker.Appearance">
+            <summary>
+            Gets the colors of the picker.
+            </summary>
+            <value>The color of the picker.</value>
+            <remarks>
+            <para/><list type="table">
+            <listheader><term>Platform</term><description>Version supported</description></listheader>
+            <item><term>Windows UWP</term><description>Windows 10</description></item>
+            <item><term>Windows Store</term><description>Windows 8.1 or later</description></item>
+            <item><term>Windows Phone Store</term><description>Windows Phone 8.1 or later</description></item></list>
+            </remarks>
+        </member>
+        <member name="P:InTheHand.Devices.Enumeration.DevicePicker.Filter">
+            <summary>
+            Gets the filter used to choose what devices to show in the picker.
+            </summary>
+            <remarks>
+            <para/><list type="table">
+            <listheader><term>Platform</term><description>Version supported</description></listheader>
+            <item><term>Android</term><description>Android 4.4 and later</description></item>
+            <item><term>Windows UWP</term><description>Windows 10</description></item>
+            <item><term>Windows Store</term><description>Windows 8.1 or later</description></item>
+            <item><term>Windows Phone Store</term><description>Windows Phone 8.1 or later</description></item>
+            <item><term>Windows (Desktop Apps)</term><description>Windows 7 or later</description></item></list>
+            </remarks>
+        </member>
+        <member name="M:InTheHand.Devices.Enumeration.DevicePicker.PickSingleDeviceAsync">
+            <summary>
+            Shows the picker UI and returns the selected device; does not require you to register for an event.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:InTheHand.Devices.Enumeration.DevicePickerAppearance">
+            <summary>
+            Represents the appearance of a device picker.
+            </summary>
+            <remarks>
+            <para/><list type="table">
+            <listheader><term>Platform</term><description>Version supported</description></listheader>
+            <item><term>Windows UWP</term><description>Windows 10</description></item>
+            <item><term>Windows Store</term><description>Windows 8.1 or later</description></item>
+            <item><term>Windows Phone Store</term><description>Windows Phone 8.1 or later</description></item></list>
+            </remarks>
+        </member>
+        <member name="P:InTheHand.Devices.Enumeration.DevicePickerAppearance.AccentColor">
+            <summary>
+            Gets and sets the accent color of the picker UI.
+            </summary>
+        </member>
+        <member name="P:InTheHand.Devices.Enumeration.DevicePickerAppearance.BackgroundColor">
+            <summary>
+            Gets and sets the background color of the picker UI.
+            </summary>
+        </member>
+        <member name="P:InTheHand.Devices.Enumeration.DevicePickerAppearance.ForegroundColor">
+            <summary>
+            Gets and sets the foreground color of the picker UI.
+            </summary>
+        </member>
+        <member name="P:InTheHand.Devices.Enumeration.DevicePickerAppearance.SelectedAccentColor">
+            <summary>
+            Gets and sets the accent color of the picker UI.
+            </summary>
+        </member>
+        <member name="P:InTheHand.Devices.Enumeration.DevicePickerAppearance.SelectedBackgroundColor">
+            <summary>
+            Gets and sets the background color of the picker UI.
+            </summary>
+        </member>
+        <member name="P:InTheHand.Devices.Enumeration.DevicePickerAppearance.SelectedForegroundColor">
+            <summary>
+            Gets and sets the foreground color of the picker UI.
+            </summary>
+        </member>
+        <member name="P:InTheHand.Devices.Enumeration.DevicePickerAppearance.Title">
+            <summary>
+            The title of the picker UI.
+            </summary>
+            <remarks>For Windows Desktop apps this is used as the info text below the device list.</remarks>
+        </member>
+        <member name="T:InTheHand.Devices.Enumeration.DevicePickerFilter">
+            <summary>
+            Represents the filter used to determine which devices to show in the device picker.
+            The filter parameters are OR-ed together to build the resulting filter.
+            </summary>
+        </member>
+        <member name="P:InTheHand.Devices.Enumeration.DevicePickerFilter.SupportedDeviceSelectors">
+            <summary>
+            Gets a list of AQS filter strings.
+            This defaults to empty list (no filter).
+            You can add one or more AQS filter strings to this vector and filter the devices list to those that meet one or more of the provided filters.
+            </summary>
+            <remarks>
+            Some platforms have limitations on the filter types they support:-
+            <para/><list type="table">
+            <listheader><term>Platform</term><description>Version supported</description></listheader>
+            <item><term>Android</term><description>Supports only a small set of ClassOfDevice restrictions.
+            <see cref="F:InTheHand.Devices.Bluetooth.BluetoothServiceCapabilities.AudioService"/>, 
+            <see cref="F:InTheHand.Devices.Bluetooth.BluetoothServiceCapabilities.ObjectTransferService"/>, 
+            <see cref="F:InTheHand.Devices.Bluetooth.BluetoothServiceCapabilities.NetworkingService"/>, 
+            <see cref="F:InTheHand.Devices.Bluetooth.BluetoothMajorClass.NetworkAccessPoint"/> any other class values will display all device types.</description></item>
+            <item><term>Windows UWP</term><description>No restrictions. Additional filter types are added in Creators Update.</description></item>
+            <item><term>Windows Store</term><description>No restrictions</description></item>
+            <item><term>Windows Phone Store</term><description>No restrictions</description></item>
+            <item><term>Windows (Desktop Apps)</term><description>Supports <see cref="!:BluetoothDevice.GetDeviceSelectorFromClassOfDevice()"/> and <see cref="!:BluetoothDevice.GetDeviceSelectorFromPairingState()"/>.</description></item></list>
+            </remarks>
+        </member>
+        <member name="T:InTheHand.Devices.Enumeration.DeviceSelectedEventArgs">
+            <summary>
+            Provides data for the <see cref="!:DeviceSelected"/> event on the <see cref="T:InTheHand.Devices.Enumeration.DevicePicker"/> object.
+            </summary>
+        </member>
+        <member name="P:InTheHand.Devices.Enumeration.DeviceSelectedEventArgs.SelectedDevice">
+            <summary>
+            The device selected by the user in the picker.
+            </summary>
+            <value>The selected device.</value>
+        </member>
+        <member name="T:InTheHand.Devices.Enumeration.DeviceUnpairingResult">
+            <summary>
+            Contains information about the result of attempting to unpair a device.
+            </summary>
+        </member>
+        <member name="P:InTheHand.Devices.Enumeration.DeviceUnpairingResult.Status">
+            <summary>
+            Gets the paired status of the device after the unpairing action completed.
+            </summary>
+            <value>The paired status of the device.</value>
+        </member>
+        <member name="T:InTheHand.Devices.Enumeration.DeviceUnpairingResultStatus">
+            <summary>
+            The result of the unpairing action.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Enumeration.DeviceUnpairingResultStatus.Unpaired">
+            <summary>
+            The device object is successfully unpaired.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Enumeration.DeviceUnpairingResultStatus.AlreadyUnpaired">
+            <summary>
+            The device object was already unpaired.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Enumeration.DeviceUnpairingResultStatus.OperationAlreadyInProgress">
+            <summary>
+            The device object is currently in the middle of either a pairing or unpairing action.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Enumeration.DeviceUnpairingResultStatus.AccessDenied">
+            <summary>
+            The caller does not have sufficient permissions to unpair the device.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Enumeration.DeviceUnpairingResultStatus.Failed">
+            <summary>
+            An unknown failure occurred.
+            </summary>
+        </member>
+        <member name="T:InTheHand.Devices.Radios.Radio">
+            <summary>
+            Represents a radio device on the system.
+            </summary>
+            <remarks>
+            <para/><list type="table">
+            <listheader><term>Platform</term><description>Version supported</description></listheader>
+            <item><term>Android</term><description>Android 4.4 and later</description></item>
+            <item><term>iOS</term><description>iOS 9.0 and later</description></item>
+            <item><term>macOS</term><description>OS X 10.7 and later</description></item>
+            <item><term>tvOS</term><description>tvOS 9.0 and later</description></item>
+            <item><term>Windows UWP</term><description>Windows 10</description></item>
+            <item><term>Windows Phone Store</term><description>Windows Phone 8.1 or later</description></item>
+            <item><term>Windows Phone Silverlight</term><description>Windows Phone 8.0 or later</description></item>
+            <item><term>Windows (Desktop Apps)</term><description>Windows 7 or later</description></item></list>
+            </remarks>
+        </member>
+        <member name="M:InTheHand.Devices.Radios.Radio.GetRadiosAsync">
+            <summary>
+            A static, asynchronous method that retrieves a collection of <see cref="T:InTheHand.Devices.Radios.Radio"/> objects representing radio devices existing on the system.
+            </summary>
+            <returns>An asynchronous retrieval operation. When the operation is complete, contains a list of Radio objects describing available radios.</returns>
+            <remarks>
+            <para/><list type="table">
+            <listheader><term>Platform</term><description>Version supported</description></listheader>
+            <item><term>Android</term><description>Android 4.4 and later</description></item>
+            <item><term>iOS</term><description>iOS 9.0 and later</description></item>
+            <item><term>macOS</term><description>OS X 10.7 and later</description></item>
+            <item><term>tvOS</term><description>tvOS 9.0 and later</description></item>
+            <item><term>Windows UWP</term><description>Windows 10</description></item>
+            <item><term>Windows Phone Store</term><description>Windows Phone 8.1 or later</description></item>
+            <item><term>Windows Phone Silverlight</term><description>Windows Phone 8.0 or later</description></item>
+            <item><term>Windows (Desktop Apps)</term><description>Windows 7 or later</description></item></list>
+            </remarks>
+        </member>
+        <!-- Badly formed XML comment ignored for member "M:InTheHand.Devices.Radios.Radio.RequestAccessAsync" -->
+        <member name="M:InTheHand.Devices.Radios.Radio.SetStateAsync(InTheHand.Devices.Radios.RadioState)">
+            <summary>
+            An asynchronous operation that attempts to set the state of the radio represented by this object.
+            </summary>
+            <param name="value"></param>
+            <returns></returns>
+            <remarks>
+            <para/><list type="table">
+            <listheader><term>Platform</term><description>Version supported</description></listheader>
+            <item><term>Android</term><description>Android 4.4 and later</description></item>
+            <item><term>Windows UWP</term><description>Windows 10</description></item>
+            <item><term>Windows (Desktop Apps)</term><description>Windows 7 or later</description></item></list>
+            </remarks>
+        </member>
+        <member name="P:InTheHand.Devices.Radios.Radio.Kind">
+            <summary>
+            Gets an enumeration value that describes what kind of radio this object represents.
+            </summary>
+            <value>The kind of this radio.</value>
+            <remarks>
+            <para/><list type="table">
+            <listheader><term>Platform</term><description>Version supported</description></listheader>
+            <item><term>Android</term><description>Android 4.4 and later</description></item>
+            <item><term>iOS</term><description>iOS 9.0 and later</description></item>
+            <item><term>macOS</term><description>OS X 10.7 and later</description></item>
+            <item><term>tvOS</term><description>tvOS 9.0 and later</description></item>
+            <item><term>Windows UWP</term><description>Windows 10</description></item>
+            <item><term>Windows Phone Store</term><description>Windows Phone 8.1 or later</description></item>
+            <item><term>Windows Phone Silverlight</term><description>Windows Phone 8.0 or later</description></item>
+            <item><term>Windows (Desktop Apps)</term><description>Windows 7 or later</description></item></list>
+            </remarks>
+        </member>
+        <member name="P:InTheHand.Devices.Radios.Radio.Name">
+            <summary>
+            Gets the name of the radio represented by this object.
+            </summary>
+            <value>The radio name.</value>
+            <remarks>
+            <para/><list type="table">
+            <listheader><term>Platform</term><description>Version supported</description></listheader>
+            <item><term>Android</term><description>Android 4.4 and later</description></item>
+            <item><term>iOS</term><description>iOS 9.0 and later</description></item>
+            <item><term>macOS</term><description>OS X 10.7 and later</description></item>
+            <item><term>tvOS</term><description>tvOS 9.0 and later</description></item>
+            <item><term>Windows UWP</term><description>Windows 10</description></item>
+            <item><term>Windows Phone Store</term><description>Windows Phone 8.1 or later</description></item>
+            <item><term>Windows Phone Silverlight</term><description>Windows Phone 8.0 or later</description></item>
+            <item><term>Windows (Desktop Apps)</term><description>Windows 7 or later</description></item></list>
+            </remarks>
+        </member>
+        <member name="P:InTheHand.Devices.Radios.Radio.State">
+            <summary>
+            Gets the current state of the radio represented by this object.
+            </summary>
+            <value>The current radio state.</value>
+            <remarks>
+            <para/><list type="table">
+            <listheader><term>Platform</term><description>Version supported</description></listheader>
+            <item><term>Android</term><description>Android 4.4 and later</description></item>
+            <item><term>iOS</term><description>iOS 9.0 and later</description></item>
+            <item><term>macOS</term><description>OS X 10.7 and later</description></item>
+            <item><term>tvOS</term><description>tvOS 9.0 and later</description></item>
+            <item><term>Windows UWP</term><description>Windows 10</description></item>
+            <item><term>Windows Phone Store</term><description>Windows Phone 8.1 or later</description></item>
+            <item><term>Windows Phone Silverlight</term><description>Windows Phone 8.0 or later</description></item>
+            <item><term>Windows (Desktop Apps)</term><description>Windows 7 or later</description></item></list>
+            </remarks>
+        </member>
+        <member name="T:InTheHand.Devices.Radios.RadioAccessStatus">
+            <summary>
+            Enumeration that describes possible access states that a user can have to a given radio.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Radios.RadioAccessStatus.Unspecified">
+            <summary>
+            Access state is unspecified.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Radios.RadioAccessStatus.Allowed">
+            <summary>
+            Access is allowed.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Radios.RadioAccessStatus.DeniedByUser">
+            <summary>
+            Access was denied because of user action, usually through denying an operation through the radio privacy settings page.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Radios.RadioAccessStatus.DeniedBySystem">
+            <summary>
+            Access was denied by the system. One common reason for this result is that the user does not have suitable permission to manipulate the radio in question.
+            </summary>
+        </member>
+        <member name="T:InTheHand.Devices.Radios.RadioKind">
+            <summary>
+            Enumeration that represents the kinds of radio devices.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Radios.RadioKind.Other">
+            <summary>
+            An unspecified kind of radio device.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Radios.RadioKind.WiFi">
+            <summary>
+            A Wi-Fi radio.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Radios.RadioKind.MobileBroadband">
+            <summary>
+            A mobile broadband radio. 
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Radios.RadioKind.Bluetooth">
+            <summary>
+            A Bluetooth radio.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Radios.RadioKind.FM">
+            <summary>
+            An FM radio. 
+            </summary>
+        </member>
+        <member name="T:InTheHand.Devices.Radios.RadioState">
+            <summary>
+            Enumeration that describes possible radio states.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Radios.RadioState.Unknown">
+            <summary>
+            The radio state is unknown, or the radio is in a bad or uncontrollable state.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Radios.RadioState.On">
+            <summary>
+            The radio is powered on.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Radios.RadioState.Off">
+            <summary>
+            The radio is powered off.
+            </summary>
+        </member>
+        <member name="F:InTheHand.Devices.Radios.RadioState.Disabled">
+            <summary>
+            The radio is powered off and disabled by the device firmware or a hardware switch on the device. 
+            </summary>
+        </member>
+        <member name="T:InTheHand.Networking.Sockets.NetworkStream">
+            <summary>
+            Provides the underlying stream of data for network access.
+            </summary>
+            <remarks>
+            <para/><list type="table">
+            <listheader><term>Platform</term><description>Version supported</description></listheader>
+            <item><term>Android</term><description>Android 4.4 and later</description></item>
+            <item><term>Windows UWP</term><description>Windows 10</description></item>
+            <item><term>Windows Store</term><description>Windows 8.1 or later</description></item>
+            <item><term>Windows Phone Store</term><description>Windows Phone 8.1 or later</description></item></list>
+            </remarks>
+            <seealso cref="!:System.Net.Sockets.NetworkStream"/>
+        </member>
+        <member name="M:InTheHand.Networking.Sockets.NetworkStream.#ctor(Windows.Networking.Sockets.StreamSocket)">
+            <summary>
+            Creates a new instance of the NetworkStream for the specified <see cref="T:Windows.Networking.Sockets.StreamSocket"/>
+            </summary>
+            <param name="socket"></param>
+        </member>
+        <member name="P:InTheHand.Networking.Sockets.NetworkStream.CanRead">
+            <summary>
+            Gets a value that indicates whether the NetworkStream supports reading.
+            </summary>
+        </member>
+        <member name="P:InTheHand.Networking.Sockets.NetworkStream.CanSeek">
+            <summary>
+            Gets a value that indicates whether the stream supports seeking. This property is not currently supported.
+            </summary>
+            <value>This property always returns false.</value>
+        </member>
+        <member name="P:InTheHand.Networking.Sockets.NetworkStream.CanWrite">
+            <summary>
+            Gets a value that indicates whether the NetworkStream supports writing.
+            </summary>
+        </member>
+        <member name="P:InTheHand.Networking.Sockets.NetworkStream.Length">
+            <summary>
+            Gets the length of the data available on the stream. 
+            This property is not currently supported and always throws a NotSupportedException.
+            </summary>
+        </member>
+        <member name="P:InTheHand.Networking.Sockets.NetworkStream.Position">
+            <summary>
+            Gets or sets the current position in the stream.
+            This property is not currently supported and always throws a NotSupportedException.
+            </summary>
+        </member>
+        <member name="M:InTheHand.Networking.Sockets.NetworkStream.Flush">
+            <summary>
+            Flushes data from the stream.
+            </summary>
+        </member>
+        <member name="M:InTheHand.Networking.Sockets.NetworkStream.FlushAsync(System.Threading.CancellationToken)">
+            <summary>
+            Asynchronously clears all buffers for this stream and causes any buffered data to be written to the underlying device.
+            </summary>
+            <param name="cancellationToken"></param>
+            <returns></returns>
+        </member>
+        <member name="M:InTheHand.Networking.Sockets.NetworkStream.Read(System.Byte[],System.Int32,System.Int32)">
+            <summary>
+            Reads data from the NetworkStream.
+            </summary>
+            <param name="buffer"></param>
+            <param name="offset"></param>
+            <param name="count"></param>
+            <returns></returns>
+        </member>
+        <member name="M:InTheHand.Networking.Sockets.NetworkStream.ReadAsync(System.Byte[],System.Int32,System.Int32,System.Threading.CancellationToken)">
+            <summary>
+            Asynchronously reads a sequence of bytes from the current stream and advances the position within the stream by the number of bytes read.
+            </summary>
+            <param name="buffer"></param>
+            <param name="offset"></param>
+            <param name="count"></param>
+            <param name="cancellationToken"></param>
+            <returns></returns>
+        </member>
+        <member name="M:InTheHand.Networking.Sockets.NetworkStream.Seek(System.Int64,System.IO.SeekOrigin)">
+            <summary>
+            Sets the current position of the stream to the given value.
+            This method is not currently supported and always throws a NotSupportedException.
+            </summary>
+            <param name="offset"></param>
+            <param name="origin"></param>
+            <returns></returns>
+        </member>
+        <member name="M:InTheHand.Networking.Sockets.NetworkStream.SetLength(System.Int64)">
+            <summary>
+            Sets the length of the stream. 
+            This method always throws a NotSupportedException.
+            </summary>
+            <param name="value"></param>
+        </member>
+        <member name="M:InTheHand.Networking.Sockets.NetworkStream.Write(System.Byte[],System.Int32,System.Int32)">
+            <summary>
+            Writes data to the NetworkStream.
+            </summary>
+            <param name="buffer"></param>
+            <param name="offset"></param>
+            <param name="count"></param>
+        </member>
+        <member name="M:InTheHand.Networking.Sockets.NetworkStream.WriteAsync(System.Byte[],System.Int32,System.Int32,System.Threading.CancellationToken)">
+            <summary>
+            Asynchronously writes a sequence of bytes to the current stream and advances the current position within this stream by the number of bytes written.
+            </summary>
+            <param name="buffer"></param>
+            <param name="offset"></param>
+            <param name="count"></param>
+            <param name="cancellationToken"></param>
+            <returns></returns>
+        </member>
+        <member name="M:InTheHand.Networking.Sockets.NetworkStream.Dispose(System.Boolean)">
+            <summary>
+            Releases the unmanaged resources used by the NetworkStream and optionally releases the managed resources.
+            </summary>
+            <param name="disposing"></param>
+        </member>
+    </members>
+</doc>
