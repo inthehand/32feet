@@ -58,10 +58,12 @@ namespace InTheHand.Devices.Enumeration
         {
             await Task.Run<IReadOnlyCollection<DeviceInformation>>(async () =>
             {
+#if !__WATCHOS__
                 if (BluetoothAdapter.Default.Manager.State != CBCentralManagerState.PoweredOn)
                 {
                     stateHandle.WaitOne();
                 }
+#endif
 
                 string[] filterParts = aqsFilter.Split(':');
                 bool discover = true;

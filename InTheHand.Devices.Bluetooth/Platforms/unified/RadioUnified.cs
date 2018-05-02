@@ -37,6 +37,12 @@ namespace InTheHand.Devices.Radios
             return RadioKind.Bluetooth.ToString();
         }
 
+#if __WATCHOS__
+        private RadioState GetState()
+        {
+            return RadioState.Unknown;
+        }
+#else
         private RadioState GetState()
         {
             try
@@ -66,5 +72,6 @@ namespace InTheHand.Devices.Radios
                     return RadioState.Unknown;
             }
         }
+#endif
     }
 }

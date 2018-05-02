@@ -76,7 +76,7 @@ namespace InTheHand.Devices.Bluetooth
             {
                 s_default.ConnectionStateChanged?.Invoke(this, peripheral);
             }
-#if !__TVOS__
+#if !__TVOS__ && !__WATCHOS__
             public override void RetrievedConnectedPeripherals(CBCentralManager central, CBPeripheral[] peripherals)
             {
             }
