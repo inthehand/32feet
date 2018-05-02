@@ -16,22 +16,55 @@ namespace InTheHand.Devices.Bluetooth.GenericAttributeProfile
     public static class GattCharacteristicUuids
     {
         /// <summary>
+        /// Returns the Uuid for a characteristic given the Uniform Type Identifier.
+        /// </summary>
+        /// <param name="bluetoothUti">Uniform Type Identifier of the characteristic e.g. org.bluetooth.characteristic.aerobic_heart_rate_lower_limit</param>
+        /// <returns>The characteristic Uuid on success else Guid.Empty.</returns>
+        public static Guid FromBluetoothUti(string bluetoothUti)
+        {
+            string requestedUti = bluetoothUti.ToLower();
+            if (!requestedUti.StartsWith("org.bluetooth.characteristic"))
+            {
+                requestedUti = "org.bluetooth.characteristic" + bluetoothUti.ToLower();
+            }
+
+#if !NETSTANDARD1_4
+            var fields = typeof(GattCharacteristicUuids).GetFields(BindingFlags.Static | BindingFlags.Public);
+            foreach(var field in fields)
+            {
+                var attr = field.GetCustomAttribute(typeof(BluetoothUtiAttribute));
+                if(attr != null && ((BluetoothUtiAttribute)attr).Uti == requestedUti)
+                {
+                    return (Guid)field.GetValue(null);
+                }
+            }
+#endif
+
+            return Guid.Empty;
+        }
+
+        /// <summary>
         /// Lower limit of the heart rate where the user enhances his endurance while exercising.
         /// </summary>
         [BluetoothUti("org.bluetooth.characteristic.aerobic_heart_rate_lower_limit")]
         public static readonly Guid AerobicHeartRateLowerLimit = new Guid(0x00002A7E, 0x0000, 0x1000, 0x80, 0x00, 0x00, 0x80, 0x5F, 0x9B, 0x34, 0xFB);
 
+        [BluetoothUti("org.bluetooth.characteristic.aerobic_heart_rate_upper_limit")]
         public static readonly Guid AerobicHeartRateUpperLimit = new Guid(0x00002A84, 0x0000, 0x1000, 0x80, 0x00, 0x00, 0x80, 0x5F, 0x9B, 0x34, 0xFB);
 
+        [BluetoothUti("org.bluetooth.characteristic.aerobic_threshold")]
         public static readonly Guid AerobicThreshold = new Guid(0x00002A7F, 0x0000, 0x1000, 0x80, 0x00, 0x00, 0x80, 0x5F, 0x9B, 0x34, 0xFB);
 
+        [BluetoothUti("org.bluetooth.characteristic.age")]
         public static readonly Guid Age = new Guid(0x00002A80, 0x0000, 0x1000, 0x80, 0x00, 0x00, 0x80, 0x5F, 0x9B, 0x34, 0xFB);
 
+        [BluetoothUti("org.bluetooth.characteristic.aggregate")]
         public static readonly Guid Aggregate = new Guid(0x00002A5A, 0x0000, 0x1000, 0x80, 0x00, 0x00, 0x80, 0x5F, 0x9B, 0x34, 0xFB);
 
         /// <summary>
         /// Gets the Bluetooth SIG-defined AlertCategoryId characteristic UUID.
         /// </summary>
+        [BluetoothUti("org.bluetooth.characteristic.alert_category_id")]
         public static readonly Guid AlertCategoryId = new Guid(0x00002A43, 0x0000, 0x1000, 0x80, 0x00, 0x00, 0x80, 0x5F, 0x9B, 0x34, 0xFB);
 
         /// <summary>
