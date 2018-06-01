@@ -134,6 +134,9 @@ namespace InTheHand.Devices.Bluetooth
 
         private bool GetIsLowEnergySupported()
         {
+            if(Type.GetType("Windows.Devices.Bluetooth.BluetoothLEDevice, Windows, ContentType=WindowsRuntime") != null)
+                return true;
+
             return false;
         }
 

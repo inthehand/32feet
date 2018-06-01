@@ -18,6 +18,8 @@ using Android.Bluetooth;
 using Windows.Networking.Sockets;
 #elif UNITY
 using InTheHand.Net.Sockets;
+#elif WIN32
+using System.Net.Sockets;
 #endif
 
 namespace InTheHand.Networking.Sockets
@@ -70,6 +72,13 @@ namespace InTheHand.Networking.Sockets
         {
             _socket = socket;
         }
+#elif WIN32
+        private Socket _socket;
+
+        public NetworkStream(Socket socket)
+        {
+            _socket = socket;
+        }
 #endif
 
         /// <summary>
@@ -85,7 +94,7 @@ namespace InTheHand.Networking.Sockets
 #elif __ANDROID__
                 return _socket.InputStream.CanRead;
 
-#elif UNITY
+#elif WIN32
                 return true;
 
 #else
@@ -119,7 +128,7 @@ namespace InTheHand.Networking.Sockets
 #elif __ANDROID__
                 return _socket.OutputStream.CanWrite;
 
-#elif UNITY
+#elif WIN32
                 return true;
 
 #else
@@ -142,7 +151,7 @@ namespace InTheHand.Networking.Sockets
 #elif __ANDROID__
                 return _socket.InputStream.Length;
 
-#elif UNITY
+#elif WIN32
                 return _socket.Available;
 
 #else
@@ -181,7 +190,7 @@ namespace InTheHand.Networking.Sockets
 #endif
         }
 
-#if !UNITY
+#if !WIN32
         /// <summary>
         /// Asynchronously clears all buffers for this stream and causes any buffered data to be written to the underlying device.
         /// </summary>
@@ -216,7 +225,7 @@ namespace InTheHand.Networking.Sockets
 #elif __ANDROID__
             return _socket.InputStream.Read(buffer, offset, count);
 
-#elif UNITY
+#elif WIN32
             return _socket.Receive(buffer, count, 0);
 
 #else
@@ -224,7 +233,7 @@ namespace InTheHand.Networking.Sockets
 #endif
         }
 
-#if !UNITY
+#if !WIN32
         /// <summary>
         /// Asynchronously reads a sequence of bytes from the current stream and advances the position within the stream by the number of bytes read.
         /// </summary>
@@ -283,12 +292,12 @@ namespace InTheHand.Networking.Sockets
 #elif __ANDROID__
             _socket.OutputStream.Write(buffer, offset, count);
 
-#elif UNITY
+#elif WIN32
             _socket.Send(buffer, count, 0);
 #endif
         }
 
-#if !UNITY
+#if !WIN32
         /// <summary>
         /// Asynchronously writes a sequence of bytes to the current stream and advances the current position within this stream by the number of bytes written.
         /// </summary>
@@ -330,7 +339,7 @@ namespace InTheHand.Networking.Sockets
             _socket?.Dispose();
             _socket = null;
 
-#elif UNITY
+#elif WIN32
             _socket?.Dispose();
             _socket = null;
 #endif

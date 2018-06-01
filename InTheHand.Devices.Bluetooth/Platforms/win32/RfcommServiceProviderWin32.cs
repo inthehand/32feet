@@ -38,7 +38,7 @@ namespace InTheHand.Devices.Bluetooth.Rfcomm
                     while (_listenerSocket != null)
                     {                        
                         var socket = _listenerSocket.Accept();
-                        ConnectionReceived?.Invoke(this, new RfcommConnectionReceivedEventArgs(new System.Net.Sockets.NetworkStream(socket)));
+                        ConnectionReceived?.Invoke(this, new RfcommConnectionReceivedEventArgs(new global::System.Net.Sockets.NetworkStream(socket)));
                     }
                 }
                 catch
