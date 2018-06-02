@@ -1,12 +1,12 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="GattValueChangedEventArgs.cs" company="In The Hand Ltd">
-//   Copyright (c) 2017 In The Hand Ltd, All rights reserved.
+//   Copyright (c) 2017-18 In The Hand Ltd, All rights reserved.
 //   This source code is licensed under the MIT License - see License.txt
 // </copyright>
 //-----------------------------------------------------------------------
 
 using System;
-#if WINDOWS_UWP || WINDOWS_APP || WINDOWS_PHONE_APP || WINDOWS_PHONE_81
+#if WINDOWS_UWP || WINDOWS_APP || WINDOWS_PHONE_APP || WINDOWS_PHONE_81 || WIN32
 using System.Runtime.InteropServices.WindowsRuntime;
 #endif
 
@@ -29,7 +29,7 @@ namespace InTheHand.Devices.Bluetooth.GenericAttributeProfile
     /// </remarks>
     public sealed class GattValueChangedEventArgs
     {
-#if WINDOWS_UWP || WINDOWS_APP || WINDOWS_PHONE_APP || WINDOWS_PHONE_81
+#if WINDOWS_UWP || WINDOWS_APP || WINDOWS_PHONE_APP || WINDOWS_PHONE_81 || WIN32
         private Windows.Devices.Bluetooth.GenericAttributeProfile.GattValueChangedEventArgs _args;
 
         private GattValueChangedEventArgs(Windows.Devices.Bluetooth.GenericAttributeProfile.GattValueChangedEventArgs args)
@@ -65,7 +65,7 @@ namespace InTheHand.Devices.Bluetooth.GenericAttributeProfile
         {
             get
             {
-#if WINDOWS_UWP || WINDOWS_APP || WINDOWS_PHONE_APP || WINDOWS_PHONE_81
+#if WINDOWS_UWP || WINDOWS_APP || WINDOWS_PHONE_APP || WINDOWS_PHONE_81 || WIN32
                 return _args.CharacteristicValue.ToArray();
 #elif __ANDROID__ || __UNIFIED__
                 return _value;
@@ -82,7 +82,7 @@ namespace InTheHand.Devices.Bluetooth.GenericAttributeProfile
         {
             get
             {
-#if WINDOWS_UWP || WINDOWS_APP || WINDOWS_PHONE_APP || WINDOWS_PHONE_81
+#if WINDOWS_UWP || WINDOWS_APP || WINDOWS_PHONE_APP || WINDOWS_PHONE_81 || WIN32
                 return _args.Timestamp;
 #elif __ANDROID__ || __UNIFIED__
                 return _timestamp;
