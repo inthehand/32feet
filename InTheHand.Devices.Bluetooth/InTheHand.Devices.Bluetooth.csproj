@@ -78,6 +78,7 @@
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net461' ">
 <Compile Include="Platforms\netstandard\RfcommServiceId.portable.cs" />
+    <Compile Include="Platforms\uap\DevicePickerUap.cs" />
     <Compile Include="Platforms\win32\*.cs" />
   </ItemGroup>
 

@@ -1,38 +1,38 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="DevicePicker.uwp.cs" company="In The Hand Ltd">
-//   Copyright (c) 2017 In The Hand Ltd, All rights reserved.
+//   Copyright (c) 2017-18 In The Hand Ltd, All rights reserved.
 //   This source code is licensed under the MIT License - see License.txt
 // </copyright>
 //-----------------------------------------------------------------------
 
 using System;
-using System.Globalization;
-using System.Runtime.InteropServices;
 using System.Threading.Tasks;
-using InTheHand.Devices.Bluetooth;
-using System.Diagnostics;
-using InTheHand.Foundation;
-using InTheHand.UI.Popups;
+
 
 namespace InTheHand.Devices.Enumeration
 {
-    partial class DevicePicker
+    internal class DevicePickerUap : IDevicePicker
     {
-        private Windows.Devices.Enumeration.DevicePicker _devicePicker = new Windows.Devices.Enumeration.DevicePicker();
+        private Windows.Devices.Enumeration.DevicePicker _devicePicker;
 
-        private DevicePicker(Windows.Devices.Enumeration.DevicePicker devicePicker)
+        internal DevicePickerUap()
+        {
+            _devicePicker = new Windows.Devices.Enumeration.DevicePicker();
+        }
+
+        private DevicePickerUap(Windows.Devices.Enumeration.DevicePicker devicePicker)
         {
             _devicePicker = devicePicker;
         }
 
-        public static implicit operator Windows.Devices.Enumeration.DevicePicker(DevicePicker devicePicker)
+        public static implicit operator Windows.Devices.Enumeration.DevicePicker(DevicePickerUap devicePicker)
         {
             return devicePicker._devicePicker;
         }
 
-        public static implicit operator DevicePicker(Windows.Devices.Enumeration.DevicePicker devicePicker)
+        public static implicit operator DevicePickerUap(Windows.Devices.Enumeration.DevicePicker devicePicker)
         {
-            return new DevicePicker(devicePicker);
+            return new DevicePickerUap(devicePicker);
         }
 
         private void Initialize()
@@ -51,20 +51,69 @@ namespace InTheHand.Devices.Enumeration
             OnDevicePickerDismissed();
         }*/
 
-        private DevicePickerAppearance GetAppearance()
+        /*public DevicePickerAppearance Appearance
         {
-            return _devicePicker.Appearance;
+            get
+            {
+                return _devicePicker.Appearance;
+            }
+        }*/
+
+        public DevicePickerFilter Filter
+        {
+            get
+            {
+#if WIN32
+                var filter = new DevicePickerFilter();
+                //_devicePicker.Filter.SupportedDeviceSelectors.CopyTo(filter.SupportedDeviceSelectors,0);
+                return filter;
+#else
+                return _devicePicker.Filter;
+#endif
+            }
         }
 
-        private DevicePickerFilter GetFilter()
+        public DeviceInformation PickSingleDevice()
         {
-            return _devicePicker.Filter;
+            Task<DeviceInformation> t = Task.Run<DeviceInformation>(async () =>
+            {
+
+                var d = await _devicePicker.PickSingleDeviceAsync(Windows.Foundation.Rect.Empty);
+#if WIN32
+                if (d != null)
+                {
+                    Bluetooth.BLUETOOTH_DEVICE_INFO info = new Bluetooth.BLUETOOTH_DEVICE_INFO();
+                    info.Address = 0;
+                    return new DeviceInformation(info);
+                }
+
+                return null;
+#else
+                return d == null ? null : d;
+#endif
+            });
+
+            // TODO: this compiles but does it behave?
+            t.Wait();
+
+            return t.Result;
         }
 
-        private async Task<DeviceInformation> DoPickSingleDeviceAsync()
+        public async Task<DeviceInformation> PickSingleDeviceAsync()
         {
             var d = await _devicePicker.PickSingleDeviceAsync(Windows.Foundation.Rect.Empty);
+#if WIN32
+            if(d != null)
+            {
+                Bluetooth.BLUETOOTH_DEVICE_INFO info = new Bluetooth.BLUETOOTH_DEVICE_INFO();
+                info.Address = 0;
+                return new DeviceInformation(info);
+            }
+
+            return null;
+#else
             return d == null ? null : d;
+#endif
         }
 
 

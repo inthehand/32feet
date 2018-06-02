@@ -35,7 +35,9 @@ namespace InTheHand.Devices.Enumeration
         private Popup _popup;
 #endif
 
-#if !WINDOWS_UWP
+#if WINDOWS_UWP || WIN32
+        private IDevicePicker _picker;
+#else
         private DevicePickerFilter _filter = new DevicePickerFilter();
         
 #endif
@@ -45,8 +47,17 @@ namespace InTheHand.Devices.Enumeration
         /// </summary>
         public DevicePicker()
         {
-#if WINDOWS_UWP
-            //Initialize();
+#if WIN32
+            if (Type.GetType("Windows.Devices.Enumeration.DevicePicker, Windows, ContentType=WindowsRuntime") != null)
+            {
+                _picker = new DevicePickerUap();
+            }
+            else
+            {
+                _picker = new DevicePickerWin32();
+            }
+#elif WINDOWS_UWP
+            _picker = new DevicePickerUap();
 #endif
         }
 
@@ -65,7 +76,7 @@ namespace InTheHand.Devices.Enumeration
         //{
         //    DevicePickerDismissed?.Invoke(this, null);
         //}
-        
+
         // <summary>
         // Indicates that the user selected a device in the picker.
         // </summary>
@@ -77,6 +88,7 @@ namespace InTheHand.Devices.Enumeration
         //    DeviceSelected?.Invoke(this, new DeviceSelectedEventArgs() { SelectedDevice = device });
         //}
 
+            /*
 #if !UNITY
 #if !WINDOWS_UWP
         private DevicePickerAppearance _appearance = new DevicePickerAppearance();
@@ -98,16 +110,17 @@ namespace InTheHand.Devices.Enumeration
         {
             get
             {
-#if WINDOWS_UWP
-                return GetAppearance();
+#if WINDOWS_UWP || WIN32
+                return _picker.Appearance;
 #else
                 return _appearance;
 #endif
             }
         }
 #endif
-        
+     */   
 
+            
         /// <summary>
         /// Gets the filter used to choose what devices to show in the picker.
         /// </summary>
@@ -124,8 +137,8 @@ namespace InTheHand.Devices.Enumeration
         {
             get
             {
-#if WINDOWS_UWP
-                return GetFilter();
+#if WINDOWS_UWP || WIN32
+                return _picker.Filter;
 #else
                 return _filter;
 #endif
@@ -165,7 +178,9 @@ public Task<DeviceInformation> PickSingleDeviceAsync(Rect selection)
 #if !UNITY
         public async Task<DeviceInformation> PickSingleDeviceAsync()
         {
-#if __ANDROID__ || __IOS__ || WIN32 || WINDOWS_UWP
+#if WINDOWS_UWP || WIN32
+            return await _picker.PickSingleDeviceAsync();
+#elif __ANDROID__ || __IOS__
             return await DoPickSingleDeviceAsync();
 
 #elif WINDOWS_PHONE_APP
@@ -187,6 +202,11 @@ public Task<DeviceInformation> PickSingleDeviceAsync(Rect selection)
             return null;
 #endif
         }
-#endif
+#else
+        public DeviceInformation PickSingleDevice()
+        {
+            return _picker.PickSingleDevice();
         }
+#endif
+    }
 }

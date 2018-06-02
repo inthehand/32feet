@@ -17,9 +17,11 @@ using System.Collections.Generic;
 
 namespace InTheHand.Devices.Enumeration
 {
-    partial class DevicePicker
+    internal class DevicePickerWin32 : IDevicePicker
     {
-        //private NativeMethods.PFN_DEVICE_CALLBACK _callback;
+        //public DevicePickerAppearance Appearance { get; } = new DevicePickerAppearance();
+
+        public DevicePickerFilter Filter { get; } = new DevicePickerFilter();
 
         public DeviceInformation PickSingleDevice()
         {
@@ -28,10 +30,10 @@ namespace InTheHand.Devices.Enumeration
             sdp.hwndParent = Process.GetCurrentProcess().MainWindowHandle;
             sdp.numDevices = 1;
 #if !UNITY
-            if (!string.IsNullOrEmpty(Appearance.Title))
+            /*if (!string.IsNullOrEmpty(Appearance.Title))
             {
                 sdp.info = Appearance.Title;
-            }
+            }*/
 #endif
             //defaults
             sdp.fShowAuthenticated = true;
@@ -137,16 +139,16 @@ namespace InTheHand.Devices.Enumeration
         }
 
 #if !UNITY
-        private async Task<DeviceInformation> DoPickSingleDeviceAsync()
+        public async Task<DeviceInformation> PickSingleDeviceAsync()
         {
             NativeMethods.BLUETOOTH_SELECT_DEVICE_PARAMS sdp = new NativeMethods.BLUETOOTH_SELECT_DEVICE_PARAMS();
             sdp.dwSize = Marshal.SizeOf(sdp);
             sdp.hwndParent = Process.GetCurrentProcess().MainWindowHandle;
             sdp.numDevices = 1;
-            if(!string.IsNullOrEmpty(Appearance.Title))
+            /*if(!string.IsNullOrEmpty(Appearance.Title))
             {
                 sdp.info = Appearance.Title;
-            }
+            }*/
 
             //defaults
             sdp.fShowAuthenticated = true;
