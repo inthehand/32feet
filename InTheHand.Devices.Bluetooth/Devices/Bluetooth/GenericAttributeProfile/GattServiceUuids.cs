@@ -26,7 +26,7 @@ namespace InTheHand.Devices.Bluetooth.GenericAttributeProfile
             string requestedUti = bluetoothUti.ToLower();
             if(!requestedUti.StartsWith("org.bluetooth.service"))
             {
-                requestedUti = "org.bluetooth.service" + bluetoothUti.ToLower();
+                requestedUti = "org.bluetooth.service." + bluetoothUti.ToLower();
             }
 
 #if !NETSTANDARD1_4

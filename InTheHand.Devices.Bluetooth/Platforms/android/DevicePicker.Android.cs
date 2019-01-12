@@ -9,8 +9,6 @@ using Android.App;
 using Android.Content;
 using Android.Content.PM;
 using Android.OS;
-using InTheHand.Foundation;
-using InTheHand.UI.Popups;
 using System.Threading;
 using System.Threading.Tasks;
 

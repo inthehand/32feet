@@ -1,27 +1,33 @@
+//-----------------------------------------------------------------------
+// <copyright file="BluetoothSocket.Win32.cs" company="In The Hand Ltd">
+//   Copyright (c) 2017-19 In The Hand Ltd, All rights reserved.
+//   This source code is licensed under the MIT License - see License.txt
+// </copyright>
+//-----------------------------------------------------------------------
+
+using InTheHand.Devices.Bluetooth;
 using System;
-using System.Collections.Generic;
+using System.Net.Sockets;
 using System.Runtime.InteropServices;
-using System.Text;
 
 namespace InTheHand.Net.Sockets
 {
     /// <summary>
     /// 
     /// </summary>
-    public class MonoBluetoothSocket : IDisposable
+    public class BluetoothSocket : IDisposable
     {
         private int _socket = 0;
 
         /// <summary>
         /// 
         /// </summary>
-        public MonoBluetoothSocket()
+        public BluetoothSocket()
         {
-            //AF_BT, Type_Stream, Protocol_Rfcomm
-            _socket = NativeMethods.socket(32, 1, 3);
+            _socket = NativeMethods.socket(BluetoothSockets.BluetoothAddressFamily, SocketType.Stream, BluetoothSockets.RfcommProtocolType);
         }
 
-        internal MonoBluetoothSocket(int socket)
+        internal BluetoothSocket(int socket)
         {
             _socket = socket;
         }
@@ -29,22 +35,22 @@ namespace InTheHand.Net.Sockets
         private void ThrowIfSocketClosed()
         {
             if (_socket == 0)
-                throw new ObjectDisposedException("MonoBluetoothSocket");
+                throw new ObjectDisposedException("BluetoothSocket");
         }
 
-        public MonoBluetoothSocket Accept()
+        public BluetoothSocket Accept()
         {
             ThrowIfSocketClosed();
 
             int newSocket = NativeMethods.accept(_socket, IntPtr.Zero, IntPtr.Zero);
 
-            if (newSocket > 0)
-                throw new global::System.Net.Sockets.SocketException(NativeMethods.WSAGetLastError());
+            if (newSocket < 0)
+                throw new SocketException(NativeMethods.WSAGetLastError());
 
-            return new MonoBluetoothSocket(newSocket);
+            return new BluetoothSocket(newSocket);
         }
 
-        public void Bind(global::System.Net.EndPoint localEP)
+        public void Bind(System.Net.EndPoint localEP)
         {
             ThrowIfSocketClosed();
 
@@ -56,10 +62,10 @@ namespace InTheHand.Net.Sockets
             int result = NativeMethods.bind(_socket, SocketAddressToArray(sockAddr), sockAddr.Size);
 
             if(result < 0)
-                throw new global::System.Net.Sockets.SocketException(NativeMethods.WSAGetLastError());
+                throw new SocketException(NativeMethods.WSAGetLastError());
         }
 
-        private static byte[] SocketAddressToArray(global::System.Net.SocketAddress socketAddress)
+        private static byte[] SocketAddressToArray(System.Net.SocketAddress socketAddress)
         {
             byte[] buffer = new byte[socketAddress.Size+1];
             buffer[0] = (byte)socketAddress.Family;
@@ -92,7 +98,7 @@ namespace InTheHand.Net.Sockets
             int result = NativeMethods.connect(_socket, SocketAddressToArray(sockAddr), sockAddr.Size);
 
             if (result < 0)
-                throw new global::System.Net.Sockets.SocketException(NativeMethods.WSAGetLastError());
+                throw new SocketException(NativeMethods.WSAGetLastError());
         }
 
         public int Receive(byte[] buffer)
@@ -100,12 +106,12 @@ namespace InTheHand.Net.Sockets
             return Receive(buffer, buffer.Length, 0);
         }
 
-        public int Receive(byte[] buffer, global::System.Net.Sockets.SocketFlags socketFlags)
+        public int Receive(byte[] buffer, SocketFlags socketFlags)
         {
             return Receive(buffer, buffer.Length, socketFlags);
         }
 
-        public int Receive(byte[] buffer, int size, global::System.Net.Sockets.SocketFlags socketFlags)
+        public int Receive(byte[] buffer, int size, SocketFlags socketFlags)
         {
             ThrowIfSocketClosed();
 
@@ -118,7 +124,7 @@ namespace InTheHand.Net.Sockets
             int result = NativeMethods.recv(_socket, buffer, size, (int)socketFlags);
 
             if (result < 0)
-                throw new global::System.Net.Sockets.SocketException(NativeMethods.WSAGetLastError());
+                throw new SocketException(NativeMethods.WSAGetLastError());
 
             return result;
         }
@@ -128,12 +134,12 @@ namespace InTheHand.Net.Sockets
             return Send(buffer, buffer.Length, 0);
         }
 
-        public int Send(byte[] buffer, global::System.Net.Sockets.SocketFlags socketFlags)
+        public int Send(byte[] buffer, SocketFlags socketFlags)
         {
             return Send(buffer, buffer.Length, socketFlags);
         }
 
-        public int Send(byte[] buffer, int size, global::System.Net.Sockets.SocketFlags socketFlags)
+        public int Send(byte[] buffer, int size, SocketFlags socketFlags)
         {
             ThrowIfSocketClosed();
 
@@ -146,9 +152,19 @@ namespace InTheHand.Net.Sockets
             int result = NativeMethods.send(_socket, buffer, size, (int)socketFlags);
 
             if (result < 0)
-                throw new global::System.Net.Sockets.SocketException(NativeMethods.WSAGetLastError());
+                throw new SocketException(NativeMethods.WSAGetLastError());
 
             return result;
+        }
+
+        public int Available
+        {
+            get
+            {
+                byte[] outVal = new byte[4];
+                NativeMethods.ioctlsocket(_socket, NativeMethods.FIONREAD, outVal);
+                return BitConverter.ToInt32(outVal, 0);
+            }
         }
 
         protected virtual void Dispose(bool disposing)
@@ -162,7 +178,7 @@ namespace InTheHand.Net.Sockets
             GC.SuppressFinalize(this);
         }
 
-        ~MonoBluetoothSocket()
+        ~BluetoothSocket()
         {
             Dispose(false);
         }
@@ -170,9 +186,10 @@ namespace InTheHand.Net.Sockets
         private static class NativeMethods
         {
             private const string winsockDll = "ws2_32.dll";
+            internal const int FIONREAD = 0x4004667F;
 
             [DllImport(winsockDll)]
-            internal static extern int socket(int af, int type, int protocol);
+            internal static extern int socket(AddressFamily af, SocketType type, ProtocolType protocol);
 
             [DllImport(winsockDll)]
             internal static extern int closesocket(int s);
@@ -196,6 +213,8 @@ namespace InTheHand.Net.Sockets
             [DllImport(winsockDll)]
             internal static extern int WSAGetLastError();
 
+            [DllImport(winsockDll)]
+            internal static extern int ioctlsocket(int s, int cmd, byte[] argp);
         }
     }
 }

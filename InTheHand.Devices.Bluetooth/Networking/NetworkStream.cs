@@ -56,6 +56,7 @@ namespace InTheHand.Networking.Sockets
 
 #elif __ANDROID__
         private BluetoothSocket _socket;
+        private Java.IO.InputStream _inputStream;
 
         /// <summary>
         /// Creates a new instance of the NetworkStream for the specified <see cref="BluetoothSocket"/>
@@ -64,6 +65,8 @@ namespace InTheHand.Networking.Sockets
         public NetworkStream(BluetoothSocket socket)
         {
             _socket = socket;
+            var invoker = _socket.InputStream as Android.Runtime.InputStreamInvoker;
+            _inputStream = invoker.BaseInputStream;
         }
 #elif UNITY
         private MonoBluetoothSocket _socket;
@@ -137,6 +140,25 @@ namespace InTheHand.Networking.Sockets
             }
         }
 
+        public bool DataAvailable
+        {
+            get
+            {
+#if WINDOWS_UWP || WINDOWS_APP || WINDOWS_PHONE_APP || WINDOWS_PHONE_81
+                return _inputStream.Length > 0;
+
+#elif __ANDROID__
+                return _inputStream.Available() > 0;
+
+#elif WIN32
+                return _socket.Available > 0;
+
+#else
+                throw new PlatformNotSupportedException();
+#endif
+            }
+        }
+
         /// <summary>
         /// Gets the length of the data available on the stream. 
         /// This property is not currently supported and always throws a NotSupportedException.
@@ -149,7 +171,7 @@ namespace InTheHand.Networking.Sockets
                 return _inputStream.Length;
 
 #elif __ANDROID__
-                return _socket.InputStream.Length;
+                return _inputStream.Available();
 
 #elif WIN32
                 return _socket.Available;
@@ -335,6 +357,8 @@ namespace InTheHand.Networking.Sockets
             _socket = null;
 
 #elif __ANDROID__
+            _inputStream?.Dispose();
+            _inputStream = null;
             _socket?.Close();
             _socket?.Dispose();
             _socket = null;

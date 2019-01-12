@@ -12,7 +12,6 @@ using InTheHand.Devices.Enumeration;
 using InTheHand.Devices.Bluetooth.GenericAttributeProfile;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using InTheHand.Foundation;
 using System.Threading;
 using Android.Bluetooth;
 using Android.Runtime;

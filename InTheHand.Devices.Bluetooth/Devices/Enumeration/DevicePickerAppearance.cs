@@ -5,8 +5,6 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-using InTheHand.UI;
-
 namespace InTheHand.Devices.Enumeration
 {
     /// <summary>
@@ -54,7 +52,7 @@ namespace InTheHand.Devices.Enumeration
 #endif
         }
 #endif
-
+        /*
         /// <summary>
         /// Gets and sets the accent color of the picker UI.
         /// </summary>
@@ -84,7 +82,7 @@ namespace InTheHand.Devices.Enumeration
         /// Gets and sets the foreground color of the picker UI.
         /// </summary>
         public Color SelectedForegroundColor { get; set; }
-
+        */
         private string _title;
         /// <summary>
         /// The title of the picker UI.

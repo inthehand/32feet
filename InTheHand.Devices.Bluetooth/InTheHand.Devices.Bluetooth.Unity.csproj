@@ -93,8 +93,7 @@
     </Compile>
     <Compile Include="Devices\Enumeration\DeviceUnpairingResultStatus.cs">
     </Compile>
-    <Compile Include="Networking\NetworkStream.cs"/>
-    <Compile Include="Platforms\win32\MonoBluetoothSocket.cs" />
+    <Compile Include="Networking\NetworkStream.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />

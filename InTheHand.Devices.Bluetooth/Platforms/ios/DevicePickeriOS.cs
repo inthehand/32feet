@@ -6,8 +6,6 @@
 //-----------------------------------------------------------------------
 
 using ExternalAccessory;
-using InTheHand.Foundation;
-using InTheHand.UI.Popups;
 using System.Threading;
 using System.Threading.Tasks;
 

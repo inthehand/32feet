@@ -1,6 +1,6 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="BluetoothLEDevice.Portable.cs" company="In The Hand Ltd">
-//   Copyright (c) 2017 In The Hand Ltd, All rights reserved.
+//   Copyright (c) 2017-19 In The Hand Ltd, All rights reserved.
 //   This source code is licensed under the MIT License - see License.txt
 // </copyright>
 //-----------------------------------------------------------------------
@@ -12,7 +12,6 @@ using InTheHand.Devices.Enumeration;
 using InTheHand.Devices.Bluetooth.GenericAttributeProfile;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using InTheHand.Foundation;
 using System.Threading;
 
 namespace InTheHand.Devices.Bluetooth
