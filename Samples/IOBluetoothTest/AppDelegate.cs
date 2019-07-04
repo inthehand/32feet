@@ -28,9 +28,9 @@ namespace IOBluetoothTest
 
             foreach(IOBluetooth.IOBluetoothDevice dev in IOBluetooth.IOBluetoothDevice.PairedDevices)
             {
-                var addrstruct = Marshal.PtrToStructure(dev.GetAddress(), typeof(IOBluetooth.BluetoothDeviceAddress));
+                var addrstruct = dev.Address;
 
-
+                
                 //System.Diagnostics.Debug.WriteLine(dev.Address.ToString("x6"));
                 System.Diagnostics.Debug.WriteLine(dev.AddressString);
                 System.Diagnostics.Debug.WriteLine(dev.NameOrAddress);
