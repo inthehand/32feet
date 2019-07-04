@@ -2384,7 +2384,7 @@ namespace IOBluetooth
     //	MaxDataPacketSize = DataPacketHeaderSize + DataPacketMaxDataSize
     //}
 
-    public enum BluetoothLinkTypes : uint
+    public enum BluetoothLinkType : byte
     {
         SCOConnection = 0,
         ACLConnection = 1,
@@ -2550,14 +2550,14 @@ namespace IOBluetooth
         public ushort transmitPacketLength;
     }
 
-    public enum BluetoothHCIEvent : uint
+    public enum HCIEvent : uint
     {
-        BluetoothHCIEventInquiryComplete = 1,
-        BluetoothHCIEventInquiryResult = 2,
-        BluetoothHCIEventConnectionComplete = 3,
-        BluetoothHCIEventConnectionRequest = 4,
-        BluetoothHCIEventDisconnectionComplete = 5,
-        BluetoothHCIEventAuthenticationComplete = 6,
+        InquiryComplete = 1,
+        InquiryResult = 2,
+        ConnectionComplete = 3,
+        ConnectionRequest = 4,
+        DisconnectionComplete = 5,
+        AuthenticationComplete = 6,
         BluetoothHCIEventRemoteNameRequestComplete = 7,
         BluetoothHCIEventEncryptionChange = 8,
         BluetoothHCIEventChangeConnectionLinkKeyComplete = 9,
@@ -2693,13 +2693,13 @@ namespace IOBluetooth
     [StructLayout(LayoutKind.Sequential)]
     public struct BluetoothHCIEventConnectionCompleteResults
     {
-        public ushort connectionHandle;
+        public ushort ConnectionHandle;
 
-        public BluetoothDeviceAddress deviceAddress;
+        public BluetoothDeviceAddress DeviceAddress;
 
-        public byte linkType;
+        public BluetoothLinkType LinkType;
 
-        public byte encryptionMode;
+        public byte EncryptionMode;
     }
 
     [StructLayout(LayoutKind.Sequential)]
@@ -2797,39 +2797,39 @@ namespace IOBluetooth
     [StructLayout(LayoutKind.Sequential)]
     public struct BluetoothHCIEventConnectionRequestResults
     {
-        public BluetoothDeviceAddress deviceAddress;
+        public BluetoothDeviceAddress DeviceAddress;
 
-        public uint classOfDevice;
+        public uint ClassOfDevice;
 
-        public byte linkType;
+        public BluetoothLinkType LinkType;
     }
 
     [StructLayout(LayoutKind.Sequential)]
     public struct BluetoothHCIEventLinkKeyNotificationResults
     {
-        public BluetoothDeviceAddress deviceAddress;
+        public BluetoothDeviceAddress DeviceAddress;
 
-        public BluetoothKey linkKey;
+        public BluetoothKey LinkKey;
 
-        public byte keyType;
+        public byte KeyType;
     }
 
     [StructLayout(LayoutKind.Sequential)]
     public struct BluetoothHCIEventMaxSlotsChangeResults
     {
-        public ushort connectionHandle;
+        public ushort ConnectionHandle;
 
-        public byte maxSlots;
+        public byte MaxSlots;
     }
 
     [StructLayout(LayoutKind.Sequential)]
     public struct BluetoothHCIEventModeChangeResults
     {
-        public ushort connectionHandle;
+        public ushort ConnectionHandle;
 
-        public byte mode;
+        public byte Mode;
 
-        public ushort modeInterval;
+        public ushort ModeInterval;
     }
 
     /*[StructLayout (LayoutKind.Sequential)]
@@ -2852,27 +2852,27 @@ namespace IOBluetooth
     [StructLayout(LayoutKind.Sequential)]
     public struct BluetoothHCIEventAuthenticationCompleteResults
     {
-        public ushort connectionHandle;
+        public ushort ConnectionHandle;
     }
 
     [StructLayout(LayoutKind.Sequential)]
     public struct BluetoothHCIEventEncryptionChangeResults
     {
-        public ushort connectionHandle;
+        public ushort ConnectionHandle;
 
-        public byte enable;
+        public byte Enable;
     }
 
     [StructLayout(LayoutKind.Sequential)]
     public struct BluetoothHCIEventChangeConnectionLinkKeyCompleteResults
     {
-        public ushort connectionHandle;
+        public ushort ConnectionHandle;
     }
 
     [StructLayout(LayoutKind.Sequential)]
     public struct BluetoothHCIEventMasterLinkKeyCompleteResults
     {
-        public ushort connectionHandle;
+        public ushort ConnectionHandle;
 
         public byte keyFlag;
     }
@@ -2880,7 +2880,7 @@ namespace IOBluetooth
     [StructLayout(LayoutKind.Sequential)]
     public struct BluetoothHCIEventQoSSetupCompleteResults
     {
-        public ushort connectionHandle;
+        public ushort ConnectionHandle;
 
         public BluetoothHCIQualityOfServiceSetupParams setupParams;
     }
@@ -2888,37 +2888,37 @@ namespace IOBluetooth
     [StructLayout(LayoutKind.Sequential)]
     public struct BluetoothHCIEventHardwareErrorResults
     {
-        public byte error;
+        public byte Error;
     }
 
     [StructLayout(LayoutKind.Sequential)]
     public struct BluetoothHCIEventFlushOccurredResults
     {
-        public ushort connectionHandle;
+        public ushort ConnectionHandle;
     }
 
     [StructLayout(LayoutKind.Sequential)]
     public struct BluetoothHCIEventRoleChangeResults
     {
-        public ushort connectionHandle;
+        public ushort ConnectionHandle;
 
-        public BluetoothDeviceAddress deviceAddress;
+        public BluetoothDeviceAddress DeviceAddress;
 
-        public byte role;
+        public byte Role;
     }
 
     [StructLayout(LayoutKind.Sequential)]
     public struct BluetoothHCIEventDataBufferOverflowResults
     {
-        public byte linkType;
+        public BluetoothLinkType LinkType;
     }
 
     [StructLayout(LayoutKind.Sequential)]
     public struct BluetoothHCIEventConnectionPacketTypeResults
     {
-        public ushort connectionHandle;
+        public ushort ConnectionHandle;
 
-        public ushort packetType;
+        public ushort PacketType;
     }
 
     //[StructLayout (LayoutKind.Sequential)]
@@ -2948,65 +2948,65 @@ namespace IOBluetooth
     [StructLayout(LayoutKind.Sequential)]
     public struct BluetoothHCIEventQoSViolationResults
     {
-        public ushort connectionHandle;
+        public ushort ConnectionHandle;
     }
 
     [StructLayout(LayoutKind.Sequential)]
     public struct BluetoothHCIEventPageScanModeChangeResults
     {
-        public BluetoothDeviceAddress deviceAddress;
+        public BluetoothDeviceAddress DeviceAddress;
 
-        public byte pageScanMode;
+        public byte PageScanMode;
     }
 
     [StructLayout(LayoutKind.Sequential)]
     public struct BluetoothHCIEventPageScanRepetitionModeChangeResults
     {
-        public BluetoothDeviceAddress deviceAddress;
+        public BluetoothDeviceAddress DeviceAddress;
 
-        public byte pageScanRepetitionMode;
+        public byte PageScanRepetitionMode;
     }
 
     [StructLayout(LayoutKind.Sequential)]
     public struct BluetoothHCIEventVendorSpecificResults
     {
-        public byte length;
+        public byte Length;
 
-        public byte[] data;
+        public byte[] Data;
     }
 
     [StructLayout(LayoutKind.Sequential)]
     public struct BluetoothHCIEventEncryptionKeyRefreshCompleteResults
     {
-        public ushort connectionHandle;
+        public ushort ConnectionHandle;
     }
 
     [StructLayout(LayoutKind.Sequential)]
     public struct BluetoothHCIEventSniffSubratingResults
     {
-        public ushort connectionHandle;
+        public ushort ConnectionHandle;
 
-        public ushort maxTransmitLatency;
+        public ushort MaxTransmitLatency;
 
-        public ushort maxReceiveLatency;
+        public ushort MaxReceiveLatency;
 
-        public ushort minRemoteTimeout;
+        public ushort MinRemoteTimeout;
 
-        public ushort minLocalTimeout;
+        public ushort MinLocalTimeout;
     }
 
     [StructLayout(LayoutKind.Sequential)]
     public struct BluetoothHCIEventLEMetaResults
     {
-        public byte length;
+        public byte Length;
 
-        public byte[] data;
+        public byte[] Data;
     }
 
     [StructLayout(LayoutKind.Sequential)]
     public struct BluetoothHCIEventLELongTermKeyRequestResults
     {
-        public ushort connectionHandle;
+        public ushort ConnectionHandle;
 
         public byte[] randomNumber;
 
@@ -3145,7 +3145,7 @@ namespace IOBluetooth
     //	L2CA_ConfigResp = 19
     //}
 
-    public enum BluetoothRFCOMMParityType : uint
+    public enum RFCommParityType : uint
     {
         NoParity = 0,
         OddParity,
@@ -3153,7 +3153,7 @@ namespace IOBluetooth
         MaxParity
     }
 
-    public enum BluetoothRFCOMMLineStatus : uint
+    public enum RFCommLineStatus : uint
     {
         NoError = 0,
         OverrunError,
@@ -3488,15 +3488,15 @@ namespace IOBluetooth
     [StructLayout(LayoutKind.Sequential)]
     public struct DeviceSearchDeviceAttributes
     {
-        public BluetoothDeviceAddress address;
+        public BluetoothDeviceAddress Address;
 
-        public byte[] name;
+        public byte[] Name;
 
-        public BluetoothServiceClassMajor serviceClassMajor;
+        public BluetoothServiceClassMajor ServiceClassMajor;
 
-        public uint deviceClassMajor;
+        public uint DeviceClassMajor;
 
-        public uint deviceClassMinor;
+        public uint DeviceClassMinor;
     }
 
     //[StructLayout (LayoutKind.Sequential)]
