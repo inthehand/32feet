@@ -6,7 +6,7 @@ using ObjCRuntime;
 
 namespace IOBluetooth
 {
-    public enum BluetoothCompanyIdentifers : uint
+    public enum CompanyIdentifer : uint
     {
         EricssonTechnologyLicensing = 0,
         NokiaMobilePhones = 1,
@@ -276,7 +276,7 @@ namespace IOBluetooth
     }
 
     [Native]
-    public enum BluetoothServiceClassMajor : ulong
+    public enum ServiceClassMajor : ulong
     {
         LimitedDiscoverableMode = 1,
         Reserved1 = 2,
@@ -295,7 +295,7 @@ namespace IOBluetooth
     }
 
     [Native]
-    public enum BluetoothDeviceClassMajor : ulong
+    public enum DeviceClassMajor : ulong
     {
         Miscellaneous = 0,
         Computer = 1,
@@ -313,7 +313,7 @@ namespace IOBluetooth
     }
 
     [Native]
-    public enum BluetoothDeviceClassMinor : ulong
+    public enum DeviceClassMinor : ulong
     {
         ComputerUnclassified = 0,
         ComputerDesktopWorkstation = 1,
@@ -388,7 +388,7 @@ namespace IOBluetooth
         None = 1852796517
     }
 
-    public enum BluetoothGAPAppearance : uint
+    public enum GAPAppearance : uint
     {
         Unknown = 0,
         GenericPhone = 64,
@@ -718,19 +718,19 @@ namespace IOBluetooth
 
     public enum BluetoothKeyFlag : uint
     {
-    	SemiPermanent = 0,
-    	Temporary = 1
+        SemiPermanent = 0,
+        Temporary = 1
     }
 
     public enum BluetoothKeyType : uint
     {
-    	Combination = 0,
-    	LocalUnit = 1,
-    	RemoteUnit = 2,
-    	DebugCombination = 3,
-    	UnauthenticatedCombination = 4,
-    	AuthenticatedCombination = 5,
-    	ChangedCombination = 6
+        Combination = 0,
+        LocalUnit = 1,
+        RemoteUnit = 2,
+        DebugCombination = 3,
+        UnauthenticatedCombination = 4,
+        AuthenticatedCombination = 5,
+        ChangedCombination = 6
     }
 
     [Flags]
@@ -867,8 +867,8 @@ namespace IOBluetooth
 
     public enum BluetoothRole : uint
     {
-    	BecomeMaster = 0,
-    	RemainSlave = 1
+        BecomeMaster = 0,
+        RemainSlave = 1
     }
 
     [StructLayout(LayoutKind.Sequential)]
@@ -1670,7 +1670,7 @@ namespace IOBluetooth
     }
 
     [StructLayout(LayoutKind.Sequential)]
-    public struct BluetoothHCIFailedContactInfo
+    public struct HciFailedContactInfo
     {
         public ushort count;
 
@@ -1678,15 +1678,15 @@ namespace IOBluetooth
     }
 
     [StructLayout(LayoutKind.Sequential)]
-    public struct BluetoothHCIRSSIInfo
+    public struct HciRssiInfo
     {
         public ushort handle;
 
-        public sbyte RSSIValue;
+        public sbyte RssiValue;
     }
 
     [StructLayout(LayoutKind.Sequential)]
-    public struct BluetoothHCILinkQualityInfo
+    public struct HciLinkQualityInfo
     {
         public ushort handle;
 
@@ -1694,20 +1694,20 @@ namespace IOBluetooth
     }
 
     [StructLayout(LayoutKind.Sequential)]
-    public struct BluetoothHCIRoleInfo
+    public struct HciRoleInfo
     {
         public byte role;
 
         public ushort handle;
     }
 
-    public enum BluetoothHCIRoles : uint
+    public enum HciRole : uint
     {
         MasterRole = 0,
         SlaveRole = 1
     }
 
-    public enum BluetoothHCILinkPolicySettingsValues : uint
+    public enum HciLinkPolicySettingsValues : uint
     {
         DisableAllLMModes = 0,
         EnableMasterSlaveSwitch = 1,
@@ -1718,7 +1718,7 @@ namespace IOBluetooth
     }
 
     [StructLayout(LayoutKind.Sequential)]
-    public struct BluetoothHCILinkPolicySettingsInfo
+    public struct HciLinkPolicySettingsInfo
     {
         public ushort settings;
 
@@ -1726,7 +1726,7 @@ namespace IOBluetooth
     }
 
     [StructLayout(LayoutKind.Sequential)]
-    public struct BluetoothHCIQualityOfServiceSetupParams
+    public struct HciQualityOfServiceSetupParams
     {
         public byte flags;
 
@@ -1742,7 +1742,7 @@ namespace IOBluetooth
     }
 
     [StructLayout(LayoutKind.Sequential)]
-    public struct BluetoothHCISetupSynchronousConnectionParams
+    public struct HciSetupSynchronousConnectionParams
     {
         public uint transmitBandwidth;
 
@@ -1758,7 +1758,7 @@ namespace IOBluetooth
     }
 
     [StructLayout(LayoutKind.Sequential)]
-    public struct BluetoothHCIAcceptSynchronousConnectionRequestParams
+    public struct HciAcceptSynchronousConnectionRequestParams
     {
         public uint transmitBandwidth;
 
@@ -1774,7 +1774,7 @@ namespace IOBluetooth
     }
 
     [StructLayout(LayoutKind.Sequential)]
-    public struct BluetoothHCIEnhancedSetupSynchronousConnectionParams
+    public struct HciEnhancedSetupSynchronousConnectionParams
     {
         public uint transmitBandwidth;
 
@@ -1826,7 +1826,7 @@ namespace IOBluetooth
     }
 
     [StructLayout(LayoutKind.Sequential)]
-    public struct BluetoothHCIEnhancedAcceptSynchronousConnectionRequestParams
+    public struct HciEnhancedAcceptSynchronousConnectionRequestParams
     {
         public uint transmitBandwidth;
 
@@ -1877,13 +1877,12 @@ namespace IOBluetooth
         public ushort packetType;
     }
 
-    //[Verify (InferredFromMemberPrefix)]
-    //public enum kBluetoothHCILoopbackMode : uint
-    //{
-    //	Off = 0,
-    //	Local = 1,
-    //	Remote = 2
-    //}
+    public enum HciLoopbackMode : uint
+    {
+        Off = 0,
+        Local = 1,
+        Remote = 2
+    }
 
     [StructLayout(LayoutKind.Sequential)]
     public struct BluetoothReadClockInfo
@@ -1896,7 +1895,7 @@ namespace IOBluetooth
     }
 
     [StructLayout(LayoutKind.Sequential)]
-    public struct BluetoothHCIEventFlowSpecificationData
+    public struct HciEventFlowSpecificationData
     {
         public ushort connectionHandle;
 
@@ -1916,7 +1915,7 @@ namespace IOBluetooth
     }
 
     [StructLayout(LayoutKind.Sequential)]
-    public struct BluetoothHCIVersionInfo
+    public struct HciVersionInfo
     {
         public ushort manufacturerName;
 
@@ -1930,7 +1929,7 @@ namespace IOBluetooth
     }
 
     [StructLayout(LayoutKind.Sequential)]
-    public struct BluetoothHCIBufferSize
+    public struct HciBufferSize
     {
         public ushort ACLDataPacketLength;
 
@@ -1942,39 +1941,39 @@ namespace IOBluetooth
     }
 
     [StructLayout(LayoutKind.Sequential)]
-    public struct BluetoothHCILEBufferSize
+    public struct HciLEBufferSize
     {
         public ushort ACLDataPacketLength;
 
         public byte totalNumACLDataPackets;
     }
 
-    public enum BluetoothHCITimeoutValues : uint
+    public enum HciTimeoutValues : uint
     {
         DefaultPageTimeout = 10000
     }
 
-    public enum BluetoothHCIDeleteStoredLinkKeyFlags : uint
+    public enum HciDeleteStoredLinkKeyFlags : uint
     {
         KeyForSpecifiedDeviceOnly = 0,
         AllStoredLinkKeys = 1
     }
 
-    public enum BluetoothHCIReadStoredLinkKeysFlags : uint
+    public enum HciReadStoredLinkKeysFlags : uint
     {
         turnLinkKeyForSpecifiedDeviceOnly = 0,
         adAllStoredLinkKeys = 1
     }
 
     [StructLayout(LayoutKind.Sequential)]
-    public struct BluetoothHCIStoredLinkKeysInfo
+    public struct HciStoredLinkKeysInfo
     {
         public ushort numLinkKeysRead;
 
         public ushort maxNumLinkKeysAllowedInDevice;
     }
 
-    public enum BluetoothHCIPageScanModes : uint
+    public enum HciPageScanModes : uint
     {
         MandatoryPageScanMode = 0,
         OptionalPageScanMode1 = 1,
@@ -1982,14 +1981,14 @@ namespace IOBluetooth
         OptionalPageScanMode3 = 3
     }
 
-    public enum BluetoothHCIPageScanPeriodModes : uint
+    public enum HciPageScanPeriodModes : uint
     {
         kP0Mode = 0,
         kP1Mode = 1,
         kP2Mode = 2
     }
 
-    public enum BluetoothHCIPageScanEnableStates : uint
+    public enum HciPageScanEnableStates : uint
     {
         NoScansEnabled = 0,
         InquiryScanEnabledPageScanDisabled = 1,
@@ -1998,7 +1997,7 @@ namespace IOBluetooth
     }
 
     [StructLayout(LayoutKind.Sequential)]
-    public struct BluetoothHCIScanActivity
+    public struct HciScanActivity
     {
         public ushort scanInterval;
 
@@ -2006,7 +2005,7 @@ namespace IOBluetooth
     }
 
     [StructLayout(LayoutKind.Sequential)]
-    public struct BluetoothHCIInquiryAccessCode
+    public struct HciInquiryAccessCode
     {
         public byte[] data;
     }
@@ -2022,7 +2021,7 @@ namespace IOBluetooth
     //}
 
     [StructLayout(LayoutKind.Sequential)]
-    public struct BluetoothHCICurrentInquiryAccessCodesForWrite
+    public struct HciCurrentInquiryAccessCodesForWrite
     {
         public byte count;
 
@@ -2030,20 +2029,20 @@ namespace IOBluetooth
     }
 
     [StructLayout(LayoutKind.Sequential)]
-    public struct BluetoothHCILinkSupervisionTimeout
+    public struct HciLinkSupervisionTimeout
     {
         public ushort handle;
 
         public ushort timeout;
     }
 
-    public enum BluetoothHCISCOFlowControlStates : uint
+    public enum HciScoFlowControlStates : uint
     {
         Disabled = 0,
         Enabled = 1
     }
 
-    public enum BluetoothHCIGeneralFlowControlStates : uint
+    public enum HciGeneralFlowControlStates : uint
     {
         ostControllerToHostFlowControlOff = 0,
         CIACLDataPacketsOnHCISCODataPacketsOff = 1,
@@ -2051,27 +2050,27 @@ namespace IOBluetooth
         CIACLDataPacketsOnHCISCODataPacketsOn = 3
     }
 
-    public enum BluetoothHCITransmitReadPowerLevelTypes : uint
+    public enum HciTransmitReadPowerLevelTypes : uint
     {
         CurrentTransmitPowerLevel = 0,
         MaximumTransmitPowerLevel = 1
     }
 
-    public enum BluetoothHCIAFHChannelAssessmentModes : uint
+    public enum HciAFHChannelAssessmentModes : uint
     {
         Disabled = 0,
         Enabled = 1
     }
 
     [StructLayout(LayoutKind.Sequential)]
-    public struct BluetoothHCITransmitPowerLevelInfo
+    public struct HciTransmitPowerLevelInfo
     {
         public ushort handle;
 
         public sbyte level;
     }
 
-    public enum BluetoothHCIHoldModeActivityStates : uint
+    public enum HciHoldModeActivityStates : uint
     {
         MaintainCurrentPowerState = 0,
         SuspendPageScan = 1,
@@ -2079,13 +2078,13 @@ namespace IOBluetooth
         SuspendPeriodicInquiries = 3
     }
 
-    public enum BluetoothHCIAuthentionEnableModes : uint
+    public enum HciAuthentionEnableModes : uint
     {
         Disabled = 0,
         Enabled = 1
     }
 
-    public enum BluetoothHCIEncryptionMode : byte
+    public enum HciEncryptionMode : byte
     {
         Disabled = 0,
         OnlyForPointToPointPackets = 1,
@@ -2093,7 +2092,7 @@ namespace IOBluetooth
     }
 
     [StructLayout(LayoutKind.Sequential)]
-    public struct BluetoothHCIAutomaticFlushTimeoutInfo
+    public struct HciAutomaticFlushTimeoutInfo
     {
         public ushort handle;
 
@@ -2122,16 +2121,16 @@ namespace IOBluetooth
         public ulong totalSCOBytesReceived;
     }
 
-    public enum BluetoothTransportTypes : uint
+    public enum BluetoothTransportType : uint
     {
         Usb = 1,
         PCCard = 2,
-        PCICard = 3,
+        PciCard = 3,
         Uart = 4
     }
 
     [StructLayout(LayoutKind.Sequential)]
-    public struct BluetoothHCIInquiryResult
+    public struct HciInquiryResult
     {
         public BluetoothDeviceAddress deviceAddress;
 
@@ -2147,15 +2146,15 @@ namespace IOBluetooth
     }
 
     [StructLayout(LayoutKind.Sequential)]
-    public struct BluetoothHCIInquiryResults
+    public struct HciInquiryResults
     {
-        public BluetoothHCIInquiryResult[] results;
+        public HciInquiryResult[] results;
 
         public uint count;
     }
 
     [StructLayout(LayoutKind.Sequential)]
-    public struct BluetoothHCIInquiryWithRSSIResult
+    public struct HciInquiryWithRssiResult
     {
         public BluetoothDeviceAddress deviceAddress;
 
@@ -2171,27 +2170,27 @@ namespace IOBluetooth
     }
 
     [StructLayout(LayoutKind.Sequential)]
-    public struct BluetoothHCIInquiryWithRSSIResults
+    public struct HciInquiryWithRssiResults
     {
-        public BluetoothHCIInquiryWithRSSIResult[] results;
+        public HciInquiryWithRssiResult[] results;
 
         public uint count;
     }
 
-    public enum BluetoothHCIFECRequiredValues : uint
+    public enum HciFecRequiredValues : uint
     {
         Required = 0,
         NotRequired = 1
     }
 
-    public enum BluetoothHCIInquiryModes : uint
+    public enum HciInquiryMode : uint
     {
         Standard = 0,
-        WithRSSI = 1,
-        WithRSSIOrExtendedInquiryResultFormat = 2
+        WithRssi = 1,
+        WithRssiOrExtendedInquiryResultFormat = 2
     }
 
-    public enum BluetoothHCIInquiryScanTypes : uint
+    public enum HciInquiryScanType : uint
     {
         Standard = 0,
         Interlaced = 1,
@@ -2200,21 +2199,21 @@ namespace IOBluetooth
     }
 
     [StructLayout(LayoutKind.Sequential)]
-    public struct BluetoothHCIExtendedInquiryResponse
+    public struct HciExtendedInquiryResponse
     {
         public byte[] data;
     }
 
     [StructLayout(LayoutKind.Sequential)]
-    public struct BluetoothHCIReadExtendedInquiryResponseResults
+    public struct HciReadExtendedInquiryResponseResults
     {
         public byte outFECRequired;
 
-        public BluetoothHCIExtendedInquiryResponse extendedInquiryResponse;
+        public HciExtendedInquiryResponse extendedInquiryResponse;
     }
 
     [StructLayout(LayoutKind.Sequential)]
-    public struct BluetoothHCIExtendedInquiryResult
+    public struct HciExtendedInquiryResult
     {
         public byte numberOfReponses;
 
@@ -2228,13 +2227,13 @@ namespace IOBluetooth
 
         public ushort clockOffset;
 
-        public sbyte RSSIValue;
+        public sbyte RssiValue;
 
-        public BluetoothHCIExtendedInquiryResponse extendedInquiryResponse;
+        public HciExtendedInquiryResponse extendedInquiryResponse;
     }
 
     [StructLayout(LayoutKind.Sequential)]
-    public struct BluetoothHCIReadLMPHandleResults
+    public struct HciReadLmpHandleResults
     {
         public ushort handle;
 
@@ -2243,30 +2242,30 @@ namespace IOBluetooth
         public uint reserved;
     }
 
-    public enum BluetoothHCISimplePairingModes : uint
+    public enum HciSimplePairingMode : uint
     {
         NotSet = 0,
         Enabled = 1
     }
 
-    public enum BluetoothSimplePairingDebugModes : uint
+    public enum SimplePairingDebugMode : uint
     {
         Disabled = 0,
         Enabled = 1
     }
 
     [StructLayout(LayoutKind.Sequential)]
-    public struct BluetoothHCISimplePairingOOBData
+    public struct HciSimplePairingOobData
     {
         public byte[] data;
     }
 
     [StructLayout(LayoutKind.Sequential)]
-    public struct BluetoothHCIReadLocalOOBDataResults
+    public struct HciReadLocalOobDataResults
     {
-        public BluetoothHCISimplePairingOOBData hash;
+        public HciSimplePairingOobData hash;
 
-        public BluetoothHCISimplePairingOOBData randomizer;
+        public HciSimplePairingOobData randomizer;
     }
 
     public enum BluetoothIOCapabilities : uint
@@ -2431,7 +2430,7 @@ namespace IOBluetooth
     //	TransparentData = 3
     //}
 
-    public enum BluetoothHCIRetransmissionEffortTypes : uint
+    public enum HciRetransmissionEffortType : uint
     {
         None = 0,
         AtLeastOneAndOptimizeForPower = 1,
@@ -2550,7 +2549,7 @@ namespace IOBluetooth
         public ushort transmitPacketLength;
     }
 
-    public enum HCIEvent : uint
+    public enum HciEvent : uint
     {
         InquiryComplete = 1,
         InquiryResult = 2,
@@ -2882,7 +2881,7 @@ namespace IOBluetooth
     {
         public ushort ConnectionHandle;
 
-        public BluetoothHCIQualityOfServiceSetupParams setupParams;
+        public HciQualityOfServiceSetupParams setupParams;
     }
 
     [StructLayout(LayoutKind.Sequential)]
@@ -3492,11 +3491,11 @@ namespace IOBluetooth
 
         public byte[] Name;
 
-        public BluetoothServiceClassMajor ServiceClassMajor;
+        public ServiceClassMajor ServiceClassMajor;
 
-        public uint DeviceClassMajor;
+        public DeviceClassMajor DeviceClassMajor;
 
-        public uint DeviceClassMinor;
+        public DeviceClassMinor DeviceClassMinor;
     }
 
     //[StructLayout (LayoutKind.Sequential)]
@@ -3511,10 +3510,11 @@ namespace IOBluetooth
     //	public unsafe DeviceSearchDeviceAttributes* attributeList;
     //}
 
-    public enum DeviceSearchTypesBits : uint
+    [Flags]
+    public enum DeviceSearchType : uint
     {
         Classic = 1,
-        Le = 2
+        LE = 2
     }
 
     public enum UserNotificationChannelDirection : uint

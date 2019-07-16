@@ -12,7 +12,7 @@ namespace IOBluetoothUI
     /// </summary>
     // @interface IOBluetoothDeviceSelectorController : NSWindowController
     [BaseType(typeof(NSWindowController))]
-    interface IOBluetoothDeviceSelectorController
+    interface DeviceSelectorController
     {
         // +(IOBluetoothDeviceSelectorController *)deviceSelector;
         /// <summary>
@@ -21,7 +21,7 @@ namespace IOBluetoothUI
         /// <value>Success - a new instance of the device selector Controller Failure - nil.</value>
         [Static]
         [Export("deviceSelector")]
-        IOBluetoothDeviceSelectorController DeviceSelector { get; }
+        DeviceSelectorController DeviceSelector { get; }
 
         // -(int)runModal;
         /// <summary>
@@ -49,7 +49,7 @@ namespace IOBluetoothUI
         /// </summary>
         /// <value>The results.</value>
         [Export("getResults")]
-        IOBluetoothDevice[] Results { get; }
+        BluetoothDevice[] Results { get; }
 
         // -(void)setOptions:(IOBluetoothServiceBrowserControllerOptions)options;
         // -(IOBluetoothServiceBrowserControllerOptions)getOptions;
@@ -58,7 +58,7 @@ namespace IOBluetoothUI
         /// </summary>
         /// <value>The options.</value>
         [Export("options")]
-        IOBluetoothServiceBrowserControllerOptions Options { [Bind("getOptions")] get; set; }
+        ServiceBrowserControllerOptions Options { [Bind("getOptions")] get; set; }
 
         // -(void)setSearchAttributes:(const IOBluetoothDeviceSearchAttributes *)searchAttributes;
         //[Export("setSearchAttributes:")]
@@ -75,7 +75,7 @@ namespace IOBluetoothUI
         /// </summary>
         /// <param name="allowedUUID">Allowed UUID.</param>
         [Export("addAllowedUUID:")]
-        void AddAllowedUUID(IOBluetoothSDPUUID allowedUUID);
+        void AddAllowedUUID(SDPUUID allowedUUID);
 
         // -(void)addAllowedUUIDArray:(NSArray *)allowedUUIDArray;
         /// <summary>
@@ -83,7 +83,7 @@ namespace IOBluetoothUI
         /// </summary>
         /// <param name="allowedUUIDArray">Allowed UUIDA rray.</param>
         [Export("addAllowedUUIDArray:")]
-        void AddAllowedUUIDArray(IOBluetoothSDPUUID[] allowedUUIDArray);
+        void AddAllowedUUIDArray(SDPUUID[] allowedUUIDArray);
 
         // -(void)clearAllowedUUIDs;
         /// <summary>
@@ -144,12 +144,12 @@ namespace IOBluetoothUI
     /// </summary>
     // @interface IOBluetoothPairingController : NSWindowController
     [BaseType(typeof(NSWindowController))]
-    interface IOBluetoothPairingController
+    interface BluetoothPairingController
     {
         // +(IOBluetoothPairingController *)pairingController;
         [Static]
         [Export("pairingController")]
-        IOBluetoothPairingController PairingController { get; }
+        BluetoothPairingController PairingController { get; }
 
         /// <summary>
         /// Runs the pairing panel in a modal session to allow the user to select a Bluetooth device.
@@ -168,12 +168,12 @@ namespace IOBluetoothUI
         /// <value>The results.</value>
         // -(NSArray *)getResults;
         [Export("getResults")]
-        IOBluetoothDevice[] Results { get; }
+        BluetoothDevice[] Results { get; }
 
         // -(void)setOptions:(IOBluetoothServiceBrowserControllerOptions)options;
         // -(IOBluetoothServiceBrowserControllerOptions)getOptions;
         [Export("options")]
-        IOBluetoothServiceBrowserControllerOptions Options { [Bind("getOptions")] get; set; }
+        ServiceBrowserControllerOptions Options { [Bind("getOptions")] get; set; }
 
         // -(void)setSearchAttributes:(const IOBluetoothDeviceSearchAttributes *)searchAttributes;
         //[Export("setSearchAttributes:")]
@@ -185,11 +185,11 @@ namespace IOBluetoothUI
 
         // -(void)addAllowedUUID:(IOBluetoothSDPUUID *)allowedUUID;
         [Export("addAllowedUUID:")]
-        void AddAllowedUUID(IOBluetoothSDPUUID allowedUUID);
+        void AddAllowedUUID(SDPUUID allowedUUID);
 
         // -(void)addAllowedUUIDArray:(NSArray *)allowedUUIDArray;
         [Export("addAllowedUUIDArray:")]
-        void AddAllowedUUIDArray(IOBluetoothSDPUUID[] allowedUUIDArray);
+        void AddAllowedUUIDArray(SDPUUID[] allowedUUIDArray);
 
         // -(void)clearAllowedUUIDs;
         [Export("clearAllowedUUIDs")]
@@ -228,12 +228,12 @@ namespace IOBluetoothUI
     /// An NSWindowController subclass to display a window to search for and perform SDP queries on bluetooth devices within range.
     /// </summary>
     [BaseType(typeof(NSWindowController))]
-    interface IOBluetoothServiceBrowserController
+    interface BluetoothServiceBrowserController
     {
         // +(IOBluetoothServiceBrowserController *)serviceBrowserController:(IOBluetoothServiceBrowserControllerOptions)inOptions;
         [Static]
         [Export("serviceBrowserController:")]
-        IOBluetoothServiceBrowserController ServiceBrowserController(uint inOptions);
+        BluetoothServiceBrowserController ServiceBrowserController(uint inOptions);
 
         // +(IOBluetoothServiceBrowserController *)withServiceBrowserControllerRef:(IOBluetoothServiceBrowserControllerRef)serviceBrowserControllerRef;
         //[Static]
@@ -274,7 +274,7 @@ namespace IOBluetoothUI
         /// </summary>
         /// <value>The results.</value>
         [Export("getResults")]
-        IOBluetoothSDPServiceRecord[] Results { get; }
+        SdpServiceRecord[] Results { get; }
 
         // -(void)setOptions:(IOBluetoothServiceBrowserControllerOptions)inOptions;
         // -(IOBluetoothServiceBrowserControllerOptions)getOptions;
@@ -283,7 +283,7 @@ namespace IOBluetoothUI
         /// </summary>
         /// <value>The options.</value>
         [Export("options")]
-        IOBluetoothServiceBrowserControllerOptions Options { [Bind("getOptions")] get; set; }
+        ServiceBrowserControllerOptions Options { [Bind("getOptions")] get; set; }
 
         //// -(void)setSearchAttributes:(const IOBluetoothDeviceSearchAttributes *)searchAttributes;
         //[Export("setSearchAttributes:")]
@@ -299,7 +299,7 @@ namespace IOBluetoothUI
         /// </summary>
         /// <param name="allowedUUID">Allowed UUID.</param>
         [Export("addAllowedUUID:")]
-        void AddAllowedUUID(IOBluetoothSDPUUID allowedUUID);
+        void AddAllowedUUID(SDPUUID allowedUUID);
 
         // -(void)addAllowedUUIDArray:(NSArray *)allowedUUIDArray;
         /// <summary>
@@ -307,7 +307,7 @@ namespace IOBluetoothUI
         /// </summary>
         /// <param name="allowedUUIDArray">Allowed UUIDA rray.</param>
         [Export("addAllowedUUIDArray:")]
-        void AddAllowedUUIDArray(IOBluetoothSDPUUID[] allowedUUIDArray);
+        void AddAllowedUUIDArray(SDPUUID[] allowedUUIDArray);
 
         // -(void)clearAllowedUUIDs;
         /// <summary>
@@ -346,11 +346,11 @@ namespace IOBluetoothUI
 
     // @interface IOBluetoothObjectPushUIController : NSWindowController
     [BaseType(typeof(NSWindowController))]
-    interface IOBluetoothObjectPushUIController
+    interface ObjectPushUIController
     {
         // -(IOBluetoothObjectPushUIController *)initObjectPushWithBluetoothDevice:(IOBluetoothDevice *)inDevice withFiles:(NSArray *)inFiles delegate:(id)inDelegate;
         [Export("initObjectPushWithBluetoothDevice:withFiles:delegate:")]
-        IntPtr Constructor(IOBluetoothDevice inDevice, NSString[] inFiles, NSObject inDelegate);
+        IntPtr Constructor(BluetoothDevice device, NSString[] files, NSObject inDelegate);
 
         // -(void)runModal;
         [Export("runModal")]
@@ -379,7 +379,7 @@ namespace IOBluetoothUI
 
         // -(IOBluetoothDevice *)getDevice;
         [Export("getDevice")]
-        IOBluetoothDevice Device { get; }
+        BluetoothDevice Device { get; }
 
         // -(BOOL)isTransferInProgress;
         [Export("isTransferInProgress")]
@@ -388,7 +388,7 @@ namespace IOBluetoothUI
 
     // @interface IOBluetoothPasskeyDisplay : NSView
     [BaseType(typeof(NSView))]
-    interface IOBluetoothPasskeyDisplay
+    interface PasskeyDisplay
     {
         // @property (assign) BOOL usePasskeyNotificaitons;
         [Export("usePasskeyNotificaitons")]
@@ -421,11 +421,11 @@ namespace IOBluetoothUI
         // +(IOBluetoothPasskeyDisplay *)sharedDisplayView;
         [Static]
         [Export("sharedDisplayView")]
-        IOBluetoothPasskeyDisplay SharedDisplayView { get; }
+        PasskeyDisplay SharedDisplayView { get; }
 
         // -(void)setPasskey:(NSString *)inString forDevice:(IOBluetoothDevice *)device usingSSP:(BOOL)isSSP;
         [Export("setPasskey:forDevice:usingSSP:")]
-        void SetPasskey(string inString, IOBluetoothDevice device, bool isSSP);
+        void SetPasskey(string inString, BluetoothDevice device, bool isSSP);
 
         // -(void)advancePasskeyIndicator;
         [Export("advancePasskeyIndicator")]
@@ -443,14 +443,14 @@ namespace IOBluetoothUI
     // @interface IOBluetoothAccessibilityIgnoredTextFieldCell : NSTextFieldCell
     [Internal]
     [BaseType(typeof(NSTextFieldCell))]
-    interface IOBluetoothAccessibilityIgnoredTextFieldCell
+    interface AccessibilityIgnoredTextFieldCell
     {
     }
 
     // @interface IOBluetoothAccessibilityIgnoredImageCell : NSImageCell
     [Internal]
     [BaseType(typeof(NSImageCell))]
-    interface IOBluetoothAccessibilityIgnoredImageCell
+    interface AccessibilityIgnoredImageCell
     {
     }
 }
