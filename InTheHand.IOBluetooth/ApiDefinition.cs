@@ -19,7 +19,7 @@ namespace IOBluetooth
     /// Represents a registered notification.
     /// </summary>
     [BaseType(typeof(NSObject))]
-    interface UserNotification
+    public interface UserNotification
     {
         // -(void)unregister;
         /// <summary>
@@ -54,7 +54,7 @@ namespace IOBluetooth
     /// An instance of IOBluetoothDevice represents a single remote Bluetooth device.
     /// </summary>
     [BaseType(typeof(IOBluetoothObject))]
-    interface BluetoothDevice : INSCoding, INSSecureCoding
+    public interface BluetoothDevice : INSCoding, INSSecureCoding
     {
         // +(IOBluetoothUserNotification *)registerForConnectNotifications:(id)observer selector:(SEL)inSelector;
         [Static]
@@ -106,11 +106,11 @@ namespace IOBluetooth
         /// The developer will implement only the the methods he/she is interested in. 
         /// A list of the possible methods is at the end of the file "IOBluetoothRFCOMMChannel.h" in the definition of the protocol IOBluetoothRFCOMMChannelDelegate.</param>
         [Export("openRFCOMMChannelSync:withChannelID:delegate:")]
-        int OpenRFCOMMChannelSync(out RFCOMMChannel rfcommChannel, byte channelID, NSObject channelDelegate);
+        int OpenRfcommChannelSync(out RfcommChannel rfcommChannel, byte channelID, NSObject channelDelegate);
 
         // -(IOReturn)openRFCOMMChannelAsync:(IOBluetoothRFCOMMChannel **)rfcommChannel withChannelID:(BluetoothRFCOMMChannelID)channelID delegate:(id)channelDelegate;
         [Export("openRFCOMMChannelAsync:withChannelID:delegate:")]
-        int OpenRFCOMMChannelAsync(out RFCOMMChannel rfcommChannel, byte channelID, NSObject channelDelegate);
+        int OpenRfcommChannelAsync(out RfcommChannel rfcommChannel, byte channelID, NSObject channelDelegate);
 
         // @property (readonly) BluetoothClassOfDevice classOfDevice;
         /// <summary>
@@ -628,7 +628,7 @@ namespace IOBluetooth
 
     // @interface IOBluetoothL2CAPChannel : IOBluetoothObject <NSPortDelegate>
     [BaseType(typeof(IOBluetoothObject))]
-    interface L2CAPChannel : INSPortDelegate
+    public interface L2CAPChannel : INSPortDelegate
     {
         // +(IOBluetoothUserNotification *)registerForChannelOpenNotifications:(id)object selector:(SEL)selector;
         [Static]
@@ -721,7 +721,7 @@ namespace IOBluetooth
     // @protocol IOBluetoothL2CAPChannelDelegate
     [Protocol,Model]
     [BaseType(typeof(NSObject))]
-    interface L2CAPChannelDelegate
+    public interface L2CAPChannelDelegate
     {
         // @optional -(void)l2capChannelData:(IOBluetoothL2CAPChannel *)l2capChannel data:(void *)dataPointer length:(size_t)dataLength;
         [Export("l2capChannelData:data:length:")]
@@ -750,7 +750,7 @@ namespace IOBluetooth
 
     // @interface IOBluetoothRFCOMMChannel : IOBluetoothObject <NSPortDelegate>
     [BaseType(typeof(IOBluetoothObject))]
-    interface RFCOMMChannel : INSPortDelegate
+    public interface RfcommChannel : INSPortDelegate
     {
         // +(IOBluetoothUserNotification *)registerForChannelOpenNotifications:(id)object selector:(SEL)selector;
         [Static]
@@ -770,7 +770,7 @@ namespace IOBluetooth
         // +(instancetype)withObjectID:(IOBluetoothObjectID)objectID;
         [Static]
         [Export("withObjectID:")]
-        RFCOMMChannel WithObjectID(nuint objectID);
+        RfcommChannel WithObjectID(nuint objectID);
 
         // -(IOBluetoothRFCOMMChannelRef)getRFCOMMChannelRef;
         //[Export ("getRFCOMMChannelRef")]
@@ -787,7 +787,7 @@ namespace IOBluetooth
 
         // -(BluetoothRFCOMMMTU)getMTU;
         [Export("getMTU")]
-        ushort MTU { get; }
+        ushort Mtu { get; }
 
         // -(BOOL)isTransmissionPaused;
         [Export("isTransmissionPaused")]
@@ -815,7 +815,7 @@ namespace IOBluetooth
 
         // -(id)delegate;
         [Export("delegate")]
-        RFCOMMChannelDelegate Delegate { get; }
+        RfcommChannelDelegate Delegate { get; }
 
         // -(BluetoothRFCOMMChannelID)getChannelID;
         [Export("getChannelID")]
@@ -841,40 +841,40 @@ namespace IOBluetooth
     // @protocol IOBluetoothRFCOMMChannelDelegate
     [Protocol,Model]
     [BaseType(typeof(NSObject))]
-    interface RFCOMMChannelDelegate
+    public interface RfcommChannelDelegate
     {
         // @optional -(void)rfcommChannelData:(IOBluetoothRFCOMMChannel *)rfcommChannel data:(void *)dataPointer length:(size_t)dataLength;
         [Export("rfcommChannelData:data:length:")]
-        void RfcommChannelData(RFCOMMChannel rfcommChannel, IntPtr dataPointer, nuint dataLength);
+        void RfcommChannelData(RfcommChannel rfcommChannel, IntPtr dataPointer, nuint dataLength);
 
         // @optional -(void)rfcommChannelOpenComplete:(IOBluetoothRFCOMMChannel *)rfcommChannel status:(IOReturn)error;
         [Export("rfcommChannelOpenComplete:status:")]
-        void RfcommChannelOpenComplete(RFCOMMChannel rfcommChannel, int error);
+        void RfcommChannelOpenComplete(RfcommChannel rfcommChannel, int error);
 
         // @optional -(void)rfcommChannelClosed:(IOBluetoothRFCOMMChannel *)rfcommChannel;
         [Export("rfcommChannelClosed:")]
-        void RfcommChannelClosed(RFCOMMChannel rfcommChannel);
+        void RfcommChannelClosed(RfcommChannel rfcommChannel);
 
         // @optional -(void)rfcommChannelControlSignalsChanged:(IOBluetoothRFCOMMChannel *)rfcommChannel;
         [Export("rfcommChannelControlSignalsChanged:")]
-        void RfcommChannelControlSignalsChanged(RFCOMMChannel rfcommChannel);
+        void RfcommChannelControlSignalsChanged(RfcommChannel rfcommChannel);
 
         // @optional -(void)rfcommChannelFlowControlChanged:(IOBluetoothRFCOMMChannel *)rfcommChannel;
         [Export("rfcommChannelFlowControlChanged:")]
-        void RfcommChannelFlowControlChanged(RFCOMMChannel rfcommChannel);
+        void RfcommChannelFlowControlChanged(RfcommChannel rfcommChannel);
 
         // @optional -(void)rfcommChannelWriteComplete:(IOBluetoothRFCOMMChannel *)rfcommChannel refcon:(void *)refcon status:(IOReturn)error;
         [Export("rfcommChannelWriteComplete:refcon:status:")]
-        void RfcommChannelWriteComplete(RFCOMMChannel rfcommChannel, IntPtr refcon, int error);
+        void RfcommChannelWriteComplete(RfcommChannel rfcommChannel, IntPtr refcon, int error);
 
         // @optional -(void)rfcommChannelQueueSpaceAvailable:(IOBluetoothRFCOMMChannel *)rfcommChannel;
         [Export("rfcommChannelQueueSpaceAvailable:")]
-        void RfcommChannelQueueSpaceAvailable(RFCOMMChannel rfcommChannel);
+        void RfcommChannelQueueSpaceAvailable(RfcommChannel rfcommChannel);
     }
 
     // @interface IOBluetoothSDPDataElement : NSObject <NSCoding, NSSecureCoding>
     [BaseType(typeof(NSObject), Name ="IOBluetoothSDPDataElement")]
-    interface SDPDataElement : INSCoding, INSSecureCoding
+    public interface SDPDataElement : INSCoding, INSSecureCoding
     {
         // +(instancetype)withElementValue:(NSObject *)element;
         [Static]
@@ -951,7 +951,7 @@ namespace IOBluetooth
 
     // @interface IOBluetoothSDPServiceAttribute : NSObject <NSCoding, NSSecureCoding>
     [BaseType(typeof(NSObject))]
-    interface SdpServiceAttribute : INSCoding, INSSecureCoding
+    public interface SdpServiceAttribute : INSCoding, INSSecureCoding
     {
         // +(instancetype)withID:(BluetoothSDPServiceAttributeID)newAttributeID attributeElementValue:(NSObject *)attributeElementValue;
         [Static]
@@ -986,7 +986,7 @@ namespace IOBluetooth
 
     // @interface IOBluetoothSDPServiceRecord : NSObject <NSCoding, NSSecureCoding>
     [BaseType(typeof(NSObject))]
-    interface SdpServiceRecord : INSCoding, INSSecureCoding
+    public interface SdpServiceRecord : INSCoding, INSSecureCoding
     {
         // +(instancetype)publishedServiceRecordWithDictionary:(NSDictionary *)serviceDict;
         [Static]
@@ -1067,7 +1067,7 @@ namespace IOBluetooth
 
     // @interface IOBluetoothSDPUUID : NSData
     [BaseType(typeof(NSData))]
-    interface SDPUUID
+    public interface SDPUUID
     {
         // +(instancetype)uuidWithBytes:(const void *)bytes length:(unsigned int)length;
         [Static]
@@ -1322,7 +1322,7 @@ namespace IOBluetooth
 
     // @interface IOBluetoothOBEXSession : OBEXSession <IOBluetoothRFCOMMChannelDelegate>
     [BaseType(typeof(OBEXSession))]
-    interface BluetoothOBEXSession : RFCOMMChannelDelegate
+    public interface BluetoothOBEXSession : RfcommChannelDelegate
     {
         // +(instancetype)withSDPServiceRecord:(IOBluetoothSDPServiceRecord *)inSDPServiceRecord;
         [Static]
@@ -1337,7 +1337,7 @@ namespace IOBluetooth
         // +(instancetype)withIncomingRFCOMMChannel:(IOBluetoothRFCOMMChannel *)inChannel eventSelector:(SEL)inEventSelector selectorTarget:(id)inEventSelectorTarget refCon:(void *)inUserRefCon;
         [Static]
         [Export("withIncomingRFCOMMChannel:eventSelector:selectorTarget:refCon:")]
-        BluetoothOBEXSession WithIncomingRFCOMMChannel(RFCOMMChannel channel, Selector eventSelector, NSObject eventSelectorTarget, IntPtr userRefCon);
+        BluetoothOBEXSession WithIncomingRFCOMMChannel(RfcommChannel channel, Selector eventSelector, NSObject eventSelectorTarget, IntPtr userRefCon);
 
         // -(instancetype)initWithSDPServiceRecord:(IOBluetoothSDPServiceRecord *)inSDPServiceRecord;
         [Export("initWithSDPServiceRecord:")]
@@ -1349,11 +1349,11 @@ namespace IOBluetooth
 
         // -(instancetype)initWithIncomingRFCOMMChannel:(IOBluetoothRFCOMMChannel *)inChannel eventSelector:(SEL)inEventSelector selectorTarget:(id)inEventSelectorTarget refCon:(void *)inUserRefCon;
         [Export("initWithIncomingRFCOMMChannel:eventSelector:selectorTarget:refCon:")]
-        IntPtr Constructor(RFCOMMChannel channel, Selector eventSelector, NSObject eventSelectorTarget, IntPtr userRefCon);
+        IntPtr Constructor(RfcommChannel channel, Selector eventSelector, NSObject eventSelectorTarget, IntPtr userRefCon);
 
         // -(IOBluetoothRFCOMMChannel *)getRFCOMMChannel;
         [Export("getRFCOMMChannel")]
-        RFCOMMChannel RFCommChannel { get; }
+        RfcommChannel RFCommChannel { get; }
 
         // -(IOBluetoothDevice *)getDevice;
         [Export("getDevice")]
@@ -1493,51 +1493,51 @@ namespace IOBluetooth
     interface OBEXFileTransferServicesDelegate
     {
     	// -(void)fileTransferServicesConnectionComplete:(OBEXFileTransferServices *)inServices error:(OBEXError)inError;
-    	[Export ("fileTransferServicesConnectionComplete:error:")]
+    	[Export ("fileTransferServicesConnectionComplete:error:"), EventName("ConnectionComplete")]
     	void FileTransferServicesConnectionComplete (OBEXFileTransferServices services, int error);
 
     	// -(void)fileTransferServicesDisconnectionComplete:(OBEXFileTransferServices *)inServices error:(OBEXError)inError;
-    	[Export ("fileTransferServicesDisconnectionComplete:error:")]
+    	[Export ("fileTransferServicesDisconnectionComplete:error:"), EventName("DisconnectionComplete")]
     	void FileTransferServicesDisconnectionComplete (OBEXFileTransferServices services, int error);
 
     	// -(void)fileTransferServicesAbortComplete:(OBEXFileTransferServices *)inServices error:(OBEXError)inError;
-    	[Export ("fileTransferServicesAbortComplete:error:")]
+    	[Export ("fileTransferServicesAbortComplete:error:"), EventName("AbortComplete")]
     	void FileTransferServicesAbortComplete (OBEXFileTransferServices services, int error);
 
     	// -(void)fileTransferServicesRemoveItemComplete:(OBEXFileTransferServices *)inServices error:(OBEXError)inError removedItem:(NSString *)inItemName;
-    	[Export ("fileTransferServicesRemoveItemComplete:error:removedItem:")]
+    	[Export ("fileTransferServicesRemoveItemComplete:error:removedItem:"), EventName("RemoveItemComplete")]
     	void FileTransferServicesRemoveItemComplete (OBEXFileTransferServices services, int error, string itemName);
 
     	// -(void)fileTransferServicesCreateFolderComplete:(OBEXFileTransferServices *)inServices error:(OBEXError)inError folder:(NSString *)inFolderName;
-    	[Export ("fileTransferServicesCreateFolderComplete:error:folder:")]
+    	[Export ("fileTransferServicesCreateFolderComplete:error:folder:"), EventName("CreateFolderComplete")]
     	void FileTransferServicesCreateFolderComplete (OBEXFileTransferServices services, int error, string folderName);
 
     	// -(void)fileTransferServicesPathChangeComplete:(OBEXFileTransferServices *)inServices error:(OBEXError)inError finalPath:(NSString *)inPath;
-    	[Export ("fileTransferServicesPathChangeComplete:error:finalPath:")]
+    	[Export ("fileTransferServicesPathChangeComplete:error:finalPath:"), EventName("PathChangeComplete")]
     	void FileTransferServicesPathChangeComplete (OBEXFileTransferServices services, int error, string path);
 
     	// -(void)fileTransferServicesRetrieveFolderListingComplete:(OBEXFileTransferServices *)inServices error:(OBEXError)inError listing:(NSArray *)inListing;
-    	[Export ("fileTransferServicesRetrieveFolderListingComplete:error:listing:")]
+    	[Export ("fileTransferServicesRetrieveFolderListingComplete:error:listing:"), EventName("RetrieveFolderListingComplete"), EventArgs("FolderListing")]
     	void FileTransferServicesRetrieveFolderListingComplete (OBEXFileTransferServices services, int error, NSString[] listing);
 
     	// -(void)fileTransferServicesFilePreparationComplete:(OBEXFileTransferServices *)inServices error:(OBEXError)inError;
-    	[Export ("fileTransferServicesFilePreparationComplete:error:")]
+    	[Export ("fileTransferServicesFilePreparationComplete:error:"), EventName("FilePreparationComplete")]
     	void FileTransferServicesFilePreparationComplete (OBEXFileTransferServices services, int error);
 
     	// -(void)fileTransferServicesSendFileProgress:(OBEXFileTransferServices *)inServices transferProgress:(NSDictionary *)inProgressDescription;
-    	[Export ("fileTransferServicesSendFileProgress:transferProgress:")]
+    	[Export ("fileTransferServicesSendFileProgress:transferProgress:"), EventName("SendFileProgress")]
     	void FileTransferServicesSendFileProgress (OBEXFileTransferServices services, NSDictionary progressDescription);
 
     	// -(void)fileTransferServicesSendFileComplete:(OBEXFileTransferServices *)inServices error:(OBEXError)inError;
-    	[Export ("fileTransferServicesSendFileComplete:error:")]
+    	[Export ("fileTransferServicesSendFileComplete:error:"), EventName("SendFileComplete")]
     	void FileTransferServicesSendFileComplete (OBEXFileTransferServices services, int error);
 
     	// -(void)fileTransferServicesCopyRemoteFileProgress:(OBEXFileTransferServices *)inServices transferProgress:(NSDictionary *)inProgressDescription;
-    	[Export ("fileTransferServicesCopyRemoteFileProgress:transferProgress:")]
+    	[Export ("fileTransferServicesCopyRemoteFileProgress:transferProgress:"), EventName("CopyRemoteFileProgress")]
     	void FileTransferServicesCopyRemoteFileProgress (OBEXFileTransferServices services, NSDictionary progressDescription);
 
     	// -(void)fileTransferServicesCopyRemoteFileComplete:(OBEXFileTransferServices *)inServices error:(OBEXError)inError;
-    	[Export ("fileTransferServicesCopyRemoteFileComplete:error:")]
+    	[Export ("fileTransferServicesCopyRemoteFileComplete:error:"), EventName("CopyRemoteFileComplete")]
     	void FileTransferServicesCopyRemoteFileComplete (OBEXFileTransferServices services, int error);
     }
 
@@ -1795,7 +1795,7 @@ namespace IOBluetooth
     // @interface IOBluetoothHandsFree : NSObject
     [Introduced(PlatformName.MacOSX, 10, 7)]
     [BaseType(typeof(NSObject))]
-    interface HandsFree
+    public interface HandsFree
     {
         // @property (assign) uint32_t supportedFeatures __attribute__((availability(macos, introduced=10.7)));
         [Introduced(PlatformName.MacOSX, 10, 7)]
@@ -1835,7 +1835,7 @@ namespace IOBluetooth
         // @property (readonly) uint32_t deviceSupportedSMSServices __attribute__((availability(macos, introduced=10.7)));
         [Introduced(PlatformName.MacOSX, 10, 7)]
         [Export("deviceSupportedSMSServices")]
-        uint DeviceSupportedSMSServices { get; }
+        uint DeviceSupportedSmsServices { get; }
 
         // @property (readonly) uint32_t deviceCallHoldModes __attribute__((availability(macos, introduced=10.7)));
         [Introduced(PlatformName.MacOSX, 10, 7)]
@@ -1845,12 +1845,12 @@ namespace IOBluetooth
         // @property (readonly) IOBluetoothSMSMode SMSMode __attribute__((availability(macos, introduced=10.7)));
         [Introduced(PlatformName.MacOSX, 10, 7)]
         [Export("SMSMode")]
-        SMSMode SMSMode { get; }
+        SmsMode SmsMode { get; }
 
         // @property (readonly, getter = isSMSEnabled) BOOL SMSEnabled __attribute__((availability(macos, introduced=10.7)));
         [Introduced(PlatformName.MacOSX, 10, 7)]
         [Export("SMSEnabled")]
-        bool SMSEnabled { [Bind("isSMSEnabled")] get; }
+        bool SmsEnabled { [Bind("isSMSEnabled")] get; }
 
         [Wrap("WeakDelegate")]
         HandsFreeDelegate Delegate { get; set; }
@@ -1909,11 +1909,11 @@ namespace IOBluetooth
     // @protocol IOBluetoothHandsFreeDelegate <NSObject>
     [Protocol, Model]
     [BaseType(typeof(NSObject))]
-    interface HandsFreeDelegate
+    public interface HandsFreeDelegate
     {
         // @optional -(void)handsFree:(IOBluetoothHandsFree *)device connected:(NSNumber *)status __attribute__((availability(macos, introduced=10.7)));
         [Introduced(PlatformName.MacOSX, 10, 7)]
-        [Export("handsFree:connected:")]
+        [Export("handsFree:connected:"), EventArgs("HandsFreeConnected")]
         void Connected(HandsFree device, NSNumber status);
 
         // @optional -(void)handsFree:(IOBluetoothHandsFree *)device disconnected:(NSNumber *)status __attribute__((availability(macos, introduced=10.7)));

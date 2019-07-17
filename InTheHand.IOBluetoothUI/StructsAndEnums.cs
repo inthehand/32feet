@@ -3,17 +3,18 @@ using CoreFoundation;
 using IOBluetooth;
 using ObjCRuntime;
 using Foundation;
+using System;
 
 namespace IOBluetoothUI
 {
 
     [Native]
+    [Flags]
     public enum ServiceBrowserControllerOptions : ulong
     {
         None = 0,
         //automatically start an inquiry when the panel is displayed. This has been deprecated in 10.5
-
-        AutoStartInquiry = (1 << 0),
+        //AutoStartInquiry = (1 << 0),
         DisconnectWhenDone = (1 << 1)
     }
 
@@ -43,12 +44,12 @@ namespace IOBluetoothUI
 
     }*/
 
-    public enum BluetoothKeyboardReturnType : uint
+    /*public enum BluetoothKeyboardReturnType : uint
     {
         AnsiReturn,
         IsoReturn,
         JisReturn,
         NoReturn
-    }
+    }*/
 
 }

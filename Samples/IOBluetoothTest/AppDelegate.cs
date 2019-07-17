@@ -3,7 +3,8 @@ using System.Runtime.InteropServices;
 using AppKit;
 using Foundation;
 using ObjCRuntime;
-
+using IOBluetooth;
+using IOBluetoothUI;
 
 namespace IOBluetoothTest
 {
@@ -20,13 +21,13 @@ namespace IOBluetoothTest
             ObjCRuntime.Dlfcn.dlopen("/System.Library/Frameworks/CoreFoundation.framework/CoreFoundation", 0);
             ObjCRuntime.Dlfcn.dlopen("/System.Library/Frameworks/IOBluetooth.framework/IOBluetooth", 0);
             ObjCRuntime.Dlfcn.dlopen("/System.Library/Frameworks/IOBluetoothUI.framework/IOBluetoothUI", 0);
-            var controller = new IOBluetooth.IOBluetoothHostController();
+            var controller = new HostController();
             var cod = controller.ClassOfDevice.ToString("x8");
             var addr = controller.AddressAsString;
 
-            IOBluetooth.IOBluetoothRFCOMMChannel channel = null;
+            RFCOMMChannel channel = null;
 
-            foreach(IOBluetooth.IOBluetoothDevice dev in IOBluetooth.IOBluetoothDevice.PairedDevices)
+            foreach(BluetoothDevice dev in BluetoothDevice.PairedDevices)
             {
                 var addrstruct = dev.Address;
 
@@ -35,7 +36,7 @@ namespace IOBluetoothTest
                 System.Diagnostics.Debug.WriteLine(dev.AddressString);
                 System.Diagnostics.Debug.WriteLine(dev.NameOrAddress);
 
-                if(dev.ServiceClassMajor == IOBluetooth.BluetoothServiceClassMajor.Rendering)
+                if(dev.ServiceClassMajor == IOBluetooth.ServiceClassMajor.Rendering)
                 {
                     int res = dev.OpenRFCOMMChannelSync(out channel, 1, null);
                     if(channel != null)
@@ -52,7 +53,7 @@ namespace IOBluetoothTest
                 }
             }
 
-            var c = IOBluetoothUI.IOBluetoothDeviceSelectorController.DeviceSelector;
+            var c = DeviceSelectorController.DeviceSelector;
             c.Cancel = "Give it a rest";
             c.DescriptionText = "This is a customised picker";
             c.Title = "Custom Title";
@@ -68,7 +69,7 @@ namespace IOBluetoothTest
 
     }
 
-    public class Deleg : IOBluetooth.IOBluetoothRFCOMMChannelDelegate
+    public class Deleg : RFCOMMChannelDelegate
     {
     }
 }

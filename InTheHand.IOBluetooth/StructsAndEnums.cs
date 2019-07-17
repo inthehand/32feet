@@ -4096,14 +4096,14 @@ namespace IOBluetooth
     }
 
     [Native]
-    public enum SMSMode : ulong
+    public enum SmsMode : ulong
     {
         Pdu,
         Text
     }
 
     [Native]
-    public enum HandsFreeSMSSupport : ulong
+    public enum HandsFreeSmsSupport : ulong
     {
         Phase2SMSSupport = 1 << 0,
         Phase2pSMSSupport = 1 << 1,
@@ -4111,7 +4111,7 @@ namespace IOBluetooth
     }
 
     [Native]
-    public enum HandsFreePDUMessageStatus : ulong
+    public enum HandsFreePduMessageStatus : ulong
     {
         RecUnread = 0,
         RecRead = 1,

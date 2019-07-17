@@ -12,7 +12,7 @@ namespace IOBluetoothUI
     /// </summary>
     // @interface IOBluetoothDeviceSelectorController : NSWindowController
     [BaseType(typeof(NSWindowController))]
-    interface DeviceSelectorController
+    public interface DeviceSelectorController
     {
         // +(IOBluetoothDeviceSelectorController *)deviceSelector;
         /// <summary>
@@ -144,7 +144,7 @@ namespace IOBluetoothUI
     /// </summary>
     // @interface IOBluetoothPairingController : NSWindowController
     [BaseType(typeof(NSWindowController))]
-    interface BluetoothPairingController
+    public interface BluetoothPairingController
     {
         // +(IOBluetoothPairingController *)pairingController;
         [Static]
@@ -228,12 +228,12 @@ namespace IOBluetoothUI
     /// An NSWindowController subclass to display a window to search for and perform SDP queries on bluetooth devices within range.
     /// </summary>
     [BaseType(typeof(NSWindowController))]
-    interface BluetoothServiceBrowserController
+    public interface ServiceBrowserController
     {
         // +(IOBluetoothServiceBrowserController *)serviceBrowserController:(IOBluetoothServiceBrowserControllerOptions)inOptions;
         [Static]
         [Export("serviceBrowserController:")]
-        BluetoothServiceBrowserController ServiceBrowserController(uint inOptions);
+        ServiceBrowserController CreateServiceBrowserController(ServiceBrowserControllerOptions inOptions);
 
         // +(IOBluetoothServiceBrowserController *)withServiceBrowserControllerRef:(IOBluetoothServiceBrowserControllerRef)serviceBrowserControllerRef;
         //[Static]
@@ -346,7 +346,7 @@ namespace IOBluetoothUI
 
     // @interface IOBluetoothObjectPushUIController : NSWindowController
     [BaseType(typeof(NSWindowController))]
-    interface ObjectPushUIController
+    public interface ObjectPushUIController
     {
         // -(IOBluetoothObjectPushUIController *)initObjectPushWithBluetoothDevice:(IOBluetoothDevice *)inDevice withFiles:(NSArray *)inFiles delegate:(id)inDelegate;
         [Export("initObjectPushWithBluetoothDevice:withFiles:delegate:")]
