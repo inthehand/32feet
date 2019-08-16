@@ -345,9 +345,6 @@
     <Compile Include="Windows\Forms\SelectBluetoothDeviceDialog.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Windows\Forms\SelectBluetoothDeviceForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\ExternalLibs\Mono etc\NDesk.DBus.dll">
@@ -360,17 +357,10 @@
     <None Include="Net.Bluetooth.BlueSoleil\32feet BlueSoleil Test.html" />
     <None Include="Net.Bluetooth.Msft\BTH_LOCAL_VERSION.cs" />
     <None Include="Net.Bluetooth\BluetoothVersion.cs" />
-    <None Include="Windows\Forms\DeviceFilterEventArgs.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="InTheHand.snk" />
     <None Include="Net.Bluetooth.BlueZ\32feet BlueZ Test.html" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Windows\Forms\SelectBluetoothDeviceForm.resx">
-      <DependentUpon>SelectBluetoothDeviceForm.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">

@@ -6,11 +6,7 @@
 // This source code is licensed under the Microsoft Public License (Ms-PL) - see License.txt
 
 #if ! NO_WINFORMS
-#if WinXP
-using CommonDialog_or_Component = System.Windows.Forms.CommonDialog;
-#else
-using CommonDialog_or_Component = System.ComponentModel.Component;
-#endif
+
 //
 using System;
 using System.ComponentModel;
@@ -25,7 +21,7 @@ namespace InTheHand.Windows.Forms
     /// <summary>
     /// Provides a form to select an available Bluetooth device.
     /// </summary>
-    public class SelectBluetoothDeviceDialog : CommonDialog_or_Component
+    public class SelectBluetoothDeviceDialog : CommonDialog
     {
         #region Delegate defns
         internal delegate bool PFN_DEVICE_CALLBACK(IntPtr pvParam, ref BLUETOOTH_DEVICE_INFO pDevice);
@@ -34,7 +30,6 @@ namespace InTheHand.Windows.Forms
 #if WinXP
         private BLUETOOTH_SELECT_DEVICE_PARAMS dialogWin32;
 #endif
-        private readonly SelectBluetoothDeviceForm dialogCustom;
         private readonly ISelectBluetoothDevice dialog;
         private BluetoothDeviceInfo device;
         bool _ShowDiscoverableOnly;
@@ -52,19 +47,7 @@ namespace InTheHand.Windows.Forms
 
         internal SelectBluetoothDeviceDialog(bool forceCustomDialog)
         {
-#if NETCF
-            InTheHand.Net.PlatformVerification.ThrowException();
-#endif
-#if ! WinXP
-            // Always the custom dialog on WM/CE.
-            forceCustomDialog = true;
-            _msftFilterProxy = null;
-#endif
-            BluetoothRadio radio;
-            if (forceCustomDialog || (radio = BluetoothRadio.PrimaryRadio) != null && radio.SoftwareManufacturer != Manufacturer.Microsoft) {
-                dialogCustom = new SelectBluetoothDeviceForm();
-                dialog = dialogCustom;
-            } else {
+
 #if WinXP
                 _msftFilterProxy = MsftFilterProxy;
                 dialogWin32 = new BLUETOOTH_SELECT_DEVICE_PARAMS();
@@ -74,108 +57,25 @@ namespace InTheHand.Windows.Forms
                 Debug.Fail("Should use custom dialog on non-Win32!");
 #endif
 
-            }
-
             ClassOfDevices = new System.Collections.Generic.List<ClassOfDevice>();
         }
 
         /// <summary>
         /// Resets the properties of the <see cref="SelectBluetoothDeviceDialog"/> to their default values.
         /// </summary>
-#if WinXP
         public override void Reset()
-#else
-        public void Reset()
-#endif
         {
             this.DeviceFilter = null;
             dialog.Reset();
         }
 
-#if NETCF
-		/// <summary>
-		/// Runs a common dialog box with a default owner.
-		/// </summary>
-        /// -
-        /// <returns><see cref="F:System.Windows.Forms.DialogResult.OK">DialogResult.OK</see>
-        /// if the user clicks OK in the dialog box; otherwise, 
-        /// <see cref="F:System.Windows.Forms.DialogResult.Cancel">DialogResult.Cancel</see>.
-        /// </returns>
-		public DialogResult ShowDialog()
-		{
-            return ShowCustomDialog();
-        }
-#endif
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        DialogResult ShowCustomDialog()
-        {
-            dialogCustom.SetClassOfDevices(this.ClassOfDevices.ToArray());
-            DialogResult dr = dialogCustom.ShowDialog();
-            device = dialogCustom.selectedDevice;
-#if NETCF
-            if (ForceAuthentication) {
-                ForceAuthenticationCE(device);
-            }
-#endif
-            return dr;
-        }
-
-#if NETCF
-        void ForceAuthenticationCE(BluetoothDeviceInfo device)
-        {
-            int hresult;
-            ushort handle = 0;
-
-            //connect to device
-            try
-            {
-                hresult = NativeMethods.BthCreateACLConnection(device.DeviceAddress.ToByteArray(), out handle);
-                if (hresult != 0)
-                {
-                    //success = false;
-                }
-                else
-                {
-                    //force authentication
-                    hresult = NativeMethods.BthAuthenticate(device.DeviceAddress.ToByteArray());
-                    /*if (hresult != 0)
-                    {
-                        success = false;
-                    }*/
-                }
-
-            }
-            finally
-            {
-                if (handle != 0)
-                {
-                    //close connection
-                    hresult = NativeMethods.BthCloseConnection(handle);
-                }
-            }
-
-        }
-#else
         /// <summary>
         /// Specifies a common dialog box.
         /// </summary>
         /// <param name="hwndOwner">A value that represents the window handle of the owner window for the common dialog box.</param>
         /// <returns>true if the dialog box was successfully run; otherwise, false.</returns>
         protected override bool RunDialog(IntPtr hwndOwner)
-        {
-            if (dialogCustom == null) {
-                return RunDialogMsft(hwndOwner);
-            } else {
-                DialogResult rslt = ShowCustomDialog();
-                return rslt == DialogResult.OK;
-            }
-        }
-
-        bool RunDialogMsft(IntPtr hwndOwner)
         {
             AssertWindowsFormsThread();
             if (this._ShowDiscoverableOnly) {
@@ -248,7 +148,7 @@ namespace InTheHand.Windows.Forms
                 dialog.SkipServicesPage = value;
             }
         }
-#endif
+
         /// <summary>
         /// Gets or sets the information text.
         /// </summary>
@@ -351,45 +251,6 @@ namespace InTheHand.Windows.Forms
         }
 
         /// <summary>
-        /// If TRUE, only devices which are currently discoverable are shown in the picker.
-        /// </summary>
-        /// <remarks>
-        /// <note>Does <strong>not</strong> work on the Microsoft stack on desktop Windows.
-        /// There, when true the dialog will not open and will return an error to the caller.
-        /// </note>
-        /// </remarks>
-        public bool ShowDiscoverableOnly
-        {
-            get
-            {
-                return dialog.ShowDiscoverableOnly;
-            }
-            set
-            {
-                dialog.ShowDiscoverableOnly = value;
-                this._ShowDiscoverableOnly = value; // For RunDialogMsft
-            }
-        }
-
-        /// <summary>
-        /// Obsolete, use <see cref="P:InTheHand.Windows.Forms.SelectBluetoothDeviceDialog.ShowDiscoverableOnly"/>
-        /// instead.
-        /// If TRUE, only devices which are currently discoverable are shown in the picker.
-        /// </summary>
-        /// <remarks>
-        /// <para>Obsolete, use <see cref="P:InTheHand.Windows.Forms.SelectBluetoothDeviceDialog.ShowDiscoverableOnly"/>
-        /// instead.
-        /// </para>
-        /// </remarks>
-        /// <seealso cref="P:InTheHand.Windows.Forms.SelectBluetoothDeviceDialog.ShowDiscoverableOnly"/>
-        [Obsolete("Please use the ShowDiscoverableOnly property.")]
-        public bool DiscoverableOnly
-        {
-            get { return this.ShowDiscoverableOnly; }
-            set { this.ShowDiscoverableOnly = value; }
-        }
-
-        /// <summary>
         /// Set a function that will be called for each device
         /// that returns whether to include the device in the list or not.
         /// </summary>
@@ -439,7 +300,6 @@ namespace InTheHand.Windows.Forms
             }
         }
 
-#if !NETCF
         private bool MsftFilterProxy(IntPtr state, ref BLUETOOTH_DEVICE_INFO dev)
         {
             if (_deviceFilter == null) {
@@ -447,20 +307,8 @@ namespace InTheHand.Windows.Forms
             }
             return _deviceFilter(new BluetoothDeviceInfo(new WindowsBluetoothDeviceInfo(dev)));
         }
-#endif
 
-#if !NETCF
-        /// <exclude/>
-        protected override void Dispose(bool disposing)
-        {
-            if (dialogCustom == null) {
-                //release native memory (Microsoft desktop API only)
-                dialogWin32.SetClassOfDevices(new ClassOfDevice[] { });
-            }
 
-            base.Dispose(disposing);
-        }
 #endif
     }
 }
-#endif
