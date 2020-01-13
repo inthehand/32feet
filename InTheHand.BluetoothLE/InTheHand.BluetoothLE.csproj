@@ -33,7 +33,7 @@
     <Compile Remove="Platforms\**\*.*" />
     <Compile Remove="Platforms\Standard\Radio\**" />
     <Compile Remove="Platforms\Win32\**" />
-    <None Include="..\..\..\..\Downloads\32feet-package-icon.png">
+    <None Include="..\Misc\32feet-package-icon.png">
       <Pack>True</Pack>
       <PackagePath></PackagePath>
     </None>

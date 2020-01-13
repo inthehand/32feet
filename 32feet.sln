@@ -13,7 +13,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BluetoothClientApp.UWP", "S
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BluetoothClientApp", "Samples\BluetoothClientApp\BluetoothClientApp\BluetoothClientApp.csproj", "{73035766-C434-4EC1-BB6B-1F8B9E2D7269}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InTheHand.BluetoothLE", "InTheHand.Bluetooth\InTheHand.BluetoothLE.csproj", "{6479E778-52FE-4B15-AD15-7A1225A652E5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InTheHand.BluetoothLE", "InTheHand.BluetoothLE\InTheHand.BluetoothLE.csproj", "{6479E778-52FE-4B15-AD15-7A1225A652E5}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InTheHand.Net.Bluetooth", "InTheHand.Net.Bluetooth\InTheHand.Net.Bluetooth.csproj", "{63B0E457-2909-44AB-B8E6-3737F5ABA0E3}"
 EndProject
