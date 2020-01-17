@@ -121,15 +121,15 @@ namespace InTheHand.Net.Sockets
 
         public new int Receive(byte[] buffer)
         {
-            return Receive(buffer, buffer.Length, 0);
+            return Win32Receive(buffer, buffer.Length, SocketFlags.None);
         }
 
         public new int Receive(byte[] buffer, SocketFlags socketFlags)
         {
-            return Receive(buffer, buffer.Length, socketFlags);
+            return Win32Receive(buffer, buffer.Length, socketFlags);
         }
 
-        public new int Receive(byte[] buffer, int size, SocketFlags socketFlags)
+        int Win32Receive(byte[] buffer, int size, SocketFlags socketFlags)
         {
             ThrowIfSocketClosed();
 
@@ -144,6 +144,45 @@ namespace InTheHand.Net.Sockets
             ThrowOnSocketError(result, true);
 
             return result;
+        }
+
+        public new int Receive(byte[] buffer, int size, SocketFlags socketFlags)
+        {
+            return Win32Receive(buffer, size, socketFlags);
+        }
+        public new int Receive(byte[] buffer, int offset, int size, SocketFlags socketFlags)
+        {
+            byte[] newBuffer = new byte[size];
+            int bytesReceived = Win32Receive(newBuffer, size, socketFlags);
+            if(bytesReceived > 0)
+            {
+                newBuffer.CopyTo(buffer, offset);
+            }
+
+            return bytesReceived;
+        }
+
+        public new int Receive(byte[] buffer, int offset, int size, SocketFlags socketFlags, out SocketError errorCode)
+        {
+            ThrowIfSocketClosed();
+
+            if (buffer == null)
+                throw new ArgumentNullException(nameof(buffer));
+
+            if (offset + size > buffer.Length)
+                throw new ArgumentOutOfRangeException(nameof(size));
+            byte[] newBuffer = new byte[size];
+
+            int bytesReceived = NativeMethods.recv(_socket, newBuffer, size, (int)socketFlags);
+            if (bytesReceived > 0)
+            {
+                newBuffer.CopyTo(buffer, offset);
+            }
+
+            int socketError = NativeMethods.WSAGetLastError();
+            errorCode = (SocketError)socketError;
+
+            return bytesReceived;
         }
 
         public new EndPoint LocalEndPoint
