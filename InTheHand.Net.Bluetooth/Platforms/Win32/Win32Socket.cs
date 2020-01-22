@@ -58,6 +58,18 @@ namespace InTheHand.Net.Sockets
             return new Win32Socket(newSocket);
         }
 
+        public new int Available
+        {
+            get
+            {
+                int len;
+                int result = NativeMethods.ioctlsocket(_socket, NativeMethods.FIONREAD, out len);
+                ThrowOnSocketError(result, true);
+
+                return len;
+            }
+        }
+
         public new void Bind(EndPoint localEP)
         {
             ThrowIfSocketClosed();
@@ -272,6 +284,7 @@ namespace InTheHand.Net.Sockets
         private static class NativeMethods
         {
             private const string winsockDll = "ws2_32.dll";
+            internal const int FIONREAD = 0x4004667F;
 
             [DllImport(winsockDll)]
 #pragma warning disable IDE1006 // Naming Styles - these are Win32 function names
@@ -300,7 +313,9 @@ namespace InTheHand.Net.Sockets
 
             [DllImport(winsockDll)]
             internal static extern int getpeername(int s, byte[] addr, ref int addrlen);
-
+            
+            [DllImport(winsockDll)]
+            internal static extern int ioctlsocket(int s, int cmd, out int argp);
 
             [DllImport(winsockDll)]
             internal static extern int setsockopt(int s, int level, int optname, byte[] optval, int optlen);
