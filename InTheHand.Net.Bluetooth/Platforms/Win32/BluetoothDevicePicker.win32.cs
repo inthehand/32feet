@@ -13,21 +13,24 @@ namespace InTheHand.Net.Bluetooth
 {
     partial class BluetoothDevicePicker
     {
-        private async Task<BluetoothDeviceInfo> DoPickSingleDeviceAsync()
+        private Task<BluetoothDeviceInfo> DoPickSingleDeviceAsync()
         {
+            BluetoothDeviceInfo info = null;
+
             BLUETOOTH_SELECT_DEVICE_PARAMS p = new BLUETOOTH_SELECT_DEVICE_PARAMS();
             p.Reset();
             p.SetClassOfDevices(ClassOfDevices.ToArray());
             p.fForceAuthentication = RequireAuthentication;
+            p.hwndParent = NativeMethods.GetActiveWindow();
 
             bool success = NativeMethods.BluetoothSelectDevices(ref p);
 
-            if(success)
+            if (success)
             {
-                return new BluetoothDeviceInfo(p.Device);
+                info = new BluetoothDeviceInfo(p.Device);
             }
 
-            return null;
+            return Task.FromResult(info);
         }
     }
 }

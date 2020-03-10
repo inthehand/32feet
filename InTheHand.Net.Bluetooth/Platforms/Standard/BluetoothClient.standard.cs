@@ -1,6 +1,6 @@
 ﻿// 32feet.NET - Personal Area Networking for .NET
 //
-// InTheHand.Net.Bluetooth.BluetoothClient (.NET Standard)
+// InTheHand.Net.Sockets.BluetoothClient (.NET Standard)
 // 
 // Copyright (c) 2018-2020 In The Hand Ltd, All rights reserved.
 // This source code is licensed under the MIT License
@@ -44,12 +44,11 @@ namespace InTheHand.Net.Sockets
 
         bool GetConnected()
         {
-                return false;
+            return false;
         }
 
         bool GetEncrypt()
         {
-
             return false;
         }
 
@@ -61,7 +60,6 @@ namespace InTheHand.Net.Sockets
         {
             return string.Empty;
         }
-
 
         NetworkStream DoGetStream()
         {

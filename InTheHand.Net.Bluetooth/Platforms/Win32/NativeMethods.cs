@@ -1,6 +1,6 @@
 ﻿// 32feet.NET - Personal Area Networking for .NET
 //
-// InTheHand.Net.Bluetooth.BluetoothIoCapability
+// InTheHand.Net.Bluetooth.Win32.NativeMethods
 // 
 // Copyright (c) 2003-2020 In The Hand Ltd, All rights reserved.
 // This source code is licensed under the MIT License
@@ -13,7 +13,11 @@ namespace InTheHand.Net.Bluetooth.Win32
     internal static class NativeMethods
     {
         private const string bthpropsDll = "bthprops.cpl";
-        private const string irpropsDll = "Irprops.cpl";
+        private const string irpropsDll = "Irprops.cpl"; 
+        private const string wsDll = "ws2_32.dll";
+
+        [DllImport("User32")]
+        internal static extern IntPtr GetActiveWindow();
 
         // Requires Vista SP2 or later
         [DllImport(bthpropsDll, SetLastError = true, CharSet = CharSet.Unicode)]
@@ -97,6 +101,10 @@ namespace InTheHand.Net.Bluetooth.Win32
         [DllImport("kernel32.dll", SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
         internal static extern bool CloseHandle(IntPtr handle);
+
+        //SetService
+        [DllImport(wsDll, EntryPoint = "WSASetService", SetLastError = true)]
+        internal static extern int WSASetService(ref WSAQUERYSET lpqsRegInfo, WSAESETSERVICEOP essoperation, int dwControlFlags);
 
         // Picker
         [DllImport(irpropsDll, SetLastError = true)]
