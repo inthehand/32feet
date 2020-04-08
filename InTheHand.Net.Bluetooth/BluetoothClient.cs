@@ -15,6 +15,10 @@ namespace InTheHand.Net.Sockets
     /// </summary>
     public sealed partial class BluetoothClient : IDisposable
     {
+        public BluetoothClient()
+        {
+        }
+
         /// <summary>
         /// Returns a collection of paired devices.
         /// </summary>

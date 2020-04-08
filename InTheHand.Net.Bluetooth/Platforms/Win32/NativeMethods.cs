@@ -15,6 +15,9 @@ namespace InTheHand.Net.Bluetooth.Win32
         private const string bthpropsDll = "bthprops.cpl";
         private const string irpropsDll = "Irprops.cpl"; 
         private const string wsDll = "ws2_32.dll";
+        
+        internal const int NS_BTH = 16;
+        internal const int PROTOCOL_RFCOMM = 3;
 
         [DllImport("User32")]
         internal static extern IntPtr GetActiveWindow();

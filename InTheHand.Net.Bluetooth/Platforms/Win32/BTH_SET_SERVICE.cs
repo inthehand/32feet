@@ -10,13 +10,13 @@ using System.Runtime.InteropServices;
 
 namespace InTheHand.Net.Bluetooth.Win32
 {
-    [StructLayout(LayoutKind.Sequential)]
+    [StructLayout(LayoutKind.Sequential, Size = 40)]
     internal struct BTH_SET_SERVICE
     {
         public uint pSdpVersion;
         public IntPtr pRecordHandle;
         public ServiceClass fCodService;
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst =5)]
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 5)]
         uint[] Reserved;
         public uint ulRecordLength;
         public IntPtr pRecord;

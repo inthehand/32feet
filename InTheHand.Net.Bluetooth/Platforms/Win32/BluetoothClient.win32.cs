@@ -17,6 +17,11 @@ namespace InTheHand.Net.Sockets
     {
         private Win32Socket _socket;
 
+        internal BluetoothClient(Win32Socket s)
+        {
+            _socket = s;
+        }
+
         IEnumerable<BluetoothDeviceInfo> GetPairedDevices()
         {
             BLUETOOTH_DEVICE_SEARCH_PARAMS search = BLUETOOTH_DEVICE_SEARCH_PARAMS.Create();

@@ -56,6 +56,9 @@ namespace InTheHand.Net.Sockets
 
         public BluetoothClient AcceptBluetoothClient()
         {
+            if (!Active)
+                throw new InvalidOperationException("Not listening. You must call the Start() method before calling this method.");
+
             return DoAcceptBluetoothClient();
         }
     }

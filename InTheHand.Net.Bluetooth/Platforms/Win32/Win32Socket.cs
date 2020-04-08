@@ -21,7 +21,7 @@ namespace InTheHand.Net.Sockets
             // AF_BT, Type_Stream, Protocol_Rfcomm
             _socket = NativeMethods.socket(32, 1, 3);
         }
-        
+
         internal Win32Socket(int socket) : base((AddressFamily)32, SocketType.Stream, (ProtocolType)3)
         {
             _socket = socket;
@@ -42,12 +42,12 @@ namespace InTheHand.Net.Sockets
                 if (socketError == 10057 && !throwOnDisconnected)
                     return;
 
-                if(socketError != 0)
+                if (socketError != 0)
                     throw new SocketException(socketError);
             }
         }
 
-        public new Socket Accept()
+        public new Win32Socket Accept()
         {
             ThrowIfSocketClosed();
 
@@ -166,7 +166,7 @@ namespace InTheHand.Net.Sockets
         {
             byte[] newBuffer = new byte[size];
             int bytesReceived = Win32Receive(newBuffer, size, socketFlags);
-            if(bytesReceived > 0)
+            if (bytesReceived > 0)
             {
                 newBuffer.CopyTo(buffer, offset);
             }
@@ -197,7 +197,21 @@ namespace InTheHand.Net.Sockets
             return bytesReceived;
         }
 
+        public new void Listen(int backlog)
+        {
+            int result = NativeMethods.listen(_socket, backlog);
+            ThrowOnSocketError(result, true);
+        }
+
         public new EndPoint LocalEndPoint
+        {
+            get
+            {
+                return new BluetoothEndPoint(LocalEndPointRaw);
+            }
+        }
+
+        internal byte[] LocalEndPointRaw
         {
             get
             {
@@ -206,8 +220,26 @@ namespace InTheHand.Net.Sockets
                 int result = NativeMethods.getsockname(_socket, addr, ref len);
                 ThrowOnSocketError(result, false);
 
-                return new BluetoothEndPoint(addr);
+                return addr;
             }
+        }
+
+        public new bool Poll(int microSeconds, SelectMode mode)
+        {
+            int[] fileDescriptorSet = new int[2] { 1, _socket };
+            int result = NativeMethods.select(0, mode == SelectMode.SelectRead ? fileDescriptorSet : null, mode == SelectMode.SelectWrite ? fileDescriptorSet : null, mode == SelectMode.SelectError ? fileDescriptorSet : null, IntPtr.Zero);
+
+            if(result == -1)
+            {
+                ThrowOnSocketError(result, true);
+            }
+
+            if (fileDescriptorSet[0] == 0)
+            {
+                return false;
+            }
+
+            return fileDescriptorSet[1] == _socket;
         }
 
         public new EndPoint RemoteEndPoint
@@ -280,7 +312,7 @@ namespace InTheHand.Net.Sockets
         {
             Close();
         }
-        
+
         private static class NativeMethods
         {
             private const string winsockDll = "ws2_32.dll";
@@ -304,6 +336,9 @@ namespace InTheHand.Net.Sockets
 
             [DllImport(winsockDll)]
             internal static extern int bind(int s, byte[] name, int namelen);
+            
+            [DllImport(winsockDll)]
+            internal static extern int listen(int s, int backlog);
 
             [DllImport(winsockDll)]
             internal static extern int accept(int s, byte[] addr, int addrlen);
@@ -313,9 +348,12 @@ namespace InTheHand.Net.Sockets
 
             [DllImport(winsockDll)]
             internal static extern int getpeername(int s, byte[] addr, ref int addrlen);
-            
+
             [DllImport(winsockDll)]
             internal static extern int ioctlsocket(int s, int cmd, out int argp);
+
+            [DllImport(winsockDll)]
+            internal static extern int select(int nfds, int[] readfds, int[] writefds, int[] exceptfds, IntPtr timeout);
 
             [DllImport(winsockDll)]
             internal static extern int setsockopt(int s, int level, int optname, byte[] optval, int optlen);
