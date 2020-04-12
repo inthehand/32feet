@@ -78,10 +78,27 @@ namespace InTheHand.Net.Sockets
                 throw new ArgumentNullException(nameof(localEP));
 
             var sockAddr = localEP.Serialize();
+            var raw = SocketAddressToArray(sockAddr);
+            BitConverter.GetBytes(-1).CopyTo(raw, 26);
 
-            int result = NativeMethods.bind(_socket, SocketAddressToArray(sockAddr), sockAddr.Size);
+            int result = NativeMethods.bind(_socket, raw, sockAddr.Size);
 
             ThrowOnSocketError(result, true);
+        }
+
+        public new bool IsBound
+        {
+            get
+            {
+                var ep = LocalEndPointRaw;
+                if(ep != null)
+                {
+                    if(BitConverter.ToInt32(ep, 26) != 0)
+                        return true;
+                }
+
+                return false;
+            }
         }
 
         public new bool Connected

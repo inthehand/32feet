@@ -8,6 +8,7 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
+using System.Net;
 
 namespace InTheHand.Net
 {
@@ -370,6 +371,17 @@ namespace InTheHand.Net
         public static bool operator !=(BluetoothAddress x, BluetoothAddress y)
         {
             return !(x == y);
+        }
+
+        internal static Guid HostToNetworkOrder(Guid hostGuid)
+        {
+            byte[] guidBytes = hostGuid.ToByteArray();
+
+            BitConverter.GetBytes(IPAddress.HostToNetworkOrder(BitConverter.ToInt32(guidBytes, 0))).CopyTo(guidBytes, 0);
+            BitConverter.GetBytes(IPAddress.HostToNetworkOrder(BitConverter.ToInt16(guidBytes, 4))).CopyTo(guidBytes, 4);
+            BitConverter.GetBytes(IPAddress.HostToNetworkOrder(BitConverter.ToInt16(guidBytes, 6))).CopyTo(guidBytes, 6);
+
+            return new Guid(guidBytes);
         }
     }
 }

@@ -6,17 +6,23 @@
 // This source code is licensed under the MIT License
 
 using InTheHand.Net.Bluetooth;
+using InTheHand.Net.Bluetooth.Sdp;
 using System;
 
 namespace InTheHand.Net.Sockets
 {
-    public sealed partial class BluetoothListener
+    public sealed partial class BluetoothListener : IDisposable
     {
         Guid serviceUuid;
 
         public BluetoothListener(Guid service)
         {
             serviceUuid = service;
+        }
+
+        public BluetoothListener(Guid service, ServiceRecord sdpRecord) : this(service)
+        {
+            ServiceRecord = sdpRecord;
         }
 
         public bool Active
@@ -36,6 +42,8 @@ namespace InTheHand.Net.Sockets
             get;
             set;
         }
+
+        public ServiceRecord ServiceRecord { get; private set; }
 
         public bool Pending()
         {
@@ -61,5 +69,43 @@ namespace InTheHand.Net.Sockets
 
             return DoAcceptBluetoothClient();
         }
+
+        #region IDisposable Support
+        private bool disposedValue = false; // To detect redundant calls
+
+        void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    // TODO: dispose managed state (managed objects).
+                }
+
+                if (Active)
+                    Stop();
+                // TODO: free unmanaged resources (unmanaged objects) and override a finalizer below.
+                // TODO: set large fields to null.
+
+                disposedValue = true;
+            }
+        }
+
+        // TODO: override a finalizer only if Dispose(bool disposing) above has code to free unmanaged resources.
+        // ~BluetoothListener()
+        // {
+        //   // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
+        //   Dispose(false);
+        // }
+
+        // This code added to correctly implement the disposable pattern.
+        public void Dispose()
+        {
+            // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
+            Dispose(true);
+            // TODO: uncomment the following line if the finalizer is overridden above.
+            // GC.SuppressFinalize(this);
+        }
+        #endregion
     }
 }

@@ -108,6 +108,11 @@ namespace InTheHand.Net.Bluetooth.Win32
         //SetService
         [DllImport(wsDll, EntryPoint = "WSASetService", SetLastError = true)]
         internal static extern int WSASetService(ref WSAQUERYSET lpqsRegInfo, WSAESETSERVICEOP essoperation, int dwControlFlags);
+        
+        // Last Error
+        [DllImport(wsDll, EntryPoint = "WSAGetLastError", SetLastError = true)]
+        internal static extern int WSAGetLastError();
+
 
         // Picker
         [DllImport(irpropsDll, SetLastError = true)]

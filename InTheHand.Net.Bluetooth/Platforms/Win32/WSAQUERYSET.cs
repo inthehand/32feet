@@ -10,34 +10,36 @@ using System.Runtime.InteropServices;
 
 namespace InTheHand.Net.Bluetooth.Win32
 {
-    [StructLayout(LayoutKind.Sequential, Size = 60)]
+    [StructLayout(LayoutKind.Sequential)]
     internal struct WSAQUERYSET
     {
         public int dwSize;
+        [MarshalAs(UnmanagedType.LPWStr)]
         public string lpszServiceInstanceName;
-        [MarshalAs(UnmanagedType.Struct)]
-        public Guid lpServiceClassId;
+        //[MarshalAs(UnmanagedType.LPStruct)]
+        public IntPtr lpServiceClassId;
         IntPtr lpVersion;
+        [MarshalAs(UnmanagedType.LPWStr)]
         string lpszComment;
         public uint dwNameSpace; // NS_BTH
         IntPtr lpNSProviderId;
-        IntPtr lpszContext;
+        [MarshalAs(UnmanagedType.LPWStr)]
+        string lpszContext;
         uint dwNumberOfProtocols;
         IntPtr lpafpProtocols;
+        [MarshalAs(UnmanagedType.LPWStr)]
         string lpszQueryString;
         public uint dwNumberOfCsAddrs;
-        [MarshalAs(UnmanagedType.Struct)]
-        public CSADDR_INFO lpcsaBuffer;
+        public IntPtr lpcsaBuffer;
         uint dwOutputFlags;
-        [MarshalAs(UnmanagedType.Struct)]
-        public BLOB lpBlob;
+        //[MarshalAs(UnmanagedType.LPStruct)]
+        public IntPtr lpBlob;
     }
 
-    [StructLayout(LayoutKind.Sequential, Size = 8)]
+    [StructLayout(LayoutKind.Sequential)]
     internal struct BLOB
     {
         public int size;
-        [MarshalAs(UnmanagedType.LPStruct)]
-        public BTH_SET_SERVICE blobData;
+        public IntPtr blobData;
     }
 }

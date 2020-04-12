@@ -11,15 +11,24 @@ using System.Runtime.InteropServices;
 
 namespace InTheHand.Net.Bluetooth.Win32
 {
-    [StructLayout(LayoutKind.Sequential)]
+    [StructLayout(LayoutKind.Sequential, Size = 24)]
     internal struct CSADDR_INFO
     {
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 30)]
-        public byte[] LocalAddr;
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 30)]
-        public byte[] RemoteAddr;
+        public IntPtr lpLocalSockaddr;
+        public int iLocalSockaddrLength;
+        public IntPtr lpRemoteSockaddr;
+        public int iRemoteSockaddrLength;
+        [MarshalAs(UnmanagedType.I4)]
         public SocketType iSocketType;
         public int iProtocol;
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    internal struct SOCKET_ADDRESS
+    {
+        [MarshalAs(UnmanagedType.LPStruct)]
+        public SOCKADDR_BTH lpSockaddr;
+        public int iSockaddrLength;
     }
 
     [StructLayout(LayoutKind.Sequential)]
@@ -28,6 +37,6 @@ namespace InTheHand.Net.Bluetooth.Win32
         public ushort addressFamily;
         public ulong btAddr;
         public Guid serviceClassId;
-        public uint port;
+        public int port;
     }
 }
