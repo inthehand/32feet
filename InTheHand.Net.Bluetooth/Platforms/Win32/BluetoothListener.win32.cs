@@ -59,28 +59,34 @@ namespace InTheHand.Net.Sockets
 
             var blob = new BLOB();
             var blobData = new BTH_SET_SERVICE();
-            //blob.size = Marshal.SizeOf(blobData);
             int sdpVer = 1;
-            
+
             blobData.pSdpVersion = Marshal.AllocHGlobal(4);
             Marshal.WriteInt32(blobData.pSdpVersion, sdpVer);
             blobData.pRecordHandle = Marshal.AllocHGlobal(4);
             Marshal.WriteInt32(blobData.pRecordHandle, 0);
             blobData.fCodService = ServiceClass;
 
-            if (ServiceRecord != null)
+            if (ServiceRecord == null)
             {
-                ServiceRecordHelper.SetRfcommChannelNumber(ServiceRecord, socket.LocalEndPointRaw[26]);
-                
-                byte[] rawBytes = ServiceRecord.ToByteArray();
-                blobData.ulRecordLength = (uint)rawBytes.Length;
-                int structSize = (2 * IntPtr.Size) + (7 * 4);
-                blob.size = structSize + rawBytes.Length;
-                blob.blobData = Marshal.AllocHGlobal(blob.size);
-                Marshal.StructureToPtr(blobData, blob.blobData, false);
-                Marshal.Copy(rawBytes, 0, IntPtr.Add(blob.blobData, structSize), rawBytes.Length);
+                ServiceRecordBuilder builder = new ServiceRecordBuilder();
+                builder.AddServiceClass(serviceUuid);
+                builder.ProtocolType = BluetoothProtocolDescriptorType.Rfcomm;
+
+                if (!string.IsNullOrEmpty(ServiceName))
+                    builder.ServiceName = ServiceName;
+
+                ServiceRecord = builder.ServiceRecord;
             }
-            
+            ServiceRecordHelper.SetRfcommChannelNumber(ServiceRecord, socket.LocalEndPointRaw[26]);
+
+            byte[] rawBytes = ServiceRecord.ToByteArray();
+            blobData.ulRecordLength = (uint)rawBytes.Length;
+            int structSize = (2 * IntPtr.Size) + (7 * 4);
+            blob.size = structSize + rawBytes.Length;
+            blob.blobData = Marshal.AllocHGlobal(blob.size);
+            Marshal.StructureToPtr(blobData, blob.blobData, false);
+            Marshal.Copy(rawBytes, 0, IntPtr.Add(blob.blobData, structSize), rawBytes.Length);
 
             var blobh = GCHandle.Alloc(blob, GCHandleType.Pinned);
             qs.lpBlob = blobh.AddrOfPinnedObject();
@@ -91,7 +97,7 @@ namespace InTheHand.Net.Sockets
 
                 var newstruct = Marshal.PtrToStructure<BTH_SET_SERVICE>(blob.blobData);
                 handle = Marshal.ReadIntPtr(newstruct.pRecordHandle);
-                if(result == -1)
+                if (result == -1)
                 {
                     int werr = Marshal.GetLastWin32Error();
                     throw new SocketException(werr);
@@ -99,9 +105,13 @@ namespace InTheHand.Net.Sockets
             }
             finally
             {
-                //uuidh.Free();
-                //Marshal.FreeHGlobal(pcsa);
-                //blobdatah.Free();
+                Marshal.FreeHGlobal(csa.lpLocalSockaddr);
+                Marshal.FreeHGlobal(qs.lpcsaBuffer);
+
+                Marshal.FreeHGlobal(blobData.pSdpVersion);
+                Marshal.FreeHGlobal(blobData.pRecordHandle);
+
+                Marshal.FreeHGlobal(blob.blobData);
                 blobh.Free();
             }
         }
