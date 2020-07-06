@@ -12,17 +12,17 @@ using System.Runtime.InteropServices;
 
 namespace InTheHand.Net.Sockets
 {
-    internal class Win32Socket : Socket
+    public class Win32Socket : Socket
     {
         private int _socket = 0;
 
-        public Win32Socket() : base((AddressFamily)32, SocketType.Stream, (ProtocolType)3)
+        public Win32Socket() : base((AddressFamily)32, SocketType.Stream, BluetoothProtocolType.RFComm)
         {
             // AF_BT, Type_Stream, Protocol_Rfcomm
-            _socket = NativeMethods.socket(32, 1, 3);
+            _socket = NativeMethods.socket(32, SocketType.Stream, BluetoothProtocolType.RFComm);
         }
 
-        internal Win32Socket(int socket) : base((AddressFamily)32, SocketType.Stream, (ProtocolType)3)
+        internal Win32Socket(int socket) : base((AddressFamily)32, SocketType.Stream, BluetoothProtocolType.RFComm)
         {
             _socket = socket;
         }
@@ -337,7 +337,7 @@ namespace InTheHand.Net.Sockets
 
             [DllImport(winsockDll)]
 #pragma warning disable IDE1006 // Naming Styles - these are Win32 function names
-            internal static extern int socket(int af, int type, int protocol);
+            internal static extern int socket(int af, SocketType type, ProtocolType protocol);
 
             [DllImport(winsockDll)]
             internal static extern int closesocket(int s);

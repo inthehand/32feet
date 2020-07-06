@@ -15,6 +15,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -140,6 +141,11 @@ namespace InTheHand.Net.Sockets
         void SetAuthenticate(bool value)
         {
             _authenticate = value;
+        }
+
+        Socket GetClient()
+        {
+            return null;
         }
 
         bool GetConnected()

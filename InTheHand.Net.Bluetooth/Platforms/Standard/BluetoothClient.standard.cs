@@ -42,6 +42,11 @@ namespace InTheHand.Net.Sockets
         {
         }
 
+        Socket GetClient()
+        {
+            return null;
+        }
+
         bool GetConnected()
         {
             return false;

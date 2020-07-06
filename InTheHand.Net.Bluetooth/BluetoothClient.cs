@@ -7,6 +7,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Net.Sockets;
 
 namespace InTheHand.Net.Sockets
 {
@@ -68,17 +69,23 @@ namespace InTheHand.Net.Sockets
             DoClose();
         }
 
-        public bool Connected
-        {
-            get => GetConnected();
-        }
-
         public bool Authenticate
         {
             get => GetAuthenticate();
             set => SetAuthenticate(value);
         }
 
+        public Socket Client
+        {
+            get => GetClient();
+        }
+
+        public bool Connected
+        {
+            get => GetConnected();
+        }
+
+        
         public bool Encrypt
         {
             get => GetEncrypt();

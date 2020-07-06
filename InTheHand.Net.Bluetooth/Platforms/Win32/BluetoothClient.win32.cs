@@ -132,6 +132,11 @@ namespace InTheHand.Net.Sockets
             }
         }
 
+        Socket GetClient()
+        {
+            return _socket;
+        }
+
         bool GetConnected()
         {
             if (_socket == null)

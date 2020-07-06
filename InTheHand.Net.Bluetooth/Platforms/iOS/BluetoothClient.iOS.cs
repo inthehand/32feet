@@ -9,6 +9,7 @@ using ExternalAccessory;
 using InTheHand.Net.Sockets.iOS;
 using System;
 using System.Collections.Generic;
+using System.Net.Sockets;
 
 namespace InTheHand.Net.Sockets
 {
@@ -56,6 +57,11 @@ namespace InTheHand.Net.Sockets
 
         void SetAuthenticate(bool value)
         {
+        }
+
+        Socket GetClient()
+        {
+            return null;
         }
 
         bool GetConnected()
