@@ -1,6 +1,6 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="BluetoothAdvertisingEvent.cs" company="In The Hand Ltd">
-//   Copyright (c) 2018-19 In The Hand Ltd, All rights reserved.
+//   Copyright (c) 2018-20 In The Hand Ltd, All rights reserved.
 //   This source code is licensed under the MIT License - see License.txt
 // </copyright>
 //-----------------------------------------------------------------------
@@ -26,9 +26,9 @@ namespace InTheHand.Bluetooth
 
         public ushort Appearance { get { return GetAppearance(); } }
 
-        /*public byte TxPower { get; private set; }
+        public byte TxPower { get; private set; }
 
-        public byte Rssi { get { return GetRssi(); } }*/
+        public short Rssi { get { return GetRssi(); } }
 
         public IReadOnlyDictionary<ushort,byte[]> ManufacturerData { get { return GetManufacturerData(); } }
 

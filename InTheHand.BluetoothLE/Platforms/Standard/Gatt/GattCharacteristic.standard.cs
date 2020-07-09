@@ -17,9 +17,19 @@ namespace InTheHand.Bluetooth.GenericAttributeProfile
             return 0;
         }
 
+        string GetUserDescription()
+        {
+            return string.Empty;
+        }
+
         Task<GattDescriptor> DoGetDescriptor(Guid descriptor)
         {
             return Task.FromResult((GattDescriptor)null);
+        }
+
+        Task<IReadOnlyList<GattDescriptor>> DoGetDescriptors()
+        {
+            return Task.FromResult((IReadOnlyList<GattDescriptor>)null);
         }
 
         Task<byte[]> DoGetValue()
@@ -40,9 +50,19 @@ namespace InTheHand.Bluetooth.GenericAttributeProfile
         void AddCharacteristicValueChanged()
         {
         }
-        
+
         void RemoveCharacteristicValueChanged()
         {
+        }
+
+        private Task DoStartNotifications()
+        {
+            return Task.CompletedTask;
+        }
+
+        private Task DoStopNotifications()
+        {
+            return Task.CompletedTask;
         }
     }
 }

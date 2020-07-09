@@ -79,7 +79,7 @@ namespace InTheHand.Bluetooth.Platforms.Apple
                     List<CBUUID> services = new List<CBUUID>();
                     if (!_owner._options.AcceptAllDevices)
                     {
-                        foreach (BluetoothLEScanFilterInit filter in _owner._options.Filters)
+                        foreach (BluetoothLEScanFilter filter in _owner._options.Filters)
                         {
                             foreach (Guid service in filter.Services)
                             {

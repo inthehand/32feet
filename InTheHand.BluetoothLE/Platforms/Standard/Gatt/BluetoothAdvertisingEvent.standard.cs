@@ -21,6 +21,11 @@ namespace InTheHand.Bluetooth
             return string.Empty;
         }
 
+        short GetRssi()
+        {
+            return 0;
+        }
+
         IReadOnlyDictionary<ushort, byte[]> GetManufacturerData()
         {
             return new ReadOnlyDictionary<ushort, byte[]>(new Dictionary<ushort,byte[]>());

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 using Uap = Windows.Devices.Bluetooth.GenericAttributeProfile;
@@ -24,6 +25,11 @@ namespace InTheHand.Bluetooth.GenericAttributeProfile
             return _characteristic.Uuid;
         }
 
+        string GetUserDescription()
+        {
+            return _characteristic.UserDescription;
+        }
+
         GattCharacteristicProperties GetProperties()
         {
             return (GattCharacteristicProperties)(int)_characteristic.CharacteristicProperties;
@@ -37,6 +43,23 @@ namespace InTheHand.Bluetooth.GenericAttributeProfile
                 return new GattDescriptor(this, result.Descriptors[0]);
 
             return null;
+        }
+
+        async Task<IReadOnlyList<GattDescriptor>> DoGetDescriptors()
+        {
+            List<GattDescriptor> descriptors = new List<GattDescriptor>();
+
+            var result = await _characteristic.GetDescriptorsAsync();
+
+            if(result.Status == Uap.GattCommunicationStatus.Success)
+            {
+                foreach (var d in result.Descriptors)
+                {
+                    descriptors.Add(new GattDescriptor(this, d));
+                }
+            }
+
+            return descriptors;
         }
 
         async Task<byte[]> DoGetValue()
@@ -81,6 +104,28 @@ namespace InTheHand.Bluetooth.GenericAttributeProfile
         void RemoveCharacteristicValueChanged()
         {
             _characteristic.ValueChanged -= Characteristic_ValueChanged;
+        }
+
+        private async Task DoStartNotifications()
+        {
+            Uap.GattClientCharacteristicConfigurationDescriptorValue value = Uap.GattClientCharacteristicConfigurationDescriptorValue.None;
+            if (_characteristic.CharacteristicProperties.HasFlag(Uap.GattCharacteristicProperties.Notify))
+                value = Uap.GattClientCharacteristicConfigurationDescriptorValue.Notify;
+            else if (_characteristic.CharacteristicProperties.HasFlag(Uap.GattCharacteristicProperties.Indicate))
+                value = Uap.GattClientCharacteristicConfigurationDescriptorValue.Indicate;
+            else
+                return;
+
+            var result = await _characteristic.WriteClientCharacteristicConfigurationDescriptorAsync(value);
+
+            return;
+        }
+
+        private async Task DoStopNotifications()
+        {
+            var result = await _characteristic.WriteClientCharacteristicConfigurationDescriptorAsync(Uap.GattClientCharacteristicConfigurationDescriptorValue.None);
+
+            return;
         }
     }
 }

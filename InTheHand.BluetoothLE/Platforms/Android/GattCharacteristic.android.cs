@@ -1,5 +1,14 @@
-﻿using System;
+﻿//-----------------------------------------------------------------------
+// <copyright file="GattCharacteristic.android.cs" company="In The Hand Ltd">
+//   Copyright (c) 2018-20 In The Hand Ltd, All rights reserved.
+//   This source code is licensed under the MIT License - see License.txt
+// </copyright>
+//-----------------------------------------------------------------------
+
+using Android.Bluetooth;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -16,7 +25,7 @@ namespace InTheHand.Bluetooth.GenericAttributeProfile
 
         Guid GetUuid()
         {
-            return new Guid(_characteristic.Uuid.ToString());
+            return _characteristic.Uuid.ToGuid();
         }
 
         GattCharacteristicProperties GetProperties()
@@ -24,15 +33,30 @@ namespace InTheHand.Bluetooth.GenericAttributeProfile
             return (GattCharacteristicProperties)(int)_characteristic.Properties;
         }
 
+        string GetUserDescription()
+        {
+            return GetManualUserDescription();
+        }
+
         Task<GattDescriptor> DoGetDescriptor(Guid descriptor)
         {
-            var uuid = Java.Util.UUID.FromString(descriptor.ToString());
-            Guid g = new Guid(uuid.ToString());
-            var gattDescriptor = _characteristic.GetDescriptor(uuid);
+            var gattDescriptor = _characteristic.GetDescriptor(descriptor.ToUuid());
             if (gattDescriptor is null)
                 return Task.FromResult<GattDescriptor>(null);
 
             return Task.FromResult(new GattDescriptor(this, gattDescriptor));
+        }
+
+        async Task<IReadOnlyList<GattDescriptor>> DoGetDescriptors()
+        {
+            List<GattDescriptor> descriptors = new List<GattDescriptor>();
+
+            foreach(var descriptor in _characteristic.Descriptors)
+            {
+                descriptors.Add(new GattDescriptor(this, descriptor));
+            }
+
+            return descriptors;
         }
 
         Task<byte[]> DoGetValue()
@@ -61,10 +85,51 @@ namespace InTheHand.Bluetooth.GenericAttributeProfile
 
         void AddCharacteristicValueChanged()
         {
+            Service.Device.Gatt.CharacteristicChanged += Gatt_CharacteristicChanged;
         }
-        
+
+        private void Gatt_CharacteristicChanged(object sender, Guid e)
+        {
+            if(e == Uuid)
+                characteristicValueChanged?.Invoke(this, EventArgs.Empty);
+        }
+
         void RemoveCharacteristicValueChanged()
         {
+            Service.Device.Gatt.CharacteristicChanged -= Gatt_CharacteristicChanged;
+        }
+
+        private Task DoStartNotifications()
+        {
+            byte[] data;
+
+            if (_characteristic.Properties.HasFlag(GattProperty.Notify))
+                data = BluetoothGattDescriptor.EnableNotificationValue.ToArray();
+            else if (_characteristic.Properties.HasFlag(GattProperty.Indicate))
+                data = BluetoothGattDescriptor.EnableIndicationValue.ToArray();
+            else
+                return Task.CompletedTask;
+
+            var descriptor = _characteristic.GetDescriptor(GattDescriptorUuids.ClientCharacteristicConfiguration.ToUuid());
+            descriptor.SetValue(data);
+            var success = Service.Device.Gatt.NativeGatt.WriteDescriptor(descriptor);
+
+            if (success)
+                return Task.CompletedTask;
+            else
+                return Task.FromException(new Exception());
+        }
+
+        private Task DoStopNotifications()
+        {
+            var descriptor = _characteristic.GetDescriptor(GattDescriptorUuids.ClientCharacteristicConfiguration.ToUuid());
+            descriptor.SetValue(new byte[] { 0, 0 });
+            var success = Service.Device.Gatt.NativeGatt.WriteDescriptor(descriptor);
+
+            if (success)
+                return Task.CompletedTask;
+            else
+                return Task.FromException(new Exception());
         }
     }
 }

@@ -12,7 +12,7 @@ namespace InTheHand.Bluetooth
 {
     public sealed class RequestDeviceOptions
     {
-        public IList<BluetoothLEScanFilterInit> Filters { get; } = new List<BluetoothLEScanFilterInit>();
+        public IList<BluetoothLEScanFilter> Filters { get; } = new List<BluetoothLEScanFilter>();
 
         public IList<Guid> OptionalServices { get; } = new List<Guid>();
 

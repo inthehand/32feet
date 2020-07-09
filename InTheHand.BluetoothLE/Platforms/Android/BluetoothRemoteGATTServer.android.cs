@@ -1,17 +1,24 @@
-﻿using System;
+﻿//-----------------------------------------------------------------------
+// <copyright file="BluetoothRemoteGATTServer.android.cs" company="In The Hand Ltd">
+//   Copyright (c) 2018-20 In The Hand Ltd, All rights reserved.
+//   This source code is licensed under the MIT License - see License.txt
+// </copyright>
+//-----------------------------------------------------------------------
+
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Android.Bluetooth;
+using ABluetooth = Android.Bluetooth;
 using Android.Runtime;
 
 namespace InTheHand.Bluetooth.GenericAttributeProfile
 {
     partial class BluetoothRemoteGATTServer
     {
-        internal Android.Bluetooth.BluetoothGatt NativeGatt;
-        private Android.Bluetooth.BluetoothGattCallback _gattCallback;
+        internal ABluetooth.BluetoothGatt NativeGatt;
+        private ABluetooth.BluetoothGattCallback _gattCallback;
         private EventWaitHandle _connectedHandle = new EventWaitHandle(false, EventResetMode.AutoReset);
         private EventWaitHandle _servicesDiscoveredHandle = new EventWaitHandle(false, EventResetMode.ManualReset);
         private EventWaitHandle _characteristicReadHandle = new EventWaitHandle(false, EventResetMode.AutoReset);
@@ -20,11 +27,13 @@ namespace InTheHand.Bluetooth.GenericAttributeProfile
         private EventWaitHandle _descriptorWriteHandle = new EventWaitHandle(false, EventResetMode.AutoReset);
         private bool _connected = false;
 
-        internal BluetoothRemoteGATTServer(BluetoothDevice device, Android.Bluetooth.BluetoothDevice bluetoothDevice) : this(device)
+        internal BluetoothRemoteGATTServer(BluetoothDevice device, ABluetooth.BluetoothDevice bluetoothDevice) : this(device)
         {
             _gattCallback = new GattCallback(this);
             NativeGatt = bluetoothDevice.ConnectGatt(Android.App.Application.Context, false, _gattCallback);
         }
+
+        internal event EventHandler<Guid> CharacteristicChanged;
 
         internal void WaitForCharacteristicRead()
         {
@@ -55,10 +64,10 @@ namespace InTheHand.Bluetooth.GenericAttributeProfile
                 _owner = owner;
             }
 
-            public override void OnConnectionStateChange(BluetoothGatt gatt, GattStatus status, ProfileState newState)
+            public override void OnConnectionStateChange(ABluetooth.BluetoothGatt gatt, ABluetooth.GattStatus status, ABluetooth.ProfileState newState)
             {
                 System.Diagnostics.Debug.WriteLine($"ConnectionStateChanged {status}");
-                if (newState == ProfileState.Connected)
+                if (newState == ABluetooth.ProfileState.Connected)
                 {
                     _owner._connected = true;
                     _owner._connectedHandle.Set();
@@ -66,37 +75,38 @@ namespace InTheHand.Bluetooth.GenericAttributeProfile
                 }
             }
 
-            public override void OnCharacteristicRead(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, GattStatus status)
+            public override void OnCharacteristicRead(ABluetooth.BluetoothGatt gatt, ABluetooth.BluetoothGattCharacteristic characteristic, ABluetooth.GattStatus status)
             {
                 System.Diagnostics.Debug.WriteLine($"CharacteristicRead {characteristic.Uuid} {status}");
                 _owner._characteristicReadHandle.Set();
             }
 
-            public override void OnCharacteristicWrite(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, GattStatus status)
+            public override void OnCharacteristicWrite(ABluetooth.BluetoothGatt gatt, ABluetooth.BluetoothGattCharacteristic characteristic, ABluetooth.GattStatus status)
             {
                 System.Diagnostics.Debug.WriteLine($"CharacteristicWrite {characteristic.Uuid} {status}");
                 _owner._characteristicWriteHandle.Set();
             }
 
-            public override void OnCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic)
+            public override void OnCharacteristicChanged(ABluetooth.BluetoothGatt gatt, ABluetooth.BluetoothGattCharacteristic characteristic)
             {
                 System.Diagnostics.Debug.WriteLine($"CharacteristicChanged {characteristic.Uuid}");
+                _owner.CharacteristicChanged?.Invoke(this, characteristic.Uuid.ToGuid());
 
             }
 
-            public override void OnDescriptorRead(BluetoothGatt gatt, BluetoothGattDescriptor descriptor, GattStatus status)
+            public override void OnDescriptorRead(ABluetooth.BluetoothGatt gatt, ABluetooth.BluetoothGattDescriptor descriptor, ABluetooth.GattStatus status)
             {
                 System.Diagnostics.Debug.WriteLine($"DescriptorRead {descriptor.Uuid} {status}");
                 _owner._descriptorReadHandle.Set();
             }
 
-            public override void OnDescriptorWrite(BluetoothGatt gatt, BluetoothGattDescriptor descriptor, [GeneratedEnum] GattStatus status)
+            public override void OnDescriptorWrite(ABluetooth.BluetoothGatt gatt, ABluetooth.BluetoothGattDescriptor descriptor, ABluetooth.GattStatus status)
             {
                 System.Diagnostics.Debug.WriteLine($"DescriptorWrite {descriptor.Uuid} {status}");
                 _owner._descriptorWriteHandle.Set();
             }
 
-            public override void OnServicesDiscovered(BluetoothGatt gatt, GattStatus status)
+            public override void OnServicesDiscovered(ABluetooth.BluetoothGatt gatt, ABluetooth.GattStatus status)
             {
                 System.Diagnostics.Debug.WriteLine($"ServicesDiscovered {status}");
                 _owner._servicesDiscoveredHandle.Set();
@@ -105,7 +115,7 @@ namespace InTheHand.Bluetooth.GenericAttributeProfile
 
         bool GetConnected()
         {
-            return Bluetooth._manager.GetConnectionState(Device._device, ProfileType.Gatt) == ProfileState.Connected;
+            return Bluetooth._manager.GetConnectionState(Device._device, ABluetooth.ProfileType.Gatt) == ABluetooth.ProfileState.Connected;
         }
 
         Task DoConnect()
@@ -124,7 +134,7 @@ namespace InTheHand.Bluetooth.GenericAttributeProfile
 
         Task<BluetoothRemoteGATTService> DoGetPrimaryService(Guid? service)
         {
-            BluetoothGattService nativeService = null;
+            ABluetooth.BluetoothGattService nativeService = null;
             _servicesDiscoveredHandle.WaitOne();
             if (service.HasValue)
             {
@@ -134,7 +144,7 @@ namespace InTheHand.Bluetooth.GenericAttributeProfile
             {
                 foreach (var serv in NativeGatt.Services)
                 {
-                    if (serv.Type == GattServiceType.Primary)
+                    if (serv.Type == ABluetooth.GattServiceType.Primary)
                     {
                         nativeService = serv;
                         break;

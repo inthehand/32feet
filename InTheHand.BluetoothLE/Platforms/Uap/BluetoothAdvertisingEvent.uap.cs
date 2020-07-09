@@ -4,24 +4,37 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
+using Windows.Devices.Bluetooth;
 using Windows.Devices.Bluetooth.Advertisement;
 
 namespace InTheHand.Bluetooth
 {
     partial class BluetoothAdvertisingEvent
     {
-        private byte _rssi;
+        private short _rssi;
+        private BluetoothLEDevice _device;
         private BluetoothLEAdvertisement _advertisement;
 
-        internal BluetoothAdvertisingEvent(BluetoothDevice device, byte rssi, BluetoothLEAdvertisement advertisement) : this(device)
+        internal BluetoothAdvertisingEvent(BluetoothLEAdvertisementReceivedEventArgs args)
         {
-            _rssi = rssi;
-            _advertisement = advertisement;
+            _rssi = args.RawSignalStrengthInDBm;
+            _device = BluetoothLEDevice.FromBluetoothAddressAsync(args.BluetoothAddress).GetResults();
+            _advertisement = args.Advertisement;
+        }
+
+        public static implicit operator BluetoothAdvertisingEvent(BluetoothLEAdvertisementReceivedEventArgs args)
+        {
+            return new BluetoothAdvertisingEvent(args);
         }
 
         ushort GetAppearance()
         {
-            return Device.NativeDevice.Appearance.RawValue;
+            return _device.Appearance.RawValue;
+        }
+
+        short GetRssi()
+        {
+            return _rssi;
         }
 
         Guid[] GetUuids()

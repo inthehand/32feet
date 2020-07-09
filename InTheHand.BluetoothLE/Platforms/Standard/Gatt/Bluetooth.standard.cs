@@ -15,6 +15,10 @@ namespace InTheHand.Bluetooth
             return Task.FromResult((BluetoothDevice)null);
         }
 
+        private async Task DoRequestLEScan(BluetoothLEScan scan)
+        {
+        }
+
         private void AddAvailabilityChanged()
         {
         }

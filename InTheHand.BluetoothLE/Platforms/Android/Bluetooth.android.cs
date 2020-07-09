@@ -61,7 +61,11 @@ namespace InTheHand.Bluetooth
             });
         }
 
-        [Activity(NoHistory = false, LaunchMode = LaunchMode.Multiple)]
+        private async Task DoRequestLEScan(BluetoothLEScan scan)
+        {
+        }
+
+            [Activity(NoHistory = false, LaunchMode = LaunchMode.Multiple)]
         private sealed class DevicePickerActivity : Activity
         {
             protected override void OnCreate(Bundle savedInstanceState)

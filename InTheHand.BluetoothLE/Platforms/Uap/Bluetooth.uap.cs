@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Windows.Devices.Enumeration;
 using Windows.Devices.Bluetooth;
+using Windows.Devices.Bluetooth.Advertisement;
 using Windows.Devices.Bluetooth.GenericAttributeProfile;
 
 namespace InTheHand.Bluetooth
@@ -77,6 +78,31 @@ namespace InTheHand.Bluetooth
             var adaptor = await BluetoothAdapter.GetDefaultAsync();
             var radio = await adaptor.GetRadioAsync();
             radio.StateChanged -= Radio_StateChanged;
+        }
+
+        BluetoothLEAdvertisementWatcher watcher;
+
+        private async Task DoRequestLEScan(BluetoothLEScan scan)
+        {
+            var filter = new BluetoothLEAdvertisementFilter();
+
+            if (watcher == null)
+            {
+                watcher = new BluetoothLEAdvertisementWatcher(filter);
+                watcher.Received += Watcher_Received;
+            }
+            else
+            {
+                watcher.AdvertisementFilter = filter;
+            }
+
+            watcher.Start();
+        }
+
+        
+        private void Watcher_Received(BluetoothLEAdvertisementWatcher sender, BluetoothLEAdvertisementReceivedEventArgs args)
+        {
+            AdvertisementReceived?.Invoke(this, args);
         }
     }
 }

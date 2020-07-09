@@ -7,6 +7,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -24,6 +25,21 @@ namespace InTheHand.Bluetooth.GenericAttributeProfile
         public Guid Uuid { get { return GetUuid(); } }
 
         public GattCharacteristicProperties Properties { get { return GetProperties(); } }
+
+        public string UserDescription { get { return GetUserDescription(); } }
+
+        private string GetManualUserDescription()
+        {
+            var descriptor = GetDescriptorAsync(GattDescriptorUuids.CharacteristicUserDescription).Result;
+
+            if(descriptor != null)
+            {
+                var bytes = descriptor.ReadValueAsync().Result;
+                return System.Text.Encoding.UTF8.GetString(bytes);
+            }
+
+            return string.Empty;
+        }
 
         public byte[] Value
         {
@@ -59,6 +75,11 @@ namespace InTheHand.Bluetooth.GenericAttributeProfile
             return DoGetDescriptor(descriptor);
         }
 
+        public Task<IReadOnlyList<GattDescriptor>> GetDescriptorsAsync()
+        {
+            return DoGetDescriptors();
+        }
+
         private event EventHandler characteristicValueChanged;
 
         void OnCharacteristicValueChanged()
@@ -82,6 +103,16 @@ namespace InTheHand.Bluetooth.GenericAttributeProfile
                 characteristicValueChanged -= value;
                 RemoveCharacteristicValueChanged();
             }
+        }
+
+        public Task StartNotifications()
+        {
+            return DoStartNotifications();
+        }
+
+        public Task StopNotifications()
+        {
+            return DoStopNotifications();
         }
     }
 }

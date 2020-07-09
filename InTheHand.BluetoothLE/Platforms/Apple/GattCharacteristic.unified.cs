@@ -31,6 +31,11 @@ namespace InTheHand.Bluetooth.GenericAttributeProfile
             return (GattCharacteristicProperties)((int)_characteristic.Properties & 0xff);
         }
 
+        string GetUserDescription()
+        {
+            return GetManualUserDescription();
+        }
+
         Task<GattDescriptor> DoGetDescriptor(Guid descriptor)
         {
             GattDescriptor matchingDescriptor = null;
@@ -45,6 +50,19 @@ namespace InTheHand.Bluetooth.GenericAttributeProfile
             }
 
             return Task.FromResult(matchingDescriptor);
+        }
+
+        async Task<IReadOnlyList<GattDescriptor>> DoGetDescriptors()
+        {
+            List<GattDescriptor> descriptors = new List<GattDescriptor>();
+            ((CBPeripheral)Service.Device).DiscoverDescriptors(_characteristic);
+            foreach (CBDescriptor cbdescriptor in _characteristic.Descriptors)
+            {
+                descriptors.Add(new GattDescriptor(this, cbdescriptor));
+
+            }
+
+            return descriptors;
         }
 
         Task<byte[]> DoGetValue()
@@ -67,20 +85,34 @@ namespace InTheHand.Bluetooth.GenericAttributeProfile
         void AddCharacteristicValueChanged()
         {
             CBPeripheral peripheral = Service.Device;
-            peripheral.SetNotifyValue(true, _characteristic);
             peripheral.UpdatedCharacterteristicValue += Peripheral_UpdatedCharacterteristicValue;
         }
 
         void Peripheral_UpdatedCharacterteristicValue(object sender, CBCharacteristicEventArgs e)
         {
-            characteristicValueChanged?.Invoke(this, EventArgs.Empty);
+            if(e.Characteristic == _characteristic)
+                characteristicValueChanged?.Invoke(this, EventArgs.Empty);
         }
 
         void RemoveCharacteristicValueChanged()
         {
             CBPeripheral peripheral = Service.Device;
             peripheral.UpdatedCharacterteristicValue -= Peripheral_UpdatedCharacterteristicValue;
+            
+        }
+
+        private Task DoStartNotifications()
+        {
+            CBPeripheral peripheral = Service.Device;
+            peripheral.SetNotifyValue(true, _characteristic);
+            return Task.CompletedTask;
+        }
+
+        private Task DoStopNotifications()
+        {
+            CBPeripheral peripheral = Service.Device;
             peripheral.SetNotifyValue(false, _characteristic);
+            return Task.CompletedTask;
         }
     }
 }

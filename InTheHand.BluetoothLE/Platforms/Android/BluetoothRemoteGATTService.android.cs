@@ -1,35 +1,43 @@
-﻿using System;
+﻿//-----------------------------------------------------------------------
+// <copyright file="BluetoothRemoteGATTService.android.cs" company="In The Hand Ltd">
+//   Copyright (c) 2018-20 In The Hand Ltd, All rights reserved.
+//   This source code is licensed under the MIT License - see License.txt
+// </copyright>
+//-----------------------------------------------------------------------
+
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using ABluetooth = Android.Bluetooth;
 
 namespace InTheHand.Bluetooth.GenericAttributeProfile
 {
     partial class BluetoothRemoteGATTService
     {
-        private Android.Bluetooth.BluetoothGattService _service;
-
-        internal BluetoothRemoteGATTService(BluetoothDevice device, Android.Bluetooth.BluetoothGattService service) : this(device)
+        internal BluetoothRemoteGATTService(BluetoothDevice device, ABluetooth.BluetoothGattService service) : this(device)
         {
             if (service is null)
                 throw new ArgumentNullException("service");
 
-            _service = service;
+            NativeService = service;
         }
+
+        internal ABluetooth.BluetoothGattService NativeService { get; }
 
         Guid GetUuid()
         {
-            return new Guid(_service.Uuid.ToString());
+            return NativeService.Uuid.ToGuid();
         }
 
         bool GetIsPrimary()
         {
-            return _service.Type == Android.Bluetooth.GattServiceType.Primary;
+            return NativeService.Type == ABluetooth.GattServiceType.Primary;
         }
 
         Task<GattCharacteristic> DoGetCharacteristic(Guid characteristic)
         {
-            var nativeCharacteristic = _service.GetCharacteristic(Java.Util.UUID.FromString(characteristic.ToString()));
+            var nativeCharacteristic = NativeService.GetCharacteristic(characteristic.ToUuid());
             if (nativeCharacteristic is null)
                 return Task.FromResult((GattCharacteristic)null);
 
@@ -39,7 +47,7 @@ namespace InTheHand.Bluetooth.GenericAttributeProfile
         Task<IReadOnlyList<GattCharacteristic>> DoGetCharacteristics()
         {
             List<GattCharacteristic> characteristics = new List<GattCharacteristic>();
-            foreach(var characteristic in _service.Characteristics)
+            foreach(var characteristic in NativeService.Characteristics)
             {
                 characteristics.Add(new GattCharacteristic(this, characteristic));
             }

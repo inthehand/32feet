@@ -30,9 +30,9 @@ namespace InTheHand.Bluetooth.GenericAttributeProfile
             return DoGetCharacteristic(characteristic);
         }
 
-        public async Task<IReadOnlyList<GattCharacteristic>> GetCharacteristicsAsync()
+        public Task<IReadOnlyList<GattCharacteristic>> GetCharacteristicsAsync()
         {
-            return await DoGetCharacteristics();
+            return DoGetCharacteristics();
         }
 
         public async Task<BluetoothRemoteGATTService> GetIncludedServiceAsync(Guid service)
