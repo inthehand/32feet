@@ -1,9 +1,17 @@
-﻿using System;
+﻿//-----------------------------------------------------------------------
+// <copyright file="BluetoothAdvertisingEvent.uap.cs" company="In The Hand Ltd">
+//   Copyright (c) 2018-20 In The Hand Ltd, All rights reserved.
+//   This source code is licensed under the MIT License - see License.txt
+// </copyright>
+//-----------------------------------------------------------------------
+
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
+using System.Threading.Tasks;
 using Windows.Devices.Bluetooth;
 using Windows.Devices.Bluetooth.Advertisement;
 
@@ -12,13 +20,36 @@ namespace InTheHand.Bluetooth
     partial class BluetoothAdvertisingEvent
     {
         private short _rssi;
-        private BluetoothLEDevice _device;
         private BluetoothLEAdvertisement _advertisement;
 
         internal BluetoothAdvertisingEvent(BluetoothLEAdvertisementReceivedEventArgs args)
         {
             _rssi = args.RawSignalStrengthInDBm;
-            _device = BluetoothLEDevice.FromBluetoothAddressAsync(args.BluetoothAddress).GetResults();
+            _txPower = args.TransmitPowerLevelInDBm.HasValue ? (byte)args.TransmitPowerLevelInDBm.Value : (byte)0;
+
+            /*var sections = args.Advertisement.GetSectionsByType(0xA);
+            if(sections != null && sections.Count > 0)
+            {
+                var array = sections[0].Data.ToArray();
+
+                _txPower = sections[0].Data.GetByte(0);
+            }*/
+
+            var appearanceSections = args.Advertisement.GetSectionsByType(0x19);
+            if (appearanceSections != null && appearanceSections.Count > 0)
+            {
+                var appearanceArray = appearanceSections[0].Data.ToArray();
+                _appearance = BitConverter.ToUInt16(appearanceArray, 0);
+            }
+
+            Task.Run(async () =>
+            {
+                var device = await BluetoothLEDevice.FromBluetoothAddressAsync(args.BluetoothAddress, args.BluetoothAddressType);
+                
+                if (device != null)
+                    Device = device;
+            });
+
             _advertisement = args.Advertisement;
         }
 
@@ -27,14 +58,23 @@ namespace InTheHand.Bluetooth
             return new BluetoothAdvertisingEvent(args);
         }
 
+        private ushort _appearance;
+
         ushort GetAppearance()
         {
-            return _device.Appearance.RawValue;
+            return _appearance;
         }
 
         short GetRssi()
         {
             return _rssi;
+        }
+
+        private byte _txPower;
+
+        byte GetTxPower()
+        {
+            return _txPower;
         }
 
         Guid[] GetUuids()

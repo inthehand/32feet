@@ -32,6 +32,11 @@ namespace InTheHand.Bluetooth
             return new BluetoothDevice(device);
         }
 
+        private static async Task<BluetoothDevice> PlatformFromId(string id)
+        {
+            return ABluetooth.BluetoothAdapter.DefaultAdapter.GetRemoteDevice(id);
+        }
+
         string GetId()
         {
             return _device.Address;

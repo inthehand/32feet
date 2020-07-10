@@ -26,7 +26,7 @@ namespace InTheHand.Bluetooth
 
         public ushort Appearance { get { return GetAppearance(); } }
 
-        public byte TxPower { get; private set; }
+        public byte TxPower { get { return GetTxPower(); } }
 
         public short Rssi { get { return GetRssi(); } }
 

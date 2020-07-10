@@ -28,6 +28,33 @@ namespace InTheHand.Bluetooth
             NativeDevice = device;
         }
 
+        public static implicit operator BluetoothLEDevice(BluetoothDevice device)
+        {
+            return device.NativeDevice;
+        }
+
+        public static implicit operator BluetoothDevice(BluetoothLEDevice device)
+        {
+            return new BluetoothDevice(device);
+        }
+
+        private static async Task<BluetoothDevice> PlatformFromId(string id)
+        {
+            if (ulong.TryParse(id, out var parsedId))
+            {
+                if(Bluetooth.KnownDevices.ContainsKey(parsedId))
+                {
+                    BluetoothDevice knownDevice = (BluetoothDevice)Bluetooth.KnownDevices[parsedId].Target;
+                    if (knownDevice != null)
+                        return knownDevice;
+                }
+                var device = await BluetoothLEDevice.FromBluetoothAddressAsync(parsedId);
+                return device;
+            }
+
+            return null;
+        }
+
         string GetId()
         {
             return NativeDevice.BluetoothAddress.ToString();

@@ -6,6 +6,7 @@
 //-----------------------------------------------------------------------
 
 using CoreBluetooth;
+using Foundation;
 using InTheHand.Bluetooth.GenericAttributeProfile;
 using System.Threading.Tasks;
 
@@ -29,6 +30,16 @@ namespace InTheHand.Bluetooth
         public static implicit operator CBPeripheral(BluetoothDevice device)
         {
             return device._peripheral;
+        }
+
+        private static async Task<BluetoothDevice> PlatformFromId(string id)
+        {
+            var devices = Bluetooth._manager.RetrievePeripheralsWithIdentifiers(new NSUuid(id));
+
+            if (devices != null && devices.Length > 0)
+                return devices[0];
+
+            return null;
         }
 
         string GetId()

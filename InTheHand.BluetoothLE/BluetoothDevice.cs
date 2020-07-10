@@ -1,12 +1,13 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="BluetoothDevice.cs" company="In The Hand Ltd">
-//   Copyright (c) 2018-19 In The Hand Ltd, All rights reserved.
+//   Copyright (c) 2018-20 In The Hand Ltd, All rights reserved.
 //   This source code is licensed under the MIT License - see License.txt
 // </copyright>
 //-----------------------------------------------------------------------
 
 using InTheHand.Bluetooth.GenericAttributeProfile;
 using System;
+using System.Threading.Tasks;
 
 namespace InTheHand.Bluetooth
 {
@@ -16,6 +17,10 @@ namespace InTheHand.Bluetooth
         public string Name { get { return GetName(); } }
         public BluetoothRemoteGATTServer Gatt { get { return GetGatt(); } }
 
+        public static Task<BluetoothDevice> FromIdAsync(string id)
+        {
+            return PlatformFromId(id);
+        }
         /*
         public Task WatchAdvertisementsAsync()
         {

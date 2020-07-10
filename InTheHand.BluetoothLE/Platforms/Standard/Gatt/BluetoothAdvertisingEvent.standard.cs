@@ -26,6 +26,11 @@ namespace InTheHand.Bluetooth
             return 0;
         }
 
+        byte GetTxPower()
+        {
+            return 0;
+        }
+
         IReadOnlyDictionary<ushort, byte[]> GetManufacturerData()
         {
             return new ReadOnlyDictionary<ushort, byte[]>(new Dictionary<ushort,byte[]>());

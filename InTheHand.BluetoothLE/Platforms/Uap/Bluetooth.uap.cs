@@ -4,11 +4,14 @@ using Windows.Devices.Enumeration;
 using Windows.Devices.Bluetooth;
 using Windows.Devices.Bluetooth.Advertisement;
 using Windows.Devices.Bluetooth.GenericAttributeProfile;
+using System.Collections.Generic;
 
 namespace InTheHand.Bluetooth
 {
     partial class Bluetooth
     {
+        internal static Dictionary<ulong, WeakReference> KnownDevices = new Dictionary<ulong, WeakReference>();
+
         async Task<bool> DoGetAvailability()
         {
             var adaptor = await BluetoothAdapter.GetDefaultAsync();

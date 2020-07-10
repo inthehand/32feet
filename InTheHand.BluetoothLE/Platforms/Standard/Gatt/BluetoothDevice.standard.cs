@@ -14,6 +14,11 @@ namespace InTheHand.Bluetooth
     {
         private bool _watchingAdvertisements = false;
 
+        private static async Task<BluetoothDevice> PlatformFromId(string id)
+        {
+            return null;
+        }
+
         string GetId()
         {
             return string.Empty;

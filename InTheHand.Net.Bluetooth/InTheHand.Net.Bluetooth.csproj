@@ -5,13 +5,16 @@
     <Company>In The Hand Ltd</Company>
     <Authors>Peter Foot</Authors>
     <Product>32feet.NET</Product>
-    <Version>4.0.6</Version>
+    <Version>4.0.7</Version>
     <RepositoryUrl>https://github.com/inthehand/32feet</RepositoryUrl>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <PackageProjectUrl>https://github.com/inthehand/32feet</PackageProjectUrl>
     <PackageLicenseUrl></PackageLicenseUrl>
     <Copyright>Copyright (c) 2004-2020 In The Hand Ltd</Copyright>
     <Description>32feet.NET is a shared-source project to make personal area networking technologies such as Bluetooth easily accessible from .NET code.</Description>
-    <FileVersion>4.0.6.0622</FileVersion>
+    <FileVersion>4.0.7.0710</FileVersion>
     <AssemblyVersion>4.0.0.0</AssemblyVersion>
     <AssemblyName>InTheHand.Net.Bluetooth</AssemblyName>
     <DebugType>Full</DebugType>
@@ -28,7 +31,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="MSBuild.Sdk.Extras" Version="2.0.54" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All"/>
+    <PackageReference Include="MSBuild.Sdk.Extras" Version="2.0.54" PrivateAssets="All" />
   </ItemGroup>
   <ItemGroup>
     <Compile Remove="Platforms\**\*.*" />
@@ -64,6 +68,10 @@
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net461' ">
+    <Compile Include="Platforms\Win32\*.cs" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'netcore31' ">
     <Compile Include="Platforms\Win32\*.cs" />
   </ItemGroup>
   
