@@ -138,7 +138,7 @@ namespace InTheHand.Bluetooth.GenericAttributeProfile
             _servicesDiscoveredHandle.WaitOne();
             if (service.HasValue)
             {
-                nativeService = NativeGatt.GetService(Java.Util.UUID.FromString(service.ToString()));
+                nativeService = NativeGatt.GetService(service.GetValueOrDefault().ToUuid());
             }
             else
             {
@@ -162,7 +162,8 @@ namespace InTheHand.Bluetooth.GenericAttributeProfile
 
             foreach (var serv in NativeGatt.Services)
             {
-                services.Add(new BluetoothRemoteGATTService(Device, serv));
+                if(serv.Type == ABluetooth.GattServiceType.Primary)
+                    services.Add(new BluetoothRemoteGATTService(Device, serv));
             }
 
             return services;

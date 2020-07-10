@@ -22,7 +22,7 @@ namespace InTheHand.Bluetooth.GenericAttributeProfile
 
         Guid GetUuid()
         {
-            return new Guid(_descriptor.Uuid.ToString());
+            return _descriptor.Uuid.ToGuid();
         }
 
         Task<byte[]> DoGetValue()

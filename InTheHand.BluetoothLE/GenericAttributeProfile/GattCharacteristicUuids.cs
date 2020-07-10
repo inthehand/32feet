@@ -1,6 +1,6 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="GattCharacteristicUuids.cs" company="In The Hand Ltd">
-//   Copyright (c) 2015-19 In The Hand Ltd, All rights reserved.
+//   Copyright (c) 2015-20 In The Hand Ltd, All rights reserved.
 //   This source code is licensed under the MIT License - see License.txt
 // </copyright>
 //-----------------------------------------------------------------------
@@ -320,6 +320,15 @@ namespace InTheHand.Bluetooth.GenericAttributeProfile
 
         [BluetoothUti("org.bluetooth.characteristic.exact_time_256")]
         public static readonly Guid ExactTime256 = new Guid(0x00002A0C, 0x0000, 0x1000, 0x80, 0x00, 0x00, 0x80, 0x5F, 0x9B, 0x34, 0xFB);
+        
+        [BluetoothUti("org.bluetooth.characteristic.fat_burn_heart_rate_lower_limit")]
+        public static readonly Guid FatBurnHeartRateLowerLimit = new Guid(0x00002A88, 0x0000, 0x1000, 0x80, 0x00, 0x00, 0x80, 0x5F, 0x9B, 0x34, 0xFB);
+        
+        [BluetoothUti("org.bluetooth.characteristic.fat_burn_heart_rate_upper_limit")]
+        public static readonly Guid FatBurnHeartRateUpperLimit = new Guid(0x00002A89, 0x0000, 0x1000, 0x80, 0x00, 0x00, 0x80, 0x5F, 0x9B, 0x34, 0xFB);
+        
+        [BluetoothUti("org.bluetooth.characteristic.firmware_revision_string")]
+        public static readonly Guid FirmwareRevisionString = new Guid(0x00002A26, 0x0000, 0x1000, 0x80, 0x00, 0x00, 0x80, 0x5F, 0x9B, 0x34, 0xFB);
 
         // TODO: Complete list of Characteristics
         //...

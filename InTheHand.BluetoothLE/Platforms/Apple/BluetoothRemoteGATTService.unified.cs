@@ -1,6 +1,14 @@
-﻿using CoreBluetooth;
+﻿//-----------------------------------------------------------------------
+// <copyright file="BluetoothRemoteGATTService.unified.cs" company="In The Hand Ltd">
+//   Copyright (c) 2018-20 In The Hand Ltd, All rights reserved.
+//   This source code is licensed under the MIT License - see License.txt
+// </copyright>
+//-----------------------------------------------------------------------
+
+using CoreBluetooth;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -58,6 +66,33 @@ namespace InTheHand.Bluetooth.GenericAttributeProfile
             }
 
             return Task.FromResult((IReadOnlyList<GattCharacteristic>)characteristics.AsReadOnly());
+        }
+
+        private async Task<BluetoothRemoteGATTService> DoGetIncludedServiceAsync(Guid service)
+        {
+            ((CBPeripheral)Device).DiscoverIncludedServices(new CBUUID[] { }, _service);
+
+            foreach (var includedService in _service.IncludedServices)
+            {
+                if (includedService.UUID.ToGuid() == service)
+                    return new BluetoothRemoteGATTService(Device, includedService);
+            }
+
+            return null;
+        }
+
+        private async Task<IReadOnlyList<BluetoothRemoteGATTService>> DoGetIncludedServicesAsync()
+        {
+            List<BluetoothRemoteGATTService> services = new List<BluetoothRemoteGATTService>();
+
+            ((CBPeripheral)Device).DiscoverIncludedServices(new CBUUID[] { }, _service);
+
+            foreach(var includedService in _service.IncludedServices)
+            {
+                services.Add(new BluetoothRemoteGATTService(Device, includedService));
+            }
+
+            return services;
         }
     }
 }

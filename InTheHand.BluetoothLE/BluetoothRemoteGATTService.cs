@@ -35,16 +35,14 @@ namespace InTheHand.Bluetooth.GenericAttributeProfile
             return DoGetCharacteristics();
         }
 
-        public async Task<BluetoothRemoteGATTService> GetIncludedServiceAsync(Guid service)
+        public Task<BluetoothRemoteGATTService> GetIncludedServiceAsync(Guid service)
         {
-            return new BluetoothRemoteGATTService(Device);
+            return DoGetIncludedServiceAsync(service);
         }
 
-        public async Task<IReadOnlyList<BluetoothRemoteGATTService>> GetIncludedServicesAsync()
+        public Task<IReadOnlyList<BluetoothRemoteGATTService>> GetIncludedServicesAsync()
         {
-            List<BluetoothRemoteGATTService> services = new List<BluetoothRemoteGATTService>();
-
-            return services.AsReadOnly();
+            return DoGetIncludedServicesAsync();
         }
 
         public event EventHandler ServiceAdded;
