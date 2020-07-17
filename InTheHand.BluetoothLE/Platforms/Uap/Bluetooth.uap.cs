@@ -5,6 +5,9 @@ using Windows.Devices.Bluetooth;
 using Windows.Devices.Bluetooth.Advertisement;
 using Windows.Devices.Bluetooth.GenericAttributeProfile;
 using System.Collections.Generic;
+using Windows.UI.Core;
+using Windows.UI.Xaml.Media;
+using Windows.UI;
 
 namespace InTheHand.Bluetooth
 {
@@ -20,11 +23,13 @@ namespace InTheHand.Bluetooth
 
         async Task<BluetoothDevice> DoRequestDevice(RequestDeviceOptions options)
         {
+            
             DevicePicker picker = new DevicePicker();
-            picker.Appearance.AccentColor = Windows.UI.Color.FromArgb(0xff, 0xff, 0xff, 0xff);
-            picker.Appearance.ForegroundColor = Windows.UI.Color.FromArgb(0xff, 0xff, 0xff, 0xff);
+            picker.Appearance.AccentColor = Windows.UI.Colors.Green;
+            picker.Appearance.ForegroundColor = Windows.UI.Colors.White;
+            picker.Appearance.BackgroundColor = Windows.UI.Colors.Black;
             picker.Appearance.Title = Windows.ApplicationModel.Package.Current.DisplayName + " wants to pair";
-
+            picker.Appearance.SelectedAccentColor = Windows.UI.Colors.Red;
             if (!options.AcceptAllDevices)
             {
                 foreach (var filter in options.Filters)
