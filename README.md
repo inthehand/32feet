@@ -4,7 +4,7 @@
 32feet.NET is a shared-source project to make personal area networking technologies such as Bluetooth, Infrared (IrDA) and more, easily accessible from .NET code. Supports desktop, mobile or embedded systems.  32feet.NET is free for commercial or non-commercial use. If you use the binaries you can just use the library as-is, if you make modifications to the source you need to include the 32feet.NET License.txt document and ensure the file headers are not modified/removed.  The project currently consists of the following libraries:-
 
 - Bluetooth 
-- Bluetooth LE (Coming soon)
+- Bluetooth LE (Preview)
 - IrDA (Obsolete)
 - Object Exchange (Legacy libraries only)
 - USB (Coming soon)
@@ -17,17 +17,11 @@ Downloads are available here on the _Downloads_ tab. Packages are also available
 - InTheHand.Net.Bluetooth - Standard (v4.x)
 [![NuGet version](https://badge.fury.io/nu/InTheHand.Net.Bluetooth.svg)](https://badge.fury.io/nu/InTheHand.Net.Bluetooth)
 
+- InTheHand.BluetoothLE - Low Energy (v4.x)
+[![NuGet version](https://badge.fury.io/nu/InTheHand.BluetoothLE.svg)](https://badge.fury.io/nu/InTheHand.BluetoothLE)
+
 - 32feet.NET - Legacy (v3.x)
 [![NuGet version](https://badge.fury.io/nu/32feet.NET.svg)](https://badge.fury.io/nu/32feet.NET)
-
-- InTheHand.Devices.Bluetooth - Experimental UWP API (v4.x) - Obsolete
-[![NuGet version](https://badge.fury.io/nu/inthehand.devices.bluetooth.svg)](https://badge.fury.io/nu/inthehand.devices.bluetooth)
-
-- 32feet.NET.Phone - Windows Phone - Obsolete
-[![NuGet version](https://badge.fury.io/nu/32feet.NET.Phone.svg)](https://badge.fury.io/nu/32feet.NET.Phone)
-
-- InTheHand.Devices.Enumeration (Windows 8 / Windows Phone Device Pickers) - Obsolete
-[![NuGet version](https://badge.fury.io/nu/inthehand.devices.enumeration.svg)](https://badge.fury.io/nu/inthehand.devices.enumeration)
 
 ## Documentation / Tutorial
 The user guide is available in the [Wiki](https://github.com/inthehand/32feet/wiki) section, and the class documentation is at [http://inthehand.github.io/] and in the release package.
