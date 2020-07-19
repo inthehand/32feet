@@ -8,6 +8,9 @@ using System.Collections.Generic;
 using Windows.UI.Core;
 using Windows.UI.Xaml.Media;
 using Windows.UI;
+using System.Reflection;
+using System.Runtime.InteropServices;
+using Windows.Foundation;
 
 namespace InTheHand.Bluetooth
 {
@@ -25,10 +28,32 @@ namespace InTheHand.Bluetooth
         {
             
             DevicePicker picker = new DevicePicker();
+            Rect bounds = Rect.Empty;
             picker.Appearance.AccentColor = Windows.UI.Colors.Green;
             picker.Appearance.ForegroundColor = Windows.UI.Colors.White;
             picker.Appearance.BackgroundColor = Windows.UI.Colors.Black;
+#if !UAP
+            uint len = 64;
+            byte[] buffer = new byte[len];
+
+            int hasPackage = GetCurrentPackageId(ref len, buffer);
+
+            if (hasPackage == 0x3d54)
+            {
+                foreach(var attr in System.Reflection.Assembly.GetEntryAssembly().GetCustomAttributes(typeof(AssemblyProductAttribute)))
+                {
+                    picker.Appearance.Title = ((AssemblyProductAttribute)attr).Product + " wants to pair";
+                    break;
+                }
+            }
+            else
+            {
+                picker.Appearance.Title = Windows.ApplicationModel.Package.Current.DisplayName + " wants to pair";
+            }
+#else
             picker.Appearance.Title = Windows.ApplicationModel.Package.Current.DisplayName + " wants to pair";
+            bounds = Windows.UI.ViewManagement.ApplicationView.GetForCurrentView().VisibleBounds;
+#endif
             picker.Appearance.SelectedAccentColor = Windows.UI.Colors.Red;
             if (!options.AcceptAllDevices)
             {
@@ -52,7 +77,7 @@ namespace InTheHand.Bluetooth
                 picker.Filter.SupportedDeviceSelectors.Add(BluetoothLEDevice.GetDeviceSelectorFromPairingState(false));
             }
             
-            var deviceInfo = await picker.PickSingleDeviceAsync(Windows.UI.ViewManagement.ApplicationView.GetForCurrentView().VisibleBounds);
+            var deviceInfo = await picker.PickSingleDeviceAsync(bounds);
            
             if (deviceInfo == null)
                 return null;
@@ -112,5 +137,8 @@ namespace InTheHand.Bluetooth
         {
             AdvertisementReceived?.Invoke(this, args);
         }
+
+        [DllImport("Kernel32.dll", SetLastError = true)]
+        private static extern int GetCurrentPackageId(ref uint bufferLength, byte[] buffer);
     }
 }

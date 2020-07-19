@@ -10,7 +10,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="InTheHand.BluetoothLE" Version="4.0.1" />
     <PackageReference Include="Xamarin.Forms" Version="4.0.0.425677" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\InTheHand.BluetoothLE\InTheHand.BluetoothLE.csproj" />
   </ItemGroup>
 </Project>

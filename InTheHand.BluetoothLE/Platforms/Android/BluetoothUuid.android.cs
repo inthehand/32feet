@@ -17,7 +17,17 @@ namespace InTheHand.Bluetooth
             return UUID.FromString(g.ToString());
         }
 
+        public static UUID ToUuid(this BluetoothUuid uuid)
+        {
+            return UUID.FromString(uuid.ToString());
+        }
+
         public static Guid ToGuid(this UUID u)
+        {
+            return Guid.Parse(u.ToString());
+        }
+
+        public static BluetoothUuid ToBluetoothUuid(this UUID u)
         {
             return Guid.Parse(u.ToString());
         }

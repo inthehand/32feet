@@ -123,7 +123,7 @@ namespace InTheHand.Bluetooth
                     // read data
                     byte[] dataBytes = new byte[data.Data.Length - 4];
                     data.Data.CopyTo(4, dataBytes, 0, dataBytes.Length);
-                    serviceData.Add(BluetoothUuid.FromShortId(BitConverter.ToUInt32(uuidBytes, 0)), dataBytes);
+                    serviceData.Add(BluetoothUuid.FromShortId(BitConverter.ToUInt16(uuidBytes, 0)), dataBytes);
                 }
                 else if (data.DataType == BluetoothLEAdvertisementDataTypes.ServiceData16BitUuids)
                 {

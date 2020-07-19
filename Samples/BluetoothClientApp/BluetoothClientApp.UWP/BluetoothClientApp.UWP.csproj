@@ -11,7 +11,7 @@
     <AssemblyName>BluetoothClientApp.UWP</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
-    <TargetPlatformVersion>10.0.17763.0</TargetPlatformVersion>
+    <TargetPlatformVersion>10.0.19041.0</TargetPlatformVersion>
     <TargetPlatformMinVersion>10.0.16299.0</TargetPlatformMinVersion>
     <MinimumVisualStudioVersion>14</MinimumVisualStudioVersion>
     <EnableDotNetNativeCompatibleProfile>true</EnableDotNetNativeCompatibleProfile>
@@ -147,6 +147,10 @@
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform" Version="6.2.8" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\InTheHand.BluetoothLE\InTheHand.BluetoothLE.csproj">
+      <Project>{6479e778-52fe-4b15-ad15-7a1225a652e5}</Project>
+      <Name>InTheHand.BluetoothLE</Name>
+    </ProjectReference>
     <ProjectReference Include="..\BluetoothClientApp\BluetoothClientApp.csproj">
       <Project>{897AB987-17A0-406E-ACB7-74AB82ECC3AC}</Project>
       <Name>BluetoothClientApp</Name>
