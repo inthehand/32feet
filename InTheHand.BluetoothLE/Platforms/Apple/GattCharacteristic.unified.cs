@@ -5,13 +5,13 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace InTheHand.Bluetooth.GenericAttributeProfile
+namespace InTheHand.Bluetooth
 {
     partial class GattCharacteristic
     {
         private CBCharacteristic _characteristic;
 
-        internal GattCharacteristic(BluetoothRemoteGATTService service, CBCharacteristic characteristic) : this(service)
+        internal GattCharacteristic(GattService service, CBCharacteristic characteristic) : this(service)
         {
             _characteristic = characteristic;
         }
@@ -21,9 +21,9 @@ namespace InTheHand.Bluetooth.GenericAttributeProfile
             return characteristic._characteristic;
         }
 
-        Guid GetUuid()
+        BluetoothUuid GetUuid()
         {
-            return _characteristic.UUID.ToGuid();
+            return _characteristic.UUID;
         }
 
         GattCharacteristicProperties GetProperties()
@@ -36,13 +36,13 @@ namespace InTheHand.Bluetooth.GenericAttributeProfile
             return GetManualUserDescription();
         }
 
-        Task<GattDescriptor> DoGetDescriptor(Guid descriptor)
+        Task<GattDescriptor> DoGetDescriptor(BluetoothUuid descriptor)
         {
             GattDescriptor matchingDescriptor = null;
             ((CBPeripheral)Service.Device).DiscoverDescriptors(_characteristic);
             foreach (CBDescriptor cbdescriptor in _characteristic.Descriptors)
             {
-                if (cbdescriptor.UUID.ToGuid() == descriptor)
+                if ((BluetoothUuid)cbdescriptor.UUID == descriptor)
                 {
                     matchingDescriptor = new GattDescriptor(this, cbdescriptor);
                     break;

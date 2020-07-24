@@ -8,7 +8,7 @@
 using System;
 using System.Threading.Tasks;
 
-namespace InTheHand.Bluetooth.GenericAttributeProfile
+namespace InTheHand.Bluetooth
 {
     public sealed partial class GattDescriptor
     {
@@ -19,7 +19,7 @@ namespace InTheHand.Bluetooth.GenericAttributeProfile
 
         public GattCharacteristic Characteristic { get; private set; }
 
-        public Guid Uuid { get { return GetUuid(); } }
+        public BluetoothUuid Uuid { get { return GetUuid(); } }
 
         public byte[] Value
         {

@@ -1,5 +1,5 @@
 ﻿//-----------------------------------------------------------------------
-// <copyright file="BluetoothRemoteGATTService.uap.cs" company="In The Hand Ltd">
+// <copyright file="GattService.uap.cs" company="In The Hand Ltd">
 //   Copyright (c) 2018-20 In The Hand Ltd, All rights reserved.
 //   This source code is licensed under the MIT License - see License.txt
 // </copyright>
@@ -8,30 +8,29 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Windows.Devices.Bluetooth.GenericAttributeProfile;
-using InTheHand.Bluetooth.GenericAttributeProfile;
+using WBluetooth = Windows.Devices.Bluetooth.GenericAttributeProfile;
 
-namespace InTheHand.Bluetooth.GenericAttributeProfile
+namespace InTheHand.Bluetooth
 {
-    partial class BluetoothRemoteGATTService
+    partial class GattService
     {
-        readonly GattDeviceService _service;
+        readonly WBluetooth.GattDeviceService _service;
 
-        internal BluetoothRemoteGATTService(BluetoothDevice device, GattDeviceService service) : this(device)
+        internal GattService(BluetoothDevice device, WBluetooth.GattDeviceService service) : this(device)
         {
             _service = service;
         }
 
-        public static implicit operator GattDeviceService(BluetoothRemoteGATTService service)
+        public static implicit operator WBluetooth.GattDeviceService(GattService service)
         {
             return service._service;
         }
 
-        async Task<GattCharacteristic> DoGetCharacteristic(Guid characteristic)
+        async Task<GattCharacteristic> DoGetCharacteristic(BluetoothUuid characteristic)
         {
             var result = await _service.GetCharacteristicsForUuidAsync(characteristic);
 
-            if (result.Status == GattCommunicationStatus.Success && result.Characteristics.Count > 0)
+            if (result.Status == WBluetooth.GattCommunicationStatus.Success && result.Characteristics.Count > 0)
                 return new GattCharacteristic(this, result.Characteristics[0]);
 
             return null;
@@ -42,7 +41,7 @@ namespace InTheHand.Bluetooth.GenericAttributeProfile
             List<GattCharacteristic> characteristics = new List<GattCharacteristic>();
 
             var result = await _service.GetCharacteristicsAsync();
-            if(result.Status == GattCommunicationStatus.Success)
+            if(result.Status == WBluetooth.GattCommunicationStatus.Success)
             {
                 foreach(var c in result.Characteristics)
                 {
@@ -53,29 +52,29 @@ namespace InTheHand.Bluetooth.GenericAttributeProfile
             return characteristics.AsReadOnly();
         }
 
-        private async Task<BluetoothRemoteGATTService> DoGetIncludedServiceAsync(Guid service)
+        private async Task<GattService> DoGetIncludedServiceAsync(BluetoothUuid service)
         {
             var servicesResult = await _service.GetIncludedServicesForUuidAsync(service);
 
-            if(servicesResult.Status == GattCommunicationStatus.Success)
+            if(servicesResult.Status == WBluetooth.GattCommunicationStatus.Success)
             {
-                return new BluetoothRemoteGATTService(Device, servicesResult.Services[0]);
+                return new GattService(Device, servicesResult.Services[0]);
             }
 
             return null;
         }
 
-        private async Task<IReadOnlyList<BluetoothRemoteGATTService>> DoGetIncludedServicesAsync()
+        private async Task<IReadOnlyList<GattService>> DoGetIncludedServicesAsync()
         {
-            List<BluetoothRemoteGATTService> services = new List<BluetoothRemoteGATTService>();
+            List<GattService> services = new List<GattService>();
 
             var servicesResult = await _service.GetIncludedServicesAsync();
 
-            if (servicesResult.Status == GattCommunicationStatus.Success)
+            if (servicesResult.Status == WBluetooth.GattCommunicationStatus.Success)
             {
                 foreach(var includedService in servicesResult.Services)
                 {
-                    services.Add(new BluetoothRemoteGATTService(Device, includedService));
+                    services.Add(new GattService(Device, includedService));
                 }
 
                 return services;
@@ -84,7 +83,7 @@ namespace InTheHand.Bluetooth.GenericAttributeProfile
             return null;
         }
 
-        Guid GetUuid()
+        BluetoothUuid GetUuid()
         {
             return _service.Uuid;
         }

@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Uap = Windows.Devices.Bluetooth.GenericAttributeProfile;
 using System.Runtime.InteropServices.WindowsRuntime;
 
-namespace InTheHand.Bluetooth.GenericAttributeProfile
+namespace InTheHand.Bluetooth
 {
     partial class GattDescriptor
     {

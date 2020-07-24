@@ -5,12 +5,14 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-using InTheHand.Bluetooth.GenericAttributeProfile;
 using System;
 
 namespace InTheHand.Bluetooth
 {
-    public struct BluetoothUuid
+    /// <summary>
+    /// Represents a Bluetooth UUID. Can be expressed as a Guid or a short ID for documented Bluetooth SIG definitions.
+    /// </summary>
+    public partial struct BluetoothUuid
     {
         private static readonly Guid BluetoothBase = new Guid(0x00000000, 0x0000, 0x1000, 0x80, 0x00, 0x00, 0x80, 0x5F, 0x9B, 0x34, 0xFB);
 
@@ -36,6 +38,11 @@ namespace InTheHand.Bluetooth
             return FromShortId(uuid);
         }
 
+        public static explicit operator BluetoothUuid(string uuid)
+        {
+            return FromId(uuid);
+        }
+
         public static explicit operator ushort(BluetoothUuid uuid)
         {
             ushort? val = TryGetShortId(uuid);
@@ -45,6 +52,31 @@ namespace InTheHand.Bluetooth
             return default;
         }
 
+        /// <summary>
+        /// Returns true if both Uuids are equal.
+        /// </summary>
+        /// <param name="uuid1"></param>
+        /// <param name="uuid2"></param>
+        /// <returns></returns>
+        public static bool operator ==(BluetoothUuid uuid1, BluetoothUuid uuid2)
+        {
+            return uuid1.Value == uuid2.Value;
+        }
+
+        /// <summary>
+        /// Returns true if both Uuids are unequal.
+        /// </summary>
+        /// <param name="uuid1"></param>
+        /// <param name="uuid2"></param>
+        /// <returns></returns>
+        public static bool operator !=(BluetoothUuid uuid1, BluetoothUuid uuid2)
+        {
+            return uuid1.Value != uuid2.Value;
+        }
+
+        /// <summary>
+        /// The full underlying value as a <see cref="Guid"/>.
+        /// </summary>
         public Guid Value
         {
             get
@@ -55,22 +87,22 @@ namespace InTheHand.Bluetooth
 
         public override bool Equals(object obj)
         {
-            if(obj is BluetoothUuid)
+            if(obj is BluetoothUuid uuid)
             {
-                return Value == ((BluetoothUuid)obj).Value;
+                return Value == uuid.Value;
             }
-            else if(obj is ushort)
+            else if(obj is ushort shortId)
             {
                 ushort? shortVal = TryGetShortId(Value);
 
-                if(shortVal.HasValue && shortVal.Value == (ushort)obj)
+                if(shortVal.HasValue && shortVal.Value == shortId)
                 {
                     return true;
                 }
             }
-            else if(obj is Guid)
+            else if(obj is Guid guid)
             {
-                return Value == (Guid)obj;
+                return Value == guid;
             }
 
             return false;
@@ -84,6 +116,18 @@ namespace InTheHand.Bluetooth
         public override string ToString()
         {
             return Value.ToString();
+        }
+
+        /// <summary>
+        /// A default Uuid containing a zero Guid.
+        /// </summary>
+        /// <value>This is not a valid value so be careful passing this to any native function.</value>
+        public static BluetoothUuid Empty
+        {
+            get
+            {
+                return default;
+            }
         }
 
         public static BluetoothUuid FromGuid(Guid uuid)
@@ -125,6 +169,12 @@ namespace InTheHand.Bluetooth
             return match ? BitConverter.ToUInt16(bytes, 0) : default;
         }
 
+        /// <summary>
+        /// Returns the Uuid for a given Bluetooth SIG name.
+        /// Names must beging with the "org.bluetooth" prefix.
+        /// </summary>
+        /// <param name="uuidName"></param>
+        /// <returns></returns>
         public static BluetoothUuid FromId(string uuidName)
         {
             if(uuidName.StartsWith("org.bluetooth.service"))
@@ -155,7 +205,7 @@ namespace InTheHand.Bluetooth
             }
             else
             {
-                return GenericAttributeProfile.GattServiceUuids.FromBluetoothUti(name);
+                return GattServiceUuids.FromBluetoothUti(name);
             }
         }
 
@@ -171,7 +221,7 @@ namespace InTheHand.Bluetooth
             }
             else
             {
-                return GenericAttributeProfile.GattCharacteristicUuids.FromBluetoothUti(name);
+                return GattCharacteristicUuids.FromBluetoothUti(name);
             }
         }
 
@@ -187,7 +237,7 @@ namespace InTheHand.Bluetooth
             }
             else
             {
-                return GenericAttributeProfile.GattDescriptorUuids.FromBluetoothUti(name);
+                return GattDescriptorUuids.FromBluetoothUti(name);
             }
         }
     }

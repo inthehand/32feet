@@ -10,7 +10,7 @@
 using System;
 using System.Reflection;
 
-namespace InTheHand.Bluetooth.GenericAttributeProfile
+namespace InTheHand.Bluetooth
 {
     /// <summary>
     /// Provides characteristic UUIDs for common GATT characteristics.

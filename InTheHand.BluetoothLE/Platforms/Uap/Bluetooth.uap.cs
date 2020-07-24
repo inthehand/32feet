@@ -53,8 +53,9 @@ namespace InTheHand.Bluetooth
 #else
             picker.Appearance.Title = Windows.ApplicationModel.Package.Current.DisplayName + " wants to pair";
             bounds = Windows.UI.ViewManagement.ApplicationView.GetForCurrentView().VisibleBounds;
+            picker.Appearance.SelectedAccentColor = (Color)Windows.UI.Xaml.Application.Current.Resources["SystemAccentColor"];
 #endif
-            picker.Appearance.SelectedAccentColor = Windows.UI.Colors.Red;
+
             if (!options.AcceptAllDevices)
             {
                 foreach (var filter in options.Filters)
@@ -113,6 +114,7 @@ namespace InTheHand.Bluetooth
             radio.StateChanged -= Radio_StateChanged;
         }
 
+#if DEBUG
         BluetoothLEAdvertisementWatcher watcher;
 
         private async Task DoRequestLEScan(BluetoothLEScan scan)
@@ -132,13 +134,16 @@ namespace InTheHand.Bluetooth
             watcher.Start();
         }
 
-        
+
         private void Watcher_Received(BluetoothLEAdvertisementWatcher sender, BluetoothLEAdvertisementReceivedEventArgs args)
         {
             AdvertisementReceived?.Invoke(this, args);
         }
+#endif
 
+#if !UAP
         [DllImport("Kernel32.dll", SetLastError = true)]
         private static extern int GetCurrentPackageId(ref uint bufferLength, byte[] buffer);
+#endif
     }
 }

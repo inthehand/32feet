@@ -5,7 +5,6 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-using InTheHand.Bluetooth.GenericAttributeProfile;
 using System.Threading.Tasks;
 using ABluetooth = Android.Bluetooth;
 

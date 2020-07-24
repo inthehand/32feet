@@ -11,11 +11,11 @@ using System.Text;
 using System.Threading.Tasks;
 using ABluetooth = Android.Bluetooth;
 
-namespace InTheHand.Bluetooth.GenericAttributeProfile
+namespace InTheHand.Bluetooth
 {
-    partial class BluetoothRemoteGATTService
+    partial class GattService
     {
-        internal BluetoothRemoteGATTService(BluetoothDevice device, ABluetooth.BluetoothGattService service) : this(device)
+        internal GattService(BluetoothDevice device, ABluetooth.BluetoothGattService service) : this(device)
         {
             if (service is null)
                 throw new ArgumentNullException("service");
@@ -25,9 +25,9 @@ namespace InTheHand.Bluetooth.GenericAttributeProfile
 
         internal ABluetooth.BluetoothGattService NativeService { get; }
 
-        private Guid GetUuid()
+        private BluetoothUuid GetUuid()
         {
-            return NativeService.Uuid.ToGuid();
+            return NativeService.Uuid;
         }
 
         private bool GetIsPrimary()
@@ -35,9 +35,9 @@ namespace InTheHand.Bluetooth.GenericAttributeProfile
             return NativeService.Type == ABluetooth.GattServiceType.Primary;
         }
 
-        private Task<GattCharacteristic> DoGetCharacteristic(Guid characteristic)
+        private Task<GattCharacteristic> DoGetCharacteristic(BluetoothUuid characteristic)
         {
-            var nativeCharacteristic = NativeService.GetCharacteristic(characteristic.ToUuid());
+            var nativeCharacteristic = NativeService.GetCharacteristic(characteristic);
             if (nativeCharacteristic is null)
                 return Task.FromResult((GattCharacteristic)null);
 
@@ -54,24 +54,24 @@ namespace InTheHand.Bluetooth.GenericAttributeProfile
             return Task.FromResult((IReadOnlyList<GattCharacteristic>)characteristics.AsReadOnly());
         }
 
-        private async Task<BluetoothRemoteGATTService> DoGetIncludedServiceAsync(Guid service)
+        private async Task<GattService> DoGetIncludedServiceAsync(BluetoothUuid service)
         {
             foreach (var includedService in NativeService.IncludedServices)
             {
-                if (includedService.Uuid.ToGuid() == service)
-                    return new BluetoothRemoteGATTService(Device, includedService);
+                if (includedService.Uuid == service)
+                    return new GattService(Device, includedService);
             }
 
             return null;
         }
 
-        private async Task<IReadOnlyList<BluetoothRemoteGATTService>> DoGetIncludedServicesAsync()
+        private async Task<IReadOnlyList<GattService>> DoGetIncludedServicesAsync()
         {
-            List<BluetoothRemoteGATTService> services = new List<BluetoothRemoteGATTService>();
+            List<GattService> services = new List<GattService>();
 
             foreach(var includedService in NativeService.IncludedServices)
             {
-                services.Add(new BluetoothRemoteGATTService(Device, includedService));
+                services.Add(new GattService(Device, includedService));
             }
 
             return services;

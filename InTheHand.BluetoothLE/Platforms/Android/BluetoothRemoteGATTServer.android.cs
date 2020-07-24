@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 using ABluetooth = Android.Bluetooth;
 using Android.Runtime;
 
-namespace InTheHand.Bluetooth.GenericAttributeProfile
+namespace InTheHand.Bluetooth
 {
     partial class BluetoothRemoteGATTServer
     {
@@ -33,7 +33,7 @@ namespace InTheHand.Bluetooth.GenericAttributeProfile
             NativeGatt = bluetoothDevice.ConnectGatt(Android.App.Application.Context, false, _gattCallback);
         }
 
-        internal event EventHandler<Guid> CharacteristicChanged;
+        internal event EventHandler<BluetoothUuid> CharacteristicChanged;
 
         internal void WaitForCharacteristicRead()
         {
@@ -90,7 +90,7 @@ namespace InTheHand.Bluetooth.GenericAttributeProfile
             public override void OnCharacteristicChanged(ABluetooth.BluetoothGatt gatt, ABluetooth.BluetoothGattCharacteristic characteristic)
             {
                 System.Diagnostics.Debug.WriteLine($"CharacteristicChanged {characteristic.Uuid}");
-                _owner.CharacteristicChanged?.Invoke(this, characteristic.Uuid.ToGuid());
+                _owner.CharacteristicChanged?.Invoke(this, characteristic.Uuid);
 
             }
 
@@ -132,38 +132,27 @@ namespace InTheHand.Bluetooth.GenericAttributeProfile
             NativeGatt.Disconnect();
         }
 
-        Task<BluetoothRemoteGATTService> DoGetPrimaryService(Guid? service)
+        Task<GattService> DoGetPrimaryService(BluetoothUuid service)
         {
-            ABluetooth.BluetoothGattService nativeService = null;
             _servicesDiscoveredHandle.WaitOne();
-            if (service.HasValue)
-            {
-                nativeService = NativeGatt.GetService(service.GetValueOrDefault().ToUuid());
-            }
-            else
-            {
-                foreach (var serv in NativeGatt.Services)
-                {
-                    if (serv.Type == ABluetooth.GattServiceType.Primary)
-                    {
-                        nativeService = serv;
-                        break;
-                    }
-                }
-            }
-            return Task.FromResult(nativeService is null ? null : new BluetoothRemoteGATTService(Device, nativeService));
+            ABluetooth.BluetoothGattService nativeService = NativeGatt.GetService(service);
+            
+            return Task.FromResult(nativeService is null ? null : new GattService(Device, nativeService));
         }
 
-        async Task<List<BluetoothRemoteGATTService>> DoGetPrimaryServices(Guid? service)
+        async Task<List<GattService>> DoGetPrimaryServices(BluetoothUuid? service)
         {
-            var services = new List<BluetoothRemoteGATTService>();
+            var services = new List<GattService>();
 
             _servicesDiscoveredHandle.WaitOne();
 
             foreach (var serv in NativeGatt.Services)
             {
-                if(serv.Type == ABluetooth.GattServiceType.Primary)
-                    services.Add(new BluetoothRemoteGATTService(Device, serv));
+                // if a service was specified only add if service uuid is a match
+                if (serv.Type == ABluetooth.GattServiceType.Primary && (!service.HasValue || service.Value == serv.Uuid))
+                {
+                    services.Add(new GattService(Device, serv));
+                }
             }
 
             return services;

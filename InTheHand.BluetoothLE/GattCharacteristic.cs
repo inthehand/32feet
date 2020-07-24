@@ -1,6 +1,6 @@
 ﻿//-----------------------------------------------------------------------
-// <copyright file="BluetoothRemoteGATTCharacteristic.cs" company="In The Hand Ltd">
-//   Copyright (c) 2018-19 In The Hand Ltd, All rights reserved.
+// <copyright file="GattCharacteristic.cs" company="In The Hand Ltd">
+//   Copyright (c) 2018-20 In The Hand Ltd, All rights reserved.
 //   This source code is licensed under the MIT License - see License.txt
 // </copyright>
 //-----------------------------------------------------------------------
@@ -11,18 +11,18 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace InTheHand.Bluetooth.GenericAttributeProfile
+namespace InTheHand.Bluetooth
 {
     public sealed partial class GattCharacteristic
     {
-        internal GattCharacteristic(BluetoothRemoteGATTService service)
+        internal GattCharacteristic(GattService service)
         {
             Service = service;
         }
 
-        public BluetoothRemoteGATTService Service { get; private set; }
+        public GattService Service { get; private set; }
 
-        public Guid Uuid { get { return GetUuid(); } }
+        public BluetoothUuid Uuid { get { return GetUuid(); } }
 
         public GattCharacteristicProperties Properties { get { return GetProperties(); } }
 

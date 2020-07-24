@@ -10,26 +10,16 @@ using System;
 
 namespace InTheHand.Bluetooth
 {
-    public static class BluetoothUuidExtensions
+    partial struct BluetoothUuid
     {
-        public static UUID ToUuid(this Guid g)
-        {
-            return UUID.FromString(g.ToString());
-        }
-
-        public static UUID ToUuid(this BluetoothUuid uuid)
+        public static implicit operator UUID(BluetoothUuid uuid)
         {
             return UUID.FromString(uuid.ToString());
         }
 
-        public static Guid ToGuid(this UUID u)
+        public static implicit operator BluetoothUuid(UUID uuid)
         {
-            return Guid.Parse(u.ToString());
-        }
-
-        public static BluetoothUuid ToBluetoothUuid(this UUID u)
-        {
-            return Guid.Parse(u.ToString());
+            return Guid.Parse(uuid.ToString());
         }
     }
 }

@@ -81,9 +81,9 @@ namespace InTheHand.Bluetooth.Platforms.Apple
                     {
                         foreach (BluetoothLEScanFilter filter in _owner._options.Filters)
                         {
-                            foreach (Guid service in filter.Services)
+                            foreach (BluetoothUuid service in filter.Services)
                             {
-                                services.Add(service.ToCBUUID());
+                                services.Add(service);
                             }
                         }
                     }

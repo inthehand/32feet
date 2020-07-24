@@ -1,11 +1,18 @@
-﻿using CoreBluetooth;
+﻿//-----------------------------------------------------------------------
+// <copyright file="BluetoothRemoteGATTServer.unified.cs" company="In The Hand Ltd">
+//   Copyright (c) 2018-20 In The Hand Ltd, All rights reserved.
+//   This source code is licensed under the MIT License - see License.txt
+// </copyright>
+//-----------------------------------------------------------------------
+
+using CoreBluetooth;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace InTheHand.Bluetooth.GenericAttributeProfile
+namespace InTheHand.Bluetooth
 {
     partial class BluetoothRemoteGATTServer
     {
@@ -39,35 +46,28 @@ namespace InTheHand.Bluetooth.GenericAttributeProfile
         {
         }
 
-        Task<BluetoothRemoteGATTService> DoGetPrimaryService(Guid? service)
+        Task<GattService> DoGetPrimaryService(BluetoothUuid service)
         {
             return Task.Run(() =>
             {
                 EventWaitHandle handle = new EventWaitHandle(false, EventResetMode.AutoReset);
 
-                BluetoothRemoteGATTService matchingService = null;
+                GattService matchingService = null;
 
                 ((CBPeripheral)Device).DiscoveredService += (sender, args) =>
                  {
                      handle.Set();
                  };
 
-                if (service.HasValue)
-                {
-                    ((CBPeripheral)Device).DiscoverServices(new CBUUID[] { service.Value.ToCBUUID() });
-                }
-                else
-                {
-                    ((CBPeripheral)Device).DiscoverServices();
-                }
-
+                ((CBPeripheral)Device).DiscoverServices(new CBUUID[] { service });
+                
                 handle.WaitOne();
 
                 foreach (CBService cbservice in ((CBPeripheral)Device).Services)
                 {
-                    if (cbservice.UUID.ToGuid() == service)
+                    if ((BluetoothUuid)cbservice.UUID == service)
                     {
-                        matchingService = new BluetoothRemoteGATTService(Device, cbservice);
+                        matchingService = new GattService(Device, cbservice);
                     }
                 }
 
@@ -75,15 +75,15 @@ namespace InTheHand.Bluetooth.GenericAttributeProfile
             });
         }
 
-        Task<List<BluetoothRemoteGATTService>> DoGetPrimaryServices(Guid? service)
+        Task<List<GattService>> DoGetPrimaryServices(BluetoothUuid? service)
         {
             return Task.Run(() =>
             {
-                var services = new List<BluetoothRemoteGATTService>();
+                var services = new List<GattService>();
             
                 EventWaitHandle handle = new EventWaitHandle(false, EventResetMode.AutoReset);
 
-                BluetoothRemoteGATTService matchingService = null;
+                GattService matchingService = null;
 
                 ((CBPeripheral)Device).DiscoveredService += (sender, args) =>
                 {
@@ -92,7 +92,7 @@ namespace InTheHand.Bluetooth.GenericAttributeProfile
 
                 if (service.HasValue)
                 {
-                    ((CBPeripheral)Device).DiscoverServices(new CBUUID[] { service.Value.ToCBUUID() });
+                    ((CBPeripheral)Device).DiscoverServices(new CBUUID[] { service });
                 }
                 else
                 {
@@ -103,7 +103,7 @@ namespace InTheHand.Bluetooth.GenericAttributeProfile
 
                 foreach (CBService cbservice in ((CBPeripheral)Device).Services)
                 {
-                    services.Add(new BluetoothRemoteGATTService(Device, cbservice));
+                    services.Add(new GattService(Device, cbservice));
                 }
 
                 return services;

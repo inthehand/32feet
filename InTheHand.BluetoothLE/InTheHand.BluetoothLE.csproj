@@ -29,18 +29,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All"/>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
     <PackageReference Include="MSBuild.Sdk.Extras" Version="2.0.54" PrivateAssets="All" />
   </ItemGroup>
 
   <ItemGroup>
     <Compile Remove="Platforms\**\*.*" />
-    <Compile Remove="Platforms\Standard\Radio\**" />
-    <Compile Remove="Platforms\Win32\**" />
-    <EmbeddedResource Remove="Platforms\Standard\Radio\**" />
-    <EmbeddedResource Remove="Platforms\Win32\**" />
-    <None Remove="Platforms\Standard\Radio\**" />
-    <None Remove="Platforms\Win32\**" />
     <None Include="..\Misc\32feet-package-icon.png">
       <Pack>True</Pack>
       <PackagePath></PackagePath>
@@ -66,7 +60,7 @@
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
-    <Compile Include="Platforms\Standard\*\*.cs" />
+    <Compile Include="Platforms\Standard\*.cs" />
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'uap10.0' ">
@@ -74,7 +68,7 @@
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net461' ">
-    <PackageReference Include="Microsoft.Windows.SDK.Contracts" Version="10.0.19041.1"/>
+    <PackageReference Include="Microsoft.Windows.SDK.Contracts" Version="10.0.19041.1" />
     <Compile Include="Platforms\Uap\*.cs" />
   </ItemGroup>
 
@@ -96,6 +90,5 @@
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'xamarin.mac20' ">
     <Compile Include="Platforms\Apple\*.cs" />
-  </ItemGroup>
-  
+  </ItemGroup>  
 </Project>

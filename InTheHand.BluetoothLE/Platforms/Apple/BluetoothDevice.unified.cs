@@ -7,7 +7,6 @@
 
 using CoreBluetooth;
 using Foundation;
-using InTheHand.Bluetooth.GenericAttributeProfile;
 using System.Threading.Tasks;
 
 namespace InTheHand.Bluetooth

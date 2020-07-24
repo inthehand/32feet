@@ -1,15 +1,22 @@
-﻿using System;
+﻿//-----------------------------------------------------------------------
+// <copyright file="GattCharacteristic.standard.cs" company="In The Hand Ltd">
+//   Copyright (c) 2018-20 In The Hand Ltd, All rights reserved.
+//   This source code is licensed under the MIT License - see License.txt
+// </copyright>
+//-----------------------------------------------------------------------
+
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace InTheHand.Bluetooth.GenericAttributeProfile
+namespace InTheHand.Bluetooth
 {
     partial class GattCharacteristic
     {
-        Guid GetUuid()
+        BluetoothUuid GetUuid()
         {
-            return Guid.Empty;
+            return default;
         }
 
         GattCharacteristicProperties GetProperties()
@@ -22,7 +29,7 @@ namespace InTheHand.Bluetooth.GenericAttributeProfile
             return string.Empty;
         }
 
-        Task<GattDescriptor> DoGetDescriptor(Guid descriptor)
+        Task<GattDescriptor> DoGetDescriptor(BluetoothUuid descriptor)
         {
             return Task.FromResult((GattDescriptor)null);
         }

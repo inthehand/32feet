@@ -10,13 +10,13 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace InTheHand.Bluetooth.GenericAttributeProfile
+namespace InTheHand.Bluetooth
 {
-    partial class BluetoothRemoteGATTService
+    partial class GattService
     {
-        Guid GetUuid()
+        BluetoothUuid GetUuid()
         {
-            return Guid.Empty;
+            return default;
         }
 
         bool GetIsPrimary()
@@ -24,7 +24,7 @@ namespace InTheHand.Bluetooth.GenericAttributeProfile
             return true;
         }
 
-        Task<GattCharacteristic> DoGetCharacteristic(Guid characteristic)
+        Task<GattCharacteristic> DoGetCharacteristic(BluetoothUuid characteristic)
         {
             return Task.FromResult((GattCharacteristic)null);
         }
@@ -36,12 +36,12 @@ namespace InTheHand.Bluetooth.GenericAttributeProfile
             return Task.FromResult((IReadOnlyList<GattCharacteristic>)characteristics.AsReadOnly());
         }
 
-        private async Task<BluetoothRemoteGATTService> DoGetIncludedServiceAsync(Guid service)
+        private async Task<GattService> DoGetIncludedServiceAsync(BluetoothUuid service)
         {
             return null;
         }
 
-        private async Task<IReadOnlyList<BluetoothRemoteGATTService>> DoGetIncludedServicesAsync()
+        private async Task<IReadOnlyList<GattService>> DoGetIncludedServicesAsync()
         {
             return null;
         }

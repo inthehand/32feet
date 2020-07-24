@@ -1,6 +1,6 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="GattDescriptor.android.cs" company="In The Hand Ltd">
-//   Copyright (c) 2018-19 In The Hand Ltd, All rights reserved.
+//   Copyright (c) 2018-20 In The Hand Ltd, All rights reserved.
 //   This source code is licensed under the MIT License - see License.txt
 // </copyright>
 //-----------------------------------------------------------------------
@@ -9,20 +9,20 @@ using System;
 using System.Threading.Tasks;
 using Android.Bluetooth;
 
-namespace InTheHand.Bluetooth.GenericAttributeProfile
+namespace InTheHand.Bluetooth
 {
     partial class GattDescriptor
     {
-        private BluetoothGattDescriptor _descriptor;
+        private readonly BluetoothGattDescriptor _descriptor;
 
         internal GattDescriptor(GattCharacteristic characteristic, BluetoothGattDescriptor descriptor) : this(characteristic)
         {
             _descriptor = descriptor;
         }
 
-        Guid GetUuid()
+        BluetoothUuid GetUuid()
         {
-            return _descriptor.Uuid.ToGuid();
+            return _descriptor.Uuid;
         }
 
         Task<byte[]> DoGetValue()

@@ -62,12 +62,13 @@ namespace InTheHand.Bluetooth
             _availabilityChanged?.Invoke(this, EventArgs.Empty);
         }
 
+#if DEBUG
         public Task RequestLEScan(BluetoothLEScan scan)
         {
             return DoRequestLEScan(scan);
         }
 
         public event EventHandler<BluetoothAdvertisingEvent> AdvertisementReceived;
-
+#endif
     }
 }

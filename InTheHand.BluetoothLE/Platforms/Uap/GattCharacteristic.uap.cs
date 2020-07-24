@@ -4,13 +4,13 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 using Uap = Windows.Devices.Bluetooth.GenericAttributeProfile;
 
-namespace InTheHand.Bluetooth.GenericAttributeProfile
+namespace InTheHand.Bluetooth
 {
     partial class GattCharacteristic
     {
         private readonly Uap.GattCharacteristic _characteristic;
 
-        internal GattCharacteristic(BluetoothRemoteGATTService service, Uap.GattCharacteristic characteristic) : this(service)
+        internal GattCharacteristic(GattService service, Uap.GattCharacteristic characteristic) : this(service)
         {
             _characteristic = characteristic;
         }
@@ -20,7 +20,7 @@ namespace InTheHand.Bluetooth.GenericAttributeProfile
             return characteristic._characteristic;
         }
 
-        Guid GetUuid()
+        BluetoothUuid GetUuid()
         {
             return _characteristic.Uuid;
         }

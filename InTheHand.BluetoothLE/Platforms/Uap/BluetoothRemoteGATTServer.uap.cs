@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace InTheHand.Bluetooth.GenericAttributeProfile
+namespace InTheHand.Bluetooth
 {
     partial class BluetoothRemoteGATTServer
     {
@@ -22,28 +22,21 @@ namespace InTheHand.Bluetooth.GenericAttributeProfile
 
         }
 
-        async Task<BluetoothRemoteGATTService> DoGetPrimaryService(Guid? service)
+        async Task<GattService> DoGetPrimaryService(BluetoothUuid service)
         {
             Windows.Devices.Bluetooth.GenericAttributeProfile.GattDeviceServicesResult result = null;
 
-            if (service.HasValue)
-            {
-                result = await Device.NativeDevice.GetGattServicesForUuidAsync(service.Value);
-            }
-            else
-            {
-                result = await Device.NativeDevice.GetGattServicesAsync();
-            }
+            result = await Device.NativeDevice.GetGattServicesForUuidAsync(service);
 
             if (result == null || result.Services.Count == 0)
                 return null;
 
-            return new BluetoothRemoteGATTService(Device, result.Services[0]);
+            return new GattService(Device, result.Services[0]);
         }
 
-        async Task<List<BluetoothRemoteGATTService>> DoGetPrimaryServices(Guid? service)
+        async Task<List<GattService>> DoGetPrimaryServices(BluetoothUuid? service)
         {
-            var services = new List<BluetoothRemoteGATTService>();
+            var services = new List<GattService>();
 
             Windows.Devices.Bluetooth.GenericAttributeProfile.GattDeviceServicesResult result = null;
 
@@ -60,7 +53,7 @@ namespace InTheHand.Bluetooth.GenericAttributeProfile
             {
                 foreach(var serv in result.Services)
                 {
-                    services.Add(new BluetoothRemoteGATTService(Device, serv));
+                    services.Add(new GattService(Device, serv));
                 }
             }
             

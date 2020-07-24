@@ -10,7 +10,7 @@
 using System;
 using System.Reflection;
 
-namespace InTheHand.Bluetooth.GenericAttributeProfile
+namespace InTheHand.Bluetooth
 {
     /// <summary>
     /// Represents an enumeration of the most well known Descriptor UUID values.

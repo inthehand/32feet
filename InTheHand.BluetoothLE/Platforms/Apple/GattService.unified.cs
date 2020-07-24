@@ -12,25 +12,25 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace InTheHand.Bluetooth.GenericAttributeProfile
+namespace InTheHand.Bluetooth
 {
-    partial class BluetoothRemoteGATTService
+    partial class GattService
     {
         private CBService _service;
 
-        internal BluetoothRemoteGATTService(BluetoothDevice device, CBService service) : this(device)
+        internal GattService(BluetoothDevice device, CBService service) : this(device)
         {
             _service = service;
         }
 
-        public static implicit operator CBService(BluetoothRemoteGATTService service)
+        public static implicit operator CBService(GattService service)
         {
             return service._service;
         }
 
-        Guid GetUuid()
+        BluetoothUuid GetUuid()
         {
-            return _service.UUID.ToGuid();
+            return _service.UUID;
         }
 
         bool GetIsPrimary()
@@ -38,14 +38,14 @@ namespace InTheHand.Bluetooth.GenericAttributeProfile
             return true;
         }
 
-        Task<GattCharacteristic> DoGetCharacteristic(Guid characteristic)
+        Task<GattCharacteristic> DoGetCharacteristic(BluetoothUuid characteristic)
         {
-            ((CBPeripheral)Device).DiscoverCharacteristics(new CBUUID[] { characteristic.ToCBUUID() }, _service);
+            ((CBPeripheral)Device).DiscoverCharacteristics(new CBUUID[] { characteristic }, _service);
             GattCharacteristic matchingCharacteristic = null;
 
             foreach(CBCharacteristic cbcharacteristic in _service.Characteristics)
             {
-                if(cbcharacteristic.UUID.ToGuid() == characteristic)
+                if((BluetoothUuid)cbcharacteristic.UUID == characteristic)
                 {
                     matchingCharacteristic = new GattCharacteristic(this, cbcharacteristic);
                     break;
@@ -68,28 +68,28 @@ namespace InTheHand.Bluetooth.GenericAttributeProfile
             return Task.FromResult((IReadOnlyList<GattCharacteristic>)characteristics.AsReadOnly());
         }
 
-        private async Task<BluetoothRemoteGATTService> DoGetIncludedServiceAsync(Guid service)
+        private async Task<GattService> DoGetIncludedServiceAsync(BluetoothUuid service)
         {
             ((CBPeripheral)Device).DiscoverIncludedServices(new CBUUID[] { }, _service);
 
             foreach (var includedService in _service.IncludedServices)
             {
-                if (includedService.UUID.ToGuid() == service)
-                    return new BluetoothRemoteGATTService(Device, includedService);
+                if ((BluetoothUuid)includedService.UUID == service)
+                    return new GattService(Device, includedService);
             }
 
             return null;
         }
 
-        private async Task<IReadOnlyList<BluetoothRemoteGATTService>> DoGetIncludedServicesAsync()
+        private async Task<IReadOnlyList<GattService>> DoGetIncludedServicesAsync()
         {
-            List<BluetoothRemoteGATTService> services = new List<BluetoothRemoteGATTService>();
+            List<GattService> services = new List<GattService>();
 
             ((CBPeripheral)Device).DiscoverIncludedServices(new CBUUID[] { }, _service);
 
             foreach(var includedService in _service.IncludedServices)
             {
-                services.Add(new BluetoothRemoteGATTService(Device, includedService));
+                services.Add(new GattService(Device, includedService));
             }
 
             return services;

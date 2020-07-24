@@ -12,20 +12,20 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace InTheHand.Bluetooth.GenericAttributeProfile
+namespace InTheHand.Bluetooth
 {
     partial class GattCharacteristic
     {
-        private Android.Bluetooth.BluetoothGattCharacteristic _characteristic;
+        private readonly BluetoothGattCharacteristic _characteristic;
 
-        internal GattCharacteristic(BluetoothRemoteGATTService service, Android.Bluetooth.BluetoothGattCharacteristic characteristic) : this(service)
+        internal GattCharacteristic(GattService service, Android.Bluetooth.BluetoothGattCharacteristic characteristic) : this(service)
         {
             _characteristic = characteristic;
         }
 
-        Guid GetUuid()
+        BluetoothUuid GetUuid()
         {
-            return _characteristic.Uuid.ToGuid();
+            return _characteristic.Uuid;
         }
 
         GattCharacteristicProperties GetProperties()
@@ -38,9 +38,9 @@ namespace InTheHand.Bluetooth.GenericAttributeProfile
             return GetManualUserDescription();
         }
 
-        Task<GattDescriptor> DoGetDescriptor(Guid descriptor)
+        Task<GattDescriptor> DoGetDescriptor(BluetoothUuid descriptor)
         {
-            var gattDescriptor = _characteristic.GetDescriptor(descriptor.ToUuid());
+            var gattDescriptor = _characteristic.GetDescriptor(descriptor);
             if (gattDescriptor is null)
                 return Task.FromResult<GattDescriptor>(null);
 
@@ -88,7 +88,7 @@ namespace InTheHand.Bluetooth.GenericAttributeProfile
             Service.Device.Gatt.CharacteristicChanged += Gatt_CharacteristicChanged;
         }
 
-        private void Gatt_CharacteristicChanged(object sender, Guid e)
+        private void Gatt_CharacteristicChanged(object sender, BluetoothUuid e)
         {
             if(e == Uuid)
                 characteristicValueChanged?.Invoke(this, EventArgs.Empty);
@@ -110,7 +110,7 @@ namespace InTheHand.Bluetooth.GenericAttributeProfile
             else
                 return Task.CompletedTask;
 
-            var descriptor = _characteristic.GetDescriptor(GattDescriptorUuids.ClientCharacteristicConfiguration.ToUuid());
+            var descriptor = _characteristic.GetDescriptor(GattDescriptorUuids.ClientCharacteristicConfiguration);
             descriptor.SetValue(data);
             var success = Service.Device.Gatt.NativeGatt.WriteDescriptor(descriptor);
 
@@ -122,7 +122,7 @@ namespace InTheHand.Bluetooth.GenericAttributeProfile
 
         private Task DoStopNotifications()
         {
-            var descriptor = _characteristic.GetDescriptor(GattDescriptorUuids.ClientCharacteristicConfiguration.ToUuid());
+            var descriptor = _characteristic.GetDescriptor(GattDescriptorUuids.ClientCharacteristicConfiguration);
             descriptor.SetValue(new byte[] { 0, 0 });
             var success = Service.Device.Gatt.NativeGatt.WriteDescriptor(descriptor);
 

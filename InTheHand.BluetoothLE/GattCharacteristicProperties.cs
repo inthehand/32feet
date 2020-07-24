@@ -1,13 +1,13 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="GattCharacteristicProperties.cs" company="In The Hand Ltd">
-//   Copyright (c) 2015-19 In The Hand Ltd, All rights reserved.
+//   Copyright (c) 2015-20 In The Hand Ltd, All rights reserved.
 //   This source code is licensed under the MIT License - see License.txt
 // </copyright>
 //-----------------------------------------------------------------------
 
 using System;
 
-namespace InTheHand.Bluetooth.GenericAttributeProfile
+namespace InTheHand.Bluetooth
 {
     [Flags]
     public enum GattCharacteristicProperties
