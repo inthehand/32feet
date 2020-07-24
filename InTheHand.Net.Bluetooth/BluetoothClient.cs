@@ -12,7 +12,7 @@ using System.Net.Sockets;
 namespace InTheHand.Net.Sockets
 {
     /// <summary>
-    /// 
+    /// Provides client connections for Bluetooth RfComm network services.
     /// </summary>
     public sealed partial class BluetoothClient : IDisposable
     {

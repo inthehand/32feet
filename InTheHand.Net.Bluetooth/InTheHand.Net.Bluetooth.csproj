@@ -13,7 +13,7 @@
     <PackageProjectUrl>https://github.com/inthehand/32feet</PackageProjectUrl>
     <PackageLicenseUrl></PackageLicenseUrl>
     <Copyright>Copyright (c) 2004-2020 In The Hand Ltd</Copyright>
-    <Description>32feet.NET is a shared-source project to make personal area networking technologies such as Bluetooth easily accessible from .NET code.</Description>
+    <Description>32feet.NET is an open-source project to make personal area networking technologies such as Bluetooth easily accessible from .NET code.</Description>
     <FileVersion>4.0.7.0710</FileVersion>
     <AssemblyVersion>4.0.0.0</AssemblyVersion>
     <AssemblyName>InTheHand.Net.Bluetooth</AssemblyName>
@@ -28,10 +28,11 @@
     <PackageId>InTheHand.Net.Bluetooth</PackageId>
     <PackageReleaseNotes>Added SDP namespace. Added initial BluetoothListener implementation for Windows.</PackageReleaseNotes>
     <PackageIcon>32feet-package-icon.png</PackageIcon>
+    <RepositoryType>GIT</RepositoryType>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All"/>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
     <PackageReference Include="MSBuild.Sdk.Extras" Version="2.0.54" PrivateAssets="All" />
   </ItemGroup>
   <ItemGroup>
@@ -73,6 +74,10 @@
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'netcore31' ">
     <Compile Include="Platforms\Win32\*.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Obex\" />
   </ItemGroup>
   
 </Project>

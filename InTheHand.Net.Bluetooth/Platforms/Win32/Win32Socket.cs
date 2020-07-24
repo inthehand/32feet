@@ -47,6 +47,7 @@ namespace InTheHand.Net.Sockets
             }
         }
 
+        /// <inheritdoc/>
         public new Win32Socket Accept()
         {
             ThrowIfSocketClosed();
@@ -58,6 +59,7 @@ namespace InTheHand.Net.Sockets
             return new Win32Socket(newSocket);
         }
 
+        /// <inheritdoc/>
         public new int Available
         {
             get
@@ -70,6 +72,7 @@ namespace InTheHand.Net.Sockets
             }
         }
 
+        /// <inheritdoc/>
         public new void Bind(EndPoint localEP)
         {
             ThrowIfSocketClosed();
@@ -86,6 +89,7 @@ namespace InTheHand.Net.Sockets
             ThrowOnSocketError(result, true);
         }
 
+        /// <inheritdoc/>
         public new bool IsBound
         {
             get
@@ -101,6 +105,7 @@ namespace InTheHand.Net.Sockets
             }
         }
 
+        /// <inheritdoc/>
         public new bool Connected
         {
             get
@@ -124,6 +129,7 @@ namespace InTheHand.Net.Sockets
             return buffer;
         }
 
+        /// <inheritdoc/>
         public new void Close()
         {
             if (_socket != 0)
@@ -134,6 +140,7 @@ namespace InTheHand.Net.Sockets
             }
         }
 
+        /// <inheritdoc/>
         public new void Connect(EndPoint remoteEP)
         {
             ThrowIfSocketClosed();
@@ -148,11 +155,13 @@ namespace InTheHand.Net.Sockets
             ThrowOnSocketError(result, true);
         }
 
+        /// <inheritdoc/>
         public new int Receive(byte[] buffer)
         {
             return Win32Receive(buffer, buffer.Length, SocketFlags.None);
         }
 
+        /// <inheritdoc/>
         public new int Receive(byte[] buffer, SocketFlags socketFlags)
         {
             return Win32Receive(buffer, buffer.Length, socketFlags);
@@ -175,10 +184,13 @@ namespace InTheHand.Net.Sockets
             return result;
         }
 
+        /// <inheritdoc/>
         public new int Receive(byte[] buffer, int size, SocketFlags socketFlags)
         {
             return Win32Receive(buffer, size, socketFlags);
         }
+
+        /// <inheritdoc/>
         public new int Receive(byte[] buffer, int offset, int size, SocketFlags socketFlags)
         {
             byte[] newBuffer = new byte[size];
@@ -191,6 +203,7 @@ namespace InTheHand.Net.Sockets
             return bytesReceived;
         }
 
+        /// <inheritdoc/>
         public new int Receive(byte[] buffer, int offset, int size, SocketFlags socketFlags, out SocketError errorCode)
         {
             ThrowIfSocketClosed();
@@ -214,12 +227,14 @@ namespace InTheHand.Net.Sockets
             return bytesReceived;
         }
 
+        /// <inheritdoc/>
         public new void Listen(int backlog)
         {
             int result = NativeMethods.listen(_socket, backlog);
             ThrowOnSocketError(result, true);
         }
 
+        /// <inheritdoc/>
         public new EndPoint LocalEndPoint
         {
             get
@@ -241,6 +256,8 @@ namespace InTheHand.Net.Sockets
             }
         }
 
+        /// <inheritdoc/>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "Matching Socket API")]
         public new bool Poll(int microSeconds, SelectMode mode)
         {
             int[] fileDescriptorSet = new int[2] { 1, _socket };
@@ -259,6 +276,7 @@ namespace InTheHand.Net.Sockets
             return fileDescriptorSet[1] == _socket;
         }
 
+        /// <inheritdoc/>
         public new EndPoint RemoteEndPoint
         {
             get
@@ -275,21 +293,25 @@ namespace InTheHand.Net.Sockets
             }
         }
 
+        /// <inheritdoc/>
         public new int Send(byte[] buffer)
         {
             return Send(buffer, buffer.Length, 0);
         }
 
+        /// <inheritdoc/>
         public new int Send(byte[] buffer, SocketFlags socketFlags)
         {
             return Send(buffer, buffer.Length, socketFlags);
         }
 
+        /// <inheritdoc/>
         public new int Send(byte[] buffer, int size, SocketFlags socketFlags)
         {
             return Send(buffer, 0, size, socketFlags);
         }
 
+        /// <inheritdoc/>
         public new int Send(byte[] buffer, int offset, int size, SocketFlags socketFlags)
         {
             ThrowIfSocketClosed();
@@ -313,18 +335,21 @@ namespace InTheHand.Net.Sockets
             return result;
         }
 
+        /// <inheritdoc/>
         public new void SetSocketOption(SocketOptionLevel optionLevel, SocketOptionName optionName, bool optionValue)
         {
             int result = NativeMethods.setsockopt(_socket, (int)optionLevel, (int)optionName, BitConverter.GetBytes(Convert.ToInt32(optionValue)), Marshal.SizeOf(typeof(int)));
             ThrowOnSocketError(result, true);
         }
 
+        /// <inheritdoc/>
         public new void SetSocketOption(SocketOptionLevel optionLevel, SocketOptionName optionName, int optionValue)
         {
             int result = NativeMethods.setsockopt(_socket, (int)optionLevel, (int)optionName, BitConverter.GetBytes(optionValue), Marshal.SizeOf(typeof(int)));
             ThrowOnSocketError(result, true);
         }
 
+        /// <inheritdoc/>
         protected override void Dispose(bool disposing)
         {
             Close();
