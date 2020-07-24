@@ -5,8 +5,8 @@
 
 - Bluetooth 
 - Bluetooth LE (Preview)
-- IrDA (Obsolete)
-- Object Exchange (Legacy libraries only)
+- IrDA
+- Object Exchange (Obex)
 - USB (Coming soon)
 
 Bluetooth support requires .NET Framework v4.6.1 for desktop Windows 7, 8 and 10. Android and Apple macOS and iOS are also supported.
@@ -14,11 +14,14 @@ Bluetooth support requires .NET Framework v4.6.1 for desktop Windows 7, 8 and 10
 ## Downloading
 Downloads are available here on the _Downloads_ tab. Packages are also available at NuGet:-
 
-- InTheHand.Net.Bluetooth - Standard (v4.x)
+- InTheHand.Net.Bluetooth - Bluetooth Classic (v4.x)
 [![NuGet version](https://badge.fury.io/nu/InTheHand.Net.Bluetooth.svg)](https://badge.fury.io/nu/InTheHand.Net.Bluetooth)
 
-- InTheHand.BluetoothLE - Low Energy (v4.x)
+- InTheHand.BluetoothLE - Bluetooth Low Energy (v4.x)
 [![NuGet version](https://badge.fury.io/nu/InTheHand.BluetoothLE.svg)](https://badge.fury.io/nu/InTheHand.BluetoothLE)
+
+- InTheHand.Net.IrDA (v4.x)
+[![NuGet version](https://badge.fury.io/nu/InTheHand.Net.IrDA.svg)](https://badge.fury.io/nu/InTheHand.Net.IrDA)
 
 - 32feet.NET - Legacy (v3.x)
 [![NuGet version](https://badge.fury.io/nu/32feet.NET.svg)](https://badge.fury.io/nu/32feet.NET)
