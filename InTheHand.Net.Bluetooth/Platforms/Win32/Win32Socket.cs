@@ -296,23 +296,28 @@ namespace InTheHand.Net.Sockets
         /// <inheritdoc/>
         public new int Send(byte[] buffer)
         {
-            return Send(buffer, buffer.Length, 0);
+            return Win32Send(buffer, 0, buffer.Length, 0);
         }
 
         /// <inheritdoc/>
         public new int Send(byte[] buffer, SocketFlags socketFlags)
         {
-            return Send(buffer, buffer.Length, socketFlags);
+            return Win32Send(buffer, 0, buffer.Length, socketFlags);
         }
 
         /// <inheritdoc/>
         public new int Send(byte[] buffer, int size, SocketFlags socketFlags)
         {
-            return Send(buffer, 0, size, socketFlags);
+            return Win32Send(buffer, 0, size, socketFlags);
         }
 
         /// <inheritdoc/>
         public new int Send(byte[] buffer, int offset, int size, SocketFlags socketFlags)
+        {
+            return Win32Send(buffer, offset, size, socketFlags);
+        }
+
+        private int Win32Send(byte[] buffer, int offset, int size, SocketFlags socketFlags)
         {
             ThrowIfSocketClosed();
 

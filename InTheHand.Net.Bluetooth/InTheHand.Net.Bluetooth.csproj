@@ -19,12 +19,10 @@
     <AssemblyName>InTheHand.Net.Bluetooth</AssemblyName>
     <DebugType>Full</DebugType>
     <GenerateDocumentationFile Condition=" '$(Configuration)' == 'Release' ">true</GenerateDocumentationFile>
-    <PackageProjectUrl>https://github.com/inthehand/32feet</PackageProjectUrl>
     <PackageTags>bluetooth windows win32 android iOS</PackageTags>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageId>InTheHand.Net.Bluetooth</PackageId>
     <PackageReleaseNotes>Added SDP namespace. Added initial BluetoothListener implementation for Windows.</PackageReleaseNotes>
     <PackageIcon>32feet-package-icon.png</PackageIcon>
@@ -76,8 +74,4 @@
     <Compile Include="Platforms\Win32\*.cs" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Obex\" />
-  </ItemGroup>
-  
 </Project>
