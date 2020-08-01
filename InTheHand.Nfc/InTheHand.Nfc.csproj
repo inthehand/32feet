@@ -1,0 +1,75 @@
+<Project Sdk="MSBuild.Sdk.Extras/2.0.54">
+
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0;uap10.0;monoandroid90;Xamarin.iOS10</TargetFrameworks>
+    <Company>In The Hand Ltd</Company>
+    <Authors>Peter Foot</Authors>
+    <Product>32feet.NET</Product>
+    <Version>1.0.1</Version>
+    <RepositoryUrl>https://github.com/inthehand/32feet</RepositoryUrl>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <PackageProjectUrl>https://github.com/inthehand/32feet</PackageProjectUrl>
+    <PackageLicenseUrl></PackageLicenseUrl>
+    <Copyright>Copyright (c) 2020 In The Hand Ltd</Copyright>
+    <Description>32feet.NET is an open-source project to make personal area networking technologies such as Bluetooth easily accessible from .NET code.</Description>
+    <FileVersion>1.0.1.801</FileVersion>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <AssemblyName>InTheHand.Nfc</AssemblyName>
+    <DebugType>Full</DebugType>
+    <GenerateDocumentationFile Condition=" '$(Configuration)' == 'Release' ">true</GenerateDocumentationFile>
+    <PackageTags>nfc windows android iOS</PackageTags>
+    <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageId>InTheHand.Nfc</PackageId>
+    <PackageReleaseNotes>Initial preview.</PackageReleaseNotes>
+    <PackageIcon>32feet-package-icon.png</PackageIcon>
+    <RepositoryType>GIT</RepositoryType>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
+    <PackageReference Include="MSBuild.Sdk.Extras" Version="2.0.54" PrivateAssets="All" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="Platforms\**\*.*" />
+    <None Include="..\Misc\32feet-package-icon.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+    <None Include="Platforms\**\*.*" />
+  </ItemGroup>
+
+  <PropertyGroup Condition="'$(TargetFramework)' == 'monoandroid90'">
+    <TargetFrameworkIdentifier>MonoAndroid</TargetFrameworkIdentifier>
+    <TargetFrameworkVersion>v9.0</TargetFrameworkVersion>
+    <AndroidUseLatestPlatformSdk>False</AndroidUseLatestPlatformSdk>
+    <DefineConstants>$(DefineConstants);MONOANDROID9_0</DefineConstants>
+    <LanguageTargets>$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets</LanguageTargets>
+  </PropertyGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
+    <Compile Include="Platforms\Standard\*.cs" />
+  </ItemGroup>
+  
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'uap10.0' ">
+    <DefineConstants>UAP</DefineConstants>
+    <RuntimeIdentifiers>win10-x64;win10-x86</RuntimeIdentifiers>
+    <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.19041.0</TargetPlatformVersion>
+    <TargetPlatformMinVersion>10.0.18362.0</TargetPlatformMinVersion>
+  </PropertyGroup>
+  
+  <ItemGroup Condition=" '$(TargetFramework)' == 'monoandroid90' ">
+    <Compile Include="Platforms\Android\*.cs" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'Xamarin.iOS10' ">
+    <Compile Include="Platforms\iOS\*.cs" />
+  </ItemGroup>
+  
+  <ItemGroup Condition=" '$(TargetFramework)' == 'uap10.0' ">
+    <Compile Include="Platforms\Windows\*.cs" />
+  </ItemGroup>
+</Project>
