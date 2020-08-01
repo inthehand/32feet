@@ -13,6 +13,7 @@ using InTheHand.Net.Sockets;
 using InTheHand.Net.Bluetooth;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Threading;
 
 namespace InTheHand.Net
 {
@@ -344,6 +345,10 @@ namespace InTheHand.Net
                                     case SchemeNames.Pbap:
                                         serviceGuid = BluetoothService.PhonebookAccessPse;
                                         break;
+                                    case SchemeNames.Map:
+                                        serviceGuid = BluetoothService.MessageAccessProfile;
+                                        break;
+
                                     default:
                                         serviceGuid = BluetoothService.ObexObjectPush;
                                         break;
@@ -356,21 +361,15 @@ namespace InTheHand.Net
                                 //assume a tcp host
                                 s = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
-                                IPAddress ipa;
-                                try {
-                                    ipa = IPAddress.Parse(uri.Host);
-                                } catch {
-                                    // Compile-time: warning CS0618: 'System.Net.Dns.Resolve(string)' 
-                                    //    is obsolete: 'Resolve is obsoleted for this type, 
-                                    //    please use GetHostEntry instead. http://go.microsoft.com/fwlink/?linkid=14202'
-                                    // However GetHostEntry isn't supported on NETCFv1,
-                                    // so just keep it and disable the warning on
-                                    // the other platforms.
-
-#pragma warning disable 618
-                                    ipa = System.Net.Dns.Resolve(uri.Host).AddressList[0];
-#pragma warning restore 618
-
+                                IPAddress ipa = null;
+                                var addresses = System.Net.Dns.GetHostAddresses(uri.Host);
+                                if (addresses.Length > 0)
+                                {
+                                    ipa = addresses[0];
+                                }
+                                else
+                                {
+                                    throw new WebException("Host not recognised", WebExceptionStatus.NameResolutionFailure);
                                 }
 
                                 IPEndPoint ipep = new IPEndPoint(ipa, 650);
@@ -382,8 +381,8 @@ namespace InTheHand.Net
                                 ns = new System.Net.Sockets.NetworkStream(s, true);
 
                             // Timeout
-                            ns.ReadTimeout = timeout;
-                            ns.WriteTimeout = timeout;
+                            //ns.ReadTimeout = timeout;
+                            //ns.WriteTimeout = timeout;
                         }
 
                         return Connect_Obex();
@@ -398,21 +397,69 @@ namespace InTheHand.Net
             return (ObexStatusCode)0;
         }
 
+        private static Guid ToBigEndian(Guid netGuid)
+        {
+            byte[] java = new byte[16];
+            byte[] net = netGuid.ToByteArray();
+            for (int i = 8; i < 16; i++)
+            {
+                java[i] = net[i];
+            }
+            java[0] = net[3];
+            java[1] = net[2];
+            java[2] = net[1];
+            java[3] = net[0];
+            java[4] = net[5];
+            java[5] = net[4];
+            java[6] = net[7];
+            java[7] = net[6];
+            return new Guid(java);
+        }
+
         private ObexStatusCode Connect_Obex()
         {
-            //do obex negotiation
-            byte[] connectPacket;
+            // do obex negotiation
+            byte[] connectPacket = new byte[remoteMaxPacket];
+            short connectPacketLength = 7;
+
             if (uri.Scheme == SchemeNames.Ftp) {
                 connectPacket = new byte[] { 0x80, 0x00, 26, 0x10, 0x00, 0x20, 0x00, 0x46, 0x00, 19, 0xF9, 0xEC, 0x7B, 0xC4, 0x95, 0x3C, 0x11, 0xD2, 0x98, 0x4E, 0x52, 0x54, 0x00, 0xDC, 0x9E, 0x09 };
+                connectPacketLength = (short)connectPacket.Length;
             } else {
-                connectPacket = new byte[7] { 0x80, 0x00, 0x07, 0x10, 0x00, 0x20, 0x00 };
+                new byte[7] { 0x80, 0x00, 0x07, 0x10, 0x00, 0x20, 0x00 }.CopyTo(connectPacket, 0);
+
+                // target
+                if (Guid.TryParse(Headers["TARGET"], out var targetGuid))
+                {
+                    var targetBytes = ToBigEndian(targetGuid).ToByteArray();
+                    connectPacket[connectPacketLength] = (byte)ObexHeader.Target;
+                    short targetHeaderLen = IPAddress.HostToNetworkOrder((short)(targetBytes.Length + 3));
+                    BitConverter.GetBytes(targetHeaderLen).CopyTo(connectPacket, connectPacketLength + 1);
+                    targetBytes.CopyTo(connectPacket, connectPacketLength + 3);
+
+                    connectPacketLength += 19;
+                }
+
+                if(!string.IsNullOrEmpty(Headers["MapSupportedFeatures"]))
+                {
+                    connectPacket[connectPacketLength] = 0x27;
+                    short targetHeaderLen = IPAddress.HostToNetworkOrder((short)7);
+                    BitConverter.GetBytes(targetHeaderLen).CopyTo(connectPacket, connectPacketLength + 1);
+                    int featureMap = IPAddress.HostToNetworkOrder(0x1c);
+                    BitConverter.GetBytes(featureMap).CopyTo(connectPacket, connectPacketLength + 3);
+
+                    connectPacketLength += 7;
+                }
             }
-            ns.Write(connectPacket, 0, connectPacket.Length);
+
+            BitConverter.GetBytes(IPAddress.HostToNetworkOrder(connectPacketLength)).CopyTo(connectPacket, 1);
+
+            ns.Write(connectPacket, 0, connectPacketLength);
 
             byte[] receivePacket = new byte[3];
             StreamReadBlockMust(ns, receivePacket, 0, 3);
             if (receivePacket[0] == (byte)(ObexStatusCode.OK | ObexStatusCode.Final)) {
-                //get length
+                // get length
                 short len = (short)(IPAddress.NetworkToHostOrder(BitConverter.ToInt16(receivePacket, 1)) - 3);
 
                 byte[] receivePacket2 = new byte[3 + len];
@@ -698,12 +745,14 @@ namespace InTheHand.Net
             string type = ContentType;
             if (!string.IsNullOrEmpty(type)) {
                 buffer[bufferlen] = (byte)ObexHeader.Type;
-                int typeheaderlen = IPAddress.HostToNetworkOrder((short)((type.Length + 1) + 3));
+                short typeheaderlen = IPAddress.HostToNetworkOrder((short)((type.Length + 1) + 3));
                 BitConverter.GetBytes(typeheaderlen).CopyTo(buffer, bufferlen + 1);
                 System.Text.Encoding.ASCII.GetBytes(type).CopyTo(buffer, bufferlen + 3);
 
                 bufferlen += type.Length + 4;
             }
+
+            
 
             //write total packet size
             BitConverter.GetBytes(IPAddress.HostToNetworkOrder((short)bufferlen)).CopyTo(buffer, 1);
@@ -841,7 +890,7 @@ namespace InTheHand.Net
         /// </summary>
         /// -
         /// <returns>A <see cref="Stream"/> to use to write request data.</returns>
-        public override System.IO.Stream GetRequestStream()
+        public override Stream GetRequestStream()
         {
             return requestStream;
         }
@@ -985,7 +1034,7 @@ namespace InTheHand.Net
         void HackApmRunner_GetResponse(object state)
         {
             AsyncResult<WebResponse> ar = (AsyncResult<WebResponse>)state;
-            ar.SetAsCompletedWithResultOf(() => this.GetResponse(), false);
+            ar.SetAsCompletedWithResultOf(() => GetResponse(), false);
         }
 
         /// <summary>
