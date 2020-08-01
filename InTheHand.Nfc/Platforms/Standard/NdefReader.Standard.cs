@@ -10,16 +10,11 @@ using System.Threading.Tasks;
 
 namespace InTheHand.Nfc
 {
-    public sealed partial class NdefReader
+    partial class NdefReader
     {
-
-        public Task ScanAsync(NdefScanOptions options = null)
+        private Task PlatformScanAsync(NdefScanOptions options = null)
         {
-            return PlatformScanAsync(options);
+            return Task.FromException(new PlatformNotSupportedException());
         }
-
-        public event EventHandler<NdefMessage> Reading;
-
-        public event EventHandler Error;
     }
 }
