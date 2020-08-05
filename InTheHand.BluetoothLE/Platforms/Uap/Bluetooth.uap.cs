@@ -117,10 +117,8 @@ namespace InTheHand.Bluetooth
 #if DEBUG
         BluetoothLEAdvertisementWatcher watcher;
 
-        private async Task DoRequestLEScan(BluetoothLEScan scan)
+        private async Task<BluetoothLEScan> DoRequestLEScan(BluetoothLEScanFilter filter)
         {
-            var filter = new BluetoothLEAdvertisementFilter();
-
             if (watcher == null)
             {
                 watcher = new BluetoothLEAdvertisementWatcher(filter);
@@ -132,6 +130,8 @@ namespace InTheHand.Bluetooth
             }
 
             watcher.Start();
+
+            return watcher;
         }
 
 

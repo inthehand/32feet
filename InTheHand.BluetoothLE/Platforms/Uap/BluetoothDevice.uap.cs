@@ -16,10 +16,6 @@ namespace InTheHand.Bluetooth
 {
     partial class BluetoothDevice
     {
-        //static BluetoothLEAdvertisementWatcher _advertisementWatcher = new BluetoothLEAdvertisementWatcher();
-        //static int _advertisementRefCount = 0;
-
-        private readonly bool _watchingAdvertisements = false;
         internal BluetoothLEDevice NativeDevice;
 
         internal BluetoothDevice(BluetoothLEDevice device)

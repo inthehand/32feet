@@ -63,9 +63,9 @@ namespace InTheHand.Bluetooth
         }
 
 #if DEBUG
-        public Task RequestLEScan(BluetoothLEScan scan)
+        public Task<BluetoothLEScan> RequestLEScan(BluetoothLEScanFilter filter)
         {
-            return DoRequestLEScan(scan);
+            return DoRequestLEScan(filter);
         }
 
         public event EventHandler<BluetoothAdvertisingEvent> AdvertisementReceived;

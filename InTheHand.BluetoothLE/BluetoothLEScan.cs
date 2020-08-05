@@ -4,7 +4,7 @@
 //   This source code is licensed under the MIT License - see License.txt
 // </copyright>
 //-----------------------------------------------------------------------
-
+#if DEBUG
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -17,14 +17,15 @@ namespace InTheHand.Bluetooth
 
         public bool KeepRepeatedDevices { get; set; }
 
-        public bool AcceptAllAdvertisements { get; set; }
+        public bool AcceptAllAdvertisements { get => PlatformAcceptAllAdvertisements; }
 
         public bool Active { get; private set; }
 
         public void Stop()
         {
             Active = false;
-            //DoStop();
+            PlatformStop();
         }
     }
 }
+#endif

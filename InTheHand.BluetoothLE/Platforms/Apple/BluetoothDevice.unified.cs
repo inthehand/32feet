@@ -7,6 +7,7 @@
 
 using CoreBluetooth;
 using Foundation;
+using System;
 using System.Threading.Tasks;
 
 namespace InTheHand.Bluetooth
@@ -33,10 +34,19 @@ namespace InTheHand.Bluetooth
 
         private static async Task<BluetoothDevice> PlatformFromId(string id)
         {
-            var devices = Bluetooth._manager.RetrievePeripheralsWithIdentifiers(new NSUuid(id));
+            try
+            {
+                NSUuid nativeIdentifier = new NSUuid(id);
+                var devices = Bluetooth._manager.RetrievePeripheralsWithIdentifiers(nativeIdentifier);
 
-            if (devices != null && devices.Length > 0)
-                return devices[0];
+                if (devices != null && devices.Length > 0)
+                    return devices[0];
+
+            }
+            catch(FormatException)
+            {
+                throw new ArgumentException("Invalid Id", nameof(id));
+            }
 
             return null;
         }

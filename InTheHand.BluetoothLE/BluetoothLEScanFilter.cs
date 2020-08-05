@@ -4,13 +4,13 @@
 //   This source code is licensed under the MIT License - see License.txt
 // </copyright>
 //-----------------------------------------------------------------------
-
+#if DEBUG
 using System;
 using System.Collections.Generic;
 
 namespace InTheHand.Bluetooth
 {
-    public sealed class BluetoothLEScanFilter
+    public sealed partial class BluetoothLEScanFilter
     {
         public string Name { get; set; }
 
@@ -20,3 +20,4 @@ namespace InTheHand.Bluetooth
 
     }
 }
+#endif
