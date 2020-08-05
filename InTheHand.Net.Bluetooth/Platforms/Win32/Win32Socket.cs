@@ -16,13 +16,14 @@ namespace InTheHand.Net.Sockets
     {
         private int _socket = 0;
 
-        public Win32Socket() : base((AddressFamily)32, SocketType.Stream, BluetoothProtocolType.RFComm)
+        // TODO: find a way of using this just for MONO and a "bare" Socket for .NET
+        public Win32Socket() : base(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp)
         {
             // AF_BT, Type_Stream, Protocol_Rfcomm
             _socket = NativeMethods.socket(32, SocketType.Stream, BluetoothProtocolType.RFComm);
         }
 
-        internal Win32Socket(int socket) : base((AddressFamily)32, SocketType.Stream, BluetoothProtocolType.RFComm)
+        internal Win32Socket(int socket) : base(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp)
         {
             _socket = socket;
         }

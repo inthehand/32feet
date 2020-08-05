@@ -17,7 +17,7 @@
     <FileVersion>4.0.7.0710</FileVersion>
     <AssemblyVersion>4.0.0.0</AssemblyVersion>
     <AssemblyName>InTheHand.Net.Bluetooth</AssemblyName>
-    <DebugType>Full</DebugType>
+    <DebugType>full</DebugType>
     <GenerateDocumentationFile Condition=" '$(Configuration)' == 'Release' ">true</GenerateDocumentationFile>
     <PackageTags>bluetooth windows win32 android iOS</PackageTags>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -49,6 +49,11 @@
     <DefineConstants>$(DefineConstants);MONOANDROID9_0</DefineConstants>
     <LanguageTargets>$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets</LanguageTargets>
   </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)'=='Debug'">
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugSymbols>true</DebugSymbols>
+  </PropertyGroup>
   
   <ItemGroup Condition=" '$(TargetFramework)' == 'monoandroid90' ">
     <PackageReference Include="Plugin.CurrentActivity" Version="2.1.0.4" />
@@ -65,7 +70,11 @@
   <ItemGroup Condition=" '$(TargetFramework)' == 'Xamarin.iOS10' ">
     <Compile Include="Platforms\iOS\*.cs" />
   </ItemGroup>
-
+  
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net35' ">
+    <Compile Include="Platforms\Win32\*.cs" />
+  </ItemGroup>
+  
   <ItemGroup Condition=" '$(TargetFramework)' == 'net461' ">
     <Compile Include="Platforms\Win32\*.cs" />
   </ItemGroup>

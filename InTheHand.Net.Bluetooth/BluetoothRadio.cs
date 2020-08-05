@@ -65,11 +65,4 @@ namespace InTheHand.Net.Bluetooth
             GC.SuppressFinalize(this);
         }
     }
-
-    public enum RadioMode
-    {
-        PowerOff,
-        Connectable,
-        Discoverable,
-    }
 }
