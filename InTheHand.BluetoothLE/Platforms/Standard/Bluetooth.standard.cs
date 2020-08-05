@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace InTheHand.Bluetooth
@@ -10,14 +11,22 @@ namespace InTheHand.Bluetooth
             return Task.FromResult(false);
         }
 
-        Task<BluetoothDevice> DoRequestDevice(RequestDeviceOptions options)
+        Task<BluetoothDevice> PlatformRequestDevice(RequestDeviceOptions options)
         {
             return Task.FromResult((BluetoothDevice)null);
         }
 
-        private async Task DoRequestLEScan(BluetoothLEScan scan)
+        Task<IReadOnlyCollection<BluetoothDevice>> PlatformScanForDevices(RequestDeviceOptions options)
         {
+            return Task.FromResult((IReadOnlyCollection<BluetoothDevice>)new List<BluetoothDevice>().AsReadOnly());
         }
+
+#if DEBUG
+        private async Task<BluetoothLEScan> DoRequestLEScan(BluetoothLEScanFilter filter)
+        {
+            return null;
+        }
+#endif
 
         private void AddAvailabilityChanged()
         {

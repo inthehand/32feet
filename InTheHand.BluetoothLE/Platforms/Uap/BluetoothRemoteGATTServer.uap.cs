@@ -14,7 +14,7 @@ namespace InTheHand.Bluetooth
 
         async Task DoConnect()
         {
-            await Device.NativeDevice.RequestAccessAsync();
+            var status = await Device.NativeDevice.RequestAccessAsync();
         }
 
         void DoDisconnect()
@@ -42,14 +42,14 @@ namespace InTheHand.Bluetooth
 
             if (service == null)
             {
-                result = await Device.NativeDevice.GetGattServicesAsync();
+                result = await Device.NativeDevice.GetGattServicesAsync(Windows.Devices.Bluetooth.BluetoothCacheMode.Uncached);
             }
             else
             {
-                result = await Device.NativeDevice.GetGattServicesForUuidAsync(service.Value);
+                result = await Device.NativeDevice.GetGattServicesForUuidAsync(service.Value, Windows.Devices.Bluetooth.BluetoothCacheMode.Uncached);
             }
 
-            if (result != null || result.Services.Count > 0)
+            if (result != null && result.Services.Count > 0)
             {
                 foreach(var serv in result.Services)
                 {

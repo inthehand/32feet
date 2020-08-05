@@ -11,7 +11,7 @@ using System.Text;
 
 namespace InTheHand.Bluetooth
 {
-    public sealed class BluetoothLEScan
+    public sealed partial class BluetoothLEScan
     {
         public readonly List<BluetoothLEScanFilter> Filters = new List<BluetoothLEScanFilter>();
 

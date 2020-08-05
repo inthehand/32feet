@@ -6,6 +6,7 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace InTheHand.Bluetooth
@@ -26,9 +27,14 @@ namespace InTheHand.Bluetooth
         /// </summary>
         /// <param name="options"></param>
         /// <returns>A BluetoothDevice or null if unsuccessful.</returns>
-        public async Task<BluetoothDevice> RequestDevice(RequestDeviceOptions options)
+        public Task<BluetoothDevice> RequestDevice(RequestDeviceOptions options)
         {
-            return await DoRequestDevice(options);
+            return PlatformRequestDevice(options);
+        }
+
+        public Task<IReadOnlyCollection<BluetoothDevice>> ScanForDevices(RequestDeviceOptions options)
+        {
+            return PlatformScanForDevices(options);
         }
 
         private event EventHandler _availabilityChanged;

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Android.App;
@@ -33,7 +34,7 @@ namespace InTheHand.Bluetooth
         }
 
 
-        Task<BluetoothDevice> DoRequestDevice(RequestDeviceOptions options)
+        Task<BluetoothDevice> PlatformRequestDevice(RequestDeviceOptions options)
         {
             _currentRequest = options;
             //Intent i = new Intent("android.bluetooth.devicepicker.action.LAUNCH");
@@ -61,8 +62,14 @@ namespace InTheHand.Bluetooth
             });
         }
 
-        private async Task DoRequestLEScan(BluetoothLEScan scan)
+        Task<IReadOnlyCollection<BluetoothDevice>> PlatformScanForDevices(RequestDeviceOptions options)
         {
+            return Task.FromResult((IReadOnlyCollection<BluetoothDevice>)new List<BluetoothDevice>().AsReadOnly());
+        }
+
+        private async Task<BluetoothLEScan> DoRequestLEScan(BluetoothLEScanFilter scan)
+        {
+            return null;
         }
 
             [Activity(NoHistory = false, LaunchMode = LaunchMode.Multiple)]

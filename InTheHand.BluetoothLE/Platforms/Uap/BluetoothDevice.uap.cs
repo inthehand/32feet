@@ -44,6 +44,7 @@ namespace InTheHand.Bluetooth
                         return knownDevice;
                 }
                 var device = await BluetoothLEDevice.FromBluetoothAddressAsync(parsedId);
+                var success = device.RequestAccessAsync();
                 return device;
             }
 

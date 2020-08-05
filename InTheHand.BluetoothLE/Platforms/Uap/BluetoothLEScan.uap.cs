@@ -13,21 +13,22 @@ namespace InTheHand.Bluetooth
     {
         BluetoothLEAdvertisementWatcher _watcher;
 
-        internal BluetoothLEScan(BluetoothLEAdvertisementFilter filter = null)
-        {
-            if (filter != null)
-            {
-                _watcher = new BluetoothLEAdvertisementWatcher(filter);
-            }
-            else
-            {
-                _watcher = new BluetoothLEAdvertisementWatcher();
-            }
-
+        private BluetoothLEScan(BluetoothLEAdvertisementWatcher watcher)
+        {            
             _watcher.Received += _watcher_Received;
             _watcher.Start();
 
             Active = true;
+        }
+
+        public static implicit operator BluetoothLEAdvertisementWatcher(BluetoothLEScan scan)
+        {
+            return scan._watcher;
+        }
+
+        public static implicit operator BluetoothLEScan(BluetoothLEAdvertisementWatcher watcher)
+        {
+            return new BluetoothLEScan(watcher);
         }
 
         private bool PlatformAcceptAllAdvertisements

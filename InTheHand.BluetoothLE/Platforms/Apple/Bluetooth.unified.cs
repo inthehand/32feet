@@ -62,7 +62,7 @@ namespace InTheHand.Bluetooth
 #if __IOS__
         private UIAlertController controller = null;
 #endif
-        Task<BluetoothDevice> DoRequestDevice(RequestDeviceOptions options)
+        Task<BluetoothDevice> PlatformRequestDevice(RequestDeviceOptions options)
         {
 #if __IOS__
             EventWaitHandle handle = new EventWaitHandle(false, EventResetMode.AutoReset);
@@ -109,8 +109,14 @@ namespace InTheHand.Bluetooth
             return Task.FromResult((BluetoothDevice)null);
         }
 
-        private async Task DoRequestLEScan(BluetoothLEScan scan)
+        Task<IReadOnlyCollection<BluetoothDevice>> PlatformScanForDevices(RequestDeviceOptions options)
         {
+            return Task.FromResult((IReadOnlyCollection<BluetoothDevice>)new List<BluetoothDevice>().AsReadOnly());
+        }
+
+        private async Task<BluetoothLEScan> DoRequestLEScan(BluetoothLEScanFilter filter)
+        {
+            return null;
         }
 
         private bool _oldAvailability;

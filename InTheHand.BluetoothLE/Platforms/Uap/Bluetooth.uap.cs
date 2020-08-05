@@ -24,14 +24,14 @@ namespace InTheHand.Bluetooth
             return adaptor.IsLowEnergySupported;
         }
 
-        async Task<BluetoothDevice> DoRequestDevice(RequestDeviceOptions options)
+        async Task<BluetoothDevice> PlatformRequestDevice(RequestDeviceOptions options)
         {
             
             DevicePicker picker = new DevicePicker();
             Rect bounds = Rect.Empty;
             picker.Appearance.AccentColor = Windows.UI.Colors.Green;
             picker.Appearance.ForegroundColor = Windows.UI.Colors.White;
-            picker.Appearance.BackgroundColor = Windows.UI.Colors.Black;
+            picker.Appearance.BackgroundColor = Windows.UI.Colors.DarkGray;
 #if !UAP
             uint len = 64;
             byte[] buffer = new byte[len];
@@ -84,7 +84,20 @@ namespace InTheHand.Bluetooth
                 return null;
 
             var device = await BluetoothLEDevice.FromIdAsync(deviceInfo.Id);
+            var access = await device.RequestAccessAsync();
             return new BluetoothDevice(device);
+        }
+
+        async Task<IReadOnlyCollection<BluetoothDevice>> PlatformScanForDevices(RequestDeviceOptions options)
+        {
+            List<BluetoothDevice> devices = new List<BluetoothDevice>();
+
+            foreach(var device in await DeviceInformation.FindAllAsync(BluetoothLEDevice.GetDeviceSelectorFromPairingState(false)))
+            {
+                devices.Add(await BluetoothLEDevice.FromIdAsync(device.Id));
+            }
+
+            return devices.AsReadOnly();
         }
 
         bool _oldAvailability;
