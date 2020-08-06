@@ -8,22 +8,24 @@
 using Android.Bluetooth;
 using Android.Content;
 using Android.OS;
-using InTheHand.Net.Bluetooth;
 using InTheHand.Net.Bluetooth.Droid;
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.IO;
 using System.Net.Sockets;
 using System.Threading;
-using System.Threading.Tasks;
+using Xamarin.Essentials;
 
 namespace InTheHand.Net.Sockets
 {
     partial class BluetoothClient
     {
         private BluetoothSocket _socket;
+
+        private void PlatformInitialize()
+        {
+            if (!BluetoothAdapter.DefaultAdapter.IsEnabled)
+                BluetoothAdapter.DefaultAdapter.Enable();
+        }
 
         IEnumerable<BluetoothDeviceInfo> GetPairedDevices()
         {
@@ -49,11 +51,9 @@ namespace InTheHand.Net.Sockets
             filter.AddAction(BluetoothDevice.ActionFound);
             filter.AddAction(BluetoothAdapter.ActionDiscoveryFinished);
             filter.AddAction(BluetoothAdapter.ActionDiscoveryStarted);
-            Plugin.CurrentActivity.CrossCurrentActivity.Current.Activity.RegisterReceiver(receiver, filter, null, handler);
+            Platform.CurrentActivity.RegisterReceiver(receiver, filter, null, handler);
 
             EventWaitHandle handle = new EventWaitHandle(false, EventResetMode.AutoReset);
-
-            BluetoothAdapter.DefaultAdapter.StartDiscovery();
 
             receiver.DeviceFound += (s, e) =>
             {
@@ -67,10 +67,12 @@ namespace InTheHand.Net.Sockets
                     }
                 }
             };
+            
+            BluetoothAdapter.DefaultAdapter.StartDiscovery();
 
             receiver.DiscoveryComplete += (s, e) =>
             {
-                Plugin.CurrentActivity.CrossCurrentActivity.Current.Activity.UnregisterReceiver(receiver);
+                Platform.CurrentActivity.UnregisterReceiver(receiver);
                 handle.Set();
                 handlerThread.QuitSafely();
             };

@@ -13,6 +13,10 @@ namespace InTheHand.Net.Sockets
 {
     partial class BluetoothClient
     {
+        private void PlatformInitialize()
+        {
+        }
+
         IEnumerable<BluetoothDeviceInfo> GetPairedDevices()
         {
             yield break;

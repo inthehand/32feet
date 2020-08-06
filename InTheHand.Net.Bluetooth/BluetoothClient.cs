@@ -18,6 +18,7 @@ namespace InTheHand.Net.Sockets
     {
         public BluetoothClient()
         {
+            PlatformInitialize();
         }
 
         /// <summary>
@@ -85,7 +86,6 @@ namespace InTheHand.Net.Sockets
             get => GetConnected();
         }
 
-        
         public bool Encrypt
         {
             get => GetEncrypt();

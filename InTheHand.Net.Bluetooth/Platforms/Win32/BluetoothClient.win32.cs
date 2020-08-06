@@ -17,6 +17,10 @@ namespace InTheHand.Net.Sockets
     {
         private Win32Socket _socket;
 
+        private void PlatformInitialize()
+        {
+        }
+
         internal BluetoothClient(Win32Socket s)
         {
             _socket = s;

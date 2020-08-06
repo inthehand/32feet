@@ -13,6 +13,7 @@ using InTheHand.Net.Bluetooth.Droid;
 using InTheHand.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
+using Xamarin.Essentials;
 
 namespace InTheHand.Net.Bluetooth
 {
@@ -27,8 +28,8 @@ namespace InTheHand.Net.Bluetooth
         {
             s_current = this;
 
-            Intent i = new Intent(Plugin.CurrentActivity.CrossCurrentActivity.Current.Activity, typeof(DevicePickerActivity));
-            Plugin.CurrentActivity.CrossCurrentActivity.Current.Activity.StartActivity(i);
+            Intent i = new Intent(Platform.CurrentActivity, typeof(DevicePickerActivity));
+            Platform.CurrentActivity.StartActivity(i);
 
             return Task.Run(() =>
             {
@@ -88,15 +89,13 @@ namespace InTheHand.Net.Bluetooth
                 i.PutExtra("android.bluetooth.devicepicker.extra.NEED_AUTH", paired);
                 i.PutExtra("android.bluetooth.devicepicker.extra.FILTER_TYPE", filterType);
 
-                Plugin.CurrentActivity.CrossCurrentActivity.Current.Activity.StartActivityForResult(i, 1);
+                Platform.CurrentActivity.StartActivityForResult(i, 1);
             }
 
             // set the handle when the picker has completed and return control straight back to the calling activity
             protected override void OnActivityResult(int requestCode, Result resultCode, Intent data)
             {
                 base.OnActivityResult(requestCode, resultCode, data);
-
-                
 
                 Finish();
             }

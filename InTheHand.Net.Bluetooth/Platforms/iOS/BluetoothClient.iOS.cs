@@ -19,6 +19,10 @@ namespace InTheHand.Net.Sockets
         private EAAccessory _accessory;
         private ExternalAccessoryNetworkStream _stream;
 
+        private void PlatformInitialize()
+        {
+        }
+
         IEnumerable<BluetoothDeviceInfo> GetPairedDevices()
         {
             foreach(EAAccessory accessory in EAAccessoryManager.SharedAccessoryManager.ConnectedAccessories)
