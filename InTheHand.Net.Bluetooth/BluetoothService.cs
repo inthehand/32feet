@@ -387,7 +387,7 @@ namespace InTheHand.Net.Bluetooth
         /// A string containing the name of the service class whose UUID value is <paramref name="uuid16"/>,
         /// or a null reference (<c>Nothing</c> in Visual Basic) if no such constant is found.
         /// </returns>
-        public static String GetName(Int16 uuid16)
+        public static String GetName(short uuid16)
         {
             return GetName(CreateBluetoothUuid(uuid16));
         }
@@ -402,8 +402,7 @@ namespace InTheHand.Net.Bluetooth
         /// A string containing the name of the service class whose UUID value is <paramref name="uuid16"/>,
         /// or a null reference (<c>Nothing</c> in Visual Basic) if no such constant is found.
         /// </returns>
-        [CLSCompliant(false)] //use Int32 overload instead
-        public static String GetName(UInt16 uuid16)
+        public static string GetName(ushort uuid16)
         {
             return GetName(CreateBluetoothUuid(uuid16));
         }
@@ -418,7 +417,7 @@ namespace InTheHand.Net.Bluetooth
         /// A string containing the name of the service class whose UUID value is <paramref name="uuid32"/>,
         /// or a null reference (<c>Nothing</c> in Visual Basic) if no such constant is found.
         /// </returns>
-        public static String GetName(Int32 uuid32)
+        public static string GetName(int uuid32)
         {
             return GetName(CreateBluetoothUuid(uuid32));
         }
@@ -433,8 +432,7 @@ namespace InTheHand.Net.Bluetooth
         /// A string containing the name of the service class whose UUID value is <paramref name="uuid32"/>,
         /// or a null reference (<c>Nothing</c> in Visual Basic) if no such constant is found.
         /// </returns>
-        [CLSCompliant(false)] //use Int32 overload instead
-        public static String GetName(UInt32 uuid32)
+        public static string GetName(uint uuid32)
         {
             return GetName(CreateBluetoothUuid(uuid32));
         }
@@ -466,7 +464,6 @@ namespace InTheHand.Net.Bluetooth
         /// A <see cref="T:System.Guid"/> containing the full 128-bit form of the
         /// supplied Bluetooth service class UUID.
         /// </returns>
-        [CLSCompliant(false)] //use Int16 overload instead
         public static Guid CreateBluetoothUuid(ushort uuid16)
         {
             return CreateBluetoothUuid((uint)uuid16);
@@ -499,10 +496,9 @@ namespace InTheHand.Net.Bluetooth
         /// A <see cref="T:System.Guid"/> containing the full 128-bit form of the
         /// supplied Bluetooth service class UUID.
         /// </returns>
-        [CLSCompliant(false)] //use Int32 overload instead
         public static Guid CreateBluetoothUuid(uint uuid32)
         {
-            return CreateBluetoothUuid(unchecked((Int32)uuid32));
+            return CreateBluetoothUuid(unchecked((int)uuid32));
         }
         #endregion
 
@@ -510,8 +506,8 @@ namespace InTheHand.Net.Bluetooth
         internal static ushort? GetAsClassId16(Guid service)
         {
             var barr = service.ToByteArray();
-            UInt16 classId16 = BitConverter.ToUInt16(barr, 0);
-            var recreated = BluetoothService.CreateBluetoothUuid(classId16);
+            ushort classId16 = BitConverter.ToUInt16(barr, 0);
+            var recreated = CreateBluetoothUuid(classId16);
             if (service == recreated) return classId16;
             else return null;
         }

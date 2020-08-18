@@ -61,13 +61,17 @@ namespace InTheHand.Net
             _address = BitConverter.ToUInt64(raw, 0);
         }
 
-        [CLSCompliant(false)]
+        /// <summary>
+        /// Defines an implicit conversion of a BluetoothAddress to a <see cref="ulong"/>,
+        /// </summary>
         public static implicit operator ulong(BluetoothAddress address)
         {
             return address._address;
         }
 
-        [CLSCompliant(false)]
+        /// <summary>
+        /// Defines an implicit conversion of a <see cref="ulong"/> to a BluetoothAddress,
+        /// </summary>
         public static implicit operator BluetoothAddress(ulong address)
         {
             return new BluetoothAddress(address);
@@ -129,10 +133,7 @@ namespace InTheHand.Net
         /// Returns the hash code for this instance.
         /// </summary>
         /// <returns>A hash code for the current object.</returns>
-        public override int GetHashCode()
-        {
-            return _address.GetHashCode();
-        }
+        public override int GetHashCode() => _address.GetHashCode();
 
         public int CompareTo(BluetoothAddress other)
         {

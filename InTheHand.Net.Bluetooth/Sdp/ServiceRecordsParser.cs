@@ -7,20 +7,12 @@
 // This source code is licensed under the MIT License
 
 using System;
-
-using System.Collections.Generic;
-using System.Text;
-using System.Diagnostics;
-using InTheHand.Net.Bluetooth.AttributeIds;
-using System.Globalization;
-using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Net;
 
 namespace InTheHand.Net.Bluetooth.Sdp
 {
-
     /// <summary>
     /// Parses an array of bytes into the contained SDP 
     /// <see cref="T:InTheHand.Net.Bluetooth.ServiceRecord"/>.
@@ -160,9 +152,7 @@ namespace InTheHand.Net.Bluetooth.Sdp
                 throw CreateInvalidException(ErrorMsgTopElementNotSequence, offset);
             }
             //
-            int contentLength;
-            int contentOffset;
-            int elementLength = GetElementLength(buffer, offset, length, out contentOffset, out contentLength);
+            int elementLength = GetElementLength(buffer, offset, length, out int contentOffset, out int contentLength);
             if (elementLength > length) {
                 throw CreateInvalidExceptionOverruns(offset, elementLength, length);
             }
@@ -186,8 +176,7 @@ namespace InTheHand.Net.Bluetooth.Sdp
         private ServiceAttribute ParseAttributeElementPair(byte[] buffer, int offset, int length, out int readLength)
         {
             // Verify that the first element of the pair is a UInt16 to hold the attr id.
-            int contentOffset, contentLength;
-            GetElementLength(buffer, offset, length, out contentOffset, out contentLength);
+            GetElementLength(buffer, offset, length, out int contentOffset, out int contentLength);
             ElementTypeDescriptor etd = GetElementTypeDescriptor(buffer[offset]);
             bool goodIdType = (etd == ElementTypeDescriptor.UnsignedInteger /*|| etd == ElementTypeDescriptor.TwosComplementInteger*/);
             goodIdType = goodIdType && (contentLength == 2);
@@ -197,8 +186,7 @@ namespace InTheHand.Net.Bluetooth.Sdp
             }
             // Now we can read the pair -- the id and the following element.
             readLength = 0;
-            Int32 elementLength;
-            UInt16 attrId = ReadElementUInt16(buffer, offset, length, out elementLength);
+            ushort attrId = ReadElementUInt16(buffer, offset, length, out int elementLength);
             readLength += elementLength;
             offset += elementLength; length -= elementLength;
             ServiceElement value = ParseInternal(buffer, offset, length, out elementLength);
@@ -211,13 +199,9 @@ namespace InTheHand.Net.Bluetooth.Sdp
 
         private ServiceElement ParseInternal(byte[] buffer, int offset, int length, out int readLength)
         {
-            ElementTypeDescriptor etd;
-            SizeIndex sizeIndex;
-            SplitHeaderByte(buffer[offset], out etd, out sizeIndex);
+            SplitHeaderByte(buffer[offset], out ElementTypeDescriptor etd, out SizeIndex sizeIndex);
             VerifyAllowedSizeIndex(etd, sizeIndex, m_allowAnySizeForUnknownTypeDescriptorElements);
-            int contentLength;
-            int contentOffset;
-            readLength = GetElementLength(buffer, offset, length, out contentOffset, out contentLength);
+            readLength = GetElementLength(buffer, offset, length, out int contentOffset, out int contentLength);
             if (readLength > length) {
                 throw CreateInvalidExceptionOverruns(offset, readLength, length);
             }
@@ -325,8 +309,7 @@ namespace InTheHand.Net.Bluetooth.Sdp
                     ? ElementType.ElementSequence : ElementType.ElementAlternative;
                 rawValue = children;
             } else if (etd == ElementTypeDescriptor.Url) { //----------------
-                int myReadLength;
-                byte[] valueArray = ReadArrayContent(buffer, offset, length, out myReadLength);
+                byte[] valueArray = ReadArrayContent(buffer, offset, length, out int myReadLength);
                 System.Diagnostics.Debug.Assert(myReadLength == readLength);
                 if (LazyUrlCreation) {
                     rawValue = valueArray;
@@ -336,8 +319,7 @@ namespace InTheHand.Net.Bluetooth.Sdp
                 }
                 type = ElementType.Url;
             } else if (etd == ElementTypeDescriptor.TextString) { //----------------
-                int myReadLength;
-                byte[] valueArray = ReadArrayContent(buffer, offset, length, out myReadLength);
+                byte[] valueArray = ReadArrayContent(buffer, offset, length, out int myReadLength);
                 System.Diagnostics.Debug.Assert(myReadLength == readLength);
                 type = ElementType.TextString;
                 rawValue = valueArray;
@@ -378,21 +360,18 @@ namespace InTheHand.Net.Bluetooth.Sdp
             Debug.Assert(!(etd != ElementTypeDescriptor.ElementSequence
                 && etd != ElementTypeDescriptor.ElementAlternative), "Not Element Sequence or Alternative.");
             //
-            Int32 elementLength;
-            Int32 contentOffset;
-            Int32 curContentLength;
-            elementLength = GetElementLength(buffer, offset, length, out contentOffset, out curContentLength);
+            int elementLength;
+            elementLength = GetElementLength(buffer, offset, length, out int contentOffset, out int curContentLength);
             Debug.Assert(!(elementLength != length), "Given length is not equal to the Seq/Alt length field.");
             //
             int curOffset = offset + contentOffset;
-            while (curOffset < offset + length && curContentLength > 0) {
-                //
-                int readLength;
-
-                T child = itemParser(buffer, curOffset, curContentLength, out readLength);
+            while (curOffset < offset + length && curContentLength > 0) 
+            {
+                T child = itemParser(buffer, curOffset, curContentLength, out int readLength);
                 children.Add(child);
                 curOffset += readLength; curContentLength -= readLength;
             }//while
+
             // These can be wrong if the record is wrong but check them so we can 
             // see this during development.
             // Now, we throw if the record is invalid, so these aren't executed in
@@ -455,9 +434,7 @@ namespace InTheHand.Net.Bluetooth.Sdp
                 throw CreateInvalidException(ErrorMsgTopElementNotSequence, offset);
             }
             //
-            int contentLength;
-            int contentOffset;
-            int elementLength = GetElementLength(buffer, offset, length, out contentOffset, out contentLength);
+            int elementLength = GetElementLength(buffer, offset, length, out int contentOffset, out int contentLength);
             if (elementLength > length) {
                 throw CreateInvalidExceptionOverruns(offset, elementLength, length);
             }
@@ -547,9 +524,7 @@ namespace InTheHand.Net.Bluetooth.Sdp
 
         private static byte[] ReadArrayContent(byte[] buffer, int offset, int length, out int readLength)
         {
-            int contentOffset;
-            int contentLength;
-            readLength = GetElementLength(buffer, offset, length, out contentOffset, out contentLength);
+            readLength = GetElementLength(buffer, offset, length, out int contentOffset, out int contentLength);
             //
             byte[] result = new byte[contentLength];
             Array.Copy(buffer, offset + contentOffset, result, 0, contentLength);

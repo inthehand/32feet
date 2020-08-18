@@ -13,7 +13,6 @@ namespace InTheHand.Net.Bluetooth.Win32
     internal static class NativeMethods
     {
         private const string bthpropsDll = "bthprops.cpl";
-        private const string irpropsDll = "Irprops.cpl"; 
         private const string wsDll = "ws2_32.dll";
         
         internal const int NS_BTH = 16;
@@ -49,56 +48,56 @@ namespace InTheHand.Net.Bluetooth.Win32
         [DllImport(bthpropsDll, SetLastError = true, CharSet = CharSet.Unicode)]
         internal static extern int BluetoothAuthenticateDeviceEx(IntPtr hwndParentIn, IntPtr hRadioIn, ref BLUETOOTH_DEVICE_INFO pbtdiInout, byte[] pbtOobData, BluetoothAuthenticationRequirements authenticationRequirement);
 
-        [DllImport(irpropsDll, SetLastError = true)]
+        [DllImport(bthpropsDll, SetLastError = true)]
         internal static extern int BluetoothRemoveDevice(ref ulong pAddress);
 
         // Radio
-        [DllImport(irpropsDll, SetLastError = true)]
+        [DllImport(bthpropsDll, SetLastError = true)]
         internal static extern IntPtr BluetoothFindFirstRadio(ref BLUETOOTH_FIND_RADIO_PARAMS pbtfrp, out IntPtr phRadio);
 
-        [DllImport(irpropsDll, SetLastError = true)]
+        [DllImport(bthpropsDll, SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
         internal static extern bool BluetoothFindNextRadio(IntPtr hFind, out IntPtr phRadio);
 
-        [DllImport(irpropsDll, SetLastError = true)]
+        [DllImport(bthpropsDll, SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
         internal static extern bool BluetoothFindRadioClose(IntPtr hFind);
         
-        [DllImport(irpropsDll, SetLastError = true)]
+        [DllImport(bthpropsDll, SetLastError = true)]
         internal static extern int BluetoothGetRadioInfo(IntPtr hRadio, ref BLUETOOTH_RADIO_INFO pRadioInfo);
 
-        [DllImport(irpropsDll, SetLastError = true)]
+        [DllImport(bthpropsDll, SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
         internal static extern bool BluetoothIsConnectable(IntPtr hRadio);
         
-        [DllImport(irpropsDll, SetLastError = true)]
+        [DllImport(bthpropsDll, SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
         internal static extern bool BluetoothIsDiscoverable(IntPtr hRadio);
 
 
-        [DllImport(irpropsDll, SetLastError = true)]
+        [DllImport(bthpropsDll, SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
         internal static extern bool BluetoothEnableDiscovery(IntPtr hRadio, bool fEnabled);
         
-        [DllImport(irpropsDll, SetLastError = true)]
+        [DllImport(bthpropsDll, SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
         internal static extern bool BluetoothEnableIncomingConnections(IntPtr hRadio, bool fEnabled);
 
         // Discovery
-        [DllImport(irpropsDll, SetLastError = true)]
+        [DllImport(bthpropsDll, SetLastError = true)]
         internal static extern IntPtr BluetoothFindFirstDevice(ref BLUETOOTH_DEVICE_SEARCH_PARAMS pbtsp, ref BLUETOOTH_DEVICE_INFO pbtdi);
 
-        [DllImport(irpropsDll, SetLastError = true)]
+        [DllImport(bthpropsDll, SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
         internal static extern bool BluetoothFindNextDevice(IntPtr hFind, ref BLUETOOTH_DEVICE_INFO pbtdi);
 
-        [DllImport(irpropsDll, SetLastError = true)]
+        [DllImport(bthpropsDll, SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
         internal static extern bool BluetoothFindDeviceClose(IntPtr hFind);
 
-        [DllImport(irpropsDll, SetLastError = true)]
+        [DllImport(bthpropsDll, SetLastError = true)]
         internal static extern int BluetoothEnumerateInstalledServices(IntPtr hRadio, ref BLUETOOTH_DEVICE_INFO pbtdi, ref int pcServices, byte[] pGuidServices);
-        [DllImport(irpropsDll, SetLastError = true)]
+        [DllImport(bthpropsDll, SetLastError = true)]
         internal static extern int BluetoothSetServiceState(IntPtr hRadio, ref BLUETOOTH_DEVICE_INFO pbtdi, ref Guid pGuidService, uint dwServiceFlags);
 
         [DllImport("kernel32.dll", SetLastError = true)]
@@ -115,15 +114,19 @@ namespace InTheHand.Net.Bluetooth.Win32
 
 
         // Picker
-        [DllImport(irpropsDll, SetLastError = true)]
+        [DllImport(bthpropsDll, SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
         internal static extern bool BluetoothSelectDevices(ref BLUETOOTH_SELECT_DEVICE_PARAMS pbtsdp);
 
-        [DllImport(irpropsDll, SetLastError = true)]
+        [DllImport(bthpropsDll, SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
         internal static extern bool BluetoothSelectDevicesFree(ref BLUETOOTH_SELECT_DEVICE_PARAMS pbtsdp);
 
         internal delegate bool PFN_DEVICE_CALLBACK(IntPtr pvParam, ref BLUETOOTH_DEVICE_INFO pDevice);
+
+        [DllImport(bthpropsDll, SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        internal static extern bool BluetoothDisplayDeviceProperties(IntPtr hwndParent, ref BLUETOOTH_DEVICE_INFO pbtdi);
     }
 
     /// <summary>
