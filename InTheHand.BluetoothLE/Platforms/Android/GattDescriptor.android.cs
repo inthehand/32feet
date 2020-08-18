@@ -20,6 +20,11 @@ namespace InTheHand.Bluetooth
             _descriptor = descriptor;
         }
 
+        public static implicit operator BluetoothGattDescriptor(GattDescriptor descriptor)
+        {
+            return descriptor._descriptor;
+        }
+
         BluetoothUuid GetUuid()
         {
             return _descriptor.Uuid;

@@ -23,6 +23,11 @@ namespace InTheHand.Bluetooth
             NativeService = service;
         }
 
+        public static implicit operator ABluetooth.BluetoothGattService(GattService service)
+        {
+            return service.NativeService;
+        }
+
         internal ABluetooth.BluetoothGattService NativeService { get; }
 
         private BluetoothUuid GetUuid()

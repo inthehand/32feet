@@ -4,9 +4,11 @@ using System.Threading;
 using System.Threading.Tasks;
 using Android.App;
 using Android.Bluetooth;
+using Android.Bluetooth.LE;
 using Android.Content;
 using Android.Content.PM;
 using Android.OS;
+using Android.Runtime;
 
 namespace InTheHand.Bluetooth
 {
@@ -62,9 +64,73 @@ namespace InTheHand.Bluetooth
             });
         }
 
-        Task<IReadOnlyCollection<BluetoothDevice>> PlatformScanForDevices(RequestDeviceOptions options)
+        async Task<IReadOnlyCollection<BluetoothDevice>> PlatformScanForDevices(RequestDeviceOptions options)
         {
-            return Task.FromResult((IReadOnlyCollection<BluetoothDevice>)new List<BluetoothDevice>().AsReadOnly());
+            List<ScanFilter> filters = new List<ScanFilter>();
+            foreach (var f in options.Filters)
+            {
+                foreach (var u in f.Services)
+                {
+                    ScanFilter.Builder b = new ScanFilter.Builder();
+                    b.SetServiceUuid(ParcelUuid.FromString(u.Value.ToString()));
+                    filters.Add(b.Build());
+                }
+            }
+
+            ScanSettings.Builder sb = new ScanSettings.Builder();
+            sb.SetScanMode(Android.Bluetooth.LE.ScanMode.Balanced);
+            var settings = sb.Build();
+            var callback = new DevicesCallback();
+
+            _manager.Adapter.BluetoothLeScanner.StartScan(callback);
+
+            await Task.Delay(30000);
+
+            return callback.Devices.AsReadOnly();
+        }
+
+        private class DevicesCallback : ScanCallback
+        {
+            private EventWaitHandle handle = new EventWaitHandle(false, EventResetMode.AutoReset);
+            private List<BluetoothDevice> devices = new List<BluetoothDevice>();
+
+            public List<BluetoothDevice> Devices
+            {
+                get
+                {
+                    return devices;
+                }
+            }
+
+            public void WaitOne()
+            {
+                handle.WaitOne();
+            }
+
+            public override void OnBatchScanResults(IList<ScanResult> results)
+            {
+                System.Diagnostics.Debug.WriteLine("OnBatchScanResults");
+
+                base.OnBatchScanResults(results);
+            }
+
+            public override void OnScanResult(ScanCallbackType callbackType, ScanResult result)
+            {
+                System.Diagnostics.Debug.WriteLine("OnScanResult");
+
+                devices.Add(result.Device);
+                if (callbackType == ScanCallbackType.AllMatches)
+                    handle.Set();
+
+                base.OnScanResult(callbackType, result);
+            }
+
+            public override void OnScanFailed(ScanFailure errorCode)
+            {
+                System.Diagnostics.Debug.WriteLine("OnBatchScanResults");
+
+                base.OnScanFailed(errorCode);
+            }
         }
 
         private async Task<BluetoothLEScan> DoRequestLEScan(BluetoothLEScanFilter scan)

@@ -26,7 +26,7 @@ namespace InTheHand.Bluetooth
 
         async Task<byte[]> DoGetValue()
         {
-            var result = await _descriptor.ReadValueAsync(Windows.Devices.Bluetooth.BluetoothCacheMode.Cached).AsTask().ConfigureAwait(false);
+            var result = await _descriptor.ReadValueAsync(Windows.Devices.Bluetooth.BluetoothCacheMode.Cached).AsTask();
 
             if (result.Status == Uap.GattCommunicationStatus.Success)
             {

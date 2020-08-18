@@ -65,7 +65,7 @@ namespace InTheHand.Bluetooth
         Task<BluetoothDevice> PlatformRequestDevice(RequestDeviceOptions options)
         {
 #if __IOS__
-            EventWaitHandle handle = new EventWaitHandle(false, EventResetMode.AutoReset);
+            EventWaitHandle handle = new EventWaitHandle(false, EventResetMode.ManualReset);
             BluetoothDevice selectedDevice = null;
 
             controller = UIAlertController.Create("Select a Bluetooth accessory", null, UIAlertControllerStyle.Alert);
@@ -102,6 +102,7 @@ namespace InTheHand.Bluetooth
             
             return Task.Run(() =>
             {
+                var s2 = source;
                 handle.WaitOne();
                 return selectedDevice;
             });

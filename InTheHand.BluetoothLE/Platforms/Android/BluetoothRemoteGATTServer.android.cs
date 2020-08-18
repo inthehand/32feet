@@ -17,8 +17,8 @@ namespace InTheHand.Bluetooth
 {
     partial class BluetoothRemoteGATTServer
     {
-        internal ABluetooth.BluetoothGatt NativeGatt;
-        private ABluetooth.BluetoothGattCallback _gattCallback;
+        internal readonly ABluetooth.BluetoothGatt NativeGatt;
+        private readonly ABluetooth.BluetoothGattCallback _gattCallback;
         private EventWaitHandle _connectedHandle = new EventWaitHandle(false, EventResetMode.AutoReset);
         private EventWaitHandle _servicesDiscoveredHandle = new EventWaitHandle(false, EventResetMode.ManualReset);
         private EventWaitHandle _characteristicReadHandle = new EventWaitHandle(false, EventResetMode.AutoReset);

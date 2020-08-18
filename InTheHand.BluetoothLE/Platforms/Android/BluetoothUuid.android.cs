@@ -5,6 +5,7 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
+using Android.OS;
 using Java.Util;
 using System;
 
@@ -17,7 +18,17 @@ namespace InTheHand.Bluetooth
             return UUID.FromString(uuid.ToString());
         }
 
+        public static implicit operator ParcelUuid(BluetoothUuid uuid)
+        {
+            return ParcelUuid.FromString(uuid.ToString());
+        }
+
         public static implicit operator BluetoothUuid(UUID uuid)
+        {
+            return Guid.Parse(uuid.ToString());
+        }
+
+        public static implicit operator BluetoothUuid(ParcelUuid uuid)
         {
             return Guid.Parse(uuid.ToString());
         }

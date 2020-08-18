@@ -1,4 +1,4 @@
-﻿<Project Sdk="MSBuild.Sdk.Extras/2.0.54">
+﻿<Project Sdk="MSBuild.Sdk.Extras/2.1.2">
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;monoandroid81;xamarin.ios10;xamarin.tvos10;xamarin.watchos10;xamarin.mac20;uap10.0;net461</TargetFrameworks>
@@ -30,7 +30,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
-    <PackageReference Include="MSBuild.Sdk.Extras" Version="2.0.54" PrivateAssets="All" />
+    <PackageReference Include="MSBuild.Sdk.Extras" Version="2.1.2" PrivateAssets="All" />
   </ItemGroup>
 
   <ItemGroup>

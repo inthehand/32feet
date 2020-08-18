@@ -1,6 +1,6 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="GattDescriptor.cs" company="In The Hand Ltd">
-//   Copyright (c) 2018-19 In The Hand Ltd, All rights reserved.
+//   Copyright (c) 2018-20 In The Hand Ltd, All rights reserved.
 //   This source code is licensed under the MIT License - see License.txt
 // </copyright>
 //-----------------------------------------------------------------------
@@ -10,6 +10,9 @@ using System.Threading.Tasks;
 
 namespace InTheHand.Bluetooth
 {
+    /// <summary>
+    /// Represents a GATT Descriptor, which provides further information about a <see cref="GattCharacteristic"/>’s value.
+    /// </summary>
     public sealed partial class GattDescriptor
     {
         internal GattDescriptor(GattCharacteristic characteristic)
@@ -17,10 +20,20 @@ namespace InTheHand.Bluetooth
             Characteristic = characteristic;
         }
 
+        /// <summary>
+        /// The GATT characteristic this descriptor belongs to.
+        /// </summary>
         public GattCharacteristic Characteristic { get; private set; }
 
+        /// <summary>
+        /// The UUID of the characteristic descriptor.
+        /// </summary>
         public BluetoothUuid Uuid { get { return GetUuid(); } }
 
+        /// <summary>
+        /// The currently cached descriptor value. 
+        /// This value gets updated when the value of the descriptor is read.
+        /// </summary>
         public byte[] Value
         {
             get
@@ -31,11 +44,20 @@ namespace InTheHand.Bluetooth
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public Task<byte[]> ReadValueAsync()
         {
             return DoReadValue();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
         public Task WriteValueAsync(byte[] value)
         {
             return DoWriteValue(value);

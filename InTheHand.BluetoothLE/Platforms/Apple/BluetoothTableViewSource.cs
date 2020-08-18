@@ -97,7 +97,10 @@ namespace InTheHand.Bluetooth.Platforms.Apple
                 if (!string.IsNullOrEmpty(peripheral.Name))
                 {
                     System.Diagnostics.Debug.WriteLine(peripheral.Name + " " + peripheral.Identifier.ToString());
-                    _owner._devices.Add(peripheral);
+                    if (!_owner._devices.Contains(peripheral))
+                    {
+                        _owner._devices.Add(peripheral);
+                    }
 
                     UIDevice.CurrentDevice.BeginInvokeOnMainThread(() =>
                     {

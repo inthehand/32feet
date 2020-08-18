@@ -18,9 +18,14 @@ namespace InTheHand.Bluetooth
     {
         private readonly BluetoothGattCharacteristic _characteristic;
 
-        internal GattCharacteristic(GattService service, Android.Bluetooth.BluetoothGattCharacteristic characteristic) : this(service)
+        internal GattCharacteristic(GattService service, BluetoothGattCharacteristic characteristic) : this(service)
         {
             _characteristic = characteristic;
+        }
+
+        public static implicit operator BluetoothGattCharacteristic(GattCharacteristic characteristic)
+        {
+            return characteristic._characteristic;
         }
 
         BluetoothUuid GetUuid()

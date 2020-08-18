@@ -12,7 +12,7 @@ namespace InTheHand.Bluetooth
 {
     partial class BluetoothDevice
     {
-        internal ABluetooth.BluetoothDevice _device;
+        internal readonly ABluetooth.BluetoothDevice _device;
         private BluetoothRemoteGATTServer _gattServer;
         private bool _watchingAdvertisements = false;
 
