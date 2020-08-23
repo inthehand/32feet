@@ -25,7 +25,10 @@ namespace InTheHand.Bluetooth
         private EventWaitHandle _characteristicWriteHandle = new EventWaitHandle(false, EventResetMode.AutoReset);
         private EventWaitHandle _descriptorReadHandle = new EventWaitHandle(false, EventResetMode.AutoReset);
         private EventWaitHandle _descriptorWriteHandle = new EventWaitHandle(false, EventResetMode.AutoReset);
-        private bool _connected = false;
+        
+        private void PlatformInit()
+        {
+        }
 
         internal BluetoothRemoteGATTServer(BluetoothDevice device, ABluetooth.BluetoothDevice bluetoothDevice) : this(device)
         {
@@ -69,9 +72,12 @@ namespace InTheHand.Bluetooth
                 System.Diagnostics.Debug.WriteLine($"ConnectionStateChanged {status}");
                 if (newState == ABluetooth.ProfileState.Connected)
                 {
-                    _owner._connected = true;
                     _owner._connectedHandle.Set();
                     gatt.DiscoverServices();
+                }
+                else
+                {
+                    _owner.Device.OnGattServerDisconnected();
                 }
             }
 

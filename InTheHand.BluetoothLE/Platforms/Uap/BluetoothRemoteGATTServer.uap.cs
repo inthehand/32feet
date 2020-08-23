@@ -7,6 +7,17 @@ namespace InTheHand.Bluetooth
 {
     partial class BluetoothRemoteGATTServer
     {
+        private void PlatformInit()
+        {
+            Device.NativeDevice.ConnectionStatusChanged += NativeDevice_ConnectionStatusChanged;
+        }
+
+        private void NativeDevice_ConnectionStatusChanged(Windows.Devices.Bluetooth.BluetoothLEDevice sender, object args)
+        {
+            if (sender.ConnectionStatus == Windows.Devices.Bluetooth.BluetoothConnectionStatus.Disconnected)
+                Device.OnGattServerDisconnected();
+        }
+
         bool GetConnected()
         {
             return Device.NativeDevice.ConnectionStatus == Windows.Devices.Bluetooth.BluetoothConnectionStatus.Connected;

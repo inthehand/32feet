@@ -23,6 +23,11 @@ namespace InTheHand.Bluetooth
             NativeDevice = device;
         }
 
+        ~BluetoothDevice()
+        {
+            NativeDevice.Dispose();
+        }
+
         public static implicit operator BluetoothLEDevice(BluetoothDevice device)
         {
             return device.NativeDevice;

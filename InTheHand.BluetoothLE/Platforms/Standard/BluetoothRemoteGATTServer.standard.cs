@@ -14,6 +14,10 @@ namespace InTheHand.Bluetooth
 {
     partial class BluetoothRemoteGATTServer
     {
+        private void PlatformInit()
+        {
+        }
+
         bool GetConnected()
         {
             return false;

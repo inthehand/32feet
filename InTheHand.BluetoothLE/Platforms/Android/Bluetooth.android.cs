@@ -89,10 +89,25 @@ namespace InTheHand.Bluetooth
             return callback.Devices.AsReadOnly();
         }
 
+        async Task<IReadOnlyCollection<BluetoothDevice>> PlatformGetPairedDevices()
+        {
+            List<BluetoothDevice> devices = new List<BluetoothDevice>();
+
+            foreach (var device in _manager.Adapter.BondedDevices)
+            {
+                if(device.Type == BluetoothDeviceType.Le || device.Type == BluetoothDeviceType.Dual)
+                {
+                    devices.Add(device);
+                }
+            }
+
+            return devices.AsReadOnly();
+        }
+
         private class DevicesCallback : ScanCallback
         {
-            private EventWaitHandle handle = new EventWaitHandle(false, EventResetMode.AutoReset);
-            private List<BluetoothDevice> devices = new List<BluetoothDevice>();
+            private readonly EventWaitHandle handle = new EventWaitHandle(false, EventResetMode.AutoReset);
+            private readonly List<BluetoothDevice> devices = new List<BluetoothDevice>();
 
             public List<BluetoothDevice> Devices
             {
@@ -132,12 +147,12 @@ namespace InTheHand.Bluetooth
                 base.OnScanFailed(errorCode);
             }
         }
-
+#if DEBUG
         private async Task<BluetoothLEScan> DoRequestLEScan(BluetoothLEScanFilter scan)
         {
             return null;
         }
-
+#endif
             [Activity(NoHistory = false, LaunchMode = LaunchMode.Multiple)]
         private sealed class DevicePickerActivity : Activity
         {

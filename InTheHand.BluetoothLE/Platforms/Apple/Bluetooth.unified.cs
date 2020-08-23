@@ -75,8 +75,10 @@ namespace InTheHand.Bluetooth
             }));
             
             CGRect rect = new CGRect(0, 0, 272, 272);
-            var tvc = new UITableViewController(UITableViewStyle.Plain);
-            tvc.PreferredContentSize = rect.Size;
+            var tvc = new UITableViewController(UITableViewStyle.Plain)
+            {
+                PreferredContentSize = rect.Size
+            };
             controller.PreferredContentSize = rect.Size;
             var source = new InTheHand.Bluetooth.Platforms.Apple.BluetoothTableViewSource(options);
             source.DeviceSelected += (s, e) =>
@@ -115,10 +117,61 @@ namespace InTheHand.Bluetooth
             return Task.FromResult((IReadOnlyCollection<BluetoothDevice>)new List<BluetoothDevice>().AsReadOnly());
         }
 
+        Task<IReadOnlyCollection<BluetoothDevice>> PlatformGetPairedDevices()
+        {
+#if __IOS__
+            PairedDeviceHandler deviceHandler = new PairedDeviceHandler();
+
+            _manager.RetrievedPeripherals += deviceHandler._manager_RetrievedPeripherals;
+            _manager.RetrievePeripherals(GattServiceUuids.GenericAttribute);
+            
+            return Task.Run(() =>
+            {
+                deviceHandler.WaitOne();
+                return deviceHandler.Devices;
+            });
+#else
+            return Task.FromResult((IReadOnlyCollection<BluetoothDevice>)new List<BluetoothDevice>().AsReadOnly());
+#endif
+        }
+
+#if __IOS__
+        private class PairedDeviceHandler
+        {
+            EventWaitHandle handle = new EventWaitHandle(false, EventResetMode.ManualReset);
+            List<BluetoothDevice> devices = new List<BluetoothDevice>();
+
+            public IReadOnlyCollection<BluetoothDevice> Devices
+            {
+                get
+                {
+                    return devices.AsReadOnly();
+                }
+            }
+
+            public void WaitOne()
+            {
+                handle.WaitOne();
+            }
+
+            public void _manager_RetrievedPeripherals(object sender, CBPeripheralsEventArgs e)
+            {
+                foreach (var peripheral in e.Peripherals)
+                {
+                    devices.Add(peripheral);
+                }
+
+                handle.Set();
+            }
+        }
+#endif
+
+#if DEBUG
         private async Task<BluetoothLEScan> DoRequestLEScan(BluetoothLEScanFilter filter)
         {
             return null;
         }
+#endif
 
         private bool _oldAvailability;
 

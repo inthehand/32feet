@@ -32,11 +32,6 @@ namespace InTheHand.Bluetooth
             return PlatformRequestDevice(options);
         }
 
-        public Task<IReadOnlyCollection<BluetoothDevice>> ScanForDevices(RequestDeviceOptions options)
-        {
-            return PlatformScanForDevices(options);
-        }
-
         private event EventHandler _availabilityChanged;
         /// <summary>
         /// Bluetooth availability has changed, for example by disabling the radio or revoking user permission.
@@ -68,7 +63,18 @@ namespace InTheHand.Bluetooth
             _availabilityChanged?.Invoke(this, EventArgs.Empty);
         }
 
+        public Task<IReadOnlyCollection<BluetoothDevice>> GetPairedDevices()
+        {
+            return PlatformGetPairedDevices();
+        }
+
 #if DEBUG
+        public Task<IReadOnlyCollection<BluetoothDevice>> ScanForDevices(RequestDeviceOptions options)
+        {
+            return PlatformScanForDevices(options);
+        }
+
+        
         public Task<BluetoothLEScan> RequestLEScan(BluetoothLEScanFilter filter)
         {
             return DoRequestLEScan(filter);

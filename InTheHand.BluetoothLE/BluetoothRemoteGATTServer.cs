@@ -17,6 +17,12 @@ namespace InTheHand.Bluetooth
         internal BluetoothRemoteGATTServer(BluetoothDevice device)
         {
             Device = device;
+            PlatformInit();
+        }
+
+        private void Device_GattServerDisconnected(object sender, EventArgs e)
+        {
+            Device.OnGattServerDisconnected();
         }
 
         public BluetoothDevice Device { get; private set; }

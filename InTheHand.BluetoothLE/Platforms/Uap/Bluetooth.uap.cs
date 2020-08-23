@@ -29,9 +29,9 @@ namespace InTheHand.Bluetooth
             
             DevicePicker picker = new DevicePicker();
             Rect bounds = Rect.Empty;
-            picker.Appearance.AccentColor = Windows.UI.Colors.Green;
-            picker.Appearance.ForegroundColor = Windows.UI.Colors.White;
-            picker.Appearance.BackgroundColor = Windows.UI.Colors.DarkGray;
+            //picker.Appearance.AccentColor = Windows.UI.Colors.Green;
+            //picker.Appearance.ForegroundColor = Windows.UI.Colors.White;
+            //picker.Appearance.BackgroundColor = Windows.UI.Colors.DarkGray;
 #if !UAP
             uint len = 64;
             byte[] buffer = new byte[len];
@@ -93,6 +93,18 @@ namespace InTheHand.Bluetooth
             List<BluetoothDevice> devices = new List<BluetoothDevice>();
 
             foreach(var device in await DeviceInformation.FindAllAsync(BluetoothLEDevice.GetDeviceSelectorFromPairingState(false)))
+            {
+                devices.Add(await BluetoothLEDevice.FromIdAsync(device.Id));
+            }
+
+            return devices.AsReadOnly();
+        }
+
+        async Task<IReadOnlyCollection<BluetoothDevice>> PlatformGetPairedDevices()
+        {
+            List<BluetoothDevice> devices = new List<BluetoothDevice>();
+
+            foreach (var device in await DeviceInformation.FindAllAsync(BluetoothLEDevice.GetDeviceSelectorFromPairingState(true)))
             {
                 devices.Add(await BluetoothLEDevice.FromIdAsync(device.Id));
             }

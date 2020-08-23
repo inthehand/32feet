@@ -4,7 +4,7 @@
 //   This source code is licensed under the MIT License - see License.txt
 // </copyright>
 //-----------------------------------------------------------------------
-#if DEBUG
+
 using System;
 using System.Collections.Generic;
 
@@ -20,4 +20,3 @@ namespace InTheHand.Bluetooth
 
     }
 }
-#endif
