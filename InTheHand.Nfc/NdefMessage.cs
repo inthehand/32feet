@@ -11,7 +11,7 @@ namespace InTheHand.Nfc
 {
     public class NdefMessage
     {
-        private List<NdefRecord> _records = new List<NdefRecord>();
+        private readonly List<NdefRecord> _records = new List<NdefRecord>();
 
         public IReadOnlyCollection<NdefRecord> Records 
         { 

@@ -14,6 +14,7 @@ using InTheHand.Net.Bluetooth;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading;
+using System.Linq;
 
 namespace InTheHand.Net
 {
@@ -596,15 +597,28 @@ namespace InTheHand.Net
             byte[] buffer = new byte[remoteMaxPacket];
 
             string filename = uri.PathAndQuery;
-            if (!uri.UserEscaped) {
-#if !(WinCE && V1)
+            if (!uri.UserEscaped) 
+            {
                 // This is a NOP if there's no %xx encodings present.
                 filename = Uri.UnescapeDataString(filename);
-#else
-				// HACK ObexWebRequest -- No Unescape method on NETCFv1!!
-#endif
             }
-            filename = filename.TrimStart(new char[] { '/' });
+
+            //name
+            filename = filename.TrimStart('/');
+            string[] segments = filename.Split('/');
+
+            if (segments.Length > 1)
+            {
+                SetPath("/");
+
+                for (int i = 0; i < segments.Length - 1; i++)
+                {
+                    SetPath(segments[i]);
+                }
+
+                filename = segments[segments.Length - 1];
+            }
+
             int filenameLength = (filename.Length + 1) * 2;
 
             int packetLength = 3;
@@ -729,7 +743,21 @@ namespace InTheHand.Net
             }
 
             //name
-            string filename = uri.PathAndQuery.TrimStart(new char[] { '/' });
+            string filename = uri.PathAndQuery.TrimStart('/');
+            string[] segments = filename.Split('/');
+
+            if (segments.Length > 1)
+            {
+                SetPath("/");
+
+                for (int i = 0; i < segments.Length - 1; i++)
+                {
+                    SetPath(segments[i]);
+                }
+
+                filename = segments[segments.Length - 1];
+            }
+
             if (filename.Length > 0) {
                 const int NullTerminatorLen = 2;
                 int filenameLength = filename.Length * 2 + NullTerminatorLen;
@@ -788,6 +816,48 @@ namespace InTheHand.Net
         }
         #endregion
 
+        private void SetPath(string path)
+        {
+            ObexStatusCode sc;
+            byte[] buffer = new byte[remoteMaxPacket];
+            buffer[0] = (byte)ObexMethod.SetPath;
+            buffer[3] = 0x2;
+
+            if (path == "/")
+                path = string.Empty;
+
+            int bufferlen = 5;
+
+            if (connectionId != INVALID_CONNECTION_ID)
+            {
+                buffer[bufferlen] = (byte)ObexHeader.ConnectionID;
+                BitConverter.GetBytes(IPAddress.HostToNetworkOrder(connectionId)).CopyTo(buffer, bufferlen + 1);
+
+                bufferlen += 5;
+            }
+
+            const int NullTerminatorLen = 2;
+            int filenameLength = path.Length * 2 + NullTerminatorLen;
+            buffer[bufferlen] = (byte)ObexHeader.Name;
+            int filenameheaderlen = IPAddress.HostToNetworkOrder((short)(filenameLength + 3));
+            BitConverter.GetBytes(filenameheaderlen).CopyTo(buffer, bufferlen + 1);
+            System.Text.Encoding.BigEndianUnicode.GetBytes(path).CopyTo(buffer, bufferlen + 3);
+
+            bufferlen += filenameLength + 3;
+
+            //write total packet size
+            BitConverter.GetBytes(IPAddress.HostToNetworkOrder((short)bufferlen)).CopyTo(buffer, 1);
+
+            // Send then Receive
+            ns.Write(buffer, 0, bufferlen);
+            //
+            StreamReadBlockMust(ns, buffer, 0, 3);
+            int bytesread = 3;
+            //get code
+            sc = (ObexStatusCode)buffer[0];
+
+        }
+
         #region Check Response
         private bool CheckResponse(ref ObexStatusCode status, bool isConnectResponse)
         {
@@ -807,12 +877,15 @@ namespace InTheHand.Net
                     short len = (short)(IPAddress.NetworkToHostOrder(BitConverter.ToInt16(receiveBuffer, 1)) - 3);
                     Debug.Assert(len >= 0, "not got len!");
 
-                    if (len > 0) {
+                    if (len > 0) 
+                    {
                         byte[] receivePacket2 = new byte[len];
                         StreamReadBlockMust(ns, receivePacket2, 0, len);
                         bool validObexHeader = false;
-                        if ((ObexHeader)receivePacket2[0] == ObexHeader.ConnectionID) {
-                            if (len == 5) {
+                        if ((ObexHeader)receivePacket2[0] == ObexHeader.ConnectionID) 
+                        {
+                            if (len == 5) 
+                            {
                                 // ignore ConnectionId
                                 validObexHeader = true;
                             } else
@@ -822,7 +895,8 @@ namespace InTheHand.Net
                                 Debug.Assert(len >= 3, "not got eobLen!");
 
                                 // ex. len = 8, eobLen = 3
-                                if (eobLen != (len - 5)) {
+                                if (eobLen != (len - 5)) 
+                                {
                                     // receive packet length and End-of-Body length are mismatch
                                     Debug.Fail("invalid packet length...");
                                     // return false;
@@ -831,6 +905,11 @@ namespace InTheHand.Net
                                 // ignore ConnectionId and EndOfBody
                                 validObexHeader = true;
                             }
+                        }
+                        else if((ObexHeader)receivePacket2[0] == ObexHeader.Name)
+                        {
+                            //TODO: Need a method to return name header in response
+                            validObexHeader = true;
                         }
 
                         if (!validObexHeader) {

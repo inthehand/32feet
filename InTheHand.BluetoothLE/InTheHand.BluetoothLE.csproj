@@ -5,7 +5,7 @@
     <Company>In The Hand Ltd</Company>
     <Authors>Peter Foot</Authors>
     <Product>32feet.NET</Product>
-    <Version>4.0.2-pre</Version>
+    <Version>4.0.3-pre</Version>
     <RepositoryUrl>https://github.com/inthehand/32feet</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
@@ -15,8 +15,8 @@
     <PackageLicenseUrl></PackageLicenseUrl>
     <Copyright>Copyright (c) 2004-2020 In The Hand Ltd</Copyright>
     <Description>32feet.NET is a shared-source project to make personal area networking technologies such as Bluetooth easily accessible from .NET code.</Description>
-    <FileVersion>4.0.2.819</FileVersion>
-    <AssemblyVersion>4.0.2.0</AssemblyVersion>
+    <FileVersion>4.0.3.823</FileVersion>
+    <AssemblyVersion>4.0.3.0</AssemblyVersion>
     <AssemblyName>InTheHand.BluetoothLE</AssemblyName>
     <GenerateDocumentationFile Condition=" '$(Configuration)' == 'Release' ">true</GenerateDocumentationFile>
     <PackageIconUrl></PackageIconUrl>
@@ -26,6 +26,7 @@
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <RootNamespace>InTheHand.Bluetooth</RootNamespace>
     <PackageIcon>32feet-package-icon.png</PackageIcon>
+    <PackageReleaseNotes>Added support to retrieve paired devices without UI (not currently implemented on iOS).</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
@@ -56,7 +57,7 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|netstandard2.0|AnyCPU'">
-    <DebugType>pdbonly</DebugType>
+    <DebugType>portable</DebugType>
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   

@@ -24,7 +24,7 @@ namespace InTheHand.Nfc
         /// </summary>
         public string Id { get; internal set; }
 
-        public byte[] Data { get; internal set; }
+        public object Data { get; internal set; }
 
 
         public string Encoding { get; internal set; }
