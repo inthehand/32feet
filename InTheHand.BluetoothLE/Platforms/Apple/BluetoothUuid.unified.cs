@@ -18,7 +18,7 @@ namespace InTheHand.Bluetooth
     {
         public static implicit operator CBUUID(BluetoothUuid uuid)
         {
-            return CBUUID.FromBytes(uuid.Value.ToByteArray());
+            return CBUUID.FromString(uuid.ToString());
         }
 
         public static implicit operator BluetoothUuid(CBUUID uuid)

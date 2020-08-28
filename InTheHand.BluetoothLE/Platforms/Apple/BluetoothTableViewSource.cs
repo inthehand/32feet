@@ -28,7 +28,7 @@ namespace InTheHand.Bluetooth.Platforms.Apple
         public override UITableViewCell GetCell(UITableView tableView, NSIndexPath indexPath)
         {
             var cell = new UITableViewCell(UITableViewCellStyle.Default, "bluetoothDevice");
-            cell.TextLabel.Text = _devices[indexPath.Row].Name;
+            cell.TextLabel.Text = string.IsNullOrEmpty(_devices[indexPath.Row].Name) ? _devices[indexPath.Row].Identifier.ToString() : _devices[indexPath.Row].Name;
             //cell.DetailTextLabel.Text = _devices[indexPath.Row].Identifier.ToString();
             return cell;
         }
@@ -94,19 +94,29 @@ namespace InTheHand.Bluetooth.Platforms.Apple
 
             public override void DiscoveredPeripheral(CBCentralManager central, CBPeripheral peripheral, NSDictionary advertisementData, NSNumber RSSI)
             {
-                if (!string.IsNullOrEmpty(peripheral.Name))
+                foreach(var item in advertisementData)
                 {
-                    System.Diagnostics.Debug.WriteLine(peripheral.Name + " " + peripheral.Identifier.ToString());
-                    if (!_owner._devices.Contains(peripheral))
+                    if (item.Key.ToString() == CBAdvertisement.DataLocalNameKey)
                     {
-                        _owner._devices.Add(peripheral);
+                        System.Diagnostics.Debug.WriteLine($"{item.Key}  {item.Value}");
                     }
+                }
 
-                    UIDevice.CurrentDevice.BeginInvokeOnMainThread(() =>
+                //if (!string.IsNullOrEmpty(peripheral.Name))
+                //{
+                    System.Diagnostics.Debug.WriteLine(peripheral.Name + " " + peripheral.Identifier.ToString());
+                if (!_owner._devices.Contains(peripheral))
+                {
+                    _owner._devices.Add(peripheral);
+                }
+
+                
+
+                UIDevice.CurrentDevice.BeginInvokeOnMainThread(() =>
                     {
                         _owner.OnReloadData();
                     });
-                }
+                //}
             }
         }
     }

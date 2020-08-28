@@ -22,11 +22,15 @@ namespace InTheHand.Bluetooth
 
         bool GetConnected()
         {
-#if __TVOS__ || __WATCHOS__
-            throw new PlatformNotSupportedException();
-#else
-            return ((CBPeripheral)Device).IsConnected;
-#endif
+            switch (((CBPeripheral)Device).State)
+            {
+                case CBPeripheralState.Connected:
+                case CBPeripheralState.Connecting:
+                    return true;
+
+                default:
+                    return false;
+            }
         }
 
         Task DoConnect()
@@ -34,16 +38,34 @@ namespace InTheHand.Bluetooth
             return Task.Run(() =>
             {
                 EventWaitHandle handle = new EventWaitHandle(false, EventResetMode.AutoReset);
-                Bluetooth._manager.ConnectedPeripheral += (sender, args) =>
+                Bluetooth.ConnectedPeripheral += (sender, peripheral) =>
                  {
-                     if (args.Peripheral == (CBPeripheral)Device)
+                     if (peripheral.Identifier.IsEqual(((CBPeripheral)Device).Identifier))
                          handle.Set();
                  };
-                Bluetooth._manager.ConnectPeripheral(Device);
+                Bluetooth.FailedToConnectPeripheral += (sender, peripheral) =>
+                {
+                    if (peripheral.Identifier.IsEqual(((CBPeripheral)Device).Identifier))
+                        handle.Set();
+                };
 
-                handle.WaitOne();
+                Bluetooth._manager.ConnectPeripheral(Device
+#if __IOS__
+                    , new CBConnectPeripheralOptions { RequiresAncs = true }
+#endif
+                    );
+
+                handle.WaitOne(5000);
+
+                if (!Connected)
+                    Bluetooth._manager.CancelPeripheralConnection(Device);
             });
 
+        }
+
+        private void Bluetooth_FailedToConnectPeripheral(object sender, CBPeripheral e)
+        {
+            throw new NotImplementedException();
         }
 
         void DoDisconnect()
@@ -86,8 +108,6 @@ namespace InTheHand.Bluetooth
                 var services = new List<GattService>();
             
                 EventWaitHandle handle = new EventWaitHandle(false, EventResetMode.AutoReset);
-
-                GattService matchingService = null;
 
                 ((CBPeripheral)Device).DiscoveredService += (sender, args) =>
                 {

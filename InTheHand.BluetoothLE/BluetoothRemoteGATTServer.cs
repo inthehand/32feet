@@ -29,7 +29,7 @@ namespace InTheHand.Bluetooth
 
         public bool Connected { get { return GetConnected(); } }
 
-        public Task Connect()
+        public Task ConnectAsync()
         {
             return DoConnect();
         }
@@ -40,12 +40,12 @@ namespace InTheHand.Bluetooth
             Device.OnGattServerDisconnected();
         }
 
-        public Task<GattService> GetPrimaryService(BluetoothUuid service)
+        public Task<GattService> GetPrimaryServiceAsync(BluetoothUuid service)
         {
             return DoGetPrimaryService(service);
         }
 
-        public Task<List<GattService>> GetPrimaryServices(BluetoothUuid? service = null)
+        public Task<List<GattService>> GetPrimaryServicesAsync(BluetoothUuid? service = null)
         {
             return DoGetPrimaryServices(service);
         }

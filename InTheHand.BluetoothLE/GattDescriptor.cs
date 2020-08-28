@@ -6,6 +6,7 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Diagnostics;
 using System.Threading.Tasks;
 
 namespace InTheHand.Bluetooth
@@ -13,6 +14,7 @@ namespace InTheHand.Bluetooth
     /// <summary>
     /// Represents a GATT Descriptor, which provides further information about a <see cref="GattCharacteristic"/>’s value.
     /// </summary>
+    [DebuggerDisplay("{Uuid}")]
     public sealed partial class GattDescriptor
     {
         internal GattDescriptor(GattCharacteristic characteristic)

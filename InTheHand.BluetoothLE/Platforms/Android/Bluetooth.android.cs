@@ -19,24 +19,24 @@ namespace InTheHand.Bluetooth
         internal static Android.Bluetooth.BluetoothDevice s_device;
         private static RequestDeviceOptions _currentRequest;
 
-        Task<bool> DoGetAvailability()
+        static Task<bool> DoGetAvailability()
         {
             return Task.FromResult(BluetoothAdapter.DefaultAdapter.IsEnabled);
         }
 
-        private bool _oldAvailability;
+        private static bool _oldAvailability;
 
-        private async void AddAvailabilityChanged()
+        private static async void AddAvailabilityChanged()
         {
             _oldAvailability = await DoGetAvailability();
         }
 
-        private void RemoveAvailabilityChanged()
+        private static void RemoveAvailabilityChanged()
         {
         }
 
 
-        Task<BluetoothDevice> PlatformRequestDevice(RequestDeviceOptions options)
+        static Task<BluetoothDevice> PlatformRequestDevice(RequestDeviceOptions options)
         {
             _currentRequest = options;
             //Intent i = new Intent("android.bluetooth.devicepicker.action.LAUNCH");
@@ -64,7 +64,7 @@ namespace InTheHand.Bluetooth
             });
         }
 
-        async Task<IReadOnlyCollection<BluetoothDevice>> PlatformScanForDevices(RequestDeviceOptions options)
+        static async Task<IReadOnlyCollection<BluetoothDevice>> PlatformScanForDevices(RequestDeviceOptions options)
         {
             List<ScanFilter> filters = new List<ScanFilter>();
             foreach (var f in options.Filters)
@@ -89,7 +89,7 @@ namespace InTheHand.Bluetooth
             return callback.Devices.AsReadOnly();
         }
 
-        async Task<IReadOnlyCollection<BluetoothDevice>> PlatformGetPairedDevices()
+        static async Task<IReadOnlyCollection<BluetoothDevice>> PlatformGetPairedDevices()
         {
             List<BluetoothDevice> devices = new List<BluetoothDevice>();
 
@@ -148,7 +148,7 @@ namespace InTheHand.Bluetooth
             }
         }
 #if DEBUG
-        private async Task<BluetoothLEScan> DoRequestLEScan(BluetoothLEScanFilter scan)
+        private static async Task<BluetoothLEScan> DoRequestLEScan(BluetoothLEScanFilter scan)
         {
             return null;
         }

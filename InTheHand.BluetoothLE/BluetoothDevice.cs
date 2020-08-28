@@ -6,10 +6,12 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Diagnostics;
 using System.Threading.Tasks;
 
 namespace InTheHand.Bluetooth
 {
+    [DebuggerDisplay("{Id} ({Name})")]
     public sealed partial class BluetoothDevice
     {
         public string Id { get { return GetId(); } }

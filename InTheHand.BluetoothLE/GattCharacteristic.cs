@@ -7,12 +7,14 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace InTheHand.Bluetooth
 {
+    [DebuggerDisplay("{Uuid} ({UserDescription})")]
     public sealed partial class GattCharacteristic
     {
         internal GattCharacteristic(GattService service)

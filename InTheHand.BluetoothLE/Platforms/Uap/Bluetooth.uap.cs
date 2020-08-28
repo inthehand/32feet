@@ -18,13 +18,13 @@ namespace InTheHand.Bluetooth
     {
         internal static Dictionary<ulong, WeakReference> KnownDevices = new Dictionary<ulong, WeakReference>();
 
-        async Task<bool> DoGetAvailability()
+        static async Task<bool> DoGetAvailability()
         {
             var adaptor = await BluetoothAdapter.GetDefaultAsync();
             return adaptor.IsLowEnergySupported;
         }
 
-        async Task<BluetoothDevice> PlatformRequestDevice(RequestDeviceOptions options)
+        static async Task<BluetoothDevice> PlatformRequestDevice(RequestDeviceOptions options)
         {
             
             DevicePicker picker = new DevicePicker();
@@ -88,7 +88,7 @@ namespace InTheHand.Bluetooth
             return new BluetoothDevice(device);
         }
 
-        async Task<IReadOnlyCollection<BluetoothDevice>> PlatformScanForDevices(RequestDeviceOptions options)
+        static async Task<IReadOnlyCollection<BluetoothDevice>> PlatformScanForDevices(RequestDeviceOptions options)
         {
             List<BluetoothDevice> devices = new List<BluetoothDevice>();
 
@@ -100,7 +100,7 @@ namespace InTheHand.Bluetooth
             return devices.AsReadOnly();
         }
 
-        async Task<IReadOnlyCollection<BluetoothDevice>> PlatformGetPairedDevices()
+        static async Task<IReadOnlyCollection<BluetoothDevice>> PlatformGetPairedDevices()
         {
             List<BluetoothDevice> devices = new List<BluetoothDevice>();
 
@@ -112,9 +112,9 @@ namespace InTheHand.Bluetooth
             return devices.AsReadOnly();
         }
 
-        bool _oldAvailability;
+        static bool _oldAvailability;
 
-        private async void AddAvailabilityChanged()
+        private static async void AddAvailabilityChanged()
         {
             _oldAvailability = await DoGetAvailability();
             var adaptor = await BluetoothAdapter.GetDefaultAsync();
@@ -122,7 +122,7 @@ namespace InTheHand.Bluetooth
             radio.StateChanged += Radio_StateChanged;
         }
 
-        private async void Radio_StateChanged(Windows.Devices.Radios.Radio sender, object args)
+        private static async void Radio_StateChanged(Windows.Devices.Radios.Radio sender, object args)
         {
             bool newAvailability = await DoGetAvailability();
             if(newAvailability != _oldAvailability)
@@ -132,7 +132,7 @@ namespace InTheHand.Bluetooth
             }
         }
 
-        private async void RemoveAvailabilityChanged()
+        private static async void RemoveAvailabilityChanged()
         {
             var adaptor = await BluetoothAdapter.GetDefaultAsync();
             var radio = await adaptor.GetRadioAsync();
@@ -140,9 +140,9 @@ namespace InTheHand.Bluetooth
         }
 
 #if DEBUG
-        BluetoothLEAdvertisementWatcher watcher;
+        static BluetoothLEAdvertisementWatcher watcher;
 
-        private async Task<BluetoothLEScan> DoRequestLEScan(BluetoothLEScanFilter filter)
+        private static async Task<BluetoothLEScan> DoRequestLEScan(BluetoothLEScanFilter filter)
         {
             if (watcher == null)
             {
@@ -160,9 +160,9 @@ namespace InTheHand.Bluetooth
         }
 
 
-        private void Watcher_Received(BluetoothLEAdvertisementWatcher sender, BluetoothLEAdvertisementReceivedEventArgs args)
+        private static void Watcher_Received(BluetoothLEAdvertisementWatcher sender, BluetoothLEAdvertisementReceivedEventArgs args)
         {
-            AdvertisementReceived?.Invoke(this, args);
+            AdvertisementReceived?.Invoke(null, args);
         }
 #endif
 

@@ -6,10 +6,14 @@
 //-----------------------------------------------------------------------
 
 using CoreBluetooth;
+using CoreFoundation;
 using CoreGraphics;
+using Foundation;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 #if !__MACOS__
@@ -20,52 +24,167 @@ namespace InTheHand.Bluetooth
 {
     partial class Bluetooth
     {
-        internal static CBCentralManager _manager = new CBCentralManager();
+        internal static CBCentralManager _manager;
+        private static BluetoothDelegate _delegate = new BluetoothDelegate();
+        private static bool availability = false;
 
-        public Bluetooth()
+        static Bluetooth()
         {
-            _manager.DiscoveredPeripheral += _manager_DiscoveredPeripheral;
+            Debug.WriteLine("Bluetooth_ctor");
+            CBCentralInitOptions options = new CBCentralInitOptions { ShowPowerAlert = true
+#if __IOS__
+//                ,  RestoreIdentifier = NSBundle.MainBundle.ObjectForInfoDictionary("CFBundleName")?.ToString()
+#endif
+            };
+
+            _manager = new CBCentralManager(_delegate, DispatchQueue.MainQueue, options);
+            //_manager.UpdatedState += _manager_UpdatedState;
+#if __IOS__
+            //_manager.DiscoveredPeripheral += _manager_DiscoveredPeripheral;
+            //_manager.RetrievedConnectedPeripherals += _manager_RetrievedConnectedPeripherals;
+#endif
         }
 
-        private ObservableCollection<BluetoothDevice> _foundDevices = new ObservableCollection<BluetoothDevice>();
+        internal static event EventHandler<CBPeripheral> ConnectedPeripheral;
+        internal static event EventHandler<CBPeripheral> DisconnectedPeripheral;
+        internal static event EventHandler<CBPeripheral> FailedToConnectPeripheral;
 
-        private void _manager_DiscoveredPeripheral(object sender, CBDiscoveredPeripheralEventArgs e)
+#if __IOS__
+        private static void _manager_RetrievedConnectedPeripherals(object sender, CBPeripheralsEventArgs e)
         {
-            System.Diagnostics.Debug.WriteLine(e.Peripheral.Identifier);
-            _foundDevices.Add(e.Peripheral);
+            throw new NotImplementedException();
+        }
+
+        private static void _manager_DiscoveredPeripheral(object sender, CBDiscoveredPeripheralEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+#endif
+        private sealed class BluetoothDelegate : CBCentralManagerDelegate
+        {
+
+            internal BluetoothDelegate()
+            {
+            }
+
+            public override void UpdatedState(CBCentralManager central)
+            {
+                Debug.WriteLine(central.State);
+
+                bool newAvailability = false;
+
+#if !__WATCHOS__
+                switch(central.State)
+                {
+                    case CBCentralManagerState.PoweredOn:
+                    case CBCentralManagerState.Resetting:
+                        newAvailability = true;
+                        break;
+
+                    default:
+                        newAvailability = false;
+                        break;
+                }
+#endif
+
+                if(availability != newAvailability)
+                {
+                    availability = newAvailability;
+                    OnAvailabilityChanged();
+                }
+            }
+
+            public override void ConnectedPeripheral(CBCentralManager central, CBPeripheral peripheral)
+            {
+                System.Diagnostics.Debug.WriteLine($"Connected {peripheral.Identifier}");
+                Bluetooth.ConnectedPeripheral?.Invoke(central, peripheral);
+            }
+
+            public override void DisconnectedPeripheral(CBCentralManager central, CBPeripheral peripheral, NSError error)
+            {
+                System.Diagnostics.Debug.WriteLine($"Disconnected {peripheral.Identifier} {error}");
+                Bluetooth.DisconnectedPeripheral?.Invoke(central, peripheral);
+            }
+
+            public override void FailedToConnectPeripheral(CBCentralManager central, CBPeripheral peripheral, NSError error)
+            {
+                System.Diagnostics.Debug.WriteLine($"Failed to connect {peripheral.Identifier} {error.Code}");
+                Bluetooth.FailedToConnectPeripheral?.Invoke(central, peripheral);
+            }
+
+            public override void DiscoveredPeripheral(CBCentralManager central, CBPeripheral peripheral, NSDictionary advertisementData, NSNumber RSSI)
+            {
+                OnDiscoveredPeripheral(central, peripheral, advertisementData, RSSI);
+            }
+
+#if __IOS__
+            public override void RetrievedConnectedPeripherals(CBCentralManager central, CBPeripheral[] peripherals)
+            {
+                base.RetrievedConnectedPeripherals(central, peripherals);
+            }
+
+            public override void WillRestoreState(CBCentralManager central, NSDictionary dict)
+            {
+                base.WillRestoreState(central, dict);
+            }
+#endif
+        }
+
+        private static ObservableCollection<BluetoothDevice> _foundDevices = new ObservableCollection<BluetoothDevice>();
+
+        private static void OnDiscoveredPeripheral(CBCentralManager central, CBPeripheral peripheral, NSDictionary advertisementData, NSNumber RSSI)
+        {
+            
+            System.Diagnostics.Debug.WriteLine($"{peripheral.Identifier} {RSSI}");
+            _foundDevices.Add(peripheral);
 #if __IOS__
             if(controller !=null)
             {
-                controller.AddTextField((t) => { t.Text = e.Peripheral.Name; });
+                controller.AddTextField((t) => { t.Text = peripheral.Name; });
             }
 #endif
-        }
-
-        Task<bool> DoGetAvailability()
-        {
-            bool supported = false;
-
-#if __WATCHOS__
-            supported = true;
-#else
-            switch(_manager.State)
-            {
-                case CBCentralManagerState.Resetting:
-                case CBCentralManagerState.PoweredOn:
-                    supported = true;
-                    break;
-            }
-#endif
-            return Task.FromResult(supported);
         }
 
 #if __IOS__
-        private UIAlertController controller = null;
+        internal static event EventHandler<CBPeripheral[]> OnRetrievedPeripherals;
+
+
 #endif
-        Task<BluetoothDevice> PlatformRequestDevice(RequestDeviceOptions options)
+
+
+        static Task<bool> DoGetAvailability()
+        {
+            bool available = false;
+
+            switch(_manager.State)
+            {
+#if __WATCHOS__
+                case CBManagerState.PoweredOn:
+                case CBManagerState.Resetting:
+#else
+                case CBCentralManagerState.PoweredOn:
+                case CBCentralManagerState.Resetting:             
+#endif
+                    available = true;
+                    break;
+            }
+
+            return Task.FromResult(available);
+        }
+
+#if __IOS__
+        private static UIAlertController controller = null;
+#endif
+        static async Task<BluetoothDevice> PlatformRequestDevice(RequestDeviceOptions options)
         {
 #if __IOS__
             EventWaitHandle handle = new EventWaitHandle(false, EventResetMode.ManualReset);
+
+            if(_manager.State != CBCentralManagerState.PoweredOn)
+            {
+                throw new InvalidOperationException();
+            }
+
             BluetoothDevice selectedDevice = null;
 
             controller = UIAlertController.Create("Select a Bluetooth accessory", null, UIAlertControllerStyle.Alert);
@@ -102,32 +221,32 @@ namespace InTheHand.Bluetooth
 
             currentController.PresentViewController(controller, true, null);
             
-            return Task.Run(() =>
+            return await Task.Run(() =>
             {
                 var s2 = source;
                 handle.WaitOne();
                 return selectedDevice;
             });
 #endif
-            return Task.FromResult((BluetoothDevice)null);
+            return null;
         }
 
-        Task<IReadOnlyCollection<BluetoothDevice>> PlatformScanForDevices(RequestDeviceOptions options)
+        static Task<IReadOnlyCollection<BluetoothDevice>> PlatformScanForDevices(RequestDeviceOptions options)
         {
             return Task.FromResult((IReadOnlyCollection<BluetoothDevice>)new List<BluetoothDevice>().AsReadOnly());
         }
 
-        Task<IReadOnlyCollection<BluetoothDevice>> PlatformGetPairedDevices()
+        static Task<IReadOnlyCollection<BluetoothDevice>> PlatformGetPairedDevices()
         {
 #if __IOS__
             PairedDeviceHandler deviceHandler = new PairedDeviceHandler();
+            OnRetrievedPeripherals += deviceHandler.OnRetrievedPeripherals;
 
-            _manager.RetrievedPeripherals += deviceHandler._manager_RetrievedPeripherals;
-            _manager.RetrievePeripherals(GattServiceUuids.GenericAttribute);
+            _manager.RetrieveConnectedPeripherals(CBUUID.FromPartial(0x180F));
             
             return Task.Run(() =>
             {
-                deviceHandler.WaitOne();
+                //deviceHandler.WaitOne();
                 return deviceHandler.Devices;
             });
 #else
@@ -154,9 +273,9 @@ namespace InTheHand.Bluetooth
                 handle.WaitOne();
             }
 
-            public void _manager_RetrievedPeripherals(object sender, CBPeripheralsEventArgs e)
+            public void OnRetrievedPeripherals(object sender, CBPeripheral[] peripherals)
             {
-                foreach (var peripheral in e.Peripherals)
+                foreach (var peripheral in peripherals)
                 {
                     devices.Add(peripheral);
                 }
@@ -167,26 +286,26 @@ namespace InTheHand.Bluetooth
 #endif
 
 #if DEBUG
-        private async Task<BluetoothLEScan> DoRequestLEScan(BluetoothLEScanFilter filter)
+        private static async Task<BluetoothLEScan> DoRequestLEScan(BluetoothLEScanFilter filter)
         {
             return null;
         }
 #endif
 
-        private bool _oldAvailability;
+        private static bool _oldAvailability;
 
-        private async void AddAvailabilityChanged()
+        private static async void AddAvailabilityChanged()
         {
             _oldAvailability = await DoGetAvailability();
             _manager.UpdatedState += _manager_UpdatedState;
         }
 
-        private void RemoveAvailabilityChanged()
+        private static void RemoveAvailabilityChanged()
         {
             _manager.UpdatedState -= _manager_UpdatedState;
         }
 
-        private async void _manager_UpdatedState(object sender, EventArgs e)
+        private static async void _manager_UpdatedState(object sender, EventArgs e)
         {
             bool newAvailability = await DoGetAvailability();
             if (newAvailability != _oldAvailability)

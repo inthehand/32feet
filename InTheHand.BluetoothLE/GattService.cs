@@ -7,11 +7,13 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace InTheHand.Bluetooth
 {
+    [DebuggerDisplay("{Uuid}")]
     public sealed partial class GattService
     {
         internal GattService(BluetoothDevice device)
