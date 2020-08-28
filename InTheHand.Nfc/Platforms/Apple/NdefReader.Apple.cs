@@ -70,7 +70,10 @@ namespace InTheHand.Nfc
             {
                 // filter which codes are errors
                 System.Diagnostics.Debug.WriteLine(error);
-                reader.Error?.Invoke(reader, EventArgs.Empty);  
+                if (error.Code != 0xC8)
+                {
+                    reader.Error?.Invoke(reader, EventArgs.Empty);
+                }
             }
         }
 
