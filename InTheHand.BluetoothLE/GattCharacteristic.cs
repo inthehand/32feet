@@ -72,7 +72,7 @@ namespace InTheHand.Bluetooth
             return DoWriteValue(value);
         }
 
-        public Task<GattDescriptor> GetDescriptorAsync(Guid descriptor)
+        public Task<GattDescriptor> GetDescriptorAsync(BluetoothUuid descriptor)
         {
             return DoGetDescriptor(descriptor);
         }
@@ -107,12 +107,12 @@ namespace InTheHand.Bluetooth
             }
         }
 
-        public Task StartNotifications()
+        public Task StartNotificationsAsync()
         {
             return DoStartNotifications();
         }
 
-        public Task StopNotifications()
+        public Task StopNotificationsAsync()
         {
             return DoStopNotifications();
         }

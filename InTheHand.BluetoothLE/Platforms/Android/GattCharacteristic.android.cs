@@ -84,8 +84,10 @@ namespace InTheHand.Bluetooth
         {
             _characteristic.SetValue(value);
             bool written = Service.Device.Gatt.NativeGatt.WriteCharacteristic(_characteristic);
-            Service.Device.Gatt.WaitForCharacteristicWrite();
-            return Task.CompletedTask;
+            return Task.Run(() =>
+            {
+                Service.Device.Gatt.WaitForCharacteristicWrite();
+            });
         }
 
         void AddCharacteristicValueChanged()
@@ -104,7 +106,7 @@ namespace InTheHand.Bluetooth
             Service.Device.Gatt.CharacteristicChanged -= Gatt_CharacteristicChanged;
         }
 
-        private Task DoStartNotifications()
+        private async Task DoStartNotifications()
         {
             byte[] data;
 
@@ -113,28 +115,18 @@ namespace InTheHand.Bluetooth
             else if (_characteristic.Properties.HasFlag(GattProperty.Indicate))
                 data = BluetoothGattDescriptor.EnableIndicationValue.ToArray();
             else
-                return Task.CompletedTask;
+                return;
 
-            var descriptor = _characteristic.GetDescriptor(GattDescriptorUuids.ClientCharacteristicConfiguration);
-            descriptor.SetValue(data);
-            var success = Service.Device.Gatt.NativeGatt.WriteDescriptor(descriptor);
-
-            if (success)
-                return Task.CompletedTask;
-            else
-                return Task.FromException(new Exception());
+            var descriptor = await GetDescriptorAsync(GattDescriptorUuids.ClientCharacteristicConfiguration);
+            await descriptor.WriteValueAsync(data);
+            Service.Device.Gatt.NativeGatt.SetCharacteristicNotification(_characteristic, true);
         }
 
-        private Task DoStopNotifications()
+        private async Task DoStopNotifications()
         {
-            var descriptor = _characteristic.GetDescriptor(GattDescriptorUuids.ClientCharacteristicConfiguration);
-            descriptor.SetValue(new byte[] { 0, 0 });
-            var success = Service.Device.Gatt.NativeGatt.WriteDescriptor(descriptor);
-
-            if (success)
-                return Task.CompletedTask;
-            else
-                return Task.FromException(new Exception());
+            Service.Device.Gatt.NativeGatt.SetCharacteristicNotification(_characteristic, false);
+            var descriptor = await GetDescriptorAsync(GattDescriptorUuids.ClientCharacteristicConfiguration);
+            await descriptor.WriteValueAsync(new byte[] { 0, 0 });
         }
     }
 }

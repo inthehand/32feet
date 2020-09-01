@@ -64,6 +64,17 @@ namespace InTheHand.Bluetooth
         }
 
         /// <summary>
+        /// Returns true if both Uuids are equal.
+        /// </summary>
+        /// <param name="uuid1"></param>
+        /// <param name="uuid2"></param>
+        /// <returns></returns>
+        public static bool operator ==(BluetoothUuid uuid1, Guid uuid2)
+        {
+            return uuid1.Value == uuid2;
+        }
+
+        /// <summary>
         /// Returns true if both Uuids are unequal.
         /// </summary>
         /// <param name="uuid1"></param>
@@ -72,6 +83,17 @@ namespace InTheHand.Bluetooth
         public static bool operator !=(BluetoothUuid uuid1, BluetoothUuid uuid2)
         {
             return uuid1.Value != uuid2.Value;
+        }
+
+        /// <summary>
+        /// Returns true if both Uuids are unequal.
+        /// </summary>
+        /// <param name="uuid1"></param>
+        /// <param name="uuid2"></param>
+        /// <returns></returns>
+        public static bool operator !=(BluetoothUuid uuid1, Guid uuid2)
+        {
+            return uuid1.Value != uuid2;
         }
 
         /// <summary>

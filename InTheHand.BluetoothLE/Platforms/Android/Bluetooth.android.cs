@@ -9,6 +9,7 @@ using Android.Content;
 using Android.Content.PM;
 using Android.OS;
 using Android.Runtime;
+using Xamarin.Essentials;
 
 namespace InTheHand.Bluetooth
 {
@@ -46,8 +47,8 @@ namespace InTheHand.Bluetooth
 
             //Plugin.CurrentActivity.CrossCurrentActivity.Current.Activity.StartActivityForResult(i, 1);
 
-            Intent i = new Intent(Plugin.CurrentActivity.CrossCurrentActivity.Current.Activity, typeof(DevicePickerActivity));
-            Plugin.CurrentActivity.CrossCurrentActivity.Current.Activity.StartActivity(i);
+            Intent i = new Intent(Platform.CurrentActivity, typeof(DevicePickerActivity));
+            Platform.CurrentActivity.StartActivity(i);
 
             return Task.Run<BluetoothDevice>(() =>
             {
@@ -166,7 +167,7 @@ namespace InTheHand.Bluetooth
                 i.PutExtra("android.bluetooth.devicepicker.extra.DEVICE_PICKER_LAUNCH_CLASS", Java.Lang.Class.FromType(typeof(DevicePickerReceiver)).Name);
                 i.PutExtra("android.bluetooth.devicepicker.extra.NEED_AUTH", false);
 
-                Plugin.CurrentActivity.CrossCurrentActivity.Current.Activity.StartActivityForResult(i, 1);
+                Platform.CurrentActivity.StartActivityForResult(i, 1);
 
             }
 

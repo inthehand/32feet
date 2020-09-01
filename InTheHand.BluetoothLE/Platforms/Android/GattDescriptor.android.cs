@@ -50,8 +50,10 @@ namespace InTheHand.Bluetooth
         {
             _descriptor.SetValue(value);
             bool written = Characteristic.Service.Device.Gatt.NativeGatt.WriteDescriptor(_descriptor);
-            Characteristic.Service.Device.Gatt.WaitForDescriptorWrite();
-            return Task.CompletedTask;
+            return Task.Run(() =>
+            {
+                Characteristic.Service.Device.Gatt.WaitForDescriptorWrite();
+            });
         }
     }
 }
