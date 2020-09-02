@@ -26,6 +26,11 @@ namespace InTheHand.Bluetooth
         async Task DoConnect()
         {
             var status = await Device.NativeDevice.RequestAccessAsync();
+            if(status == Windows.Devices.Enumeration.DeviceAccessStatus.Allowed)
+            {
+                // need to request something to force a connection
+                await Device.NativeDevice.GetGattServicesAsync();
+            }
         }
 
         void DoDisconnect()

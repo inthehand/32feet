@@ -25,6 +25,11 @@ namespace InTheHand.Bluetooth
     {
         private BluetoothLEAdvertisementFilter _platformFilter;
 
+        public BluetoothLEScanFilter()
+        {
+            _platformFilter = new BluetoothLEAdvertisementFilter();
+        }
+
         internal BluetoothLEScanFilter(BluetoothLEAdvertisementFilter filter)
         {
             _platformFilter = filter;
