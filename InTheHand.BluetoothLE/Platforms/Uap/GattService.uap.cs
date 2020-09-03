@@ -8,6 +8,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Windows.Devices.Bluetooth;
 using WBluetooth = Windows.Devices.Bluetooth.GenericAttributeProfile;
 
 namespace InTheHand.Bluetooth
@@ -28,7 +29,7 @@ namespace InTheHand.Bluetooth
 
         async Task<GattCharacteristic> DoGetCharacteristic(BluetoothUuid characteristic)
         {
-            var result = await _service.GetCharacteristicsForUuidAsync(characteristic);
+            var result = await _service.GetCharacteristicsForUuidAsync(characteristic, Windows.Devices.Bluetooth.BluetoothCacheMode.Uncached);
 
             if (result.Status == WBluetooth.GattCommunicationStatus.Success && result.Characteristics.Count > 0)
                 return new GattCharacteristic(this, result.Characteristics[0]);
@@ -40,7 +41,7 @@ namespace InTheHand.Bluetooth
         {
             List<GattCharacteristic> characteristics = new List<GattCharacteristic>();
 
-            var result = await _service.GetCharacteristicsAsync();
+            var result = await _service.GetCharacteristicsAsync(BluetoothCacheMode.Uncached);
             if(result.Status == WBluetooth.GattCommunicationStatus.Success)
             {
                 foreach(var c in result.Characteristics)

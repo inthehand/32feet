@@ -29,7 +29,7 @@ namespace InTheHand.Bluetooth
             if(status == Windows.Devices.Enumeration.DeviceAccessStatus.Allowed)
             {
                 // need to request something to force a connection
-                await Device.NativeDevice.GetGattServicesAsync();
+                await Device.NativeDevice.GetGattServicesAsync(cacheMode: Windows.Devices.Bluetooth.BluetoothCacheMode.Uncached);
             }
         }
 
@@ -42,7 +42,7 @@ namespace InTheHand.Bluetooth
         {
             Windows.Devices.Bluetooth.GenericAttributeProfile.GattDeviceServicesResult result = null;
 
-            result = await Device.NativeDevice.GetGattServicesForUuidAsync(service);
+            result = await Device.NativeDevice.GetGattServicesForUuidAsync(service, Windows.Devices.Bluetooth.BluetoothCacheMode.Uncached);
 
             if (result == null || result.Services.Count == 0)
                 return null;
