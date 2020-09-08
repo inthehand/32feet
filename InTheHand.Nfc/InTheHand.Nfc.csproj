@@ -8,12 +8,13 @@
     <Version>1.0.1</Version>
     <RepositoryUrl>https://github.com/inthehand/32feet</RepositoryUrl>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <DebugSymbols>true</DebugSymbols>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <PackageProjectUrl>https://github.com/inthehand/32feet</PackageProjectUrl>
     <Copyright>Copyright (c) 2020 In The Hand Ltd</Copyright>
     <Description>32feet.NET is an open-source project to make personal area networking technologies such as Bluetooth easily accessible from .NET code.</Description>
-    <FileVersion>1.0.1.801</FileVersion>
+    <FileVersion>1.0.1.908</FileVersion>
     <AssemblyVersion>1.0.0.0</AssemblyVersion>
     <AssemblyName>InTheHand.Nfc</AssemblyName>
     <GenerateDocumentationFile Condition=" '$(Configuration)' == 'Release' ">true</GenerateDocumentationFile>
@@ -29,8 +30,13 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
-    <PackageReference Include="MSBuild.Sdk.Extras" Version="2.1.2" PrivateAssets="All" />
+    <PackageReference Include="MSBuild.Sdk.Extras" Version="2.1.2" PrivateAssets="All" /> 
   </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'monoandroid90'">
+    <PackageReference Include="Xamarin.Essentials" Version="1.5.3.2" />
+  </ItemGroup>
+
   <ItemGroup>
     <Compile Remove="Platforms\**\*.*" />
     <None Include="..\Misc\32feet-package-icon.png">
@@ -47,6 +53,7 @@
     <DefineConstants>$(DefineConstants);MONOANDROID9_0</DefineConstants>
     <LanguageTargets>$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets</LanguageTargets>
   </PropertyGroup>
+  
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
     <Compile Include="Platforms\Standard\*.cs" />
@@ -57,10 +64,6 @@
     <RuntimeIdentifiers>win10-x64;win10-x86</RuntimeIdentifiers>
     <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.19041.0</TargetPlatformVersion>
     <TargetPlatformMinVersion>10.0.18362.0</TargetPlatformMinVersion>
-  </PropertyGroup>
-  
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|netstandard2.0|AnyCPU'">
-    <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   
   <ItemGroup Condition=" '$(TargetFramework)' == 'monoandroid90' ">
