@@ -58,7 +58,7 @@ namespace InTheHand.Bluetooth
 
         string GetId()
         {
-            return NativeDevice.BluetoothAddress.ToString();
+            return NativeDevice.BluetoothAddress.ToString("X");
         }
 
         string GetName()

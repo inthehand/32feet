@@ -241,14 +241,17 @@ namespace InTheHand.Bluetooth
 #if __IOS__
             PairedDeviceHandler deviceHandler = new PairedDeviceHandler();
             OnRetrievedPeripherals += deviceHandler.OnRetrievedPeripherals;
-
-            _manager.RetrieveConnectedPeripherals(CBUUID.FromPartial(0x180F));
-            
-            return Task.Run(() =>
+            List<BluetoothDevice> devices = new List<BluetoothDevice>();
+            var periphs = _manager.RetrieveConnectedPeripherals(CBUUID.FromPartial(0x1801));
+            foreach (var p in periphs)
             {
-                //deviceHandler.WaitOne();
-                return deviceHandler.Devices;
-            });
+                devices.Add(p);
+            }
+
+            return Task.Run(() =>
+                        {
+                            return (IReadOnlyCollection<BluetoothDevice>)devices.AsReadOnly();
+                        });
 #else
             return Task.FromResult((IReadOnlyCollection<BluetoothDevice>)new List<BluetoothDevice>().AsReadOnly());
 #endif
