@@ -3606,7 +3606,7 @@ namespace IOBluetooth
         UserDefinedRangeStart = 48,
         UserDefinedRangeEnd = 63,
         Type = 66,
-        TimeISO = 68,
+        TimeIso8601 = 68,
         Target = 70,
         Http = 71,
         Body = 72,
@@ -3620,11 +3620,12 @@ namespace IOBluetooth
         Length = 195,
         Time4Byte = 196,
         ConnectionID = 203,
-        Obex13wanuuid = 80,
-        OBEX13ObjectClass = 81,
-        OBEX13SessionParameters = 82,
-        OBEX13SessionSequenceNumber = 147,
-        OBEX13CreatorID = 207
+
+        WanUuid = 80,
+        Obex13ObjectClass = 81,
+        SessionParameters = 82,
+        SessionSequenceNumber = 147,
+        CreatorID = 207
     }
 
     public enum OBEXOpCodeResponseValues : uint
@@ -3808,27 +3809,27 @@ namespace IOBluetooth
     [StructLayout(LayoutKind.Sequential)]
     public struct OBEXConnectCommandResponseData
     {
-        public byte serverResponseOpCode;
+        public byte ServerResponseOpCode;
 
-        public unsafe void* headerDataPtr;
+        public unsafe void* HeaderDataPtr;
 
-        public nuint headerDataLength;
+        public nuint HeaderDataLength;
 
-        public ushort maxPacketSize;
+        public ushort MaxPacketSize;
 
-        public byte version;
+        public byte Version;
 
-        public byte flags;
+        public byte Flags;
     }
 
     [StructLayout(LayoutKind.Sequential)]
     public struct OBEXDisconnectCommandResponseData
     {
-        public byte serverResponseOpCode;
+        public byte ServerResponseOpCode;
 
-        public unsafe void* headerDataPtr;
+        public unsafe void* HeaderDataPtr;
 
-        public nuint headerDataLength;
+        public nuint HeaderDataLength;
     }
 
     [StructLayout(LayoutKind.Sequential)]
