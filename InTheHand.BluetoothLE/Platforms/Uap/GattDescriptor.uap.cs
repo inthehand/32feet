@@ -24,7 +24,7 @@ namespace InTheHand.Bluetooth
             return _descriptor.Uuid;
         }
 
-        async Task<byte[]> DoGetValue()
+        async Task<byte[]> PlatformGetValue()
         {
             var result = await _descriptor.ReadValueAsync(Windows.Devices.Bluetooth.BluetoothCacheMode.Cached).AsTask();
 
@@ -36,7 +36,7 @@ namespace InTheHand.Bluetooth
             return null;
         }
 
-        async Task<byte[]> DoReadValue()
+        async Task<byte[]> PlatformReadValue()
         {
             var result = await _descriptor.ReadValueAsync(Windows.Devices.Bluetooth.BluetoothCacheMode.Uncached).AsTask().ConfigureAwait(false);
 
@@ -48,7 +48,7 @@ namespace InTheHand.Bluetooth
             return null;
         }
 
-        async Task DoWriteValue(byte[] value)
+        async Task PlatformWriteValue(byte[] value)
         {
             await _descriptor.WriteValueAsync(value.AsBuffer());
         }

@@ -29,29 +29,29 @@ namespace InTheHand.Bluetooth
             return string.Empty;
         }
 
-        Task<GattDescriptor> DoGetDescriptor(BluetoothUuid descriptor)
+        Task<GattDescriptor> PlatformGetDescriptor(BluetoothUuid descriptor)
         {
             return Task.FromResult((GattDescriptor)null);
         }
 
-        Task<IReadOnlyList<GattDescriptor>> DoGetDescriptors()
+        Task<IReadOnlyList<GattDescriptor>> PlatformGetDescriptors()
         {
             return Task.FromResult((IReadOnlyList<GattDescriptor>)null);
         }
 
-        Task<byte[]> DoGetValue()
+        Task<byte[]> PlatformGetValue()
         {
             return Task.FromResult<byte[]>(null);
         }
 
-        Task<byte[]> DoReadValue()
+        Task<byte[]> PlatformReadValue()
         {
             return Task.FromResult<byte[]>(null);
         }
 
-        Task DoWriteValue(byte[] value)
+        Task PlatformWriteValue(byte[] value, bool requireResponse)
         {
-            return Task.CompletedTask;
+            return Task.FromException(new PlatformNotSupportedException());
         }
 
         void AddCharacteristicValueChanged()
@@ -62,14 +62,14 @@ namespace InTheHand.Bluetooth
         {
         }
 
-        private Task DoStartNotifications()
+        private Task PlatformStartNotifications()
         {
-            return Task.CompletedTask;
+            return Task.FromException(new PlatformNotSupportedException());
         }
 
-        private Task DoStopNotifications()
+        private Task PlatformStopNotifications()
         {
-            return Task.CompletedTask;
+            return Task.FromException(new PlatformNotSupportedException());
         }
     }
 }

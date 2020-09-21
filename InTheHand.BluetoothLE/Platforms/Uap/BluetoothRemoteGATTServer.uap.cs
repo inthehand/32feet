@@ -23,7 +23,7 @@ namespace InTheHand.Bluetooth
             return Device.NativeDevice.ConnectionStatus == Windows.Devices.Bluetooth.BluetoothConnectionStatus.Connected;
         }
 
-        async Task DoConnect()
+        async Task PlatformConnect()
         {
             var status = await Device.NativeDevice.RequestAccessAsync();
             if(status == Windows.Devices.Enumeration.DeviceAccessStatus.Allowed)
@@ -33,12 +33,12 @@ namespace InTheHand.Bluetooth
             }
         }
 
-        void DoDisconnect()
+        void PlatformDisconnect()
         {
 
         }
 
-        async Task<GattService> DoGetPrimaryService(BluetoothUuid service)
+        async Task<GattService> PlatformGetPrimaryService(BluetoothUuid service)
         {
             Windows.Devices.Bluetooth.GenericAttributeProfile.GattDeviceServicesResult result = null;
 
@@ -50,7 +50,7 @@ namespace InTheHand.Bluetooth
             return new GattService(Device, result.Services[0]);
         }
 
-        async Task<List<GattService>> DoGetPrimaryServices(BluetoothUuid? service)
+        async Task<List<GattService>> PlatformGetPrimaryServices(BluetoothUuid? service)
         {
             var services = new List<GattService>();
 

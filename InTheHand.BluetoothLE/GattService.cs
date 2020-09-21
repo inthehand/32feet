@@ -23,28 +23,29 @@ namespace InTheHand.Bluetooth
 
         public BluetoothDevice Device { get; private set; }
 
+        [DebuggerDisplay("{Value:N}")]
         public BluetoothUuid Uuid { get { return GetUuid(); } }
 
         public bool IsPrimary { get { return GetIsPrimary(); } }
 
         public Task<GattCharacteristic> GetCharacteristicAsync(BluetoothUuid characteristic)
         {
-            return DoGetCharacteristic(characteristic);
+            return PlatformGetCharacteristic(characteristic);
         }
 
         public Task<IReadOnlyList<GattCharacteristic>> GetCharacteristicsAsync()
         {
-            return DoGetCharacteristics();
+            return PlatformGetCharacteristics();
         }
 
         public Task<GattService> GetIncludedServiceAsync(BluetoothUuid service)
         {
-            return DoGetIncludedServiceAsync(service);
+            return PlatformGetIncludedServiceAsync(service);
         }
 
         public Task<IReadOnlyList<GattService>> GetIncludedServicesAsync()
         {
-            return DoGetIncludedServicesAsync();
+            return PlatformGetIncludedServicesAsync();
         }
 
 #if DEBUG

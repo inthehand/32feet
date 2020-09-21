@@ -18,18 +18,18 @@ namespace InTheHand.Bluetooth
 {
     partial class BluetoothRemoteGATTServer
     {
-        internal readonly ABluetooth.BluetoothGatt NativeGatt;
-        private readonly ABluetooth.BluetoothGattCallback _gattCallback;
-        private EventWaitHandle _servicesDiscoveredHandle = new EventWaitHandle(false, EventResetMode.ManualReset);
+        private ABluetooth.BluetoothGatt _gatt;
+        private ABluetooth.BluetoothGattCallback _gattCallback;
         
         private void PlatformInit()
         {
+            _gattCallback = new GattCallback(this);
+            _gatt = ((ABluetooth.BluetoothDevice)Device).ConnectGatt(Android.App.Application.Context, false, _gattCallback);
         }
 
-        internal BluetoothRemoteGATTServer(BluetoothDevice device, ABluetooth.BluetoothDevice bluetoothDevice) : this(device)
+        public static implicit operator ABluetooth.BluetoothGatt(BluetoothRemoteGATTServer gatt)
         {
-            _gattCallback = new GattCallback(this);
-            NativeGatt = bluetoothDevice.ConnectGatt(Android.App.Application.Context, false, _gattCallback);
+            return gatt._gatt;
         }
 
         internal event EventHandler<ConnectionStateEventArgs> ConnectionStateChanged;
@@ -38,10 +38,12 @@ namespace InTheHand.Bluetooth
         internal event EventHandler<CharacteristicEventArgs> CharacteristicWrite;
         internal event EventHandler<DescriptorEventArgs> DescriptorRead;
         internal event EventHandler<DescriptorEventArgs> DescriptorWrite;
+        internal event EventHandler<GattEventArgs> ServicesDiscovered;
+        private bool _servicesDiscovered = false;
 
         internal class GattCallback : ABluetooth.BluetoothGattCallback
         {
-            private BluetoothRemoteGATTServer _owner;
+            private readonly BluetoothRemoteGATTServer _owner;
 
             internal GattCallback(BluetoothRemoteGATTServer owner)
             {
@@ -50,11 +52,12 @@ namespace InTheHand.Bluetooth
 
             public override void OnConnectionStateChange(ABluetooth.BluetoothGatt gatt, ABluetooth.GattStatus status, ABluetooth.ProfileState newState)
             {
-                System.Diagnostics.Debug.WriteLine($"ConnectionStateChanged {status}");
+                System.Diagnostics.Debug.WriteLine($"ConnectionStateChanged {status} {newState}");
                 _owner.ConnectionStateChanged?.Invoke(_owner, new ConnectionStateEventArgs { Status = status, State = newState });
                 if (newState == ABluetooth.ProfileState.Connected)
                 {
-                    gatt.DiscoverServices();
+                    if(!_owner._servicesDiscovered)
+                        gatt.DiscoverServices();
                 }
                 else
                 {
@@ -95,16 +98,38 @@ namespace InTheHand.Bluetooth
             public override void OnServicesDiscovered(ABluetooth.BluetoothGatt gatt, ABluetooth.GattStatus status)
             {
                 System.Diagnostics.Debug.WriteLine($"ServicesDiscovered {status}");
-                _owner._servicesDiscoveredHandle.Set();
+                _owner._servicesDiscovered = true;
+                _owner.ServicesDiscovered?.Invoke(_owner, new GattEventArgs { Status = status });
             }
         }
 
         bool GetConnected()
         {
-            return Bluetooth._manager.GetConnectionState(Device._device, ABluetooth.ProfileType.Gatt) == ABluetooth.ProfileState.Connected;
+            return Bluetooth._manager.GetConnectionState(Device, ABluetooth.ProfileType.Gatt) == ABluetooth.ProfileState.Connected;
         }
 
-        Task DoConnect()
+        private async Task<bool> WaitForServiceDiscovery()
+        {
+            if (_servicesDiscovered)
+                return true;
+
+            TaskCompletionSource<bool> tcs = new TaskCompletionSource<bool>();
+
+            void handler(object s, GattEventArgs e)
+            {
+                if (!tcs.Task.IsCompleted)
+                {
+                    tcs.SetResult(true);
+
+                    ServicesDiscovered -= handler;
+                }
+            };
+
+            ServicesDiscovered += handler;
+            return await tcs.Task;
+        }
+
+        Task PlatformConnect()
         {
             TaskCompletionSource<bool> tcs = new TaskCompletionSource<bool>();
 
@@ -125,30 +150,41 @@ namespace InTheHand.Bluetooth
             }
 
             ConnectionStateChanged += handler;
-            bool success = NativeGatt.Connect();
-            return tcs.Task;
+            bool success = _gatt.Connect();
+            if (success)
+            {
+                if (Connected)
+                    return Task.FromResult(true);
+
+                return tcs.Task;
+            }
+            else
+            {
+                return Task.FromException(new OperationCanceledException());
+            }
         }
 
-        void DoDisconnect()
+        void PlatformDisconnect()
         {
-            NativeGatt.Disconnect();
+            _gatt.Disconnect();
         }
 
-        Task<GattService> DoGetPrimaryService(BluetoothUuid service)
+        async Task<GattService> PlatformGetPrimaryService(BluetoothUuid service)
         {
-            _servicesDiscoveredHandle.WaitOne();
-            ABluetooth.BluetoothGattService nativeService = NativeGatt.GetService(service);
+            await WaitForServiceDiscovery();
+
+            ABluetooth.BluetoothGattService nativeService = _gatt.GetService(service);
             
-            return Task.FromResult(nativeService is null ? null : new GattService(Device, nativeService));
+            return nativeService is null ? null : new GattService(Device, nativeService);
         }
 
-        async Task<List<GattService>> DoGetPrimaryServices(BluetoothUuid? service)
+        async Task<List<GattService>> PlatformGetPrimaryServices(BluetoothUuid? service)
         {
             var services = new List<GattService>();
 
-            _servicesDiscoveredHandle.WaitOne();
+            await WaitForServiceDiscovery();
 
-            foreach (var serv in NativeGatt.Services)
+            foreach (var serv in _gatt.Services)
             {
                 // if a service was specified only add if service uuid is a match
                 if (serv.Type == ABluetooth.GattServiceType.Primary && (!service.HasValue || service.Value == serv.Uuid))

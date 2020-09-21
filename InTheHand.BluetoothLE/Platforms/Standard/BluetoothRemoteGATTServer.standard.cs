@@ -5,9 +5,7 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace InTheHand.Bluetooth
@@ -23,20 +21,20 @@ namespace InTheHand.Bluetooth
             return false;
         }
 
-        async Task DoConnect()
+        async Task PlatformConnect()
         {
         }
 
-        void DoDisconnect()
+        void PlatformDisconnect()
         {
         }
 
-        Task<GattService> DoGetPrimaryService(BluetoothUuid service)
+        Task<GattService> PlatformGetPrimaryService(BluetoothUuid service)
         {
             return Task.FromResult((GattService)null);
         }
 
-        Task<List<GattService>> DoGetPrimaryServices(BluetoothUuid? service)
+        Task<List<GattService>> PlatformGetPrimaryServices(BluetoothUuid? service)
         {
             return Task.FromResult(new List<GattService>());
         }

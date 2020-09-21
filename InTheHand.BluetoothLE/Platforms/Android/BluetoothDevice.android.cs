@@ -5,6 +5,7 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
+using System.Diagnostics;
 using System.Threading.Tasks;
 using ABluetooth = Android.Bluetooth;
 
@@ -12,7 +13,8 @@ namespace InTheHand.Bluetooth
 {
     partial class BluetoothDevice
     {
-        internal readonly ABluetooth.BluetoothDevice _device;
+        private readonly ABluetooth.BluetoothDevice _device;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private BluetoothRemoteGATTServer _gattServer;
         private bool _watchingAdvertisements = false;
 
@@ -50,7 +52,7 @@ namespace InTheHand.Bluetooth
         {
             if (_gattServer is null)
             {
-                _gattServer = new BluetoothRemoteGATTServer(this, _device);
+                _gattServer = new BluetoothRemoteGATTServer(this);
             }
 
             return _gattServer;

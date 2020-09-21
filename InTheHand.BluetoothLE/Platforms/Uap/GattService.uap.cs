@@ -27,7 +27,7 @@ namespace InTheHand.Bluetooth
             return service._service;
         }
 
-        async Task<GattCharacteristic> DoGetCharacteristic(BluetoothUuid characteristic)
+        async Task<GattCharacteristic> PlatformGetCharacteristic(BluetoothUuid characteristic)
         {
             var result = await _service.GetCharacteristicsForUuidAsync(characteristic, Windows.Devices.Bluetooth.BluetoothCacheMode.Uncached);
 
@@ -37,7 +37,7 @@ namespace InTheHand.Bluetooth
             return null;
         }
 
-        async Task<IReadOnlyList<GattCharacteristic>> DoGetCharacteristics()
+        async Task<IReadOnlyList<GattCharacteristic>> PlatformGetCharacteristics()
         {
             List<GattCharacteristic> characteristics = new List<GattCharacteristic>();
 
@@ -53,7 +53,7 @@ namespace InTheHand.Bluetooth
             return characteristics.AsReadOnly();
         }
 
-        private async Task<GattService> DoGetIncludedServiceAsync(BluetoothUuid service)
+        private async Task<GattService> PlatformGetIncludedServiceAsync(BluetoothUuid service)
         {
             var servicesResult = await _service.GetIncludedServicesForUuidAsync(service);
 
@@ -65,7 +65,7 @@ namespace InTheHand.Bluetooth
             return null;
         }
 
-        private async Task<IReadOnlyList<GattService>> DoGetIncludedServicesAsync()
+        private async Task<IReadOnlyList<GattService>> PlatformGetIncludedServicesAsync()
         {
             List<GattService> services = new List<GattService>();
 

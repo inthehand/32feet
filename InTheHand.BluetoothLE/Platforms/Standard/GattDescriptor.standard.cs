@@ -17,17 +17,17 @@ namespace InTheHand.Bluetooth
             return default;
         }
 
-        Task<byte[]> DoGetValue()
+        Task<byte[]> PlatformGetValue()
         {
             return Task.FromResult<byte[]>(null);
         }
 
-        Task<byte[]> DoReadValue()
+        Task<byte[]> PlatformReadValue()
         {
             return Task.FromResult<byte[]>(null);
         }
 
-        Task DoWriteValue(byte[] value)
+        Task PlatformWriteValue(byte[] value)
         {
             return Task.CompletedTask;
         }

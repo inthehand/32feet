@@ -33,7 +33,7 @@ namespace InTheHand.Bluetooth
             }
         }
 
-        Task DoConnect()
+        Task PlatformConnect()
         {
             return Task.Run(() =>
             {
@@ -68,11 +68,11 @@ namespace InTheHand.Bluetooth
             throw new NotImplementedException();
         }
 
-        void DoDisconnect()
+        void PlatformDisconnect()
         {
         }
 
-        Task<GattService> DoGetPrimaryService(BluetoothUuid service)
+        Task<GattService> PlatformGetPrimaryService(BluetoothUuid service)
         {
             return Task.Run(() =>
             {
@@ -101,7 +101,7 @@ namespace InTheHand.Bluetooth
             });
         }
 
-        Task<List<GattService>> DoGetPrimaryServices(BluetoothUuid? service)
+        Task<List<GattService>> PlatformGetPrimaryServices(BluetoothUuid? service)
         {
             return Task.Run(() =>
             {

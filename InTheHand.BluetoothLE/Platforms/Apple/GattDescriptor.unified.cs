@@ -31,18 +31,18 @@ namespace InTheHand.Bluetooth
             return _descriptor.UUID;
         }
 
-        Task<byte[]> DoGetValue()
+        Task<byte[]> PlatformGetValue()
         {
             return Task.FromResult(((NSData)_descriptor.Value).ToArray());
         }
 
-        Task<byte[]> DoReadValue()
+        Task<byte[]> PlatformReadValue()
         {
             ((CBPeripheral)Characteristic.Service.Device).ReadValue(_descriptor);
             return Task.FromResult(((NSData)_descriptor.Value).ToArray());
         }
 
-        Task DoWriteValue(byte[] value)
+        Task PlatformWriteValue(byte[] value)
         {
             ((CBPeripheral)Characteristic.Service.Device).WriteValue(NSData.FromArray(value), _descriptor);
             return Task.CompletedTask;

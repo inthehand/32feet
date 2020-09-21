@@ -40,7 +40,7 @@ namespace InTheHand.Bluetooth
         {
             get
             {
-                var task = DoGetValue();
+                var task = PlatformGetValue();
                 task.Wait();
                 return task.Result;
             }
@@ -52,7 +52,7 @@ namespace InTheHand.Bluetooth
         /// <returns></returns>
         public Task<byte[]> ReadValueAsync()
         {
-            return DoReadValue();
+            return PlatformReadValue();
         }
 
         /// <summary>
@@ -62,7 +62,7 @@ namespace InTheHand.Bluetooth
         /// <returns></returns>
         public Task WriteValueAsync(byte[] value)
         {
-            return DoWriteValue(value);
+            return PlatformWriteValue(value);
         }
     }
 }

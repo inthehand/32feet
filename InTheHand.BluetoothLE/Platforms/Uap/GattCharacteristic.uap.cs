@@ -35,7 +35,7 @@ namespace InTheHand.Bluetooth
             return (GattCharacteristicProperties)(int)_characteristic.CharacteristicProperties;
         }
 
-        async Task<GattDescriptor> DoGetDescriptor(Guid descriptor)
+        async Task<GattDescriptor> PlatformGetDescriptor(Guid descriptor)
         {
             var result = await _characteristic.GetDescriptorsForUuidAsync(descriptor);
 
@@ -45,7 +45,7 @@ namespace InTheHand.Bluetooth
             return null;
         }
 
-        async Task<IReadOnlyList<GattDescriptor>> DoGetDescriptors()
+        async Task<IReadOnlyList<GattDescriptor>> PlatformGetDescriptors()
         {
             List<GattDescriptor> descriptors = new List<GattDescriptor>();
 
@@ -62,7 +62,7 @@ namespace InTheHand.Bluetooth
             return descriptors;
         }
 
-        async Task<byte[]> DoGetValue()
+        async Task<byte[]> PlatformGetValue()
         {
             var result = await _characteristic.ReadValueAsync(Windows.Devices.Bluetooth.BluetoothCacheMode.Cached).AsTask().ConfigureAwait(false);
             
@@ -74,7 +74,7 @@ namespace InTheHand.Bluetooth
             return null;
         }
 
-        async Task<byte[]> DoReadValue()
+        async Task<byte[]> PlatformReadValue()
         {
             var result = await _characteristic.ReadValueAsync(Windows.Devices.Bluetooth.BluetoothCacheMode.Uncached).AsTask().ConfigureAwait(false);
 
@@ -86,9 +86,9 @@ namespace InTheHand.Bluetooth
             return null;
         }
 
-        async Task DoWriteValue(byte[] value)
+        async Task PlatformWriteValue(byte[] value, bool requireResponse)
         {
-            await _characteristic.WriteValueAsync(value.AsBuffer());
+            await _characteristic.WriteValueAsync(value.AsBuffer(), requireResponse ? Uap.GattWriteOption.WriteWithResponse : Uap.GattWriteOption.WriteWithoutResponse);
         }
 
         void AddCharacteristicValueChanged()
@@ -106,7 +106,7 @@ namespace InTheHand.Bluetooth
             _characteristic.ValueChanged -= Characteristic_ValueChanged;
         }
 
-        private async Task DoStartNotifications()
+        private async Task PlatformStartNotifications()
         {
             Uap.GattClientCharacteristicConfigurationDescriptorValue value = Uap.GattClientCharacteristicConfigurationDescriptorValue.None;
             if (_characteristic.CharacteristicProperties.HasFlag(Uap.GattCharacteristicProperties.Notify))
@@ -121,7 +121,7 @@ namespace InTheHand.Bluetooth
             return;
         }
 
-        private async Task DoStopNotifications()
+        private async Task PlatformStopNotifications()
         {
             var result = await _characteristic.WriteClientCharacteristicConfigurationDescriptorAsync(Uap.GattClientCharacteristicConfigurationDescriptorValue.None);
 

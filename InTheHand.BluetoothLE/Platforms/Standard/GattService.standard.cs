@@ -24,24 +24,24 @@ namespace InTheHand.Bluetooth
             return true;
         }
 
-        Task<GattCharacteristic> DoGetCharacteristic(BluetoothUuid characteristic)
+        Task<GattCharacteristic> PlatformGetCharacteristic(BluetoothUuid characteristic)
         {
             return Task.FromResult((GattCharacteristic)null);
         }
 
-        Task<IReadOnlyList<GattCharacteristic>> DoGetCharacteristics()
+        Task<IReadOnlyList<GattCharacteristic>> PlatformGetCharacteristics()
         {
             List<GattCharacteristic> characteristics = new List<GattCharacteristic>();
 
             return Task.FromResult((IReadOnlyList<GattCharacteristic>)characteristics.AsReadOnly());
         }
 
-        private async Task<GattService> DoGetIncludedServiceAsync(BluetoothUuid service)
+        private async Task<GattService> PlatformGetIncludedServiceAsync(BluetoothUuid service)
         {
             return null;
         }
 
-        private async Task<IReadOnlyList<GattService>> DoGetIncludedServicesAsync()
+        private async Task<IReadOnlyList<GattService>> PlatformGetIncludedServicesAsync()
         {
             return null;
         }

@@ -47,7 +47,7 @@ namespace InTheHand.Bluetooth
         {
             get
             {
-                var task = DoGetValue();
+                var task = PlatformGetValue();
                 task.Wait();
                 return task.Result;
             }
@@ -58,28 +58,38 @@ namespace InTheHand.Bluetooth
             //if (!Service.Device.Gatt.Connected)
                 //throw new NetworkException();
 
-            return DoReadValue();
+            return PlatformReadValue();
         }
 
-        public Task WriteValueAsync(byte[] value)
+        public Task WriteValueWithResponseAsync(byte[] value)
+        {
+            ThrowOnInvalidValue(value);
+            return PlatformWriteValue(value, true);
+        }
+
+        public Task WriteValueWithoutResponseAsync(byte[] value)
+        {
+            ThrowOnInvalidValue(value);
+            return PlatformWriteValue(value, false);
+        }
+
+        private void ThrowOnInvalidValue(byte[] value)
         {
             if (value is null)
                 throw new ArgumentNullException("value");
 
             if (value.Length > 512)
                 throw new ArgumentOutOfRangeException("value", "Attribute value cannot be longer than 512 bytes");
-
-            return DoWriteValue(value);
         }
 
         public Task<GattDescriptor> GetDescriptorAsync(BluetoothUuid descriptor)
         {
-            return DoGetDescriptor(descriptor);
+            return PlatformGetDescriptor(descriptor);
         }
 
         public Task<IReadOnlyList<GattDescriptor>> GetDescriptorsAsync()
         {
-            return DoGetDescriptors();
+            return PlatformGetDescriptors();
         }
 
         private event EventHandler characteristicValueChanged;
@@ -109,12 +119,12 @@ namespace InTheHand.Bluetooth
 
         public Task StartNotificationsAsync()
         {
-            return DoStartNotifications();
+            return PlatformStartNotifications();
         }
 
         public Task StopNotificationsAsync()
         {
-            return DoStopNotifications();
+            return PlatformStopNotifications();
         }
     }
 }

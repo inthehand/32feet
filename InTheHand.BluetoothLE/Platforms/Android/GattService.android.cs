@@ -40,7 +40,7 @@ namespace InTheHand.Bluetooth
             return NativeService.Type == ABluetooth.GattServiceType.Primary;
         }
 
-        private Task<GattCharacteristic> DoGetCharacteristic(BluetoothUuid characteristic)
+        private Task<GattCharacteristic> PlatformGetCharacteristic(BluetoothUuid characteristic)
         {
             var nativeCharacteristic = NativeService.GetCharacteristic(characteristic);
             if (nativeCharacteristic is null)
@@ -49,7 +49,7 @@ namespace InTheHand.Bluetooth
             return Task.FromResult(new GattCharacteristic(this, nativeCharacteristic));
         }
 
-        private Task<IReadOnlyList<GattCharacteristic>> DoGetCharacteristics()
+        private Task<IReadOnlyList<GattCharacteristic>> PlatformGetCharacteristics()
         {
             List<GattCharacteristic> characteristics = new List<GattCharacteristic>();
             foreach(var characteristic in NativeService.Characteristics)
@@ -59,7 +59,7 @@ namespace InTheHand.Bluetooth
             return Task.FromResult((IReadOnlyList<GattCharacteristic>)characteristics.AsReadOnly());
         }
 
-        private async Task<GattService> DoGetIncludedServiceAsync(BluetoothUuid service)
+        private async Task<GattService> PlatformGetIncludedServiceAsync(BluetoothUuid service)
         {
             foreach (var includedService in NativeService.IncludedServices)
             {
@@ -70,7 +70,7 @@ namespace InTheHand.Bluetooth
             return null;
         }
 
-        private async Task<IReadOnlyList<GattService>> DoGetIncludedServicesAsync()
+        private async Task<IReadOnlyList<GattService>> PlatformGetIncludedServicesAsync()
         {
             List<GattService> services = new List<GattService>();
 

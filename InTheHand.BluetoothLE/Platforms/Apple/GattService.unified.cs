@@ -38,7 +38,7 @@ namespace InTheHand.Bluetooth
             return true;
         }
 
-        Task<GattCharacteristic> DoGetCharacteristic(BluetoothUuid characteristic)
+        Task<GattCharacteristic> PlatformGetCharacteristic(BluetoothUuid characteristic)
         {
             ((CBPeripheral)Device).DiscoverCharacteristics(new CBUUID[] { characteristic }, _service);
             GattCharacteristic matchingCharacteristic = null;
@@ -55,7 +55,7 @@ namespace InTheHand.Bluetooth
             return Task.FromResult(matchingCharacteristic);
         }
 
-        Task<IReadOnlyList<GattCharacteristic>> DoGetCharacteristics()
+        Task<IReadOnlyList<GattCharacteristic>> PlatformGetCharacteristics()
         {
             List<GattCharacteristic> characteristics = new List<GattCharacteristic>();
             ((CBPeripheral)Device).DiscoverCharacteristics(_service);
@@ -68,7 +68,7 @@ namespace InTheHand.Bluetooth
             return Task.FromResult((IReadOnlyList<GattCharacteristic>)characteristics.AsReadOnly());
         }
 
-        private async Task<GattService> DoGetIncludedServiceAsync(BluetoothUuid service)
+        private async Task<GattService> PlatformGetIncludedServiceAsync(BluetoothUuid service)
         {
             ((CBPeripheral)Device).DiscoverIncludedServices(new CBUUID[] { }, _service);
 
@@ -81,7 +81,7 @@ namespace InTheHand.Bluetooth
             return null;
         }
 
-        private async Task<IReadOnlyList<GattService>> DoGetIncludedServicesAsync()
+        private async Task<IReadOnlyList<GattService>> PlatformGetIncludedServicesAsync()
         {
             List<GattService> services = new List<GattService>();
 

@@ -36,7 +36,7 @@ namespace InTheHand.Bluetooth
             return GetManualUserDescription();
         }
 
-        Task<GattDescriptor> DoGetDescriptor(BluetoothUuid descriptor)
+        Task<GattDescriptor> PlatformGetDescriptor(BluetoothUuid descriptor)
         {
             GattDescriptor matchingDescriptor = null;
             ((CBPeripheral)Service.Device).DiscoverDescriptors(_characteristic);
@@ -52,7 +52,7 @@ namespace InTheHand.Bluetooth
             return Task.FromResult(matchingDescriptor);
         }
 
-        async Task<IReadOnlyList<GattDescriptor>> DoGetDescriptors()
+        async Task<IReadOnlyList<GattDescriptor>> PlatformGetDescriptors()
         {
             List<GattDescriptor> descriptors = new List<GattDescriptor>();
             ((CBPeripheral)Service.Device).DiscoverDescriptors(_characteristic);
@@ -65,20 +65,20 @@ namespace InTheHand.Bluetooth
             return descriptors;
         }
 
-        Task<byte[]> DoGetValue()
+        Task<byte[]> PlatformGetValue()
         {
             return Task.FromResult(_characteristic.Value.ToArray());
         }
 
-        Task<byte[]> DoReadValue()
+        Task<byte[]> PlatformReadValue()
         {
             ((CBPeripheral)Service.Device).ReadValue(_characteristic);
             return Task.FromResult(_characteristic.Value.ToArray());
         }
 
-        Task DoWriteValue(byte[] value)
+        Task PlatformWriteValue(byte[] value, bool requireResponse)
         {
-            ((CBPeripheral)Service.Device).WriteValue(NSData.FromArray(value), _characteristic, CBCharacteristicWriteType.WithResponse);
+            ((CBPeripheral)Service.Device).WriteValue(NSData.FromArray(value), _characteristic, requireResponse ? CBCharacteristicWriteType.WithResponse : CBCharacteristicWriteType.WithoutResponse);
             return Task.CompletedTask;
         }
 
@@ -101,14 +101,14 @@ namespace InTheHand.Bluetooth
             
         }
 
-        private Task DoStartNotifications()
+        private Task PlatformStartNotifications()
         {
             CBPeripheral peripheral = Service.Device;
             peripheral.SetNotifyValue(true, _characteristic);
             return Task.CompletedTask;
         }
 
-        private Task DoStopNotifications()
+        private Task PlatformStopNotifications()
         {
             CBPeripheral peripheral = Service.Device;
             peripheral.SetNotifyValue(false, _characteristic);
