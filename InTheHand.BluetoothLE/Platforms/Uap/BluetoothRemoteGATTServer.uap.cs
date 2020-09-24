@@ -1,6 +1,12 @@
-﻿using System;
+﻿//-----------------------------------------------------------------------
+// <copyright file="BluetoothRemoteGATTServer.windows.cs" company="In The Hand Ltd">
+//   Copyright (c) 2018-20 In The Hand Ltd, All rights reserved.
+//   This source code is licensed under the MIT License - see License.txt
+// </copyright>
+//-----------------------------------------------------------------------
+
+using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace InTheHand.Bluetooth
@@ -35,27 +41,24 @@ namespace InTheHand.Bluetooth
 
         void PlatformDisconnect()
         {
-
+            // Windows has no explicit disconnect 🤪
         }
 
         async Task<GattService> PlatformGetPrimaryService(BluetoothUuid service)
         {
-            Windows.Devices.Bluetooth.GenericAttributeProfile.GattDeviceServicesResult result = null;
-
-            result = await Device.NativeDevice.GetGattServicesForUuidAsync(service, Windows.Devices.Bluetooth.BluetoothCacheMode.Uncached);
+            var result = await Device.NativeDevice.GetGattServicesForUuidAsync(service, Windows.Devices.Bluetooth.BluetoothCacheMode.Uncached);
 
             if (result == null || result.Services.Count == 0)
                 return null;
 
-            return new GattService(Device, result.Services[0]);
+            return new GattService(Device, result.Services[0], true);
         }
 
         async Task<List<GattService>> PlatformGetPrimaryServices(BluetoothUuid? service)
         {
             var services = new List<GattService>();
 
-            Windows.Devices.Bluetooth.GenericAttributeProfile.GattDeviceServicesResult result = null;
-
+            Windows.Devices.Bluetooth.GenericAttributeProfile.GattDeviceServicesResult result;
             if (service == null)
             {
                 result = await Device.NativeDevice.GetGattServicesAsync(Windows.Devices.Bluetooth.BluetoothCacheMode.Uncached);
@@ -69,7 +72,7 @@ namespace InTheHand.Bluetooth
             {
                 foreach(var serv in result.Services)
                 {
-                    services.Add(new GattService(Device, serv));
+                    services.Add(new GattService(Device, serv, true));
                 }
             }
             

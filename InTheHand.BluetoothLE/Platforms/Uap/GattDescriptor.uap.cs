@@ -1,4 +1,11 @@
-﻿using System;
+﻿//-----------------------------------------------------------------------
+// <copyright file="GattDescriptor.windows.cs" company="In The Hand Ltd">
+//   Copyright (c) 2018-20 In The Hand Ltd, All rights reserved.
+//   This source code is licensed under the MIT License - see License.txt
+// </copyright>
+//-----------------------------------------------------------------------
+
+using System;
 using System.Threading.Tasks;
 using Uap = Windows.Devices.Bluetooth.GenericAttributeProfile;
 using System.Runtime.InteropServices.WindowsRuntime;

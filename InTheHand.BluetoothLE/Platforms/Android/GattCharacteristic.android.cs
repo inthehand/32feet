@@ -93,26 +93,36 @@ namespace InTheHand.Bluetooth
 
         Task PlatformWriteValue(byte[] value, bool requireResponse)
         {
-            TaskCompletionSource<bool> tcs = new TaskCompletionSource<bool>();
+            TaskCompletionSource<bool> tcs = null;
 
-            void handler(object s, CharacteristicEventArgs e)
+            if (requireResponse)
             {
-                if (e.Characteristic == _characteristic)
+                tcs = new TaskCompletionSource<bool>();
+
+                void handler(object s, CharacteristicEventArgs e)
                 {
-                    if (!tcs.Task.IsCompleted)
+                    if (e.Characteristic == _characteristic)
                     {
-                        tcs.SetResult(e.Status == ABluetooth.GattStatus.Success);
+                        if (!tcs.Task.IsCompleted)
+                        {
+                            tcs.SetResult(e.Status == ABluetooth.GattStatus.Success);
+                        }
+
+                        Service.Device.Gatt.CharacteristicWrite -= handler;
                     }
+                };
 
-                    Service.Device.Gatt.CharacteristicWrite -= handler;
-                }
-            };
+                Service.Device.Gatt.CharacteristicWrite += handler;
+            }
 
-            Service.Device.Gatt.CharacteristicWrite += handler;
             bool written = _characteristic.SetValue(value);
             _characteristic.WriteType = requireResponse ? ABluetooth.GattWriteType.Default : ABluetooth.GattWriteType.NoResponse;
             written = ((ABluetooth.BluetoothGatt)Service.Device.Gatt).WriteCharacteristic(_characteristic);
-            return tcs.Task;
+
+            if(requireResponse)
+                return tcs.Task;
+
+            return Task.CompletedTask;
         }
 
         void AddCharacteristicValueChanged()

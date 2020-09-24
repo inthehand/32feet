@@ -1,5 +1,5 @@
 ﻿//-----------------------------------------------------------------------
-// <copyright file="GattService.uap.cs" company="In The Hand Ltd">
+// <copyright file="GattService.windows.cs" company="In The Hand Ltd">
 //   Copyright (c) 2018-20 In The Hand Ltd, All rights reserved.
 //   This source code is licensed under the MIT License - see License.txt
 // </copyright>
@@ -16,10 +16,12 @@ namespace InTheHand.Bluetooth
     partial class GattService
     {
         readonly WBluetooth.GattDeviceService _service;
+        readonly bool _isPrimary;
 
-        internal GattService(BluetoothDevice device, WBluetooth.GattDeviceService service) : this(device)
+        internal GattService(BluetoothDevice device, WBluetooth.GattDeviceService service, bool isPrimary) : this(device)
         {
             _service = service;
+            _isPrimary = isPrimary;
         }
 
         public static implicit operator WBluetooth.GattDeviceService(GattService service)
@@ -59,7 +61,7 @@ namespace InTheHand.Bluetooth
 
             if(servicesResult.Status == WBluetooth.GattCommunicationStatus.Success)
             {
-                return new GattService(Device, servicesResult.Services[0]);
+                return new GattService(Device, servicesResult.Services[0], false);
             }
 
             return null;
@@ -75,7 +77,7 @@ namespace InTheHand.Bluetooth
             {
                 foreach(var includedService in servicesResult.Services)
                 {
-                    services.Add(new GattService(Device, includedService));
+                    services.Add(new GattService(Device, includedService, false));
                 }
 
                 return services;
@@ -91,7 +93,7 @@ namespace InTheHand.Bluetooth
 
         bool GetIsPrimary()
         {
-            return _service.ParentServices == null || _service.ParentServices.Count == 0;
+            return _isPrimary;
         }
     }
 }

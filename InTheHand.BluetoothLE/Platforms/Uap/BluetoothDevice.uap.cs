@@ -1,16 +1,13 @@
 ﻿//-----------------------------------------------------------------------
-// <copyright file="BluetoothDevice.uap.cs" company="In The Hand Ltd">
+// <copyright file="BluetoothDevice.windows.cs" company="In The Hand Ltd">
 //   Copyright (c) 2018-20 In The Hand Ltd, All rights reserved.
 //   This source code is licensed under the MIT License - see License.txt
 // </copyright>
 //-----------------------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using Windows.Devices.Bluetooth;
-using Windows.Devices.Bluetooth.Advertisement;
 
 namespace InTheHand.Bluetooth
 {
@@ -65,8 +62,6 @@ namespace InTheHand.Bluetooth
         {
             return NativeDevice.Name;
         }
-
-        
 
         BluetoothRemoteGATTServer GetGatt()
         {
