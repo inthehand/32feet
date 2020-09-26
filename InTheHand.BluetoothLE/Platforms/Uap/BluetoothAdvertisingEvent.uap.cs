@@ -18,7 +18,7 @@ namespace InTheHand.Bluetooth
 {
     partial class BluetoothAdvertisingEvent
     {
-        private short _rssi;
+        private readonly short _rssi;
         private BluetoothLEAdvertisement _advertisement;
 
         internal BluetoothAdvertisingEvent(BluetoothLEAdvertisementReceivedEventArgs args)

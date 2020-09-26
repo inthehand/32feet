@@ -14,6 +14,10 @@ using System.Threading.Tasks;
 
 namespace InTheHand.Bluetooth
 {
+    /// <summary>
+    /// Represents a GATT Characteristic, which is a basic data element that provides further information about a peripheral’s service.
+    /// </summary>
+    /// <remarks>Equivalent to <b>BluetoothRemoteGATTCharacteristic</b> in WebBluetooth.</remarks>
     [DebuggerDisplay("{Uuid} ({UserDescription})")]
     public sealed partial class GattCharacteristic
     {
@@ -22,14 +26,29 @@ namespace InTheHand.Bluetooth
             Service = service;
         }
 
+        /// <summary>
+        /// The GATT service this characteristic belongs to.
+        /// </summary>
         public GattService Service { get; private set; }
 
+        /// <summary>
+        /// The UUID of the characteristic.
+        /// </summary>
+        /// <seealso cref="BluetoothUuid"/>
         public BluetoothUuid Uuid { get { return GetUuid(); } }
 
+        /// <summary>
+        /// The properties of this characteristic.
+        /// </summary>
+        /// <seealso cref="GattCharacteristicProperties"/>
         public GattCharacteristicProperties Properties { get { return GetProperties(); } }
 
+        /// <summary>
+        /// Get the user friendly description for this GattCharacteristic, if the User Description <see cref="GattDescriptor">Descriptor</see> is present, otherwise this will be an empty string.
+        /// </summary>
         public string UserDescription { get { return GetUserDescription(); } }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("CodeQuality", "IDE0051:Remove unused private members", Justification = "Used on multiple platforms")]
         private string GetManualUserDescription()
         {
             var descriptor = GetDescriptorAsync(GattDescriptorUuids.CharacteristicUserDescription).Result;
@@ -43,6 +62,10 @@ namespace InTheHand.Bluetooth
             return string.Empty;
         }
 
+        /// <summary>
+        /// The currently cached characteristic value. 
+        /// This value gets updated when the value of the characteristic is read or updated via a notification or indication.
+        /// </summary>
         public byte[] Value
         {
             get
@@ -53,6 +76,10 @@ namespace InTheHand.Bluetooth
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public Task<byte[]> ReadValueAsync()
         {
             //if (!Service.Device.Gatt.Connected)
@@ -61,12 +88,22 @@ namespace InTheHand.Bluetooth
             return PlatformReadValue();
         }
 
+        /// <summary>
+        /// Performs a Characteristic Value write to a Bluetooth LE device.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
         public Task WriteValueWithResponseAsync(byte[] value)
         {
             ThrowOnInvalidValue(value);
             return PlatformWriteValue(value, true);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
         public Task WriteValueWithoutResponseAsync(byte[] value)
         {
             ThrowOnInvalidValue(value);

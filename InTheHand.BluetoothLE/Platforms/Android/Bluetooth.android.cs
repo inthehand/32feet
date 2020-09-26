@@ -16,7 +16,7 @@ namespace InTheHand.Bluetooth
     partial class Bluetooth
     {
         internal static BluetoothManager _manager = (BluetoothManager) Application.Context.GetSystemService(Android.App.Application.BluetoothService);
-        private static EventWaitHandle s_handle = new EventWaitHandle(false, EventResetMode.AutoReset);
+        private static readonly EventWaitHandle s_handle = new EventWaitHandle(false, EventResetMode.AutoReset);
         internal static Android.Bluetooth.BluetoothDevice s_device;
         private static RequestDeviceOptions _currentRequest;
 

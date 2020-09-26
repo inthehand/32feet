@@ -9,6 +9,9 @@ using System;
 
 namespace InTheHand.Bluetooth
 {
+    /// <summary>
+    /// Specifies the values for the GATT characteristic properties as well as the GATT Extended Characteristic Properties Descriptor.
+    /// </summary>
     [Flags]
     public enum GattCharacteristicProperties
     {

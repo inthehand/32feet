@@ -5,7 +5,7 @@
     <Company>In The Hand Ltd</Company>
     <Authors>Peter Foot</Authors>
     <Product>32feet.NET</Product>
-    <Version>4.0.8-pre</Version>
+    <Version>4.0.9-pre</Version>
     <RepositoryUrl>https://github.com/inthehand/32feet</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
@@ -15,8 +15,8 @@
     <PackageLicenseUrl></PackageLicenseUrl>
     <Copyright>Copyright (c) 2004-2020 In The Hand Ltd</Copyright>
     <Description>32feet.NET is an open-source project to make personal area networking technologies such as Bluetooth easily accessible from .NET code.</Description>
-    <FileVersion>4.0.8.921</FileVersion>
-    <AssemblyVersion>4.0.8.0</AssemblyVersion>
+    <FileVersion>4.0.9.926</FileVersion>
+    <AssemblyVersion>4.0.9.0</AssemblyVersion>
     <AssemblyName>InTheHand.BluetoothLE</AssemblyName>
     <GenerateDocumentationFile Condition=" '$(Configuration)' == 'Release' ">true</GenerateDocumentationFile>
     <PackageIconUrl></PackageIconUrl>
@@ -26,7 +26,7 @@
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <RootNamespace>InTheHand.Bluetooth</RootNamespace>
     <PackageIcon>32feet-package-icon.png</PackageIcon>
-    <PackageReleaseNotes>Improved reconnection behaviour for Android.</PackageReleaseNotes>
+    <PackageReleaseNotes>Fixes issue with WriteWithoutResponse on Android. Code cleanup and documentation fixes.</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>

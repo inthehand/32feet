@@ -42,7 +42,7 @@ namespace InTheHand.Bluetooth
             return PlatformRequestDevice(options);
         }
 
-        private static event EventHandler _availabilityChanged;
+        private static event EventHandler availabilityChanged;
         /// <summary>
         /// Bluetooth availability has changed, for example by disabling the radio or revoking user permission.
         /// </summary>
@@ -50,18 +50,18 @@ namespace InTheHand.Bluetooth
         {
             add
             {
-                if (_availabilityChanged == null)
+                if (availabilityChanged == null)
                 {
                     AddAvailabilityChanged();
                 }
 
-                _availabilityChanged += value;
+                availabilityChanged += value;
             }
             remove
             {
-                _availabilityChanged -= value;
+                availabilityChanged -= value;
 
-                if (_availabilityChanged == null)
+                if (availabilityChanged == null)
                 {
                     RemoveAvailabilityChanged();
                 }
@@ -70,7 +70,7 @@ namespace InTheHand.Bluetooth
 
         private static void OnAvailabilityChanged()
         {
-            _availabilityChanged?.Invoke(null, EventArgs.Empty); ;
+            availabilityChanged?.Invoke(null, EventArgs.Empty); ;
         }
 
         public static Task<IReadOnlyCollection<BluetoothDevice>> GetPairedDevicesAsync()

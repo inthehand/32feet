@@ -135,6 +135,8 @@ namespace InTheHand.Bluetooth
 
             void handler(object s, ConnectionStateEventArgs e)
             {
+                ConnectionStateChanged -= handler;
+
                 switch (e.Status)
                 {
                     case ABluetooth.GattStatus.Success:
@@ -145,8 +147,6 @@ namespace InTheHand.Bluetooth
                         tcs.SetResult(false);
                         break;
                 }
-
-                ConnectionStateChanged -= handler;
             }
 
             ConnectionStateChanged += handler;
