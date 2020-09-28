@@ -133,5 +133,26 @@ namespace InTheHand.Bluetooth
                 return services;
             });
         }
+
+        Task<short> PlatformReadRssi()
+        {
+            TaskCompletionSource<short> tcs = new TaskCompletionSource<short>();
+            var peripheral = (CBPeripheral)Device;
+
+            void handler(object s, CBRssiEventArgs e)
+            {
+                if (!tcs.Task.IsCompleted)
+                {
+                    tcs.SetResult((short)e.Rssi);
+                }
+
+                peripheral.RssiRead += handler;
+            };
+
+            peripheral.RssiRead += handler;
+            peripheral.ReadRSSI();
+
+            return tcs.Task;
+        }
     }
 }

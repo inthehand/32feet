@@ -78,5 +78,10 @@ namespace InTheHand.Bluetooth
             
             return services;
         }
+
+        Task<short> PlatformReadRssi()
+        {
+            return Task.FromResult((short)0);
+        }
     }
 }

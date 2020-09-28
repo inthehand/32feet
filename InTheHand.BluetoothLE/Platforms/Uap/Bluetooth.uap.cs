@@ -11,6 +11,7 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Windows.Devices.Bluetooth;
+using Windows.Devices.Bluetooth.Advertisement;
 using Windows.Devices.Bluetooth.GenericAttributeProfile;
 using Windows.Devices.Enumeration;
 using Windows.Foundation;
@@ -143,24 +144,12 @@ namespace InTheHand.Bluetooth
             radio.StateChanged -= Radio_StateChanged;
         }
 
-#if DEBUG
-        static BluetoothLEAdvertisementWatcher watcher;
-
-        private static async Task<BluetoothLEScan> DoRequestLEScan(BluetoothLEScanFilter filter)
+        private static async Task<BluetoothLEScan> PlatformRequestLEScan(BluetoothLEScanOptions options)
         {
-            if (watcher == null)
-            {
-                watcher = new BluetoothLEAdvertisementWatcher(filter);
-                watcher.Received += Watcher_Received;
-            }
-            else
-            {
-                watcher.AdvertisementFilter = filter;
-            }
+            if (options == null)
+                return new BluetoothLEAdvertisementWatcher();
 
-            watcher.Start();
-
-            return watcher;
+            return new BluetoothLEAdvertisementWatcher(options);
         }
 
 
@@ -168,7 +157,7 @@ namespace InTheHand.Bluetooth
         {
             AdvertisementReceived?.Invoke(null, args);
         }
-#endif
+
 
 #if !UAP
         [DllImport("Kernel32.dll", SetLastError = true)]

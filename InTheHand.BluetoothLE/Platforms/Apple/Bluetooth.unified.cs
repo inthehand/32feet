@@ -288,12 +288,11 @@ namespace InTheHand.Bluetooth
         }
 #endif
 
-#if DEBUG
-        private static async Task<BluetoothLEScan> DoRequestLEScan(BluetoothLEScanFilter filter)
+
+        private static async Task<BluetoothLEScan> PlatformRequestLEScan(BluetoothLEScanOptions options)
         {
             return null;
         }
-#endif
 
         private static bool _oldAvailability;
 

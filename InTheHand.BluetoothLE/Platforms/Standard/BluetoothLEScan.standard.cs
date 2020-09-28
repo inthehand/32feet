@@ -4,7 +4,6 @@
 //   This source code is licensed under the MIT License - see License.txt
 // </copyright>
 //-----------------------------------------------------------------------
-#if DEBUG
 
 namespace InTheHand.Bluetooth
 {
@@ -18,9 +17,16 @@ namespace InTheHand.Bluetooth
             }
         }
 
+        private bool PlatformKeepRepeatedDevices
+        {
+            get
+            {
+                return true;
+            }
+        }
+
         private void PlatformStop()
         {
         }
     }
 }
-#endif

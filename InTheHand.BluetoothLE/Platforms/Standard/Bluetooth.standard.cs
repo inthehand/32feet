@@ -26,12 +26,10 @@ namespace InTheHand.Bluetooth
             return Task.FromResult((IReadOnlyCollection<BluetoothDevice>)new List<BluetoothDevice>().AsReadOnly());
         }
 
-#if DEBUG
-        private static async Task<BluetoothLEScan> DoRequestLEScan(BluetoothLEScanFilter filter)
+        private static async Task<BluetoothLEScan> PlatformRequestLEScan(BluetoothLEScanOptions options)
         {
             return null;
         }
-#endif
 
         private static void AddAvailabilityChanged()
         {

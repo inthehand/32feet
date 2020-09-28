@@ -19,12 +19,12 @@ namespace InTheHand.Bluetooth
     partial class BluetoothAdvertisingEvent
     {
         private readonly short _rssi;
-        private BluetoothLEAdvertisement _advertisement;
+        private readonly BluetoothLEAdvertisement _advertisement;
 
         internal BluetoothAdvertisingEvent(BluetoothLEAdvertisementReceivedEventArgs args)
         {
             _rssi = args.RawSignalStrengthInDBm;
-            _txPower = args.TransmitPowerLevelInDBm.HasValue ? (byte)args.TransmitPowerLevelInDBm.Value : (byte)0;
+            _txPower = args.TransmitPowerLevelInDBm.HasValue ? (sbyte)args.TransmitPowerLevelInDBm.Value : (sbyte)0;
 
             /*var sections = args.Advertisement.GetSectionsByType(0xA);
             if(sections != null && sections.Count > 0)
@@ -69,16 +69,22 @@ namespace InTheHand.Bluetooth
             return _rssi;
         }
 
-        private byte _txPower;
+        private sbyte _txPower;
 
-        byte GetTxPower()
+        sbyte GetTxPower()
         {
             return _txPower;
         }
 
-        Guid[] GetUuids()
+        BluetoothUuid[] GetUuids()
         {
-            return _advertisement.ServiceUuids.ToArray();
+            List<BluetoothUuid> uuids = new List<BluetoothUuid>();
+            foreach(var u in _advertisement.ServiceUuids)
+            {
+                uuids.Add(u);
+            }
+
+            return uuids.ToArray();
         }
 
         string GetName()
@@ -98,9 +104,9 @@ namespace InTheHand.Bluetooth
             return new ReadOnlyDictionary<ushort,byte[]>(manufacturerData);
         }
 
-        IReadOnlyDictionary<Guid, byte[]> GetServiceData()
+        IReadOnlyDictionary<BluetoothUuid, byte[]> GetServiceData()
         {
-            Dictionary<Guid, byte[]> serviceData = new Dictionary<Guid, byte[]>();
+            Dictionary<BluetoothUuid, byte[]> serviceData = new Dictionary<BluetoothUuid, byte[]>();
 
             foreach (BluetoothLEAdvertisementDataSection data in _advertisement.DataSections)
             {
@@ -143,7 +149,7 @@ namespace InTheHand.Bluetooth
                 
             }
 
-            return new ReadOnlyDictionary<Guid, byte[]>(serviceData);
+            return new ReadOnlyDictionary<BluetoothUuid, byte[]>(serviceData);
         }
     }
 }

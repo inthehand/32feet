@@ -48,5 +48,10 @@ namespace InTheHand.Bluetooth
         {
             return PlatformGetPrimaryServices(service);
         }
+
+        public Task<short> ReadRssi()
+        {
+            return PlatformReadRssi();
+        }
     }
 }

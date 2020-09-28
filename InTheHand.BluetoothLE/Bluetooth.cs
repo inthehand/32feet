@@ -7,6 +7,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
 namespace InTheHand.Bluetooth
@@ -83,14 +84,19 @@ namespace InTheHand.Bluetooth
         {
             return PlatformScanForDevices(options);
         }
+#endif
 
-        
-        public static Task<BluetoothLEScan> RequestLEScanAsync(BluetoothLEScanFilter filter)
+        public static Task<BluetoothLEScan> RequestLEScanAsync(BluetoothLEScanOptions options = null)
         {
-            return DoRequestLEScan(filter);
+            return PlatformRequestLEScan(options);
         }
 
         public static event EventHandler<BluetoothAdvertisingEvent> AdvertisementReceived;
-#endif
+
+        internal static void OnAdvertisementReceived(BluetoothAdvertisingEvent advertisingEvent)
+        {
+            AdvertisementReceived?.Invoke(null, advertisingEvent);
+        }
+
     }
 }

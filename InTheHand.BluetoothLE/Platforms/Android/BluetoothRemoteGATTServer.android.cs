@@ -20,7 +20,7 @@ namespace InTheHand.Bluetooth
     {
         private ABluetooth.BluetoothGatt _gatt;
         private ABluetooth.BluetoothGattCallback _gattCallback;
-        
+
         private void PlatformInit()
         {
             _gattCallback = new GattCallback(this);
@@ -39,6 +39,8 @@ namespace InTheHand.Bluetooth
         internal event EventHandler<DescriptorEventArgs> DescriptorRead;
         internal event EventHandler<DescriptorEventArgs> DescriptorWrite;
         internal event EventHandler<GattEventArgs> ServicesDiscovered;
+        internal event EventHandler<RssiEventArgs> ReadRemoteRssi;
+
         private bool _servicesDiscovered = false;
 
         internal class GattCallback : ABluetooth.BluetoothGattCallback
@@ -56,7 +58,7 @@ namespace InTheHand.Bluetooth
                 _owner.ConnectionStateChanged?.Invoke(_owner, new ConnectionStateEventArgs { Status = status, State = newState });
                 if (newState == ABluetooth.ProfileState.Connected)
                 {
-                    if(!_owner._servicesDiscovered)
+                    if (!_owner._servicesDiscovered)
                         gatt.DiscoverServices();
                 }
                 else
@@ -100,6 +102,12 @@ namespace InTheHand.Bluetooth
                 System.Diagnostics.Debug.WriteLine($"ServicesDiscovered {status}");
                 _owner._servicesDiscovered = true;
                 _owner.ServicesDiscovered?.Invoke(_owner, new GattEventArgs { Status = status });
+            }
+
+            public override void OnReadRemoteRssi(ABluetooth.BluetoothGatt gatt, int rssi, [GeneratedEnum] ABluetooth.GattStatus status)
+            {
+                System.Diagnostics.Debug.WriteLine($"ReadRemoteRssi {rssi}");
+                _owner.ReadRemoteRssi?.Invoke(_owner, new RssiEventArgs { Status = status, Rssi = (short)rssi });
             }
         }
 
@@ -174,7 +182,7 @@ namespace InTheHand.Bluetooth
             await WaitForServiceDiscovery();
 
             ABluetooth.BluetoothGattService nativeService = _gatt.GetService(service);
-            
+
             return nativeService is null ? null : new GattService(Device, nativeService);
         }
 
@@ -194,6 +202,38 @@ namespace InTheHand.Bluetooth
             }
 
             return services;
+        }
+
+        Task<short> PlatformReadRssi()
+        {
+            TaskCompletionSource<short> tcs = new TaskCompletionSource<short>();
+
+            void handler(object s, RssiEventArgs e)
+            {
+                ReadRemoteRssi -= handler;
+
+                switch (e.Status)
+                {
+                    case ABluetooth.GattStatus.Success:
+                        tcs.SetResult(e.Rssi);
+                        break;
+
+                    default:
+                        tcs.SetResult(0);
+                        break;
+                }
+            }
+
+            ReadRemoteRssi += handler;
+            bool success = _gatt.ReadRemoteRssi();
+            if (success)
+            {
+                return tcs.Task;
+            }
+            else
+            {
+                return Task.FromResult((short)0);
+            }
         }
     }
 
@@ -228,4 +268,12 @@ namespace InTheHand.Bluetooth
             get; internal set;
         }
     }
+
+        internal class RssiEventArgs : GattEventArgs
+        {
+            public short Rssi
+            {
+                get; internal set;
+            }
+        }
 }

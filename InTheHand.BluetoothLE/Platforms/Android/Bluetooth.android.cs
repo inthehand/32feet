@@ -148,13 +148,13 @@ namespace InTheHand.Bluetooth
                 base.OnScanFailed(errorCode);
             }
         }
-#if DEBUG
-        private static async Task<BluetoothLEScan> DoRequestLEScan(BluetoothLEScanFilter scan)
+
+        private static async Task<BluetoothLEScan> PlatformRequestLEScan(BluetoothLEScanOptions options)
         {
-            return null;
+            return new BluetoothLEScan(options, _manager.Adapter.BluetoothLeScanner);
         }
-#endif
-            [Activity(NoHistory = false, LaunchMode = LaunchMode.Multiple)]
+
+        [Activity(NoHistory = false, LaunchMode = LaunchMode.Multiple)]
         private sealed class DevicePickerActivity : Activity
         {
             protected override void OnCreate(Bundle savedInstanceState)

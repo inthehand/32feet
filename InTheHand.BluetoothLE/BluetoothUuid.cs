@@ -13,7 +13,7 @@ namespace InTheHand.Bluetooth
     /// <summary>
     /// Represents a Bluetooth UUID. Can be expressed as a Guid or a short ID for documented Bluetooth SIG definitions.
     /// </summary>
-    [DebuggerDisplay("{Value:B}")]
+    [DebuggerDisplay("{Value}")]
     public partial struct BluetoothUuid
     {
         private static readonly Guid BluetoothBase = new Guid(0x00000000, 0x0000, 0x1000, 0x80, 0x00, 0x00, 0x80, 0x5F, 0x9B, 0x34, 0xFB);
@@ -140,6 +140,10 @@ namespace InTheHand.Bluetooth
 
         public override string ToString()
         {
+            var shortId = TryGetShortId(Value);
+            if (shortId.HasValue)
+                return shortId.Value.ToString("X4");
+
             return Value.ToString();
         }
 

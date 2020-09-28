@@ -4,7 +4,7 @@
 //   This source code is licensed under the MIT License - see License.txt
 // </copyright>
 //-----------------------------------------------------------------------
-#if DEBUG
+
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -13,9 +13,16 @@ namespace InTheHand.Bluetooth
 {
     public sealed partial class BluetoothLEScan
     {
-        public readonly List<BluetoothLEScanFilter> Filters = new List<BluetoothLEScanFilter>();
+        private List<BluetoothLEScanFilter> _filters = new List<BluetoothLEScanFilter>();
 
-        public bool KeepRepeatedDevices { get; set; }
+        internal BluetoothLEScan()
+        {
+
+        }
+
+        public IReadOnlyList<BluetoothLEScanFilter> Filters { get => _filters.AsReadOnly(); }
+
+        public bool KeepRepeatedDevices { get => PlatformKeepRepeatedDevices; }
 
         public bool AcceptAllAdvertisements { get => PlatformAcceptAllAdvertisements; }
 
@@ -28,4 +35,3 @@ namespace InTheHand.Bluetooth
         }
     }
 }
-#endif

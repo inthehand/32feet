@@ -11,9 +11,9 @@ namespace InTheHand.Bluetooth
             return 0;
         }
 
-        Guid[] GetUuids()
+        BluetoothUuid[] GetUuids()
         {
-            return new Guid[] { };
+            return new BluetoothUuid[] { };
         }
 
         string GetName()
@@ -26,7 +26,7 @@ namespace InTheHand.Bluetooth
             return 0;
         }
 
-        byte GetTxPower()
+        sbyte GetTxPower()
         {
             return 0;
         }
@@ -36,9 +36,9 @@ namespace InTheHand.Bluetooth
             return new ReadOnlyDictionary<ushort, byte[]>(new Dictionary<ushort,byte[]>());
         }
 
-        IReadOnlyDictionary<Guid, byte[]> GetServiceData()
+        IReadOnlyDictionary<BluetoothUuid, byte[]> GetServiceData()
         {
-            return new ReadOnlyDictionary<Guid, byte[]>(new Dictionary<Guid, byte[]>());
+            return new ReadOnlyDictionary<BluetoothUuid, byte[]>(new Dictionary<BluetoothUuid, byte[]>());
         }
     }
 }
