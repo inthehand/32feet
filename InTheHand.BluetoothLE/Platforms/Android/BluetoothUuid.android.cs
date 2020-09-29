@@ -15,12 +15,12 @@ namespace InTheHand.Bluetooth
     {
         public static implicit operator UUID(BluetoothUuid uuid)
         {
-            return UUID.FromString(uuid.ToString());
+            return UUID.FromString(uuid.Value.ToString());
         }
 
         public static implicit operator ParcelUuid(BluetoothUuid uuid)
         {
-            return ParcelUuid.FromString(uuid.ToString());
+            return ParcelUuid.FromString(uuid.Value.ToString());
         }
 
         public static implicit operator BluetoothUuid(UUID uuid)
