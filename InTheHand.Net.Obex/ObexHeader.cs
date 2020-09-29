@@ -7,7 +7,7 @@
 
 namespace InTheHand.Net
 {
-    internal enum ObexHeader : byte
+    public enum ObexHeader : byte
     {
         // OBEX Header codes
         None = 0x0,
@@ -21,14 +21,14 @@ namespace InTheHand.Net
         Body = 0x48,
         EndOfBody = 0x49,
         Who = 0x4A,
-        ApplicationParameter = 0x4C,
-        AuthenticationChallenge = 0x4D,
-        AuthenticationResponse = 0x4E,
+        AppParameters = 0x4C,
+        AuthorizationChallenge = 0x4D,
+        AuthorizationResponse = 0x4E,
         ObjectClass = 0x4F,
 
         WanUuid = 0x50,
-        //ObjectClass = 0x51,
-        SessionParamters = 0x52,
+        ObjectClass13 = 0x51,
+        SessionParameters = 0x52,
 
         SessionSequenceNumber = 0x93,
 

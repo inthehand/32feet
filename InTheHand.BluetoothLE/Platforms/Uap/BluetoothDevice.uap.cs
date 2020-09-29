@@ -63,9 +63,9 @@ namespace InTheHand.Bluetooth
             return NativeDevice.Name;
         }
 
-        BluetoothRemoteGATTServer GetGatt()
+        RemoteGattServer GetGatt()
         {
-            return new BluetoothRemoteGATTServer(this);
+            return new RemoteGattServer(this);
         }
 
         /*bool GetWatchingAdvertisements()

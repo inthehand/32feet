@@ -1,12 +1,6 @@
-﻿using InTheHand.Net.Bluetooth;
-using InTheHand.Net.Sockets;
-using System;
-using System.Collections.Generic;
+﻿using InTheHand.Net.Sockets;
 using System.ComponentModel;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xamarin.Forms;
 
 namespace RfcommXamarinForms
@@ -18,54 +12,43 @@ namespace RfcommXamarinForms
     {
         public MainPage()
         {
-            InitializeComponent();         
+            InitializeComponent();
         }
 
         protected override async void OnAppearing()
         {
-                BluetoothDevicePicker picker = new BluetoothDevicePicker();
-                picker.RequireAuthentication = false;
-                var device = await picker.PickSingleDeviceAsync();
+            BluetoothDeviceInfo device = null;
 
-                if (!device.Authenticated)
-                {
-                    BluetoothSecurity.PairRequest(device.DeviceAddress, "0000");
-                }
+            BluetoothClient client = new BluetoothClient();
 
-                BluetoothClient client = new BluetoothClient();
+            var devices = client.PairedDevices;
 
-                //await Task.Run(async () =>
-                //{
-                foreach (BluetoothDeviceInfo bdi in client.DiscoverDevices(24))
-                {
-                    System.Diagnostics.Debug.WriteLine(bdi.DeviceName + " " + bdi.DeviceAddress.ToString("C") + " " + bdi.Authenticated);
-                }
+            foreach (BluetoothDeviceInfo bdi in devices)
+            {
+                System.Diagnostics.Debug.WriteLine(bdi.DeviceName + " " + bdi.DeviceAddress.ToString("C") + " " + bdi.Authenticated);
+            }
 
-                foreach (BluetoothDeviceInfo bdi in client.PairedDevices)
-                {
-                    System.Diagnostics.Debug.WriteLine(bdi.DeviceName + " " + bdi.DeviceAddress.ToString("C") + " " + bdi.Authenticated);
-                }
-            //});
+            foreach (BluetoothDeviceInfo bdi in client.DiscoverDevices(24))
+            {
+                System.Diagnostics.Debug.WriteLine(bdi.DeviceName + " " + bdi.DeviceAddress.ToString("C") + " " + bdi.Authenticated);
+                if (device == null)
+                    device = bdi;
+            }
 
-            //var device = client.PairedDevices.First();
-
-                client.Connect(device.DeviceAddress, BluetoothService.SerialPort);
-                stream = client.GetStream();
-            byte[] data = System.Text.Encoding.ASCII.GetBytes("Hello world!"); //! 0 200 200 210 1\r\nTEXT 4 0 30 40 Hello World\r\nFORM\r\nPRINT\r\n");
-                stream.Write(data, 0, data.Length);
-                //stream.Close();
-         
-           
-
-            
+            //client.Connect(device.DeviceAddress, BluetoothService.SerialPort);
+            //stream = client.GetStream();
+            //byte[] data = System.Text.Encoding.ASCII.GetBytes("Hello world!"); //! 0 200 200 210 1\r\nTEXT 4 0 30 40 Hello World\r\nFORM\r\nPRINT\r\n");
+            //stream.Write(data, 0, data.Length);
+            //stream.Close();
 
             base.OnAppearing();
         }
-    Stream stream = null;
+
+        Stream stream = null;
 
         protected override void OnDisappearing()
         {
-            if(stream is object)
+            if (stream is object)
             {
                 stream.Dispose();
                 stream = null;
@@ -73,5 +56,4 @@ namespace RfcommXamarinForms
             base.OnDisappearing();
         }
     }
-
 }

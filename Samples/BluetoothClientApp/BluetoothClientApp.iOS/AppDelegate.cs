@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Foundation;
-using InTheHand.Bluetooth;
 using UIKit;
 
 namespace BluetoothClientApp.iOS
@@ -26,7 +25,7 @@ namespace BluetoothClientApp.iOS
             global::Xamarin.Forms.Forms.Init();
             LoadApplication(new App());
 
-            Task.Run(() =>
+            /*Task.Run(() =>
             {
                 UIDevice.CurrentDevice.BeginInvokeOnMainThread(() =>
                 {
@@ -37,49 +36,9 @@ namespace BluetoothClientApp.iOS
                     });
                 });
 
-            });
+            });*/
             
             return base.FinishedLaunching(app, options);
-        }
-
-        BluetoothDevice device;
-
-        public override async void OnActivated(UIApplication uiApplication)
-        {
-            base.OnActivated(uiApplication);
-
-            Bluetooth b = new Bluetooth();
-
-            while(!await b.GetAvailability())
-            {
-                await Task.Delay(100);
-            }
-
-            /*var opts = new RequestDeviceOptions();
-            opts.AcceptAllDevices = true;
-            device = await b.RequestDevice(opts);
-            if (device != null)
-            {
-                await device.Gatt.Connect();
-                //device.AdvertisementReceived += Device_AdvertisementReceived;
-                //await device.WatchAdvertisementsAsync();
-                var service = await device.Gatt.GetPrimaryServiceAsync(new Guid(0x0000180F, 0x0000, 0x1000, 0x80, 0x00, 0x00, 0x80, 0x5F, 0x9B, 0x34, 0xFB));
-                var chars = await service.GetCharacteristicsAsync();
-                foreach (var ch in chars)
-                {
-                    System.Diagnostics.Debug.WriteLine(ch.Properties);
-                    var desc = await ch.GetDescriptorAsync(new Guid(0x00002902, 0x0000, 0x1000, 0x80, 0x00, 0x00, 0x80, 0x5F, 0x9B, 0x34, 0xFB));
-                    if (desc != null)
-                    {
-                        var descval = await desc.ReadValueAsync();
-                        System.Diagnostics.Debug.WriteLine(desc.Uuid);
-                    }
-
-                    System.Diagnostics.Debug.WriteLine(ch.Uuid);
-                    byte[] val = await ch.ReadValueAsync();
-                    int ival = val[0];
-                }
-            }*/
-        }
+        }       
     }
 }

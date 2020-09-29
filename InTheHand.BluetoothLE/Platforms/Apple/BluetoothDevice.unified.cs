@@ -15,7 +15,7 @@ namespace InTheHand.Bluetooth
     partial class BluetoothDevice
     {
         private CBPeripheral _peripheral;
-        private BluetoothRemoteGATTServer _gatt;
+        private RemoteGattServer _gatt;
         private bool _watchingAdvertisements = false;
 
         private BluetoothDevice(CBPeripheral peripheral)
@@ -62,11 +62,11 @@ namespace InTheHand.Bluetooth
             return _peripheral.Name;
         }
 
-        BluetoothRemoteGATTServer GetGatt()
+        RemoteGattServer GetGatt()
         {
             if (_gatt == null)
             {
-                _gatt = new BluetoothRemoteGATTServer(this);
+                _gatt = new RemoteGattServer(this);
             }
 
             return _gatt;

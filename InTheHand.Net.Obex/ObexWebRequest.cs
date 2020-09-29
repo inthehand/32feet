@@ -94,7 +94,7 @@ namespace InTheHand.Net
     {
         private const int INVALID_CONNECTION_ID = -1;
 
-        private System.IO.MemoryStream requestStream = new System.IO.MemoryStream();
+        private readonly MemoryStream requestStream = new MemoryStream();
 
 
         private bool connected = false;
@@ -329,13 +329,14 @@ namespace InTheHand.Net
                                 && m_alreadyConnectedObexStream.CanWrite);
                             ns = m_alreadyConnectedObexStream;
                         } else {
-                            BluetoothAddress ba;
 
-                            if (BluetoothAddress.TryParse(uri.Host, out ba)) {
+                            if (BluetoothAddress.TryParse(uri.Host, out BluetoothAddress ba))
+                            {
                                 BluetoothClient cli = new BluetoothClient();
                                 Guid serviceGuid;
 
-                                switch (uri.Scheme) {
+                                switch (uri.Scheme)
+                                {
                                     case SchemeNames.Ftp:
                                         serviceGuid = BluetoothService.ObexFileTransfer;
                                         break;
@@ -358,7 +359,9 @@ namespace InTheHand.Net
                                 cli.Connect(ba, serviceGuid);
                                 ns = cli.GetStream();
 
-                            }  else {
+                            }
+                            else
+                            {
                                 //assume a tcp host
                                 s = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
@@ -574,7 +577,7 @@ namespace InTheHand.Net
         #endregion
 
         #region Uri
-        private Uri uri;
+        private readonly Uri uri;
         /// <summary>
         /// Gets the original Uniform Resource Identifier (URI) of the request. 
         /// </summary>
@@ -648,6 +651,14 @@ namespace InTheHand.Net
                 buffer[packetLength] = (byte)ObexHeader.Length;
                 BitConverter.GetBytes(IPAddress.HostToNetworkOrder(Convert.ToInt32(ContentLength))).CopyTo(buffer, packetLength + 1);
                 packetLength += 5;
+            }
+            if (Headers["AppParameters"] != null)
+            {
+                buffer[packetLength] = (byte)ObexHeader.AppParameters;
+                byte[] headerValue = { 0xe, 1, 0xb1 };// System.Text.Encoding.ASCII.GetBytes(Headers["AppParameters"]);
+                BitConverter.GetBytes(IPAddress.HostToNetworkOrder((short)(headerValue.Length + 3))).CopyTo(buffer, packetLength + 1);
+                headerValue.CopyTo(buffer, packetLength + 3);
+                packetLength += 3 + headerValue.Length;
             }
 
             // write the final packet size

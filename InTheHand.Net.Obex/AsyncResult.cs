@@ -16,7 +16,7 @@ namespace InTheHand.Net
     internal class AsyncResult<TResult> : AsyncResultNoResult
     {
        // Field set when operation completes
-       private TResult m_result = default(TResult);
+       private TResult m_result = default;
 
        public AsyncResult(AsyncCallback asyncCallback, Object state) : base(asyncCallback, state) { }
 

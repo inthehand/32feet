@@ -36,16 +36,20 @@ namespace InTheHand.Net.Bluetooth.Win32
             {
                 case BluetoothAuthenticationMethod.Passkey:
                 case BluetoothAuthenticationMethod.NumericComparison:
-                    BLUETOOTH_AUTHENTICATE_RESPONSE__NUMERIC_COMPARISON_PASSKEY_INFO nresponse = new BLUETOOTH_AUTHENTICATE_RESPONSE__NUMERIC_COMPARISON_PASSKEY_INFO();
-                    nresponse.authMethod = pAuthCallbackParams.authenticationMethod;
-                    nresponse.bthAddressRemote = pAuthCallbackParams.deviceInfo.Address;
-                    nresponse.numericComp_passkey = pAuthCallbackParams.Numeric_Value_Passkey;
+                    BLUETOOTH_AUTHENTICATE_RESPONSE__NUMERIC_COMPARISON_PASSKEY_INFO nresponse = new BLUETOOTH_AUTHENTICATE_RESPONSE__NUMERIC_COMPARISON_PASSKEY_INFO
+                    {
+                        authMethod = pAuthCallbackParams.authenticationMethod,
+                        bthAddressRemote = pAuthCallbackParams.deviceInfo.Address,
+                        numericComp_passkey = pAuthCallbackParams.Numeric_Value_Passkey
+                    };
                     return NativeMethods.BluetoothSendAuthenticationResponseEx(IntPtr.Zero, ref nresponse) == 0;
 
                 case BluetoothAuthenticationMethod.Legacy:
-                    BLUETOOTH_AUTHENTICATE_RESPONSE__PIN_INFO response = new BLUETOOTH_AUTHENTICATE_RESPONSE__PIN_INFO();
-                    response.authMethod = pAuthCallbackParams.authenticationMethod;
-                    response.bthAddressRemote = pAuthCallbackParams.deviceInfo.Address;
+                    BLUETOOTH_AUTHENTICATE_RESPONSE__PIN_INFO response = new BLUETOOTH_AUTHENTICATE_RESPONSE__PIN_INFO
+                    {
+                        authMethod = pAuthCallbackParams.authenticationMethod,
+                        bthAddressRemote = pAuthCallbackParams.deviceInfo.Address
+                    };
                     response.pinInfo.pin = new byte[16];
                     System.Text.Encoding.ASCII.GetBytes(_pin).CopyTo(response.pinInfo.pin, 0);
                     response.pinInfo.pinLength = _pin.Length;

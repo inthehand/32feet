@@ -16,7 +16,7 @@
     <MonoAndroidResourcePrefix>Resources</MonoAndroidResourcePrefix>
     <MonoAndroidAssetsPrefix>Assets</MonoAndroidAssetsPrefix>
     <AndroidUseLatestPlatformSdk>false</AndroidUseLatestPlatformSdk>
-    <TargetFrameworkVersion>v8.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v9.0</TargetFrameworkVersion>
     <AndroidHttpClientHandlerType>Xamarin.Android.Net.AndroidClientHandler</AndroidHttpClientHandlerType>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
@@ -51,9 +51,6 @@
   <ItemGroup>
     <PackageReference Include="Plugin.CurrentActivity">
       <Version>2.1.0.4</Version>
-    </PackageReference>
-    <PackageReference Include="Xamarin.Forms">
-      <Version>4.0.0.425677</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
@@ -94,6 +91,10 @@
     <Folder Include="Resources\drawable\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\InTheHand.BluetoothLE\InTheHand.BluetoothLE.csproj">
+      <Project>{6479e778-52fe-4b15-ad15-7a1225a652e5}</Project>
+      <Name>InTheHand.BluetoothLE</Name>
+    </ProjectReference>
     <ProjectReference Include="..\BluetoothClientApp\BluetoothClientApp.csproj">
       <Project>{897AB987-17A0-406E-ACB7-74AB82ECC3AC}</Project>
       <Name>BluetoothClientApp</Name>

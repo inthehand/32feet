@@ -1,4 +1,11 @@
-﻿using Android.Bluetooth.LE;
+﻿//-----------------------------------------------------------------------
+// <copyright file="BluetoothAdvertisingEvent.android.cs" company="In The Hand Ltd">
+//   Copyright (c) 2018-20 In The Hand Ltd, All rights reserved.
+//   This source code is licensed under the MIT License - see License.txt
+// </copyright>
+//-----------------------------------------------------------------------
+
+using Android.Bluetooth.LE;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;

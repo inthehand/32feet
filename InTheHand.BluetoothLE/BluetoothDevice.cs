@@ -16,7 +16,7 @@ namespace InTheHand.Bluetooth
     {
         public string Id { get { return GetId(); } }
         public string Name { get { return GetName(); } }
-        public BluetoothRemoteGATTServer Gatt { get { return GetGatt(); } }
+        public RemoteGattServer Gatt { get { return GetGatt(); } }
 
         public static Task<BluetoothDevice> FromIdAsync(string id)
         {

@@ -15,7 +15,7 @@ namespace InTheHand.Bluetooth
     {
         private readonly ABluetooth.BluetoothDevice _device;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private BluetoothRemoteGATTServer _gattServer;
+        private RemoteGattServer _gattServer;
         private bool _watchingAdvertisements = false;
 
         internal BluetoothDevice(ABluetooth.BluetoothDevice device)
@@ -48,11 +48,11 @@ namespace InTheHand.Bluetooth
             return _device.Name;
         }
 
-        BluetoothRemoteGATTServer GetGatt()
+        RemoteGattServer GetGatt()
         {
             if (_gattServer is null)
             {
-                _gattServer = new BluetoothRemoteGATTServer(this);
+                _gattServer = new RemoteGattServer(this);
             }
 
             return _gattServer;

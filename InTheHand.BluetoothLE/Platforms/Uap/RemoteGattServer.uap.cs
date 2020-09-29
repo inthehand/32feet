@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace InTheHand.Bluetooth
 {
-    partial class BluetoothRemoteGATTServer
+    partial class RemoteGattServer
     {
         private void PlatformInit()
         {

@@ -1,5 +1,5 @@
 ﻿//-----------------------------------------------------------------------
-// <copyright file="BluetoothRemoteGATTServer.cs" company="In The Hand Ltd">
+// <copyright file="RemoteGattServer.cs" company="In The Hand Ltd">
 //   Copyright (c) 2018-20 In The Hand Ltd, All rights reserved.
 //   This source code is licensed under the MIT License - see License.txt
 // </copyright>
@@ -11,9 +11,9 @@ using System.Threading.Tasks;
 
 namespace InTheHand.Bluetooth
 {
-    public sealed partial class BluetoothRemoteGATTServer
+    public sealed partial class RemoteGattServer
     {
-        internal BluetoothRemoteGATTServer(BluetoothDevice device)
+        internal RemoteGattServer(BluetoothDevice device)
         {
             Device = device;
             PlatformInit();

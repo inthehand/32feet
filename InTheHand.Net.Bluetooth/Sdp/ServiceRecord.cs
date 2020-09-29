@@ -194,11 +194,7 @@ namespace InTheHand.Net.Bluetooth.Sdp
         /// </param>
         public ServiceRecord(IList<ServiceAttribute> attributesList)
         {
-            if (attributesList == null) {
-                throw new ArgumentNullException("attributesList");
-            }
-
-            m_attributes = attributesList;
+            m_attributes = attributesList ?? throw new ArgumentNullException("attributesList");
         }
 
         /// <summary>
@@ -353,8 +349,7 @@ namespace InTheHand.Net.Bluetooth.Sdp
         /// </exception>
         public ServiceAttribute GetAttributeById(ServiceAttributeId id)
         {
-            ServiceAttribute attribute;
-            bool found = TryGetAttributeById(id, out  attribute);
+            bool found = TryGetAttributeById(id, out ServiceAttribute attribute);
             if (!found) {
 
                 throw new KeyNotFoundException(ErrorMsgNoAttributeWithId);
@@ -452,8 +447,7 @@ namespace InTheHand.Net.Bluetooth.Sdp
         {
             if (language == null) { throw new ArgumentNullException("language"); }
             ServiceAttributeId actualId = CreateLanguageBasedAttributeId(id, language.AttributeIdBase);
-            ServiceAttribute tmp;
-            bool found = TryGetAttributeById(actualId, out tmp);
+            bool found = TryGetAttributeById(actualId, out var tmp);
             return found && (tmp.Value.ElementType == ElementType.TextString);
         }
 

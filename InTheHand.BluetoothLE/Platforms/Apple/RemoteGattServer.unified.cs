@@ -1,5 +1,5 @@
 ﻿//-----------------------------------------------------------------------
-// <copyright file="BluetoothRemoteGATTServer.unified.cs" company="In The Hand Ltd">
+// <copyright file="RemoteGattServer.unified.cs" company="In The Hand Ltd">
 //   Copyright (c) 2018-20 In The Hand Ltd, All rights reserved.
 //   This source code is licensed under the MIT License - see License.txt
 // </copyright>
@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace InTheHand.Bluetooth
 {
-    partial class BluetoothRemoteGATTServer
+    partial class RemoteGattServer
     {
         private void PlatformInit()
         {
@@ -61,11 +61,6 @@ namespace InTheHand.Bluetooth
                     Bluetooth._manager.CancelPeripheralConnection(Device);
             });
 
-        }
-
-        private void Bluetooth_FailedToConnectPeripheral(object sender, CBPeripheral e)
-        {
-            throw new NotImplementedException();
         }
 
         void PlatformDisconnect()

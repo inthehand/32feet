@@ -1,5 +1,5 @@
 ﻿//-----------------------------------------------------------------------
-// <copyright file="BluetoothRemoteGATTServer.android.cs" company="In The Hand Ltd">
+// <copyright file="RemoteGattServer.android.cs" company="In The Hand Ltd">
 //   Copyright (c) 2018-20 In The Hand Ltd, All rights reserved.
 //   This source code is licensed under the MIT License - see License.txt
 // </copyright>
@@ -16,7 +16,7 @@ using System.Runtime.InteropServices;
 
 namespace InTheHand.Bluetooth
 {
-    partial class BluetoothRemoteGATTServer
+    partial class RemoteGattServer
     {
         private ABluetooth.BluetoothGatt _gatt;
         private ABluetooth.BluetoothGattCallback _gattCallback;
@@ -27,7 +27,7 @@ namespace InTheHand.Bluetooth
             _gatt = ((ABluetooth.BluetoothDevice)Device).ConnectGatt(Android.App.Application.Context, false, _gattCallback);
         }
 
-        public static implicit operator ABluetooth.BluetoothGatt(BluetoothRemoteGATTServer gatt)
+        public static implicit operator ABluetooth.BluetoothGatt(RemoteGattServer gatt)
         {
             return gatt._gatt;
         }
@@ -45,9 +45,9 @@ namespace InTheHand.Bluetooth
 
         internal class GattCallback : ABluetooth.BluetoothGattCallback
         {
-            private readonly BluetoothRemoteGATTServer _owner;
+            private readonly RemoteGattServer _owner;
 
-            internal GattCallback(BluetoothRemoteGATTServer owner)
+            internal GattCallback(RemoteGattServer owner)
             {
                 _owner = owner;
             }

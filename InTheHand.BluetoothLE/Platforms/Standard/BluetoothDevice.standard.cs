@@ -28,9 +28,9 @@ namespace InTheHand.Bluetooth
             return string.Empty;
         }
 
-        BluetoothRemoteGATTServer GetGatt()
+        RemoteGattServer GetGatt()
         {
-            return new BluetoothRemoteGATTServer(this);
+            return new RemoteGattServer(this);
         }
 
         /*

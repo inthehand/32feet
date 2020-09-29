@@ -57,15 +57,14 @@ namespace InTheHand.Net.Bluetooth.Sdp
             if (buffer == null) { throw new ArgumentNullException("buffer"); }
             //
             int len;
-            HeaderWriteState headerState;
             int offset = 0;
-            len = MakeVariableLengthHeader(buffer, offset, ElementTypeDescriptor.ElementSequence, out headerState);
+            len = MakeVariableLengthHeader(buffer, offset, ElementTypeDescriptor.ElementSequence, out HeaderWriteState headerState);
             offset += len;
             foreach (ServiceAttribute attr in record) {
                 WriteAttribute(attr, buffer, ref offset);
             }//for
-            int tmp;
-            CompleteHeaderWrite(headerState, buffer, offset, out tmp);
+
+            CompleteHeaderWrite(headerState, buffer, offset, out var tmp);
             System.Diagnostics.Debug.Assert(offset != 0);
             return offset;
         }
@@ -158,9 +157,8 @@ namespace InTheHand.Net.Bluetooth.Sdp
             //
             if (element.ElementTypeDescriptor == ElementTypeDescriptor.ElementSequence
                     || element.ElementTypeDescriptor == ElementTypeDescriptor.ElementAlternative) {
-                HeaderWriteState headerState;
                 int curLen;
-                curLen = MakeVariableLengthHeader(buf, offset, element.ElementTypeDescriptor, out headerState);
+                curLen = MakeVariableLengthHeader(buf, offset, element.ElementTypeDescriptor, out var headerState);
                 offset += curLen;
                 foreach (ServiceElement childElement in element.GetValueAsElementList()) {
                     curLen = CreateElement(childElement, buf, offset);
@@ -219,16 +217,18 @@ namespace InTheHand.Net.Bluetooth.Sdp
                 //----------------
             } else if (element.ElementTypeDescriptor == ElementTypeDescriptor.Url) {
                 Uri uri = element.GetValueAsUri();
-                String uriString = uri.ToString();
+                string uriString = uri.ToString();
                 byte[] valueBytes = System.Text.Encoding.ASCII.GetBytes(uriString);
                 WriteVariableLength(element, valueBytes, buf, ref offset, out totalLength);
                 //----------------
             } else if (element.ElementTypeDescriptor == ElementTypeDescriptor.TextString) {
                 byte[] valueBytes;
-                String valueString = element.Value as String;
-                if (valueString != null) {
+                if (element.Value is string valueString)
+                {
                     valueBytes = System.Text.Encoding.UTF8.GetBytes(valueString);
-                } else {
+                }
+                else
+                {
                     System.Diagnostics.Debug.Assert(element.Value is byte[]);
                     valueBytes = (byte[])element.Value;
                 }

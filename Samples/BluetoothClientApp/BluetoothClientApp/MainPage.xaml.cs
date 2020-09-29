@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using InTheHand.Bluetooth;
+using System;
+using System.Diagnostics;
 using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Forms;
-using InTheHand.Bluetooth;
-using InTheHand.Bluetooth.GenericAttributeProfile;
-using System.Diagnostics;
 
 namespace BluetoothClientApp
 {
@@ -15,90 +12,92 @@ namespace BluetoothClientApp
         public MainPage()
         {
             InitializeComponent();
-
             Appearing += MainPage_Appearing;
         }
 
-        
+        BluetoothLEScan scan;
+
         private async void MainPage_Appearing(object sender, EventArgs e)
         {
+            Debug.WriteLine("MainPage");
 
-            foreach(var prop in typeof(GattServiceUuids).GetFields(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static))
+            bool availability = false;
+
+            while (!availability)
             {
-                BluetoothUuid val = (BluetoothUuid)prop.GetValue(null);
-                ushort shortVal = (ushort)val;
-                BluetoothUuid convertedVal = shortVal;
+                availability = await Bluetooth.GetAvailabilityAsync();
+                await Task.Delay(500);
             }
 
+            foreach (var d in await Bluetooth.GetPairedDevicesAsync())
+            {
+                Debug.WriteLine($"{d.Id} {d.Name}");
+            }
 
-            Bluetooth b = new Bluetooth();
-            b.AdvertisementReceived += B_AdvertisementReceived;
-            //b.RequestLEScan(new BluetoothLEScan() { AcceptAllAdvertisements = true });
+            Bluetooth.AdvertisementReceived += Bluetooth_AdvertisementReceived;
+            scan = await Bluetooth.RequestLEScanAsync();
 
-            var device = await b.RequestDevice(new RequestDeviceOptions() { AcceptAllDevices = true });
+            RequestDeviceOptions options = new RequestDeviceOptions();
+            options.AcceptAllDevices = true;
+            BluetoothDevice device = await Bluetooth.RequestDeviceAsync(options);
             if (device != null)
             {
-                var servs = await device.Gatt.GetPrimaryServices();
+                device.GattServerDisconnected += Device_GattServerDisconnected;
+                await device.Gatt.ConnectAsync();
+
+                var servs = await device.Gatt.GetPrimaryServicesAsync();
+
                 foreach (var serv in servs)
                 {
-                    System.Diagnostics.Debug.WriteLine($"{serv.Uuid} Primary:{serv.IsPrimary}");
+                    var rssi = await device.Gatt.ReadRssi();
+                    Debug.WriteLine($"{rssi} {serv.Uuid} Primary:{serv.IsPrimary}");
 
+                    Debug.Indent();
 
-                    if(serv.Uuid == GattServiceUuids.Battery)
+                    foreach (var chars in await serv.GetCharacteristicsAsync())
                     {
-                        var batchar = await serv.GetCharacteristicAsync(GattCharacteristicUuids.BatteryLevel);
-                        var batval = await batchar.ReadValueAsync();
-                        //battery percent stored as a single byte
-                        System.Diagnostics.Debug.WriteLine($"Battery: {batval[0]}");
-                    }
+                        Debug.WriteLine($"{chars.Uuid} UserDescription:{chars.UserDescription} Properties:{chars.Properties}");
 
-                    System.Diagnostics.Debug.Indent();
-
-                    foreach(var chars in await serv.GetCharacteristicsAsync())
-                    {
-                        System.Diagnostics.Debug.WriteLine($"{chars.Uuid} UserDescription:{chars.UserDescription} Properties:{chars.Properties}");
-
-                         var val = await chars.ReadValueAsync();
-                        System.Diagnostics.Debug.WriteLine(ByteArrayToString(val));
-                        if (chars.Uuid == GattCharacteristicUuids.DeviceName)
-                        {
-                            Debug.WriteLine($"DeviceName:{System.Text.Encoding.UTF8.GetString(val)}");
-                        }
-
-                        System.Diagnostics.Debug.Indent();
+                        Debug.Indent();
 
                         foreach (var descriptors in await chars.GetDescriptorsAsync())
                         {
-                            System.Diagnostics.Debug.WriteLine($"Descriptor:{descriptors.Uuid}");
+                            Debug.WriteLine($"Descriptor:{descriptors.Uuid}");
 
                             var val2 = await descriptors.ReadValueAsync();
-                                
+
                             if (descriptors.Uuid == GattDescriptorUuids.ClientCharacteristicConfiguration)
                             {
-                                System.Diagnostics.Debug.WriteLine($"Notifying:{val2[0] > 0}");
+                                Debug.WriteLine($"Notifying:{val2[0] > 0}");
                             }
-                            else if(descriptors.Uuid == GattDescriptorUuids.CharacteristicUserDescription)
+                            else if (descriptors.Uuid == GattDescriptorUuids.CharacteristicUserDescription)
                             {
-                                System.Diagnostics.Debug.WriteLine($"UserDescription:{ByteArrayToString(val2)}");
+                                Debug.WriteLine($"UserDescription:{ByteArrayToString(val2)}");
                             }
                             else
                             {
-                                System.Diagnostics.Debug.WriteLine(ByteArrayToString(val2));
+                                Debug.WriteLine(ByteArrayToString(val2));
                             }
 
                         }
 
-                        System.Diagnostics.Debug.Unindent();
+                        Debug.Unindent();
                     }
 
-                    System.Diagnostics.Debug.Unindent();
+                    Debug.Unindent();
                 }
             }
         }
 
-        private void B_AdvertisementReceived(object sender, BluetoothAdvertisingEvent e)
+        private void Bluetooth_AdvertisementReceived(object sender, BluetoothAdvertisingEvent e)
         {
-            System.Diagnostics.Debug.WriteLine($"Device:{e.Device} Name:{e.Name} Rssi:{e.Rssi} TxPower:{e.TxPower} Appearance:{e.Appearance}");
+            Debug.WriteLine($"Name:{e.Name} Rssi:{e.Rssi}");
+        }
+
+        private async void Device_GattServerDisconnected(object sender, EventArgs e)
+        {
+            var device = sender as BluetoothDevice;
+            await device.Gatt.ConnectAsync();
         }
 
         private static string ByteArrayToString(byte[] data)

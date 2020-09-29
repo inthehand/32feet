@@ -6,7 +6,8 @@ using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 using Android.OS;
-using Plugin.CurrentActivity;
+using System.Threading.Tasks;
+using Android;
 
 namespace RfcommXamarinForms.Droid
 {
@@ -18,13 +19,16 @@ namespace RfcommXamarinForms.Droid
             TabLayoutResource = Resource.Layout.Tabbar;
             ToolbarResource = Resource.Layout.Toolbar;
 
-            CrossCurrentActivity.Current.Init(this, savedInstanceState);
-
             base.OnCreate(savedInstanceState);
 
             Xamarin.Essentials.Platform.Init(this, savedInstanceState);
             global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
+
+            RequestPermissions(new string[] { Manifest.Permission.AccessCoarseLocation }, 1);
+
             LoadApplication(new App());
+
+            
         }
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Android.Content.PM.Permission[] grantResults)
         {

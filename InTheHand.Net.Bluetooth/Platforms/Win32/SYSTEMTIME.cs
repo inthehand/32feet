@@ -24,27 +24,31 @@ namespace InTheHand.Win32
 
         public static SYSTEMTIME FromByteArray(byte[] array, int offset)
         {
-            SYSTEMTIME st = new SYSTEMTIME();
-            st.year = BitConverter.ToUInt16(array, offset);
-            st.month = BitConverter.ToInt16(array, offset+2);
-            st.day = BitConverter.ToInt16(array, offset + 6);
-            st.hour = BitConverter.ToInt16(array, offset + 8);
-            st.minute = BitConverter.ToInt16(array, offset + 10);
-            st.second = BitConverter.ToInt16(array, offset + 12);
+            SYSTEMTIME st = new SYSTEMTIME
+            {
+                year = BitConverter.ToUInt16(array, offset),
+                month = BitConverter.ToInt16(array, offset + 2),
+                day = BitConverter.ToInt16(array, offset + 6),
+                hour = BitConverter.ToInt16(array, offset + 8),
+                minute = BitConverter.ToInt16(array, offset + 10),
+                second = BitConverter.ToInt16(array, offset + 12)
+            };
 
             return st;
         }
         public static SYSTEMTIME FromDateTime(DateTime dt)
         {
-            SYSTEMTIME st = new SYSTEMTIME();
-            st.year = (ushort)dt.Year;
-            st.month = (short)dt.Month;
-            st.dayOfWeek = (short)dt.DayOfWeek;
-            st.day = (short)dt.Day;
-            st.hour = (short)dt.Hour;
-            st.minute = (short)dt.Minute;
-            st.second = (short)dt.Second;
-            st.millisecond = (short)dt.Millisecond;
+            SYSTEMTIME st = new SYSTEMTIME
+            {
+                year = (ushort)dt.Year,
+                month = (short)dt.Month,
+                dayOfWeek = (short)dt.DayOfWeek,
+                day = (short)dt.Day,
+                hour = (short)dt.Hour,
+                minute = (short)dt.Minute,
+                second = (short)dt.Second,
+                millisecond = (short)dt.Millisecond
+            };
 
             return st;
         }
