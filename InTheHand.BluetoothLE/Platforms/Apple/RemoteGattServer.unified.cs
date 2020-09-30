@@ -149,5 +149,9 @@ namespace InTheHand.Bluetooth
 
             return tcs.Task;
         }
+
+        void PlatformSetPreferredPhy(BluetoothPhy phy)
+        {
+        }
     }
 }

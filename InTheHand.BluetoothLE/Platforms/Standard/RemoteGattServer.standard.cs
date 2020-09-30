@@ -43,5 +43,9 @@ namespace InTheHand.Bluetooth
         {
             return Task.FromResult((short)0);
         }
+
+        void PlatformSetPreferredPhy(BluetoothPhy phy)
+        {
+        }
     }
 }

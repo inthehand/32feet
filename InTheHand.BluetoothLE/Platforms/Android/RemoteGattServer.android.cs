@@ -104,10 +104,15 @@ namespace InTheHand.Bluetooth
                 _owner.ServicesDiscovered?.Invoke(_owner, new GattEventArgs { Status = status });
             }
 
-            public override void OnReadRemoteRssi(ABluetooth.BluetoothGatt gatt, int rssi, [GeneratedEnum] ABluetooth.GattStatus status)
+            public override void OnReadRemoteRssi(ABluetooth.BluetoothGatt gatt, int rssi, ABluetooth.GattStatus status)
             {
                 System.Diagnostics.Debug.WriteLine($"ReadRemoteRssi {rssi}");
                 _owner.ReadRemoteRssi?.Invoke(_owner, new RssiEventArgs { Status = status, Rssi = (short)rssi });
+            }
+
+            public override void OnPhyUpdate(ABluetooth.BluetoothGatt gatt, ABluetooth.LE.ScanSettingsPhy txPhy, ABluetooth.LE.ScanSettingsPhy rxPhy, ABluetooth.GattStatus status)
+            {
+                System.Diagnostics.Debug.WriteLine($"PhyUpdate {txPhy} {rxPhy} {status}");
             }
         }
 
@@ -233,6 +238,30 @@ namespace InTheHand.Bluetooth
             else
             {
                 return Task.FromResult((short)0);
+            }
+        }
+
+        void PlatformSetPreferredPhy(BluetoothPhy phy)
+        {
+            if (Android.OS.Build.VERSION.SdkInt >= Android.OS.BuildVersionCodes.O)
+                _gatt.SetPreferredPhy(ToAndroidPhy(phy), ToAndroidPhy(phy), ABluetooth.BluetoothPhyOption.NoPreferred);
+        }
+
+        private static ABluetooth.BluetoothPhy ToAndroidPhy(BluetoothPhy phy)
+        {
+            switch(phy)
+            {
+                case BluetoothPhy.Le1m:
+                    return ABluetooth.BluetoothPhy.Le1m;
+
+                case BluetoothPhy.Le2m:
+                    return ABluetooth.BluetoothPhy.Le2m;
+
+                case BluetoothPhy.LeCoded:
+                    return ABluetooth.BluetoothPhy.LeCoded;
+
+                default:
+                    throw new PlatformNotSupportedException($"Unrecognised PHY {phy}");
             }
         }
     }
