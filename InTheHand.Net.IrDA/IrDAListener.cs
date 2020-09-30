@@ -181,12 +181,18 @@ namespace InTheHand.Net.Sockets
             {
                 throw new ArgumentNullException("asyncResult");
             }
+
             return Server.EndAccept(asyncResult);
         }
 
+        /// <summary>
+        /// Accepts a pending connection request as an asynchronous operation.
+        /// </summary>
+        /// <param name="state"></param>
+        /// <returns></returns>
         public System.Threading.Tasks.Task<Socket> AcceptSocketAsync(object state)
         {
-            return System.Threading.Tasks.Task.Factory.FromAsync<Socket>(
+            return System.Threading.Tasks.Task.Factory.FromAsync(
                 BeginAcceptSocket, EndAcceptSocket,
                 state);
         }
@@ -230,9 +236,14 @@ namespace InTheHand.Net.Sockets
             return new IrDAClient(s);
         }
 
+        /// <summary>
+        /// Accepts a pending connection request as an asynchronous operation.
+        /// </summary>
+        /// <param name="state"></param>
+        /// <returns></returns>
         public System.Threading.Tasks.Task<IrDAClient> AcceptIrDAClientAsync(object state)
         {
-            return System.Threading.Tasks.Task.Factory.FromAsync<IrDAClient>(
+            return System.Threading.Tasks.Task.Factory.FromAsync(
                 BeginAcceptIrDAClient, EndAcceptIrDAClient,
                 state);
         }

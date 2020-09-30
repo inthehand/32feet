@@ -43,8 +43,8 @@ namespace InTheHand.Net
                 throw new ArgumentNullException("irdaDeviceID");
             }
 
-            this.id = new IrDAAddress(irdaDeviceID);
-			this.service = serviceName ?? throw new ArgumentNullException("serviceName");
+            id = new IrDAAddress(irdaDeviceID);
+			service = serviceName ?? throw new ArgumentNullException("serviceName");
 		}
 
 		/// <summary>
@@ -59,8 +59,8 @@ namespace InTheHand.Net
         /// </param>
         public IrDAEndPoint(IrDAAddress irdaDeviceAddress, string serviceName)
 		{
-            this.id = irdaDeviceAddress ?? throw new ArgumentNullException("irdaDeviceAddress");
-			this.service = serviceName ?? throw new ArgumentNullException("serviceName");
+            id = irdaDeviceAddress ?? throw new ArgumentNullException("irdaDeviceAddress");
+			service = serviceName ?? throw new ArgumentNullException("serviceName");
         }
 
         /// <summary>

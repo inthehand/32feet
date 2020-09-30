@@ -13,7 +13,6 @@ using InTheHand.Net.IrDA;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 
-
 namespace InTheHand.Net.Sockets
 {
 
@@ -143,7 +142,7 @@ namespace InTheHand.Net.Sockets
         /// </param>
         public IrDAClient(string service) : this()
 		{
-			this.Connect(service);
+			Connect(service);
 		}
 
         /// <summary>
@@ -169,12 +168,12 @@ namespace InTheHand.Net.Sockets
         /// </param>
 		public IrDAClient(IrDAEndPoint remoteEP) : this()
 		{
-			this.Connect(remoteEP);
+			Connect(remoteEP);
 		}
 
 		internal IrDAClient(Socket acceptedSocket)
 		{
-            this.Client = acceptedSocket;
+            Client = acceptedSocket;
             Active = true;
         }
 
@@ -493,7 +492,7 @@ namespace InTheHand.Net.Sockets
         /// </exception>
         public void Connect(string service)
 		{
-			IrDADeviceInfo[] devs = this.DiscoverDevices(1);
+			IrDADeviceInfo[] devs = DiscoverDevices(1);
 			if(devs.Length > 0)
 			{
 				IrDAEndPoint ep = new IrDAEndPoint(devs[0].DeviceAddress, service);
@@ -582,6 +581,13 @@ namespace InTheHand.Net.Sockets
             Active = true;
         }
 
+        /// <summary>
+        /// Connects the client to the specified service on an arbitrary peer as an asynchronous operation.
+        /// </summary>
+        /// <param name="remoteEP">An <see cref="IrDAEndPoint"/> initialised with the address of the peer
+        /// device and the service name to connect to.</param>
+        /// <param name="state"></param>
+        /// <returns></returns>
         public System.Threading.Tasks.Task ConnectAsync(IrDAEndPoint remoteEP, object state)
         {
             return System.Threading.Tasks.Task.Factory.FromAsync(
@@ -733,7 +739,7 @@ namespace InTheHand.Net.Sockets
         /// Closes the <see cref="IrDAClient"/> and the underlying connection.
         /// </summary>
         /// -
-        /// <seealso cref="IrDAClient.Close"/>
+        /// <seealso cref="Close"/>
         public void Dispose()
         {
             Dispose(true);

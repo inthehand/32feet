@@ -20,7 +20,6 @@ namespace InTheHand.Net
 	{
         const int AddressBytesLength = 4;
         
-        // This should be read-only but arrays can't be. :-(
         // Currently there are no Properties that change the content of this type
         // so currently it is non-mutable.  If we wanted a mutable type, then we
         // have to be careful of the 'const' "None" value, as a user could change
