@@ -39,9 +39,9 @@ namespace InTheHand.Bluetooth
             return Task.FromResult((IReadOnlyList<GattDescriptor>)null);
         }
 
-        Task<byte[]> PlatformGetValue()
+        byte[] PlatformGetValue()
         {
-            return Task.FromResult<byte[]>(null);
+            return null;
         }
 
         Task<byte[]> PlatformReadValue()

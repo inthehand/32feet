@@ -30,9 +30,9 @@ namespace InTheHand.Bluetooth
             return _descriptor.Uuid;
         }
 
-        Task<byte[]> PlatformGetValue()
+        byte[] PlatformGetValue()
         {
-            return Task.FromResult(_descriptor.GetValue());
+            return _descriptor.GetValue();
         }
 
         Task<byte[]> PlatformReadValue()
@@ -72,19 +72,22 @@ namespace InTheHand.Bluetooth
             {
                 if (e.Descriptor == _descriptor)
                 {
+                    Characteristic.Service.Device.Gatt.DescriptorWrite -= handler;
+
                     if (!tcs.Task.IsCompleted)
                     {
                         tcs.SetResult(e.Status == ABluetooth.GattStatus.Success);
                     }
-
-                    Characteristic.Service.Device.Gatt.DescriptorWrite -= handler;
                 }
             };
 
             Characteristic.Service.Device.Gatt.DescriptorWrite += handler;
             bool written = _descriptor.SetValue(value);
             written = ((ABluetooth.BluetoothGatt)Characteristic.Service.Device.Gatt).WriteDescriptor(_descriptor);
-            return tcs.Task;
+            if(written)
+                return tcs.Task;
+
+            return Task.FromException(new OperationCanceledException());
         }
     }
 }

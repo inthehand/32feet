@@ -70,9 +70,7 @@ namespace InTheHand.Bluetooth
         {
             get
             {
-                var task = PlatformGetValue();
-                task.Wait();
-                return task.Result;
+                return PlatformGetValue();
             }
         }
 

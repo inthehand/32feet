@@ -31,21 +31,59 @@ namespace InTheHand.Bluetooth
             return _descriptor.UUID;
         }
 
-        Task<byte[]> PlatformGetValue()
+        byte[] PlatformGetValue()
         {
-            return Task.FromResult(((NSData)_descriptor.Value).ToArray());
+            return ((NSData)_descriptor.Value).ToArray();
         }
 
         Task<byte[]> PlatformReadValue()
         {
+            TaskCompletionSource<byte[]> tcs = new TaskCompletionSource<byte[]>();
+            CBPeripheral peripheral = Characteristic.Service.Device;
+
+            void handler(object s, CBDescriptorEventArgs e)
+            {
+                if (e.Descriptor == _descriptor)
+                {
+                    peripheral.UpdatedValue -= handler;
+
+                    if (!tcs.Task.IsCompleted)
+                    {
+                        tcs.SetResult(((NSData)e.Descriptor.Value).ToArray());
+                    }
+                }
+            };
+
+            peripheral.UpdatedValue += handler;
+
             ((CBPeripheral)Characteristic.Service.Device).ReadValue(_descriptor);
-            return Task.FromResult(((NSData)_descriptor.Value).ToArray());
+            return tcs.Task;
         }
 
         Task PlatformWriteValue(byte[] value)
         {
-            ((CBPeripheral)Characteristic.Service.Device).WriteValue(NSData.FromArray(value), _descriptor);
-            return Task.CompletedTask;
+            TaskCompletionSource<bool> tcs = null;
+            CBPeripheral peripheral = Characteristic.Service.Device;
+
+                tcs = new TaskCompletionSource<bool>();
+
+                void handler(object s, CBDescriptorEventArgs e)
+                {
+                    if (e.Descriptor == _descriptor)
+                    {
+                        peripheral.WroteDescriptorValue -= handler;
+
+                        if (!tcs.Task.IsCompleted)
+                        {
+                            tcs.SetResult(e.Error == null);
+                        }
+                    }
+                };
+
+                peripheral.WroteDescriptorValue += handler;
+
+            peripheral.WriteValue(NSData.FromArray(value), _descriptor);
+            return tcs.Task;
         }
     }
 }

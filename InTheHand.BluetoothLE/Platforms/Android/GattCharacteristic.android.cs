@@ -64,9 +64,9 @@ namespace InTheHand.Bluetooth
             return descriptors;
         }
 
-        Task<byte[]> PlatformGetValue()
+        byte[] PlatformGetValue()
         {
-            return Task.FromResult(_characteristic.GetValue());
+            return _characteristic.GetValue();
         }
 
         Task<byte[]> PlatformReadValue()
@@ -77,12 +77,12 @@ namespace InTheHand.Bluetooth
             {
                 if (e.Characteristic == _characteristic)
                 {
+                    Service.Device.Gatt.CharacteristicRead -= handler;
+
                     if (!tcs.Task.IsCompleted)
                     {
                         tcs.SetResult(_characteristic.GetValue());
                     }
-
-                    Service.Device.Gatt.CharacteristicRead -= handler;
                 }
             };
 
@@ -103,12 +103,12 @@ namespace InTheHand.Bluetooth
                 {
                     if (e.Characteristic == _characteristic)
                     {
+                        Service.Device.Gatt.CharacteristicWrite -= handler;
+
                         if (!tcs.Task.IsCompleted)
                         {
                             tcs.SetResult(e.Status == ABluetooth.GattStatus.Success);
                         }
-
-                        Service.Device.Gatt.CharacteristicWrite -= handler;
                     }
                 };
 
@@ -119,7 +119,7 @@ namespace InTheHand.Bluetooth
             _characteristic.WriteType = requireResponse ? ABluetooth.GattWriteType.Default : ABluetooth.GattWriteType.NoResponse;
             written = ((ABluetooth.BluetoothGatt)Service.Device.Gatt).WriteCharacteristic(_characteristic);
 
-            if(requireResponse)
+            if(written && requireResponse)
                 return tcs.Task;
 
             return Task.CompletedTask;

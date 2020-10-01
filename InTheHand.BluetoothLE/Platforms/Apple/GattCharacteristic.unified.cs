@@ -72,9 +72,9 @@ namespace InTheHand.Bluetooth
             return descriptors;
         }
 
-        Task<byte[]> PlatformGetValue()
+        byte[] PlatformGetValue()
         {
-            return Task.FromResult(_characteristic.Value.ToArray());
+            return _characteristic.Value.ToArray();
         }
 
         Task<byte[]> PlatformReadValue()
@@ -85,7 +85,39 @@ namespace InTheHand.Bluetooth
 
         Task PlatformWriteValue(byte[] value, bool requireResponse)
         {
-            ((CBPeripheral)Service.Device).WriteValue(NSData.FromArray(value), _characteristic, requireResponse ? CBCharacteristicWriteType.WithResponse : CBCharacteristicWriteType.WithoutResponse);
+            TaskCompletionSource<bool> tcs = null;
+            CBPeripheral peripheral = Service.Device;
+
+            if (requireResponse)
+            {
+                tcs = new TaskCompletionSource<bool>();
+
+                void handler(object s, CBCharacteristicEventArgs e)
+                {
+                    if (e.Characteristic == _characteristic)
+                    {
+                        peripheral.WroteCharacteristicValue -= handler;
+
+                        if (!tcs.Task.IsCompleted)
+                        {
+                            tcs.SetResult(e.Error == null);
+                        }
+                    }
+                };
+
+                peripheral.WroteCharacteristicValue += handler;
+            }
+
+            CBCharacteristicWriteType writeType = requireResponse ? CBCharacteristicWriteType.WithResponse : CBCharacteristicWriteType.WithoutResponse;
+
+            if (!requireResponse && !peripheral.CanSendWriteWithoutResponse)
+                writeType = CBCharacteristicWriteType.WithResponse;
+
+            ((CBPeripheral)Service.Device).WriteValue(NSData.FromArray(value), _characteristic, writeType);
+
+            if (requireResponse)
+                return tcs.Task;
+
             return Task.CompletedTask;
         }
 

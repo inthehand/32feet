@@ -16,9 +16,8 @@ namespace InTheHand.Bluetooth
         private readonly ABluetooth.BluetoothDevice _device;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private RemoteGattServer _gattServer;
-        private bool _watchingAdvertisements = false;
 
-        internal BluetoothDevice(ABluetooth.BluetoothDevice device)
+        private BluetoothDevice(ABluetooth.BluetoothDevice device)
         {
             _device = device;
         }

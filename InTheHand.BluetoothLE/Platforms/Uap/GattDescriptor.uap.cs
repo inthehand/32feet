@@ -31,9 +31,9 @@ namespace InTheHand.Bluetooth
             return _descriptor.Uuid;
         }
 
-        async Task<byte[]> PlatformGetValue()
+        byte[] PlatformGetValue()
         {
-            var result = await _descriptor.ReadValueAsync(Windows.Devices.Bluetooth.BluetoothCacheMode.Cached).AsTask();
+            var result = _descriptor.ReadValueAsync(Windows.Devices.Bluetooth.BluetoothCacheMode.Cached).GetResults();
 
             if (result.Status == Uap.GattCommunicationStatus.Success)
             {
