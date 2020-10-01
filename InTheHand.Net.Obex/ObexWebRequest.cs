@@ -867,6 +867,9 @@ namespace InTheHand.Net
             //get code
             sc = (ObexStatusCode)buffer[0];
 
+            // Read optional response headers regardless of the status code.
+            short len = (short)(IPAddress.NetworkToHostOrder(BitConverter.ToInt16(buffer, 1)) - 3);
+            StreamReadBlockMust(ns, buffer, bytesread, len);
         }
 
         #region Check Response
