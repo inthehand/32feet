@@ -501,7 +501,7 @@ namespace InTheHand.Bluetooth
         public static readonly BluetoothUuid LocalTimeInformation = 0x2A0F;
         
         [BluetoothUti("org.bluetooth.characteristic.location_and_speed")]
-        public static readonly BluetoothUuid LocationandSpeedCharacteristic = 0x2A67;
+        public static readonly BluetoothUuid LocationandSpeed = 0x2A67;
         
         [BluetoothUti("org.bluetooth.characteristic.location_name")]
         public static readonly BluetoothUuid LocationName = 0x2AB5;
