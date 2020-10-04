@@ -14,27 +14,96 @@ using Foundation;
 using UIKit;
 using CoreBluetooth;
 using CoreFoundation;
+using System.Threading.Tasks;
 
 namespace InTheHand.Bluetooth.Platforms.Apple
 {
     internal sealed class BluetoothTableViewSource : UITableViewSource, IUITableViewDataSource, IUITableViewDelegate
     {
-        private CBCentralManager _manager;
-        private BluetoothDelegate _delegate;
         private RequestDeviceOptions _options;
         private UITableView _table;
         private List<CBPeripheral> _devices = new List<CBPeripheral>();
 
         public BluetoothTableViewSource(RequestDeviceOptions options)
         {
-            _delegate = new BluetoothDelegate(this);
-            _manager = new CBCentralManager(_delegate, DispatchQueue.MainQueue);
             _options = options;
+
+            Bluetooth.DiscoveredPeripheral += Bluetooth_DiscoveredPeripheral;
+            
+            if (Bluetooth._manager.State == CBCentralManagerState.PoweredOn)
+            {
+                StartScanning();
+            }
+            else
+            {
+                Bluetooth.UpdatedState += _manager_UpdatedState;
+            }
+        }
+
+        private void Bluetooth_DiscoveredPeripheral(object sender, CBDiscoveredPeripheralEventArgs e)
+        {
+            /*foreach (var item in e.AdvertisementData)
+            {
+                if (item.Key.ToString() == CBAdvertisement.DataLocalNameKey)
+                {
+                    System.Diagnostics.Debug.WriteLine($"{item.Key}  {item.Value}");
+                }
+            }*/
+
+            //if (!string.IsNullOrEmpty(peripheral.Name))
+            //{
+            System.Diagnostics.Debug.WriteLine(e.Peripheral.Name + " " + e.Peripheral.Identifier.ToString());
+            if (!string.IsNullOrEmpty(e.Peripheral.Name) && !_devices.Contains(e.Peripheral))
+            {
+               UIDevice.CurrentDevice.BeginInvokeOnMainThread(() =>
+               {
+                   _devices.Add(e.Peripheral);
+                   OnReloadData();
+               });
+            }
+        }
+
+        private async void _manager_UpdatedState(object sender, EventArgs e)
+        {
+            if (Bluetooth._manager.State == CBCentralManagerState.PoweredOn)
+            {
+                if(!Bluetooth._manager.IsScanning)
+                    await StartScanning();
+            }
+        }
+
+        private async Task StartScanning()
+        {
+            await Task.Delay(300);
+
+            List<CBUUID> services = new List<CBUUID>();
+            if (!_options.AcceptAllDevices)
+            {
+                foreach (BluetoothLEScanFilter filter in _options.Filters)
+                {
+                    foreach (BluetoothUuid service in filter.Services)
+                    {
+                        services.Add(service);
+                    }
+                }
+            }
+
+            Bluetooth._manager.ScanForPeripherals(services.ToArray(), new PeripheralScanningOptions() { AllowDuplicatesKey = true });
+        }
+
+        public override bool CanEditRow(UITableView tableView, NSIndexPath indexPath)
+        {
+            return false;
+        }
+
+        public override UITableViewCellEditingStyle EditingStyleForRow(UITableView tableView, NSIndexPath indexPath)
+        {
+            return UITableViewCellEditingStyle.None;
         }
 
         public override UITableViewCell GetCell(UITableView tableView, NSIndexPath indexPath)
         {
-            var cell = new UITableViewCell(UITableViewCellStyle.Default, "bluetoothDevice");
+            var cell = new UITableViewCell(UITableViewCellStyle.Default, null);// "bluetoothDevice");
             cell.TextLabel.Text = string.IsNullOrEmpty(_devices[indexPath.Row].Name) ? _devices[indexPath.Row].Identifier.ToString() : _devices[indexPath.Row].Name;
             //cell.DetailTextLabel.Text = _devices[indexPath.Row].Identifier.ToString();
             return cell;
@@ -51,8 +120,8 @@ namespace InTheHand.Bluetooth.Platforms.Apple
 
         public void StopDiscovery()
         {
-            if(_manager.IsScanning)
-                _manager.StopScan();
+            if(Bluetooth._manager.IsScanning)
+                Bluetooth._manager.StopScan();
         }
 
         public override nint RowsInSection(UITableView tableview, nint section)
@@ -70,7 +139,7 @@ namespace InTheHand.Bluetooth.Platforms.Apple
             }
         }
 
-        private sealed class BluetoothDelegate : CBCentralManagerDelegate
+        /*private sealed class BluetoothDelegate : CBCentralManagerDelegate
         {
             private BluetoothTableViewSource _owner;
 
@@ -125,7 +194,7 @@ namespace InTheHand.Bluetooth.Platforms.Apple
                     });
                 //}
             }
-        }
+        }*/
     }
 }
 #endif

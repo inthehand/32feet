@@ -57,42 +57,87 @@ namespace InTheHand.Bluetooth
 
         Task<IReadOnlyList<GattCharacteristic>> PlatformGetCharacteristics()
         {
-            List<GattCharacteristic> characteristics = new List<GattCharacteristic>();
-            ((CBPeripheral)Device).DiscoverCharacteristics(_service);
-
-            foreach (CBCharacteristic cbcharacteristic in _service.Characteristics)
+            TaskCompletionSource<IReadOnlyList<GattCharacteristic>> tcs = new TaskCompletionSource<IReadOnlyList<GattCharacteristic>>();
+            CBPeripheral peripheral = Device;
+           
+            void handler(object sender, CBServiceEventArgs args)
             {
-                characteristics.Add(new GattCharacteristic(this, cbcharacteristic));
+                peripheral.DiscoveredCharacteristic -= handler;
+
+                if (args.Error != null)
+                    tcs.SetException(new Exception(args.Error.ToString()));
+
+                List<GattCharacteristic> characteristics = new List<GattCharacteristic>();
+            
+                foreach (CBCharacteristic cbcharacteristic in _service.Characteristics)
+                {
+                    characteristics.Add(new GattCharacteristic(this, cbcharacteristic));
+                }
+
+                tcs.SetResult(characteristics.AsReadOnly());
             }
 
-            return Task.FromResult((IReadOnlyList<GattCharacteristic>)characteristics.AsReadOnly());
+            peripheral.DiscoveredCharacteristic += handler;
+            peripheral.DiscoverCharacteristics(_service);
+
+            return tcs.Task;
         }
 
-        private async Task<GattService> PlatformGetIncludedServiceAsync(BluetoothUuid service)
+        private Task<GattService> PlatformGetIncludedServiceAsync(BluetoothUuid service)
         {
-            ((CBPeripheral)Device).DiscoverIncludedServices(new CBUUID[] { }, _service);
+            TaskCompletionSource<GattService> tcs = new TaskCompletionSource<GattService>();
+            CBPeripheral peripheral = Device;
 
-            foreach (var includedService in _service.IncludedServices)
+            void handler(object sender, CBServiceEventArgs args)
             {
-                if ((BluetoothUuid)includedService.UUID == service)
-                    return new GattService(Device, includedService);
+                peripheral.DiscoveredIncludedService -= handler;
+
+                if (args.Error != null)
+                {
+                    tcs.SetException(new Exception(args.Error.ToString()));
+                }
+                else
+                {
+                    tcs.SetResult(new GattService(Device, args.Service));
+                }
             }
 
-            return null;
+            peripheral.DiscoveredIncludedService += handler;
+            peripheral.DiscoverIncludedServices(new CBUUID[] { service }, _service);
+
+            return tcs.Task;
         }
 
-        private async Task<IReadOnlyList<GattService>> PlatformGetIncludedServicesAsync()
+        private Task<IReadOnlyList<GattService>> PlatformGetIncludedServicesAsync()
         {
-            List<GattService> services = new List<GattService>();
+            TaskCompletionSource<IReadOnlyList<GattService>> tcs = new TaskCompletionSource<IReadOnlyList<GattService>>();
+            CBPeripheral peripheral = Device;
 
-            ((CBPeripheral)Device).DiscoverIncludedServices(new CBUUID[] { }, _service);
-
-            foreach(var includedService in _service.IncludedServices)
+            void handler(object sender, CBServiceEventArgs args)
             {
-                services.Add(new GattService(Device, includedService));
+                peripheral.DiscoveredIncludedService -= handler;
+
+                if (args.Error != null)
+                {
+                    tcs.SetException(new Exception(args.Error.ToString()));
+                }
+                else
+                {
+                    List<GattService> services = new List<GattService>();
+                    
+                    foreach (var includedService in _service.IncludedServices)
+                    {
+                        services.Add(new GattService(Device, includedService));
+                    }
+
+                    tcs.SetResult(services.AsReadOnly());
+                }
             }
 
-            return services;
+            peripheral.DiscoveredIncludedService += handler;
+            peripheral.DiscoverIncludedServices(new CBUUID[] { }, _service);
+
+            return tcs.Task;
         }
     }
 }

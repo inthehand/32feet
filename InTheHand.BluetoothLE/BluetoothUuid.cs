@@ -16,7 +16,7 @@ namespace InTheHand.Bluetooth
     [DebuggerDisplay("{Value}")]
     public partial struct BluetoothUuid
     {
-        private static readonly Guid BluetoothBase = new Guid(0x00000000, 0x0000, 0x1000, 0x80, 0x00, 0x00, 0x80, 0x5F, 0x9B, 0x34, 0xFB);
+        internal static readonly Guid BluetoothBase = new Guid(0x00000000, 0x0000, 0x1000, 0x80, 0x00, 0x00, 0x80, 0x5F, 0x9B, 0x34, 0xFB);
 
         private Guid _uuid;
 
@@ -195,7 +195,7 @@ namespace InTheHand.Bluetooth
                 }
             }
 
-            return match ? BitConverter.ToUInt16(bytes, 0) : default;
+            return match ? BitConverter.ToUInt16(bytes, 0) : (ushort?)null;
         }
 
         /// <summary>

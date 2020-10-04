@@ -37,29 +37,15 @@ namespace InTheHand.Bluetooth
 #endif
             };
 
-            _manager = new CBCentralManager(_delegate, DispatchQueue.MainQueue, options);
-            //_manager.UpdatedState += _manager_UpdatedState;
-#if __IOS__
-            //_manager.DiscoveredPeripheral += _manager_DiscoveredPeripheral;
-            //_manager.RetrievedConnectedPeripherals += _manager_RetrievedConnectedPeripherals;
-#endif
+            _manager = new CBCentralManager(_delegate, new DispatchQueue("com.inthehand.Bluetooth"), options);
         }
 
-        internal static event EventHandler<CBPeripheral> ConnectedPeripheral;
-        internal static event EventHandler<CBPeripheral> DisconnectedPeripheral;
-        internal static event EventHandler<CBPeripheral> FailedToConnectPeripheral;
+        internal static event EventHandler UpdatedState;
+        internal static event EventHandler<CBPeripheralEventArgs> ConnectedPeripheral;
+        internal static event EventHandler<CBPeripheralErrorEventArgs> DisconnectedPeripheral;
+        internal static event EventHandler<CBDiscoveredPeripheralEventArgs> DiscoveredPeripheral;
+        internal static event EventHandler<CBPeripheralErrorEventArgs> FailedToConnectPeripheral;
 
-#if __IOS__
-        private static void _manager_RetrievedConnectedPeripherals(object sender, CBPeripheralsEventArgs e)
-        {
-            throw new NotImplementedException();
-        }
-
-        private static void _manager_DiscoveredPeripheral(object sender, CBDiscoveredPeripheralEventArgs e)
-        {
-            throw new NotImplementedException();
-        }
-#endif
         private sealed class BluetoothDelegate : CBCentralManagerDelegate
         {
 
@@ -70,6 +56,7 @@ namespace InTheHand.Bluetooth
             public override void UpdatedState(CBCentralManager central)
             {
                 Debug.WriteLine(central.State);
+                Bluetooth.UpdatedState?.Invoke(central, EventArgs.Empty);
 
                 bool newAvailability = false;
 
@@ -97,19 +84,19 @@ namespace InTheHand.Bluetooth
             public override void ConnectedPeripheral(CBCentralManager central, CBPeripheral peripheral)
             {
                 System.Diagnostics.Debug.WriteLine($"Connected {peripheral.Identifier}");
-                Bluetooth.ConnectedPeripheral?.Invoke(central, peripheral);
+                Bluetooth.ConnectedPeripheral?.Invoke(central, new CBPeripheralEventArgs(peripheral));
             }
 
             public override void DisconnectedPeripheral(CBCentralManager central, CBPeripheral peripheral, NSError error)
             {
                 System.Diagnostics.Debug.WriteLine($"Disconnected {peripheral.Identifier} {error}");
-                Bluetooth.DisconnectedPeripheral?.Invoke(central, peripheral);
+                Bluetooth.DisconnectedPeripheral?.Invoke(central, new CBPeripheralErrorEventArgs(peripheral, error));
             }
 
             public override void FailedToConnectPeripheral(CBCentralManager central, CBPeripheral peripheral, NSError error)
             {
                 System.Diagnostics.Debug.WriteLine($"Failed to connect {peripheral.Identifier} {error.Code}");
-                Bluetooth.FailedToConnectPeripheral?.Invoke(central, peripheral);
+                Bluetooth.FailedToConnectPeripheral?.Invoke(central, new CBPeripheralErrorEventArgs(peripheral, error));
             }
 
             public override void DiscoveredPeripheral(CBCentralManager central, CBPeripheral peripheral, NSDictionary advertisementData, NSNumber RSSI)
@@ -132,17 +119,12 @@ namespace InTheHand.Bluetooth
 
         private static ObservableCollection<BluetoothDevice> _foundDevices = new ObservableCollection<BluetoothDevice>();
 
+        
         private static void OnDiscoveredPeripheral(CBCentralManager central, CBPeripheral peripheral, NSDictionary advertisementData, NSNumber RSSI)
         {
-            
+            DiscoveredPeripheral?.Invoke(central, new CBDiscoveredPeripheralEventArgs(peripheral, advertisementData, RSSI));
             System.Diagnostics.Debug.WriteLine($"{peripheral.Identifier} {RSSI}");
             _foundDevices.Add(peripheral);
-#if __IOS__
-            if(controller !=null)
-            {
-                controller.AddTextField((t) => { t.Text = peripheral.Name; });
-            }
-#endif
         }
 
 #if __IOS__
@@ -175,22 +157,20 @@ namespace InTheHand.Bluetooth
 #if __IOS__
         private static UIAlertController controller = null;
 #endif
-        static async Task<BluetoothDevice> PlatformRequestDevice(RequestDeviceOptions options)
+        static Task<BluetoothDevice> PlatformRequestDevice(RequestDeviceOptions options)
         {
 #if __IOS__
-            EventWaitHandle handle = new EventWaitHandle(false, EventResetMode.ManualReset);
+            TaskCompletionSource<BluetoothDevice> tcs = new TaskCompletionSource<BluetoothDevice>();
 
             if(_manager.State != CBCentralManagerState.PoweredOn)
             {
                 throw new InvalidOperationException();
             }
 
-            BluetoothDevice selectedDevice = null;
-
             controller = UIAlertController.Create("Select a Bluetooth accessory", null, UIAlertControllerStyle.Alert);
             controller.AddAction(UIAlertAction.Create("Cancel", UIAlertActionStyle.Cancel, (a)=> {
-                handle.Set();
-                System.Diagnostics.Debug.WriteLine(a == null ? "<null>" : a.ToString());
+                tcs.SetResult(null);
+                Debug.WriteLine(a == null ? "<null>" : a.ToString());
             }));
             
             CGRect rect = new CGRect(0, 0, 272, 272);
@@ -202,9 +182,8 @@ namespace InTheHand.Bluetooth
             var source = new InTheHand.Bluetooth.Platforms.Apple.BluetoothTableViewSource(options);
             source.DeviceSelected += (s, e) =>
              {
-                 selectedDevice = e;
-                 handle.Set();
                  tvc.DismissViewController(true, null);
+                 tcs.SetResult(e);
              };
 
             tvc.TableView.Delegate = source;
@@ -212,7 +191,6 @@ namespace InTheHand.Bluetooth
 
             tvc.TableView.UserInteractionEnabled = true;
             tvc.TableView.AllowsSelection = true;
-            //controller.AddChildViewController(contentController);
             controller.SetValueForKey(tvc, new Foundation.NSString("contentViewController"));
 
             UIViewController currentController = UIApplication.SharedApplication.KeyWindow.RootViewController;
@@ -220,13 +198,8 @@ namespace InTheHand.Bluetooth
                 currentController = currentController.PresentedViewController;
 
             currentController.PresentViewController(controller, true, null);
-            
-            return await Task.Run(() =>
-            {
-                var s2 = source;
-                handle.WaitOne();
-                return selectedDevice;
-            });
+
+            return tcs.Task;
 #endif
             return null;
         }
@@ -242,7 +215,7 @@ namespace InTheHand.Bluetooth
             PairedDeviceHandler deviceHandler = new PairedDeviceHandler();
             OnRetrievedPeripherals += deviceHandler.OnRetrievedPeripherals;
             List<BluetoothDevice> devices = new List<BluetoothDevice>();
-            var periphs = _manager.RetrieveConnectedPeripherals(CBUUID.FromPartial(0x1801));
+            var periphs = _manager.RetrieveConnectedPeripherals(GattServiceUuids.GenericAttribute);
             foreach (var p in periphs)
             {
                 devices.Add(p);

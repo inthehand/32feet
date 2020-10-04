@@ -16,7 +16,6 @@ namespace InTheHand.Bluetooth
     {
         private CBPeripheral _peripheral;
         private RemoteGattServer _gatt;
-        private bool _watchingAdvertisements = false;
 
         private BluetoothDevice(CBPeripheral peripheral)
         {
@@ -72,20 +71,14 @@ namespace InTheHand.Bluetooth
             return _gatt;
         }
 
-        /*
-        bool GetWatchingAdvertisements()
+#if __IOS__
+        /// <summary>
+        /// Specifies whether to request Apple Notification Center Services to allow access to notifications from the remote device when connecting.
+        /// </summary>
+        public bool RequiresAncs
         {
-            return _watchingAdvertisements;
+            get;set;
         }
-
-        async Task DoWatchAdvertisements()
-        {
-            _watchingAdvertisements = true;
-        }
-
-        void DoUnwatchAdvertisements()
-        {
-            _watchingAdvertisements = false;
-        }*/
+#endif
     }
 }

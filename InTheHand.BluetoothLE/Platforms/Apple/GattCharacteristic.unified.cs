@@ -7,6 +7,7 @@
 
 using CoreBluetooth;
 using Foundation;
+using Intents;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -45,31 +46,66 @@ namespace InTheHand.Bluetooth
 
         Task<GattDescriptor> PlatformGetDescriptor(BluetoothUuid descriptor)
         {
-            GattDescriptor matchingDescriptor = null;
-            ((CBPeripheral)Service.Device).DiscoverDescriptors(_characteristic);
-            foreach (CBDescriptor cbdescriptor in _characteristic.Descriptors)
+            TaskCompletionSource<GattDescriptor> tcs = new TaskCompletionSource<GattDescriptor>();
+            CBPeripheral peripheral = Service.Device;
+
+            void handler(object sender, CBCharacteristicEventArgs args)
             {
-                if ((BluetoothUuid)cbdescriptor.UUID == descriptor)
+                peripheral.DiscoveredDescriptor -= handler;
+
+                if (args.Error != null)
                 {
-                    matchingDescriptor = new GattDescriptor(this, cbdescriptor);
-                    break;
+                    tcs.SetException(new Exception(args.Error.ToString()));
+                    return;
                 }
+
+                foreach (CBDescriptor cbdescriptor in _characteristic.Descriptors)
+                {
+                    if((BluetoothUuid)cbdescriptor.UUID == descriptor)
+                    {
+                        tcs.SetResult(new GattDescriptor(this, cbdescriptor));
+                        return;
+                    }
+                }
+
+                tcs.SetResult(null);
             }
 
-            return Task.FromResult(matchingDescriptor);
+            peripheral.DiscoveredDescriptor += handler;
+            peripheral.DiscoverDescriptors(_characteristic);
+
+            return tcs.Task;
         }
 
-        async Task<IReadOnlyList<GattDescriptor>> PlatformGetDescriptors()
+        Task<IReadOnlyList<GattDescriptor>> PlatformGetDescriptors()
         {
-            List<GattDescriptor> descriptors = new List<GattDescriptor>();
-            ((CBPeripheral)Service.Device).DiscoverDescriptors(_characteristic);
-            foreach (CBDescriptor cbdescriptor in _characteristic.Descriptors)
-            {
-                descriptors.Add(new GattDescriptor(this, cbdescriptor));
+            TaskCompletionSource<IReadOnlyList<GattDescriptor>> tcs = new TaskCompletionSource<IReadOnlyList<GattDescriptor>>();
+            CBPeripheral peripheral = Service.Device;
 
+            void handler(object sender, CBCharacteristicEventArgs args)
+            {
+                peripheral.DiscoveredDescriptor -= handler;
+
+                if (args.Error != null)
+                {
+                    tcs.SetException(new Exception(args.Error.ToString()));
+                    return;
+                }
+
+                List<GattDescriptor> descriptors = new List<GattDescriptor>();
+
+                foreach (CBDescriptor cbdescriptor in _characteristic.Descriptors)
+                {
+                    descriptors.Add(new GattDescriptor(this, cbdescriptor));
+                }
+
+                tcs.SetResult(descriptors.AsReadOnly());
             }
 
-            return descriptors;
+            peripheral.DiscoveredDescriptor += handler;
+            peripheral.DiscoverDescriptors(_characteristic);
+
+            return tcs.Task;
         }
 
         byte[] PlatformGetValue()
@@ -79,8 +115,32 @@ namespace InTheHand.Bluetooth
 
         Task<byte[]> PlatformReadValue()
         {
-            ((CBPeripheral)Service.Device).ReadValue(_characteristic);
-            return Task.FromResult(_characteristic.Value.ToArray());
+            TaskCompletionSource<byte[]> tcs = new TaskCompletionSource<byte[]>();
+            CBPeripheral peripheral = Service.Device;
+
+            void handler(object s, CBCharacteristicEventArgs e)
+            {
+                if (e.Characteristic == _characteristic)
+                {
+                    peripheral.UpdatedCharacterteristicValue += handler;
+
+                    if (e.Error != null)
+                    {
+                        tcs.SetException(new Exception(e.Error.ToString()));
+                    }
+                    else
+                    {
+                        if (!tcs.Task.IsCompleted)
+                        {
+                            tcs.SetResult(e.Characteristic.Value.ToArray());
+                        }
+                    }
+                }
+            };
+
+            peripheral.UpdatedCharacterteristicValue += handler;
+            peripheral.ReadValue(_characteristic);
+            return tcs.Task;
         }
 
         Task PlatformWriteValue(byte[] value, bool requireResponse)

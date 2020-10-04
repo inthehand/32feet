@@ -11,6 +11,9 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+#if !__MACOS__
+using UIKit;
+#endif
 
 namespace InTheHand.Bluetooth
 {
@@ -25,7 +28,6 @@ namespace InTheHand.Bluetooth
             switch (((CBPeripheral)Device).State)
             {
                 case CBPeripheralState.Connected:
-                case CBPeripheralState.Connecting:
                     return true;
 
                 default:
@@ -35,32 +37,65 @@ namespace InTheHand.Bluetooth
 
         Task PlatformConnect()
         {
-            return Task.Run(() =>
-            {
-                EventWaitHandle handle = new EventWaitHandle(false, EventResetMode.AutoReset);
-                Bluetooth.ConnectedPeripheral += (sender, peripheral) =>
+            TaskCompletionSource<bool> tcs = new TaskCompletionSource<bool>();
+
+            void connectedHandler(object sender, CBPeripheralEventArgs e)
+             {
+                 if (e.Peripheral.Identifier.IsEqual(((CBPeripheral)Device).Identifier))
                  {
-                     if (peripheral.Identifier.IsEqual(((CBPeripheral)Device).Identifier))
-                         handle.Set();
-                 };
-                Bluetooth.FailedToConnectPeripheral += (sender, peripheral) =>
+                    Bluetooth.ConnectedPeripheral -= connectedHandler;
+                    Bluetooth.FailedToConnectPeripheral -= failedConnectHandler;
+                    tcs.SetResult(true);
+                 }
+             };
+
+            void failedConnectHandler(object sender, CBPeripheralErrorEventArgs e)
+            {
+                if (e.Peripheral.Identifier.IsEqual(((CBPeripheral)Device).Identifier))
                 {
-                    if (peripheral.Identifier.IsEqual(((CBPeripheral)Device).Identifier))
-                        handle.Set();
-                };
+                    Bluetooth.ConnectedPeripheral -= connectedHandler;
+                    Bluetooth.FailedToConnectPeripheral -= failedConnectHandler;
+                    tcs.SetResult(false);
+                }
+            };
 
-                Bluetooth._manager.ConnectPeripheral(Device
+            Bluetooth.ConnectedPeripheral += connectedHandler;
+            Bluetooth.FailedToConnectPeripheral += failedConnectHandler;
 #if __IOS__
-                    , new CBConnectPeripheralOptions { RequiresAncs = true }
+            if (Device.RequiresAncs)
+            {
+                Bluetooth._manager.ConnectPeripheral(Device, new CBConnectPeripheralOptions { RequiresAncs = Device.RequiresAncs });
+            }
+            else
+            {
 #endif
-                    );
+                Bluetooth._manager.ConnectPeripheral(Device);
+#if __IOS__
+            }
+#endif
 
-                handle.WaitOne(5000);
+            switch(((CBPeripheral)Device).State)
+            {
+                case CBPeripheralState.Connected:
+                    Bluetooth.ConnectedPeripheral -= connectedHandler;
+                    Bluetooth.FailedToConnectPeripheral -= failedConnectHandler;
+                    return Task.CompletedTask;
 
-                if (!Connected)
+                case CBPeripheralState.Connecting:
+                    Task.Run(async () =>
+                    {
+                        await Task.Delay(5000);
+                        if (!tcs.Task.IsCompletedSuccessfully)
+                        {
+                            tcs.SetResult(false);
+                        }
+                    });
+                    return tcs.Task;
+
+                default:
                     Bluetooth._manager.CancelPeripheralConnection(Device);
-            });
-
+                    return Task.CompletedTask;
+            }
         }
 
         void PlatformDisconnect()
@@ -136,12 +171,12 @@ namespace InTheHand.Bluetooth
 
             void handler(object s, CBRssiEventArgs e)
             {
+                peripheral.RssiRead -= handler;
+
                 if (!tcs.Task.IsCompleted)
                 {
-                    tcs.SetResult((short)e.Rssi);
+                    tcs.SetResult(e.Rssi.Int16Value);
                 }
-
-                peripheral.RssiRead += handler;
             };
 
             peripheral.RssiRead += handler;

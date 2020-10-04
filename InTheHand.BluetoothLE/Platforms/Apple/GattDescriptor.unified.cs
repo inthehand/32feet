@@ -49,7 +49,7 @@ namespace InTheHand.Bluetooth
 
                     if (!tcs.Task.IsCompleted)
                     {
-                        tcs.SetResult(((NSData)e.Descriptor.Value).ToArray());
+                        tcs.SetResult(NSObjectToBytes(e.Descriptor.Value));
                     }
                 }
             };
@@ -58,6 +58,54 @@ namespace InTheHand.Bluetooth
 
             ((CBPeripheral)Characteristic.Service.Device).ReadValue(_descriptor);
             return tcs.Task;
+        }
+
+        private static byte[] NSObjectToBytes(NSObject obj)
+        {
+            if(obj is NSString str)
+            {
+                return System.Text.Encoding.UTF8.GetBytes(str);
+            }
+            else if(obj is NSNumber num)
+            {
+                System.Diagnostics.Debug.WriteLine(num.ObjCType);
+                switch (num.ObjCType)
+                {
+                    case "c":
+                        return new byte[] { num.ByteValue };
+                    case "s":
+                        return BitConverter.GetBytes(num.Int16Value);
+                    case "i":
+                        return BitConverter.GetBytes(num.Int32Value);
+                    case "l":
+                        return BitConverter.GetBytes(num.Int32Value);
+                    case "q":
+                        return BitConverter.GetBytes(num.Int64Value);
+                    case "C":
+                        return new byte[] { num.ByteValue };
+                    case "S":
+                        return BitConverter.GetBytes(num.UInt16Value);
+                    case "I":
+                        return BitConverter.GetBytes(num.UInt32Value);
+                    case "L":
+                        return BitConverter.GetBytes(num.UInt32Value);
+                    case "Q":
+                        return BitConverter.GetBytes(num.UInt64Value);
+                    case "f":
+                        return BitConverter.GetBytes(num.FloatValue);
+                    case "d":
+                        return BitConverter.GetBytes(num.DoubleValue);
+
+                    default:
+                        return new byte[] { num.ByteValue };
+                }
+            }
+            else if(obj is NSData data)
+            {
+                return data.ToArray();
+            }
+
+            return null;
         }
 
         Task PlatformWriteValue(byte[] value)
