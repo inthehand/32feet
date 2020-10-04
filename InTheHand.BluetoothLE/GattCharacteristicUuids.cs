@@ -322,11 +322,13 @@ namespace InTheHand.Bluetooth
 
         [BluetoothUti("org.bluetooth.characteristic.exact_time_100")]
         public static readonly BluetoothUuid ExactTime100 = 0x2A0B;
+        
         [BluetoothUti("org.bluetooth.characteristic.exact_time_256")]
         public static readonly BluetoothUuid ExactTime256 = 0x2A0C;
         
         [BluetoothUti("org.bluetooth.characteristic.fat_burn_heart_rate_lower_limit")]
         public static readonly BluetoothUuid FatBurnHeartRateLowerLimit = 0x2A88;
+        
         [BluetoothUti("org.bluetooth.characteristic.fat_burn_heart_rate_upper_limit")]
         public static readonly BluetoothUuid FatBurnHeartRateUpperLimit = 0x2A89;
         
@@ -338,8 +340,10 @@ namespace InTheHand.Bluetooth
 
         [BluetoothUti("org.bluetooth.characteristic.fitness_machine_control_point")]
         public static readonly BluetoothUuid FitnessMachineControlPoint = 0x2AD9;       
+        
         [BluetoothUti("org.bluetooth.characteristic.fitness_machine_feature")]
         public static readonly BluetoothUuid FitnessMachineFeature = 0x2ACC;
+        
         [BluetoothUti("org.bluetooth.characteristic.fitness_machine_status")]
         public static readonly BluetoothUuid FitnessMachineStatus = 0x2ADA;
 
@@ -351,14 +355,19 @@ namespace InTheHand.Bluetooth
 
         [BluetoothUti("org.bluetooth.characteristic.gap.central_address_resolution")]
         public static readonly BluetoothUuid CentralAddressResolution = 0x2AA6;
+        
         [BluetoothUti("org.bluetooth.characteristic.gap.device_name")]
         public static readonly BluetoothUuid DeviceName = 0x2A00;
+        
         [BluetoothUti("org.bluetooth.characteristic.gap.peripheral_preferred_connection_parameters")]
         public static readonly BluetoothUuid PeripheralPreferredConnectionParameters = 0x2A04;
+        
         [BluetoothUti("org.bluetooth.characteristic.gap.peripheral_privacy_flag")]
         public static readonly BluetoothUuid PeripheralPrivacyFlag = 0x2A02;
+        
         [BluetoothUti("org.bluetooth.characteristic.gap.reconnection_address")]
         public static readonly BluetoothUuid ReconnectionAddress = 0x2A03;
+        
         [BluetoothUti("org.bluetooth.characteristic.gap.service_changed")]
         public static readonly BluetoothUuid ServiceChanged = 0x2A05;
 
@@ -367,8 +376,10 @@ namespace InTheHand.Bluetooth
 
         [BluetoothUti("org.bluetooth.characteristic.glucose_feature")]
         public static readonly BluetoothUuid GlucoseFeature = 0x2A51;
+        
         [BluetoothUti("org.bluetooth.characteristic.glucose_measurement")]
         public static readonly BluetoothUuid GlucoseMeasurement = 0x2A18;
+        
         [BluetoothUti("org.bluetooth.characteristic.glucose_measurement_context")]
         public static readonly BluetoothUuid GlucoseMeasurementContext = 0x2A34;
         
@@ -380,8 +391,10 @@ namespace InTheHand.Bluetooth
 
         [BluetoothUti("org.bluetooth.characteristic.heart_rate_control_point")]
         public static readonly BluetoothUuid HeartRateControlPoint = 0x2A39;
+        
         [BluetoothUti("org.bluetooth.characteristic.heart_rate_max")]
         public static readonly BluetoothUuid HeartRateMax = 0x2A8D;      
+        
         [BluetoothUti("org.bluetooth.characteristic.heart_rate_measurement")]
         public static readonly BluetoothUuid HeartRateMeasurement = 0x2A37;
 
@@ -391,22 +404,27 @@ namespace InTheHand.Bluetooth
         [BluetoothUti("org.bluetooth.characteristic.height")]
         public static readonly BluetoothUuid Height = 0x2A8E;
         
-
         [BluetoothUti("org.bluetooth.characteristic.hid_control_point")]
         public static readonly BluetoothUuid HidControlPoint = 0x2A4C;
+       
         [BluetoothUti("org.bluetooth.characteristic.hid_information")]
         public static readonly BluetoothUuid HidInformation = 0x2A4A;
+        
         [BluetoothUti("org.bluetooth.characteristic.hip_circumference")]
         public static readonly BluetoothUuid HipCircumference = 0x2A8F;
         
         [BluetoothUti("org.bluetooth.characteristic.http_control_point")]
         public static readonly BluetoothUuid HttpControlPoint = 0x2ABA;
+        
         [BluetoothUti("org.bluetooth.characteristic.http_entity_body")]
         public static readonly BluetoothUuid HttpEntityBody = 0x2AB9;
+        
         [BluetoothUti("org.bluetooth.characteristic.http_headers")]
         public static readonly BluetoothUuid HttpHeaders = 0x2AB7;
+        
         [BluetoothUti("org.bluetooth.characteristic.http_status_code")]
         public static readonly BluetoothUuid HttpStatusCode = 0x2AB8;
+        
         [BluetoothUti("org.bluetooth.characteristic.https_security")]
         public static readonly BluetoothUuid HttpsSecurity = 0x2ABB;
 
@@ -415,7 +433,81 @@ namespace InTheHand.Bluetooth
 
         [BluetoothUti("org.bluetooth.characteristic.idd_annunciation_status")]
         public static readonly BluetoothUuid IddAnnunciationStatus = 0x2B22;
+        
+        [BluetoothUti("org.bluetooth.characteristic.idd_command_control_point")]
+        public static readonly BluetoothUuid IddCommandControlPoint = 0x2B25;
+        
+        [BluetoothUti("org.bluetooth.characteristic.idd_command_data")]
+        public static readonly BluetoothUuid IddCommandData = 0x2B26;
 
+        [BluetoothUti("org.bluetooth.characteristic.idd_features")]
+        public static readonly BluetoothUuid IddFeatures = 0x2B23;
+            
+        [BluetoothUti("org.bluetooth.characteristic.idd_history_data")]
+        public static readonly BluetoothUuid IddHistoryData = 0x2B28;
+        
+        [BluetoothUti("org.bluetooth.characteristic.idd_record_access_control_point")]
+        public static readonly BluetoothUuid IddRecordAccessControlPoint = 0x2B27;
+        
+        [BluetoothUti("org.bluetooth.characteristic.idd_status")]
+        public static readonly BluetoothUuid IddStatus = 0x2B21;
+        
+        [BluetoothUti("org.bluetooth.characteristic.idd_status_changed")]
+        public static readonly BluetoothUuid IddStatusChanged = 0x2B20;
+        
+        [BluetoothUti("org.bluetooth.characteristic.idd_status_reader_control_point")]
+        public static readonly BluetoothUuid IddStatusReaderControlPoint = 0x2B24;
+   
+        [BluetoothUti("org.bluetooth.characteristic.ieee_11073-20601_regulatoryertification_data_list")]
+        public static readonly BluetoothUuid RegulatoryCertificationDataList = 0x2A2A;
+   
+        [BluetoothUti("org.bluetooth.characteristic.indoor_bike_data")]
+        public static readonly BluetoothUuid IndoorBikeData = 0x2AD2;
+
+        [BluetoothUti("org.bluetooth.characteristic.indoor_positioning_configuration")]
+        public static readonly BluetoothUuid IndoorPositioningConfiguration = 0x2AAD;
+        
+        [BluetoothUti("org.bluetooth.characteristic.intermediate_cuff_pressure")]
+        public static readonly BluetoothUuid IntermediateCuffPressure = 0x2A36;
+        
+        [BluetoothUti("org.bluetooth.characteristic.intermediate_temperature")]
+        public static readonly BluetoothUuid IntermediateTemperature = 0x2A1E;
+        
+        [BluetoothUti("org.bluetooth.characteristic.irradiance")]
+        public static readonly BluetoothUuid Irradiance = 0x2A77;
+        
+        [BluetoothUti("org.bluetooth.characteristic.language")]
+        public static readonly BluetoothUuid Language = 0x2AA2;
+        
+        [BluetoothUti("org.bluetooth.characteristic.last_name")]
+        public static readonly BluetoothUuid LastName = 0x2A90;
+        
+        [BluetoothUti("org.bluetooth.characteristic.latitude")]
+        public static readonly BluetoothUuid Latitude = 0x2AAE;
+       
+        [BluetoothUti("org.bluetooth.characteristic.ln_control_point")]
+        public static readonly BluetoothUuid LNControlPoint = 0x2A6B;
+        
+        [BluetoothUti("org.bluetooth.characteristic.ln_feature")]
+        public static readonly BluetoothUuid LNFeature = 0x2A6A;
+        
+        [BluetoothUti("org.bluetooth.characteristic.local_east_coordinate")]
+        public static readonly BluetoothUuid LocalEastCoordinate = 0x2AB1;
+        
+        [BluetoothUti("org.bluetooth.characteristic.local_north_coordinate")]
+        public static readonly BluetoothUuid LocalNorthCoordinate = 0x2AB0;
+        
+        [BluetoothUti("org.bluetooth.characteristic.local_time_information")]
+        public static readonly BluetoothUuid LocalTimeInformation = 0x2A0F;
+        
+        [BluetoothUti("org.bluetooth.characteristic.location_and_speed")]
+        public static readonly BluetoothUuid LocationandSpeed = 0x2A67;
+        
+        [BluetoothUti("org.bluetooth.characteristic.location_name")]
+        public static readonly BluetoothUuid LocationName = 0x2AB5;
+        
+        [BluetoothUti("org.bluetooth.characteristic.Longitude")]
+        public static readonly BluetoothUuid Longitude = 0x2AAF;
 
         // TODO: Complete list of Characteristics
         //...
