@@ -7,6 +7,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading.Tasks;
 
 namespace InTheHand.Bluetooth
@@ -76,7 +77,7 @@ namespace InTheHand.Bluetooth
             return PlatformReadRssi();
         }
 
-
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private BluetoothPhy _preferredPhy = BluetoothPhy.Le1m;
         /// <summary>
         /// Sets the preferred Physical Layer (PHY) if supported.

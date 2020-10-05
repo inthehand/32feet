@@ -88,7 +88,7 @@ namespace InTheHand.Bluetooth.Platforms.Apple
                 }
             }
 
-            Bluetooth._manager.ScanForPeripherals(services.ToArray(), new PeripheralScanningOptions() { AllowDuplicatesKey = true });
+            Bluetooth.StartScanning(services.ToArray());
         }
 
         public override bool CanEditRow(UITableView tableView, NSIndexPath indexPath)
@@ -120,8 +120,7 @@ namespace InTheHand.Bluetooth.Platforms.Apple
 
         public void StopDiscovery()
         {
-            if(Bluetooth._manager.IsScanning)
-                Bluetooth._manager.StopScan();
+            Bluetooth.StopScanning();
         }
 
         public override nint RowsInSection(UITableView tableview, nint section)

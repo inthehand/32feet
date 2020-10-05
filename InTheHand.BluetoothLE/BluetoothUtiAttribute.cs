@@ -22,6 +22,9 @@ namespace InTheHand.Bluetooth
             Uti = uti;
         }
 
+        /// <summary>
+        /// Uniform Type Identifier e.g. 'org.bluetooth.service.generic_access'.
+        /// </summary>
         public string Uti
         {
             get;

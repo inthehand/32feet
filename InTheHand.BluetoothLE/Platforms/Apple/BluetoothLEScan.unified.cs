@@ -9,6 +9,20 @@ namespace InTheHand.Bluetooth
 {
     partial class BluetoothLEScan
     {
+        private readonly BluetoothLEScanOptions _options;
+
+        internal BluetoothLEScan(BluetoothLEScanOptions options)
+        {
+            _options = options;
+            if (options != null)
+            {
+                _filters = options.Filters;
+            }
+
+            Bluetooth.StartScanning(new CoreBluetooth.CBUUID[] { });
+            Active = true;
+        }
+
         private bool PlatformAcceptAllAdvertisements
         {
             get
@@ -27,6 +41,7 @@ namespace InTheHand.Bluetooth
 
         private void PlatformStop()
         {
+            Bluetooth.StopScanning();
         }
     }
 }

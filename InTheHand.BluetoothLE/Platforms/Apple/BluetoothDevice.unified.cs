@@ -8,6 +8,7 @@
 using CoreBluetooth;
 using Foundation;
 using System;
+using System.Diagnostics;
 using System.Threading.Tasks;
 
 namespace InTheHand.Bluetooth
@@ -15,6 +16,8 @@ namespace InTheHand.Bluetooth
     partial class BluetoothDevice
     {
         private CBPeripheral _peripheral;
+
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private RemoteGattServer _gatt;
 
         private BluetoothDevice(CBPeripheral peripheral)

@@ -124,6 +124,8 @@ namespace InTheHand.Bluetooth
         {
             DiscoveredPeripheral?.Invoke(central, new CBDiscoveredPeripheralEventArgs(peripheral, advertisementData, RSSI));
             System.Diagnostics.Debug.WriteLine($"{peripheral.Identifier} {RSSI}");
+            var e = new BluetoothAdvertisingEvent(peripheral, advertisementData, RSSI);
+            AdvertisementReceived?.Invoke(central, e);
             _foundDevices.Add(peripheral);
         }
 
@@ -264,7 +266,24 @@ namespace InTheHand.Bluetooth
 
         private static async Task<BluetoothLEScan> PlatformRequestLEScan(BluetoothLEScanOptions options)
         {
-            return null;
+            return new BluetoothLEScan(options);
+        }
+
+        private static int _scanCount = 0;
+        internal static void StartScanning(CBUUID[] services)
+        {
+            _scanCount++;
+
+            if (!_manager.IsScanning)
+                _manager.ScanForPeripherals(services, new PeripheralScanningOptions { AllowDuplicatesKey = true });
+        }
+
+        internal static void StopScanning()
+        {
+            _scanCount--;
+
+            if (_scanCount == 0 && _manager.IsScanning)
+                _manager.StopScan();
         }
 
         private static bool _oldAvailability;
