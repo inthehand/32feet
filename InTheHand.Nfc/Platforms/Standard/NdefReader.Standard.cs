@@ -16,5 +16,9 @@ namespace InTheHand.Nfc
         {
             return Task.FromException(new PlatformNotSupportedException());
         }
+
+        private void Dispose(bool disposing)
+        {
+        }
     }
 }

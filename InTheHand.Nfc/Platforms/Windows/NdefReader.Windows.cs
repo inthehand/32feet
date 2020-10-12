@@ -22,11 +22,25 @@ namespace InTheHand.Nfc
             string subscription = "NDEF";
             if(options != null)
             {
-                subscription = options.RecordType;
+                if (options.Signal != null)
+                    options.Signal.Register(Unsubscribe);
+
+                if(!string.IsNullOrEmpty(options.RecordType))
+                    subscription = options.RecordType;
             }
+
             subscriptionReference = proximityDevice.SubscribeForMessage(subscription, MessageReceived);
 
-            return Task.FromException(new NotImplementedException());
+            return Task.CompletedTask;
+        }
+
+        private void Unsubscribe()
+        {
+            if (subscriptionReference != 0)
+            {
+                proximityDevice.StopSubscribingForMessage(subscriptionReference);
+                subscriptionReference = 0;
+            }
         }
 
         private void MessageReceived(ProximityDevice sender, ProximityMessage message)
@@ -37,6 +51,19 @@ namespace InTheHand.Nfc
                 Data = message.Data.ToArray(),
                 RecordType = message.MessageType
             });
+
+            Reading?.Invoke(this, ndefMessage);
+        }
+
+        private void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                Unsubscribe();
+                proximityDevice = null;
+
+                disposedValue = true;
+            }
         }
     }
 }
