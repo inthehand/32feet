@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace InTheHand.Bluetooth
 {
-    [DebuggerDisplay("{Uuid}")]
+    [DebuggerDisplay("{Uuid} (Service)")]
     public sealed partial class GattService
     {
         internal GattService(BluetoothDevice device)
@@ -23,7 +23,6 @@ namespace InTheHand.Bluetooth
 
         public BluetoothDevice Device { get; private set; }
 
-        [DebuggerDisplay("{Value:N}")]
         public BluetoothUuid Uuid { get { return GetUuid(); } }
 
         public bool IsPrimary { get { return GetIsPrimary(); } }

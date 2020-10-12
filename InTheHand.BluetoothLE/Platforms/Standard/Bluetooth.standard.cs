@@ -13,29 +13,29 @@ namespace InTheHand.Bluetooth
 {
     partial class Bluetooth
     {
-        static Task<bool> DoGetAvailability()
+        private static Task<bool> PlatformGetAvailability()
         {
             return Task.FromResult(false);
         }
 
-        static Task<BluetoothDevice> PlatformRequestDevice(RequestDeviceOptions options)
+        private static Task<BluetoothDevice> PlatformRequestDevice(RequestDeviceOptions options)
         {
-            return Task.FromResult((BluetoothDevice)null);
+            return Task.FromException<BluetoothDevice>(new PlatformNotSupportedException());
         }
 
-        static Task<IReadOnlyCollection<BluetoothDevice>> PlatformScanForDevices(RequestDeviceOptions options)
+        private static Task<IReadOnlyCollection<BluetoothDevice>> PlatformScanForDevices(RequestDeviceOptions options)
         {
-            return Task.FromResult((IReadOnlyCollection<BluetoothDevice>)new List<BluetoothDevice>().AsReadOnly());
+            return Task.FromException<IReadOnlyCollection<BluetoothDevice>>(new PlatformNotSupportedException());
         }
 
-        static Task<IReadOnlyCollection<BluetoothDevice>> PlatformGetPairedDevices()
+        private static Task<IReadOnlyCollection<BluetoothDevice>> PlatformGetPairedDevices()
         {
-            return Task.FromResult((IReadOnlyCollection<BluetoothDevice>)new List<BluetoothDevice>().AsReadOnly());
+            return Task.FromException<IReadOnlyCollection<BluetoothDevice>>(new PlatformNotSupportedException());
         }
 
-        private static async Task<BluetoothLEScan> PlatformRequestLEScan(BluetoothLEScanOptions options)
+        private static Task<BluetoothLEScan> PlatformRequestLEScan(BluetoothLEScanOptions options)
         {
-            return null;
+            return Task.FromException<BluetoothLEScan>(new PlatformNotSupportedException());
         }
 
         private static void AddAvailabilityChanged()

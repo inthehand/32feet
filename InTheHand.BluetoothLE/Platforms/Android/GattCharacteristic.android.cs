@@ -160,7 +160,7 @@ namespace InTheHand.Bluetooth
         private async Task PlatformStopNotifications()
         {
             ((ABluetooth.BluetoothGatt)Service.Device.Gatt).SetCharacteristicNotification(_characteristic, false);
-            if (Service.Device.Gatt.Connected)
+            if (Service.Device.Gatt.IsConnected)
             {
                 var descriptor = await GetDescriptorAsync(GattDescriptorUuids.ClientCharacteristicConfiguration);
                 await descriptor.WriteValueAsync(new byte[] { 0, 0 });

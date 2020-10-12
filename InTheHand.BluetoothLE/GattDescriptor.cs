@@ -14,7 +14,7 @@ namespace InTheHand.Bluetooth
     /// <summary>
     /// Represents a GATT Descriptor, which provides further information about a <see cref="GattCharacteristic"/>’s value.
     /// </summary>
-    [DebuggerDisplay("{Uuid}")]
+    [DebuggerDisplay("{Uuid} (Descriptor)")]
     public sealed partial class GattDescriptor
     {
         internal GattDescriptor(GattCharacteristic characteristic)

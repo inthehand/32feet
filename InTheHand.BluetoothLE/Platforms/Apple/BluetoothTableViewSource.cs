@@ -77,13 +77,16 @@ namespace InTheHand.Bluetooth.Platforms.Apple
             await Task.Delay(300);
 
             List<CBUUID> services = new List<CBUUID>();
-            if (!_options.AcceptAllDevices)
+            if (_options != null)
             {
-                foreach (BluetoothLEScanFilter filter in _options.Filters)
+                if (!_options.AcceptAllDevices)
                 {
-                    foreach (BluetoothUuid service in filter.Services)
+                    foreach (BluetoothLEScanFilter filter in _options.Filters)
                     {
-                        services.Add(service);
+                        foreach (BluetoothUuid service in filter.Services)
+                        {
+                            services.Add(service);
+                        }
                     }
                 }
             }

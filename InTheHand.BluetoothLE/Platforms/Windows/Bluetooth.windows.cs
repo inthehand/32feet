@@ -23,7 +23,7 @@ namespace InTheHand.Bluetooth
     {
         internal static Dictionary<ulong, WeakReference> KnownDevices = new Dictionary<ulong, WeakReference>();
 
-        static async Task<bool> DoGetAvailability()
+        static async Task<bool> PlatformGetAvailability()
         {
             var adaptor = await BluetoothAdapter.GetDefaultAsync();
             return adaptor.IsLowEnergySupported;
@@ -97,7 +97,7 @@ namespace InTheHand.Bluetooth
         {
             List<BluetoothDevice> devices = new List<BluetoothDevice>();
 
-            foreach(var device in await DeviceInformation.FindAllAsync(BluetoothLEDevice.GetDeviceSelectorFromPairingState(false)))
+            foreach(var device in await DeviceInformation.FindAllAsync(BluetoothLEDevice.GetDeviceSelector()))
             {
                 devices.Add(await BluetoothLEDevice.FromIdAsync(device.Id));
             }
@@ -121,7 +121,7 @@ namespace InTheHand.Bluetooth
 
         private static async void AddAvailabilityChanged()
         {
-            _oldAvailability = await DoGetAvailability();
+            _oldAvailability = await PlatformGetAvailability();
             var adaptor = await BluetoothAdapter.GetDefaultAsync();
             var radio = await adaptor.GetRadioAsync();
             radio.StateChanged += Radio_StateChanged;
@@ -129,7 +129,7 @@ namespace InTheHand.Bluetooth
 
         private static async void Radio_StateChanged(Windows.Devices.Radios.Radio sender, object args)
         {
-            bool newAvailability = await DoGetAvailability();
+            bool newAvailability = await PlatformGetAvailability();
             if(newAvailability != _oldAvailability)
             {
                 _oldAvailability = newAvailability;

@@ -162,7 +162,7 @@ namespace InTheHand.Bluetooth
             bool success = _gatt.Connect();
             if (success)
             {
-                if (Connected)
+                if (IsConnected)
                     return Task.FromResult(true);
 
                 return tcs.Task;

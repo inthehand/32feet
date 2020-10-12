@@ -18,7 +18,7 @@ namespace InTheHand.Bluetooth
     /// Represents a GATT Characteristic, which is a basic data element that provides further information about a peripheral’s service.
     /// </summary>
     /// <remarks>Equivalent to <b>BluetoothRemoteGATTCharacteristic</b> in WebBluetooth.</remarks>
-    [DebuggerDisplay("{Uuid} ({UserDescription})")]
+    [DebuggerDisplay("{Uuid} (Characteristic)")]
     public sealed partial class GattCharacteristic
     {
         internal GattCharacteristic(GattService service)

@@ -136,7 +136,7 @@ namespace InTheHand.Bluetooth
 #endif
 
 
-        static Task<bool> DoGetAvailability()
+        static Task<bool> PlatformGetAvailability()
         {
             bool available = false;
 
@@ -290,7 +290,7 @@ namespace InTheHand.Bluetooth
 
         private static async void AddAvailabilityChanged()
         {
-            _oldAvailability = await DoGetAvailability();
+            _oldAvailability = await PlatformGetAvailability();
             _manager.UpdatedState += _manager_UpdatedState;
         }
 
@@ -301,7 +301,7 @@ namespace InTheHand.Bluetooth
 
         private static async void _manager_UpdatedState(object sender, EventArgs e)
         {
-            bool newAvailability = await DoGetAvailability();
+            bool newAvailability = await PlatformGetAvailability();
             if (newAvailability != _oldAvailability)
             {
                 _oldAvailability = newAvailability;

@@ -27,7 +27,7 @@ namespace InTheHand.Bluetooth
         internal static Android.Bluetooth.BluetoothDevice s_device;
         private static RequestDeviceOptions _currentRequest;
 
-        static Task<bool> DoGetAvailability()
+        static Task<bool> PlatformGetAvailability()
         {
             return Task.FromResult(BluetoothAdapter.DefaultAdapter.IsEnabled);
         }
@@ -36,7 +36,7 @@ namespace InTheHand.Bluetooth
 
         private static async void AddAvailabilityChanged()
         {
-            _oldAvailability = await DoGetAvailability();
+            _oldAvailability = await PlatformGetAvailability();
         }
 
         private static void RemoveAvailabilityChanged()
@@ -57,7 +57,7 @@ namespace InTheHand.Bluetooth
             Intent i = new Intent(Platform.CurrentActivity, typeof(DevicePickerActivity));
             Platform.CurrentActivity.StartActivity(i);
 
-            return Task.Run<BluetoothDevice>(() =>
+            return Task.Run(() =>
             {
                 s_handle.WaitOne();
 
@@ -74,14 +74,17 @@ namespace InTheHand.Bluetooth
 
         static async Task<IReadOnlyCollection<BluetoothDevice>> PlatformScanForDevices(RequestDeviceOptions options)
         {
-            List<ScanFilter> filters = new List<ScanFilter>();
-            foreach (var f in options.Filters)
+            if (options != null)
             {
-                foreach (var u in f.Services)
+                List<ScanFilter> filters = new List<ScanFilter>();
+                foreach (var f in options.Filters)
                 {
-                    ScanFilter.Builder b = new ScanFilter.Builder();
-                    b.SetServiceUuid(ParcelUuid.FromString(u.Value.ToString()));
-                    filters.Add(b.Build());
+                    foreach (var u in f.Services)
+                    {
+                        ScanFilter.Builder b = new ScanFilter.Builder();
+                        b.SetServiceUuid(ParcelUuid.FromString(u.Value.ToString()));
+                        filters.Add(b.Build());
+                    }
                 }
             }
 
@@ -92,7 +95,7 @@ namespace InTheHand.Bluetooth
 
             _manager.Adapter.BluetoothLeScanner.StartScan(callback);
 
-            await Task.Delay(30000);
+            callback.WaitOne();
 
             return callback.Devices.AsReadOnly();
         }
@@ -115,15 +118,8 @@ namespace InTheHand.Bluetooth
         private class DevicesCallback : ScanCallback
         {
             private readonly EventWaitHandle handle = new EventWaitHandle(false, EventResetMode.AutoReset);
-            private readonly List<BluetoothDevice> devices = new List<BluetoothDevice>();
 
-            public List<BluetoothDevice> Devices
-            {
-                get
-                {
-                    return devices;
-                }
-            }
+            public List<BluetoothDevice> Devices { get; } = new List<BluetoothDevice>();
 
             public void WaitOne()
             {
@@ -141,7 +137,7 @@ namespace InTheHand.Bluetooth
             {
                 System.Diagnostics.Debug.WriteLine("OnScanResult");
 
-                devices.Add(result.Device);
+                Devices.Add(result.Device);
                 if (callbackType == ScanCallbackType.AllMatches)
                     handle.Set();
 
@@ -151,6 +147,8 @@ namespace InTheHand.Bluetooth
             public override void OnScanFailed(ScanFailure errorCode)
             {
                 System.Diagnostics.Debug.WriteLine("OnBatchScanResults");
+
+                handle.Set();
 
                 base.OnScanFailed(errorCode);
             }

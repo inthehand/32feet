@@ -30,7 +30,7 @@ namespace InTheHand.Bluetooth
         /// <returns></returns>
         public static Task<bool> GetAvailabilityAsync()
         {
-            return DoGetAvailability();
+            return PlatformGetAvailability();
         }
 
         /// <summary>
@@ -38,7 +38,7 @@ namespace InTheHand.Bluetooth
         /// </summary>
         /// <param name="options"></param>
         /// <returns>A BluetoothDevice or null if unsuccessful.</returns>
-        public static Task<BluetoothDevice> RequestDeviceAsync(RequestDeviceOptions options)
+        public static Task<BluetoothDevice> RequestDeviceAsync(RequestDeviceOptions options = null)
         {
             return PlatformRequestDevice(options);
         }
@@ -79,12 +79,10 @@ namespace InTheHand.Bluetooth
             return PlatformGetPairedDevices();
         }
 
-#if DEBUG
-        public static Task<IReadOnlyCollection<BluetoothDevice>> ScanForDevicesAsync(RequestDeviceOptions options)
+        public static Task<IReadOnlyCollection<BluetoothDevice>> ScanForDevicesAsync(RequestDeviceOptions options = null)
         {
             return PlatformScanForDevices(options);
         }
-#endif
 
         public static Task<BluetoothLEScan> RequestLEScanAsync(BluetoothLEScanOptions options = null)
         {

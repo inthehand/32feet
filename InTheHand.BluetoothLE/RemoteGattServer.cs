@@ -25,9 +25,19 @@ namespace InTheHand.Bluetooth
             Device.OnGattServerDisconnected();
         }
 
+        /// <summary>
+        /// Gets the parent remote device.
+        /// </summary>
         public BluetoothDevice Device { get; private set; }
 
-        public bool Connected { get { return GetConnected(); } }
+        [Obsolete("Use IsConnected instead", true)]
+        public bool Connected { get { return IsConnected; } }
+
+        /// <summary>
+        /// Gets a value indicating if there is an active connection with the remote GATT server.
+        /// </summary>
+        /// <value>True if connected, else False.</value>
+        public bool IsConnected { get { return GetConnected(); } }
 
         /// <summary>
         /// Open a connection to the remote GATT server.
