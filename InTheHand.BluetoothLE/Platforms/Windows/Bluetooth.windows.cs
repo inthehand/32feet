@@ -82,15 +82,25 @@ namespace InTheHand.Bluetooth
                 picker.Filter.SupportedDeviceSelectors.Add(BluetoothLEDevice.GetDeviceSelectorFromPairingState(true));
                 picker.Filter.SupportedDeviceSelectors.Add(BluetoothLEDevice.GetDeviceSelectorFromPairingState(false));
             }
-            
-            var deviceInfo = await picker.PickSingleDeviceAsync(bounds);
-           
-            if (deviceInfo == null)
-                return null;
 
-            var device = await BluetoothLEDevice.FromIdAsync(deviceInfo.Id);
-            var access = await device.RequestAccessAsync();
-            return new BluetoothDevice(device);
+            try
+            {
+                var deviceInfo = await picker.PickSingleDeviceAsync(bounds);
+
+                if (deviceInfo == null)
+                    return null;
+
+                var device = await BluetoothLEDevice.FromIdAsync(deviceInfo.Id);
+                var access = await device.RequestAccessAsync();
+                return new BluetoothDevice(device);
+            }
+            catch(Exception ex)
+            {
+                if (ex.HResult == -2147023496)
+                    throw new PlatformNotSupportedException("RequestDevice cannot be called from a Console application.");
+
+                return null;
+            }
         }
 
         static async Task<IReadOnlyCollection<BluetoothDevice>> PlatformScanForDevices(RequestDeviceOptions options)
