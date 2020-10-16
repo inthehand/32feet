@@ -172,6 +172,7 @@ namespace InTheHand.Bluetooth
             controller = UIAlertController.Create("Select a Bluetooth accessory", null, UIAlertControllerStyle.Alert);
             controller.AddAction(UIAlertAction.Create("Cancel", UIAlertActionStyle.Cancel, (a)=> {
                 tcs.SetResult(null);
+                StopScanning();
                 Debug.WriteLine(a == null ? "<null>" : a.ToString());
             }));
             
@@ -217,7 +218,7 @@ namespace InTheHand.Bluetooth
             PairedDeviceHandler deviceHandler = new PairedDeviceHandler();
             OnRetrievedPeripherals += deviceHandler.OnRetrievedPeripherals;
             List<BluetoothDevice> devices = new List<BluetoothDevice>();
-            var periphs = _manager.RetrieveConnectedPeripherals(GattServiceUuids.GenericAttribute);
+            var periphs = _manager.RetrieveConnectedPeripherals(GattServiceUuids.GenericAccess, GattServiceUuids.GenericAttribute, GattServiceUuids.DeviceInformation, GattServiceUuids.Battery);
             foreach (var p in periphs)
             {
                 devices.Add(p);

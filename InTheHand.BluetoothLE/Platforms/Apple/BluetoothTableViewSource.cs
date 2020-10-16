@@ -42,24 +42,15 @@ namespace InTheHand.Bluetooth.Platforms.Apple
 
         private void Bluetooth_DiscoveredPeripheral(object sender, CBDiscoveredPeripheralEventArgs e)
         {
-            /*foreach (var item in e.AdvertisementData)
-            {
-                if (item.Key.ToString() == CBAdvertisement.DataLocalNameKey)
-                {
-                    System.Diagnostics.Debug.WriteLine($"{item.Key}  {item.Value}");
-                }
-            }*/
-
-            //if (!string.IsNullOrEmpty(peripheral.Name))
-            //{
-            System.Diagnostics.Debug.WriteLine(e.Peripheral.Name + " " + e.Peripheral.Identifier.ToString());
             if (!string.IsNullOrEmpty(e.Peripheral.Name) && !_devices.Contains(e.Peripheral))
             {
-               UIDevice.CurrentDevice.BeginInvokeOnMainThread(() =>
-               {
-                   _devices.Add(e.Peripheral);
-                   OnReloadData();
-               });
+                System.Diagnostics.Debug.WriteLine(e.Peripheral.Name + " " + e.Peripheral.Identifier.ToString());
+
+                UIDevice.CurrentDevice.BeginInvokeOnMainThread(() =>
+                {
+                    _devices.Add(e.Peripheral);
+                    OnReloadData();
+                });
             }
         }
 
