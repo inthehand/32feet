@@ -31,12 +31,8 @@ namespace InTheHand.Bluetooth
 
         static async Task<BluetoothDevice> PlatformRequestDevice(RequestDeviceOptions options)
         {
-            
             DevicePicker picker = new DevicePicker();
             Rect bounds = Rect.Empty;
-            //picker.Appearance.AccentColor = Windows.UI.Colors.Green;
-            //picker.Appearance.ForegroundColor = Windows.UI.Colors.White;
-            //picker.Appearance.BackgroundColor = Windows.UI.Colors.DarkGray;
 #if !UAP
             uint len = 64;
             byte[] buffer = new byte[len];
@@ -61,7 +57,7 @@ namespace InTheHand.Bluetooth
             picker.Appearance.SelectedAccentColor = (Color)Windows.UI.Xaml.Application.Current.Resources["SystemAccentColor"];
 #endif
 
-            if (!options.AcceptAllDevices)
+            if (options != null && !options.AcceptAllDevices)
             {
                 foreach (var filter in options.Filters)
                 {
@@ -171,8 +167,16 @@ namespace InTheHand.Bluetooth
 
 
 #if !UAP
-        [DllImport("Kernel32.dll", SetLastError = true)]
+        [DllImport("Kernel32", ExactSpelling = true, SetLastError = true)]
         private static extern int GetCurrentPackageId(ref uint bufferLength, byte[] buffer);
+
+        [ComImport]
+        [Guid("3E68D4BD-7135-4D10-8018-9FB6D9F33FA1")]
+        [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+        public interface IInitializeWithWindow
+        {
+            void Initialize(IntPtr hwnd);
+        }
 #endif
     }
 }
