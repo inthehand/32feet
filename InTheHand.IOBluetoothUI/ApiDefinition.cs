@@ -76,7 +76,7 @@ namespace IOBluetoothUI
         /// </summary>
         /// <param name="allowedUUID">Allowed UUID.</param>
         [Export("addAllowedUUID:")]
-        void AddAllowedUUID(SDPUUID allowedUUID);
+        void AddAllowedUuid(SdpUuid allowedUUID);
 
         // -(void)addAllowedUUIDArray:(NSArray *)allowedUUIDArray;
         /// <summary>
@@ -84,14 +84,14 @@ namespace IOBluetoothUI
         /// </summary>
         /// <param name="allowedUUIDArray">Allowed UUIDA rray.</param>
         [Export("addAllowedUUIDArray:")]
-        void AddAllowedUUIDArray(SDPUUID[] allowedUUIDArray);
+        void AddAllowedUuidArray(SdpUuid[] allowedUUIDArray);
 
         // -(void)clearAllowedUUIDs;
         /// <summary>
         /// Resets the controller back to the default state where it will accept any device the user selects.
         /// </summary>
         [Export("clearAllowedUUIDs")]
-        void ClearAllowedUUIDs();
+        void ClearAllowedUuids();
 
         // -(void)setTitle:(NSString *)windowTitle;
         // -(NSString *)getTitle;
@@ -186,15 +186,15 @@ namespace IOBluetoothUI
 
         // -(void)addAllowedUUID:(IOBluetoothSDPUUID *)allowedUUID;
         [Export("addAllowedUUID:")]
-        void AddAllowedUUID(SDPUUID allowedUUID);
+        void AddAllowedUuid(SdpUuid allowedUUID);
 
         // -(void)addAllowedUUIDArray:(NSArray *)allowedUUIDArray;
         [Export("addAllowedUUIDArray:")]
-        void AddAllowedUUIDArray(SDPUUID[] allowedUUIDArray);
+        void AddAllowedUuidArray(SdpUuid[] allowedUuidArray);
 
         // -(void)clearAllowedUUIDs;
         [Export("clearAllowedUUIDs")]
-        void ClearAllowedUUIDs();
+        void ClearAllowedUuids();
 
         /// <summary>
         /// Gets or sets the title of the device selector panel.
@@ -298,24 +298,24 @@ namespace IOBluetoothUI
         /// <summary>
         /// Adds a UUID to the list of UUIDs that are used to validate the user's selection.
         /// </summary>
-        /// <param name="allowedUUID">Allowed UUID.</param>
+        /// <param name="allowedUuid">Allowed UUID.</param>
         [Export("addAllowedUUID:")]
-        void AddAllowedUUID(SDPUUID allowedUUID);
+        void AddAllowedUuid(SdpUuid allowedUuid);
 
         // -(void)addAllowedUUIDArray:(NSArray *)allowedUUIDArray;
         /// <summary>
         /// Adds an array of UUIDs to the list of UUIDs that are used to validate the user's selection.
         /// </summary>
-        /// <param name="allowedUUIDArray">Allowed UUIDA rray.</param>
+        /// <param name="allowedUuidArray">Allowed UUIDA rray.</param>
         [Export("addAllowedUUIDArray:")]
-        void AddAllowedUUIDArray(SDPUUID[] allowedUUIDArray);
+        void AddAllowedUuidArray(SdpUuid[] allowedUuidArray);
 
         // -(void)clearAllowedUUIDs;
         /// <summary>
         /// Resets the controller back to the default state where it will accept any device the user selects.
         /// </summary>
         [Export("clearAllowedUUIDs")]
-        void ClearAllowedUUIDs();
+        void ClearAllowedUuids();
 
         // -(void)setTitle:(NSString *)windowTitle;
         // -(NSString *)getTitle;
