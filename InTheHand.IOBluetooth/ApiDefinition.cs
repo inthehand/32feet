@@ -4,7 +4,6 @@ using CoreFoundation;
 using Foundation;
 using ObjCRuntime;
 
-//[assembly: LinkWith("IOBluetooth.framework", LinkTarget.x86_64, ForceLoad =true, Frameworks = "CoreFoundation")]
 
 namespace IOBluetooth
 {
@@ -18,7 +17,7 @@ namespace IOBluetooth
     /// <summary>
     /// Represents a registered notification.
     /// </summary>
-    [BaseType(typeof(NSObject))]
+    [BaseType(typeof(NSObject), Name = "IOBluetoothUserNotification")]
     public interface UserNotification
     {
         // -(void)unregister;
@@ -53,7 +52,7 @@ namespace IOBluetooth
     /// <summary>
     /// An instance of IOBluetoothDevice represents a single remote Bluetooth device.
     /// </summary>
-    [BaseType(typeof(IOBluetoothObject))]
+    [BaseType(typeof(IOBluetoothObject), Name = "IOBluetoothDevice")]
     public interface BluetoothDevice : INSCoding, INSSecureCoding
     {
         // +(IOBluetoothUserNotification *)registerForConnectNotifications:(id)observer selector:(SEL)inSelector;
@@ -385,8 +384,9 @@ namespace IOBluetooth
 
     // @interface IOBluetoothDeviceInquiry : NSObject
     [BaseType(typeof(NSObject),
+        Name = "IOBluetoothDeviceInquiry",
         Delegates = new string[] { "WeakDelegate" },
-        Events = new Type[] { typeof(DeviceInquiryDelegate)})]
+        Events = new Type[] { typeof(DeviceInquiryDelegate) })]
     interface DeviceInquiry
     {
         [Wrap("WeakDelegate")]
@@ -469,7 +469,7 @@ namespace IOBluetooth
 
     // @protocol IOBluetoothDeviceInquiryDelegate
     [Protocol]
-    [BaseType(typeof(NSObject))]
+    [BaseType(typeof(NSObject), Name = "IOBluetoothDeviceInquiryDelegate")]
     interface DeviceInquiryDelegate
     {
         // @optional -(void)deviceInquiryStarted:(IOBluetoothDeviceInquiry *)sender;
@@ -495,10 +495,10 @@ namespace IOBluetooth
 
     // @interface IOBluetoothDevicePair : NSObject
     [BaseType(typeof(NSObject))]
-    interface DevicePair
+    interface IOBluetoothDevicePair
     {
         [Wrap("WeakDelegate")]
-        DevicePairDelegate Delegate { get; set; }
+        IOBluetoothDevicePairDelegate Delegate { get; set; }
 
         // @property (assign) id delegate;
         [NullAllowed, Export("delegate", ArgumentSemantic.Assign)]
@@ -507,7 +507,7 @@ namespace IOBluetooth
         // +(instancetype)pairWithDevice:(IOBluetoothDevice *)device;
         [Static]
         [Export("pairWithDevice:")]
-        DevicePair PairWithDevice(BluetoothDevice device);
+        IOBluetoothDevicePair PairWithDevice(BluetoothDevice device);
 
         // -(IOReturn)start;
         [Export("start")]
@@ -534,7 +534,7 @@ namespace IOBluetooth
     // @protocol IOBluetoothDevicePairDelegate <NSObject>
     [Protocol, Model]
     [BaseType(typeof(NSObject))]
-    interface DevicePairDelegate
+    interface IOBluetoothDevicePairDelegate
     {
         // @optional -(void)devicePairingStarted:(id)sender;
         [Export("devicePairingStarted:")]
@@ -567,10 +567,10 @@ namespace IOBluetooth
 
     // @interface IOBluetoothHostController : NSObject
     [BaseType(typeof(NSObject))]
-    interface HostController
+    interface IOBluetoothHostController
     {
         [Wrap("WeakDelegate")]
-        HostControllerDelegate Delegate { get; set; }
+        IOBluetoothHostControllerDelegate Delegate { get; set; }
 
         // @property (assign) id delegate;
         [NullAllowed, Export("delegate", ArgumentSemantic.Weak)]
@@ -579,7 +579,7 @@ namespace IOBluetooth
         // +(instancetype)defaultController;
         [Static]
         [Export("defaultController")]
-        HostController DefaultController { get; }
+        IOBluetoothHostController DefaultController { get; }
 
         // @property (readonly) BluetoothHCIPowerState powerState;
         [Export("powerState")]
@@ -614,7 +614,7 @@ namespace IOBluetooth
     // @interface IOBluetoothHostControllerDelegate (NSObject)
     [Protocol]
     [BaseType(typeof(NSObject))]
-    interface HostControllerDelegate
+    interface IOBluetoothHostControllerDelegate
     {
         // -(void)readRSSIForDeviceComplete:(id)controller device:(IOBluetoothDevice *)device info:(BluetoothHCIRSSIInfo *)info error:(IOReturn)error;
         [Export("readRSSIForDeviceComplete:device:info:error:")]
@@ -627,7 +627,7 @@ namespace IOBluetooth
 
 
     // @interface IOBluetoothL2CAPChannel : IOBluetoothObject <NSPortDelegate>
-    [BaseType(typeof(IOBluetoothObject))]
+    [BaseType(typeof(IOBluetoothObject), Name = "IOBluetoothL2CAPChannel")]
     public interface L2CAPChannel : INSPortDelegate
     {
         // +(IOBluetoothUserNotification *)registerForChannelOpenNotifications:(id)object selector:(SEL)selector;
@@ -720,7 +720,7 @@ namespace IOBluetooth
 
     // @protocol IOBluetoothL2CAPChannelDelegate
     [Protocol,Model]
-    [BaseType(typeof(NSObject))]
+    [BaseType(typeof(NSObject), Name = "IOBluetoothL2CAPChannelDelegate")]
     public interface L2CAPChannelDelegate
     {
         // @optional -(void)l2capChannelData:(IOBluetoothL2CAPChannel *)l2capChannel data:(void *)dataPointer length:(size_t)dataLength;
@@ -749,7 +749,7 @@ namespace IOBluetooth
     }
 
     // @interface IOBluetoothRFCOMMChannel : IOBluetoothObject <NSPortDelegate>
-    [BaseType(typeof(IOBluetoothObject))]
+    [BaseType(typeof(IOBluetoothObject), Name = "IOBluetoothRFCOMMChannel")]
     public interface RfcommChannel : INSPortDelegate
     {
         // +(IOBluetoothUserNotification *)registerForChannelOpenNotifications:(id)object selector:(SEL)selector;
@@ -840,7 +840,7 @@ namespace IOBluetooth
 
     // @protocol IOBluetoothRFCOMMChannelDelegate
     [Protocol,Model]
-    [BaseType(typeof(NSObject))]
+    [BaseType(typeof(NSObject), Name = "IOBluetoothRFCOMMChannelDelegate")]
     public interface RfcommChannelDelegate
     {
         // @optional -(void)rfcommChannelData:(IOBluetoothRFCOMMChannel *)rfcommChannel data:(void *)dataPointer length:(size_t)dataLength;
@@ -874,17 +874,17 @@ namespace IOBluetooth
 
     // @interface IOBluetoothSDPDataElement : NSObject <NSCoding, NSSecureCoding>
     [BaseType(typeof(NSObject), Name ="IOBluetoothSDPDataElement")]
-    public interface SDPDataElement : INSCoding, INSSecureCoding
+    public interface SdpDataElement : INSCoding, INSSecureCoding
     {
         // +(instancetype)withElementValue:(NSObject *)element;
         [Static]
         [Export("withElementValue:")]
-        SDPDataElement WithElementValue(NSObject element);
+        SdpDataElement WithElementValue(NSObject element);
 
         // +(instancetype)withType:(BluetoothSDPDataElementTypeDescriptor)type sizeDescriptor:(BluetoothSDPDataElementSizeDescriptor)newSizeDescriptor size:(uint32_t)newSize value:(NSObject *)newValue;
         [Static]
         [Export("withType:sizeDescriptor:size:value:")]
-        SDPDataElement WithType(BluetoothSDPDataElementType type, byte sizeDescriptor, uint size, NSObject value);
+        SdpDataElement WithType(BluetoothSdpDataElementType type, byte sizeDescriptor, uint size, NSObject value);
 
         // +(instancetype)withSDPDataElementRef:(IOBluetoothSDPDataElementRef)sdpDataElementRef;
         //[Static]
@@ -897,7 +897,7 @@ namespace IOBluetooth
 
         // -(instancetype)initWithType:(BluetoothSDPDataElementTypeDescriptor)newType sizeDescriptor:(BluetoothSDPDataElementSizeDescriptor)newSizeDescriptor size:(uint32_t)newSize value:(NSObject *)newValue;
         [Export("initWithType:sizeDescriptor:size:value:")]
-        IntPtr Constructor(BluetoothSDPDataElementType type, byte sizeDescriptor, uint size, NSObject value);
+        IntPtr Constructor(BluetoothSdpDataElementType type, byte sizeDescriptor, uint size, NSObject value);
 
         // -(IOBluetoothSDPDataElementRef)getSDPDataElementRef;
         //[Export ("getSDPDataElementRef")]
@@ -906,7 +906,7 @@ namespace IOBluetooth
 
         // -(BluetoothSDPDataElementTypeDescriptor)getTypeDescriptor;
         [Export("getTypeDescriptor")]
-        BluetoothSDPDataElementType TypeDescriptor { get; }
+        BluetoothSdpDataElementType TypeDescriptor { get; }
 
         // -(BluetoothSDPDataElementSizeDescriptor)getSizeDescriptor;
         [Export("getSizeDescriptor")]
@@ -942,7 +942,7 @@ namespace IOBluetooth
 
         // -(BOOL)containsDataElement:(IOBluetoothSDPDataElement *)dataElement;
         [Export("containsDataElement:")]
-        bool ContainsDataElement(SDPDataElement dataElement);
+        bool ContainsDataElement(SdpDataElement dataElement);
 
         // -(BOOL)containsValue:(NSObject *)cmpValue;
         [Export("containsValue:")]
@@ -950,7 +950,7 @@ namespace IOBluetooth
     }
 
     // @interface IOBluetoothSDPServiceAttribute : NSObject <NSCoding, NSSecureCoding>
-    [BaseType(typeof(NSObject))]
+    [BaseType(typeof(NSObject), Name = "IOBluetoothSDPServiceAttribute")]
     public interface SdpServiceAttribute : INSCoding, INSSecureCoding
     {
         // +(instancetype)withID:(BluetoothSDPServiceAttributeID)newAttributeID attributeElementValue:(NSObject *)attributeElementValue;
@@ -961,7 +961,7 @@ namespace IOBluetooth
         // +(instancetype)withID:(BluetoothSDPServiceAttributeID)newAttributeID attributeElement:(IOBluetoothSDPDataElement *)attributeElement;
         [Static]
         [Export("withID:attributeElement:")]
-        SdpServiceAttribute WithID(ushort attributeID, SDPDataElement attributeElement);
+        SdpServiceAttribute WithID(ushort attributeID, SdpDataElement attributeElement);
 
         // -(instancetype)initWithID:(BluetoothSDPServiceAttributeID)newAttributeID attributeElementValue:(NSObject *)attributeElementValue;
         [Export("initWithID:attributeElementValue:")]
@@ -969,7 +969,7 @@ namespace IOBluetooth
 
         // -(instancetype)initWithID:(BluetoothSDPServiceAttributeID)newAttributeID attributeElement:(IOBluetoothSDPDataElement *)attributeElement;
         [Export("initWithID:attributeElement:")]
-        IntPtr Constructor(ushort attributeID, SDPDataElement attributeElement);
+        IntPtr Constructor(ushort attributeID, SdpDataElement attributeElement);
 
         // -(BluetoothSDPServiceAttributeID)getAttributeID;
         [Export("getAttributeID")]
@@ -977,15 +977,15 @@ namespace IOBluetooth
 
         // -(IOBluetoothSDPDataElement *)getDataElement;
         [Export("getDataElement")]
-        SDPDataElement DataElement { get; }
+        SdpDataElement DataElement { get; }
 
         // -(IOBluetoothSDPDataElement *)getIDDataElement;
         [Export("getIDDataElement")]
-        SDPDataElement IDDataElement { get; }
+        SdpDataElement IDDataElement { get; }
     }
 
     // @interface IOBluetoothSDPServiceRecord : NSObject <NSCoding, NSSecureCoding>
-    [BaseType(typeof(NSObject))]
+    [BaseType(typeof(NSObject), Name = "IOBluetoothSDPServiceRecord")]
     public interface SdpServiceRecord : INSCoding, INSSecureCoding
     {
         // +(instancetype)publishedServiceRecordWithDictionary:(NSDictionary *)serviceDict;
@@ -1026,7 +1026,7 @@ namespace IOBluetooth
 
         // -(IOBluetoothSDPDataElement *)getAttributeDataElement:(BluetoothSDPServiceAttributeID)attributeID;
         [Export("getAttributeDataElement:")]
-        SDPDataElement GetAttributeDataElement(ushort attributeID);
+        SdpDataElement GetAttributeDataElement(ushort attributeID);
 
         // -(NSString *)getServiceName;
         [Export("getServiceName")]
@@ -1066,7 +1066,7 @@ namespace IOBluetooth
     }
 
     // @interface IOBluetoothSDPUUID : NSData
-    [BaseType(typeof(NSData))]
+    [BaseType(typeof(NSData), Name = "IOBluetoothSDPUUID")]
     public interface SDPUUID
     {
         // +(instancetype)uuidWithBytes:(const void *)bytes length:(unsigned int)length;
@@ -1322,22 +1322,22 @@ namespace IOBluetooth
 
     // @interface IOBluetoothOBEXSession : OBEXSession <IOBluetoothRFCOMMChannelDelegate>
     [BaseType(typeof(OBEXSession))]
-    public interface BluetoothOBEXSession : RfcommChannelDelegate
+    public interface IOBluetoothOBEXSession : RfcommChannelDelegate
     {
         // +(instancetype)withSDPServiceRecord:(IOBluetoothSDPServiceRecord *)inSDPServiceRecord;
         [Static]
         [Export("withSDPServiceRecord:")]
-        BluetoothOBEXSession WithSDPServiceRecord(SdpServiceRecord sdpServiceRecord);
+        IOBluetoothOBEXSession WithSDPServiceRecord(SdpServiceRecord sdpServiceRecord);
 
         // +(instancetype)withDevice:(IOBluetoothDevice *)inDevice channelID:(BluetoothRFCOMMChannelID)inRFCOMMChannelID;
         [Static]
         [Export("withDevice:channelID:")]
-        BluetoothOBEXSession WithDevice(BluetoothDevice device, byte rfCOMMChannelID);
+        IOBluetoothOBEXSession WithDevice(BluetoothDevice device, byte rfCOMMChannelID);
 
         // +(instancetype)withIncomingRFCOMMChannel:(IOBluetoothRFCOMMChannel *)inChannel eventSelector:(SEL)inEventSelector selectorTarget:(id)inEventSelectorTarget refCon:(void *)inUserRefCon;
         [Static]
         [Export("withIncomingRFCOMMChannel:eventSelector:selectorTarget:refCon:")]
-        BluetoothOBEXSession WithIncomingRFCOMMChannel(RfcommChannel channel, Selector eventSelector, NSObject eventSelectorTarget, IntPtr userRefCon);
+        IOBluetoothOBEXSession WithIncomingRFCOMMChannel(RfcommChannel channel, Selector eventSelector, NSObject eventSelectorTarget, IntPtr userRefCon);
 
         // -(instancetype)initWithSDPServiceRecord:(IOBluetoothSDPServiceRecord *)inSDPServiceRecord;
         [Export("initWithSDPServiceRecord:")]
@@ -1412,11 +1412,11 @@ namespace IOBluetooth
         // +(instancetype)withOBEXSession:(IOBluetoothOBEXSession *)inOBEXSession;
         [Static]
         [Export("withOBEXSession:")]
-        OBEXFileTransferServices WithOBEXSession(BluetoothOBEXSession obexSession);
+        OBEXFileTransferServices WithOBEXSession(IOBluetoothOBEXSession obexSession);
 
         // -(instancetype)initWithOBEXSession:(IOBluetoothOBEXSession *)inOBEXSession;
         [Export("initWithOBEXSession:")]
-        IntPtr Constructor(BluetoothOBEXSession obexSession);
+        IntPtr Constructor(IOBluetoothOBEXSession obexSession);
 
         // -(NSString *)currentPath;
         [Export("currentPath")]
@@ -1794,7 +1794,7 @@ namespace IOBluetooth
 
     // @interface IOBluetoothHandsFree : NSObject
     [Introduced(PlatformName.MacOSX, 10, 7)]
-    [BaseType(typeof(NSObject))]
+    [BaseType(typeof(NSObject), Name = "IOBluetoothHandsFree")]
     public interface HandsFree
     {
         // @property (assign) uint32_t supportedFeatures __attribute__((availability(macos, introduced=10.7)));
@@ -1971,7 +1971,7 @@ namespace IOBluetooth
 
     // @interface IOBluetoothHandsFreeAudioGateway : IOBluetoothHandsFree
     [Introduced(PlatformName.MacOSX, 10, 7)]
-    [BaseType(typeof(HandsFree))]
+    [BaseType(typeof(HandsFree), Name = "IOBluetoothHandsFreeAudioGateway")]
     interface HandsFreeAudioGateway
     {
         // -(instancetype)initWithDevice:(IOBluetoothDevice *)device delegate:(id)inDelegate __attribute__((availability(macos, introduced=10.7)));
@@ -2006,7 +2006,7 @@ namespace IOBluetooth
     }
 
     // @protocol IOBluetoothHandsFreeAudioGatewayDelegate
-    [Protocol]
+    [Protocol(Name = "IOBluetoothHandsFreeAudioGatewayDelegate")]
     interface HandsFreeAudioGatewayDelegate
     {
         // @optional -(void)handsFree:(IOBluetoothHandsFreeAudioGateway *)device hangup:(NSNumber *)hangup __attribute__((availability(macos, introduced=10.7)));
@@ -2022,7 +2022,7 @@ namespace IOBluetooth
 
     // @interface IOBluetoothHandsFreeDevice : IOBluetoothHandsFree
     [Introduced(PlatformName.MacOSX, 10, 7)]
-    [BaseType(typeof(HandsFree))]
+    [BaseType(typeof(HandsFree), Name = "IOBluetoothHandsFreeDevice")]
     interface HandsFreeDevice
     {
         // -(instancetype)initWithDevice:(IOBluetoothDevice *)device delegate:(id)delegate __attribute__((availability(macos, introduced=10.7)));
@@ -2137,7 +2137,7 @@ namespace IOBluetooth
     }
 
     // @protocol IOBluetoothHandsFreeDeviceDelegate <IOBluetoothHandsFreeDelegate>
-    [Protocol]
+    [Protocol(Name = "IOBluetoothHandsFreeDeviceDelegate")]
     interface HandsFreeDeviceDelegate : HandsFreeDelegate
     {
         // @optional -(void)handsFree:(IOBluetoothHandsFreeDevice *)device isServiceAvailable:(NSNumber *)isServiceAvailable __attribute__((availability(macos, introduced=10.7)));

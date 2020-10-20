@@ -5,13 +5,14 @@ using IOBluetooth;
 using IOBluetoothUI;
 using ObjCRuntime;
 
+
 namespace IOBluetoothUI
 {
     /// <summary>
     /// An NSWindowController subclass to display a window to initiate pairing to other bluetooth devices.
     /// </summary>
     // @interface IOBluetoothDeviceSelectorController : NSWindowController
-    [BaseType(typeof(NSWindowController))]
+    [BaseType(typeof(NSWindowController), Name = "IOBluetoothDeviceSelectorController")]
     public interface DeviceSelectorController
     {
         // +(IOBluetoothDeviceSelectorController *)deviceSelector;
@@ -143,7 +144,7 @@ namespace IOBluetoothUI
     /// An NSWindowController subclass to display a window to initiate pairing to other bluetooth devices.
     /// </summary>
     // @interface IOBluetoothPairingController : NSWindowController
-    [BaseType(typeof(NSWindowController))]
+    [BaseType(typeof(NSWindowController), Name = "IOBluetoothPairingController")]
     public interface BluetoothPairingController
     {
         // +(IOBluetoothPairingController *)pairingController;
@@ -227,7 +228,7 @@ namespace IOBluetoothUI
     /// <summary>
     /// An NSWindowController subclass to display a window to search for and perform SDP queries on bluetooth devices within range.
     /// </summary>
-    [BaseType(typeof(NSWindowController))]
+    [BaseType(typeof(NSWindowController), Name = "IOBluetoothServiceBrowserController")]
     public interface ServiceBrowserController
     {
         // +(IOBluetoothServiceBrowserController *)serviceBrowserController:(IOBluetoothServiceBrowserControllerOptions)inOptions;
@@ -254,7 +255,7 @@ namespace IOBluetoothUI
         /// These return values are the same as NSRunStoppedResponse and NSRunAbortedResponse respectively. 
         /// They are the standard values used in a modal session.</returns>
         [Export("runModal")]
-        int RunModal();
+        nint RunModal();
 
         // -(IOReturn)beginSheetModalForWindow:(NSWindow *)sheetWindow modalDelegate:(id)modalDelegate didEndSelector:(SEL)didEndSelector contextInfo:(void *)contextInfo;
         /// <summary>
@@ -291,7 +292,7 @@ namespace IOBluetoothUI
 
         //// -(const IOBluetoothDeviceSearchAttributes *)getSearchAttributes;
         //[Export("getSearchAttributes")]
-        //IOBluetoothDeviceSearchAttributes SearchAttributes { [Bind("getOptions")]get; }
+        //IOBluetoothDeviceSearchAttributes SearchAttributes { [Bind("getSearchAttributes")]get; }
 
         // -(void)addAllowedUUID:(IOBluetoothSDPUUID *)allowedUUID;
         /// <summary>
@@ -345,7 +346,7 @@ namespace IOBluetoothUI
     }
 
     // @interface IOBluetoothObjectPushUIController : NSWindowController
-    [BaseType(typeof(NSWindowController))]
+    [BaseType(typeof(NSWindowController), Name = "IOBluetoothObjectPushUIController")]
     public interface ObjectPushUIController
     {
         // -(IOBluetoothObjectPushUIController *)initObjectPushWithBluetoothDevice:(IOBluetoothDevice *)inDevice withFiles:(NSArray *)inFiles delegate:(id)inDelegate;
@@ -387,7 +388,7 @@ namespace IOBluetoothUI
     }
 
     // @interface IOBluetoothPasskeyDisplay : NSView
-    [BaseType(typeof(NSView))]
+    [BaseType(typeof(NSView), Name = "IOBluetoothPasskeyDisplay")]
     interface PasskeyDisplay
     {
         // @property (assign) BOOL usePasskeyNotificaitons;
@@ -443,14 +444,14 @@ namespace IOBluetoothUI
     // @interface IOBluetoothAccessibilityIgnoredTextFieldCell : NSTextFieldCell
     [Internal]
     [BaseType(typeof(NSTextFieldCell))]
-    interface AccessibilityIgnoredTextFieldCell
+    interface IOBluetoothAccessibilityIgnoredTextFieldCell
     {
     }
 
     // @interface IOBluetoothAccessibilityIgnoredImageCell : NSImageCell
     [Internal]
     [BaseType(typeof(NSImageCell))]
-    interface AccessibilityIgnoredImageCell
+    interface IOBluetoothAccessibilityIgnoredImageCell
     {
     }
 }

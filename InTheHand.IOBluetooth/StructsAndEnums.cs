@@ -634,12 +634,12 @@ namespace IOBluetooth
     public enum BluetoothHCIExtendedInquiryResponseDataTypes : uint
     {
         Flags = 1,
-        kBluetoothHCIExtendedInquiryResponseDataType16BitServiceClassUUIDsWithMoreAvailable = 2,
-        kBluetoothHCIExtendedInquiryResponseDataType16BitServiceClassUUIDsCompleteList = 3,
-        kBluetoothHCIExtendedInquiryResponseDataType32BitServiceClassUUIDsWithMoreAvailable = 4,
-        kBluetoothHCIExtendedInquiryResponseDataType32BitServiceClassUUIDsCompleteList = 5,
-        kBluetoothHCIExtendedInquiryResponseDataType128BitServiceClassUUIDsWithMoreAvailable = 6,
-        kBluetoothHCIExtendedInquiryResponseDataType128BitServiceClassUUIDsCompleteList = 7,
+        k16BitServiceClassUUIDsWithMoreAvailable = 2,
+        k16BitServiceClassUUIDsCompleteList = 3,
+        k32BitServiceClassUUIDsWithMoreAvailable = 4,
+        k32BitServiceClassUUIDsCompleteList = 5,
+        k128BitServiceClassUUIDsWithMoreAvailable = 6,
+        k128BitServiceClassUUIDsCompleteList = 7,
         ShortenedLocalName = 8,
         CompleteLocalName = 9,
         TransmitPowerLevel = 10,
@@ -669,7 +669,7 @@ namespace IOBluetooth
         Uri = 36,
         IndoorPositioning = 37,
         TransportDiscoveryData = 38,
-        kBluetoothHCIExtendedInquiryResponseDataType3DInformationData = 61,
+        k3DInformationData = 61,
         ManufacturerSpecificData = 255
     }
 
@@ -806,7 +806,7 @@ namespace IOBluetooth
         Optional3 = 3
     }
 
-    public enum BluetoothHciPageScanTypes : uint
+    public enum BluetoothHCIPageScanTypes : uint
     {
         Standard = 0,
         Interlaced = 1,
@@ -814,7 +814,7 @@ namespace IOBluetooth
         ReservedEnd = 255
     }
 
-    public enum BluetoothHciErroneousDataReporting : uint
+    public enum BluetoothHCIErroneousDataReporting : uint
     {
         Disabled = 0,
         Enabled = 1,
@@ -2070,7 +2070,7 @@ namespace IOBluetooth
         public sbyte level;
     }
 
-    public enum HciHoldModeActivityStates : uint
+    public enum HCIHoldModeActivityStates : uint
     {
         MaintainCurrentPowerState = 0,
         SuspendPageScan = 1,
@@ -2557,96 +2557,93 @@ namespace IOBluetooth
         ConnectionRequest = 4,
         DisconnectionComplete = 5,
         AuthenticationComplete = 6,
-        BluetoothHCIEventRemoteNameRequestComplete = 7,
-        BluetoothHCIEventEncryptionChange = 8,
-        BluetoothHCIEventChangeConnectionLinkKeyComplete = 9,
-        BluetoothHCIEventMasterLinkKeyComplete = 10,
-        BluetoothHCIEventReadRemoteSupportedFeaturesComplete = 11,
-        BluetoothHCIEventReadRemoteVersionInformationComplete = 12,
-        BluetoothHCIEventQoSSetupComplete = 13,
-        BluetoothHCIEventCommandComplete = 14,
-        BluetoothHCIEventCommandStatus = 15,
-        BluetoothHCIEventHardwareError = 16,
-        BluetoothHCIEventFlushOccurred = 17,
-        BluetoothHCIEventRoleChange = 18,
-        BluetoothHCIEventNumberOfCompletedPackets = 19,
-        BluetoothHCIEventModeChange = 20,
-        BluetoothHCIEventReturnLinkKeys = 21,
-        BluetoothHCIEventPINCodeRequest = 22,
-        BluetoothHCIEventLinkKeyRequest = 23,
-        BluetoothHCIEventLinkKeyNotification = 24,
-        BluetoothHCIEventLoopbackCommand = 25,
-        BluetoothHCIEventDataBufferOverflow = 26,
-        BluetoothHCIEventMaxSlotsChange = 27,
-        BluetoothHCIEventReadClockOffsetComplete = 28,
-        BluetoothHCIEventConnectionPacketType = 29,
-        BluetoothHCIEventQoSViolation = 30,
-        BluetoothHCIEventPageScanModeChange = 31,
-        BluetoothHCIEventPageScanRepetitionModeChange = 32,
-        BluetoothHCIEventFlowSpecificationComplete = 33,
-        BluetoothHCIEventInquiryResultWithRSSI = 34,
-        BluetoothHCIEventReadRemoteExtendedFeaturesComplete = 35,
-        BluetoothHCIEventSynchronousConnectionComplete = 44,
-        BluetoothHCIEventSynchronousConnectionChanged = 45,
-        BluetoothHCIEventSniffSubrating = 46,
-        BluetoothHCIEventExtendedInquiryResult = 47,
-        BluetoothHCIEventEncryptionKeyRefreshComplete = 48,
-        BluetoothHCIEventIOCapabilityRequest = 49,
-        BluetoothHCIEventIOCapabilityResponse = 50,
-        BluetoothHCIEventUserConfirmationRequest = 51,
-        BluetoothHCIEventUserPasskeyRequest = 52,
-        BluetoothHCIEventRemoteOOBDataRequest = 53,
-        BluetoothHCIEventSimplePairingComplete = 54,
-        BluetoothHCIEventLinkSupervisionTimeoutChanged = 56,
-        BluetoothHCIEventEnhancedFlushComplete = 57,
-        BluetoothHCIEventUserPasskeyNotification = 59,
-        BluetoothHCIEventKeypressNotification = 60,
-        BluetoothHCIEventRemoteHostSupportedFeaturesNotification = 61,
-        BluetoothHCIEventLEMetaEvent = 62,
-        BluetoothHCISubEventLEConnectionComplete = 1,
-        BluetoothHCISubEventLEAdvertisingReport = 2,
-        BluetoothHCISubEventLEConnectionUpdateComplete = 3,
-        BluetoothHCISubEventLEReadRemoteUsedFeaturesComplete = 4,
-        BluetoothHCISubEventLELongTermKeyRequest = 5,
-        BluetoothHCISubEventLERemoteConnectionParameterRequest = 6,
-        BluetoothHCISubEventLEDataLengthChange = 7,
-        BluetoothHCISubEventLEReadLocalP256PublicKeyComplete = 8,
-        BluetoothHCISubEventLEGenerateDHKeyComplete = 9,
-        BluetoothHCISubEventLEEnhancedConnectionComplete = 10,
-        BluetoothHCISubEventLEDirectAdvertisingReport = 11,
-        BluetoothHCISubEventLEPhyUpdateComplete = 12,
-        BluetoothHCISubEventLEExtendedAdvertising = 13,
-        BluetoothHCISubEventLEPeriodicAdvertisingSyncEstablished = 14,
-        BluetoothHCISubEventLEPeriodicAdvertisingReport = 15,
-        BluetoothHCISubEventLEPeriodicAdvertisingSyncLost = 16,
-        BluetoothHCISubEventLEScanTimeout = 17,
-        BluetoothHCISubEventLEAdvertisingSetTerminated = 18,
-        BluetoothHCISubEventLEScanRequestReceived = 19,
-        BluetoothHCISubEventLEChannelSelectionAlgorithm = 20,
-        LeExtendedAdvertisingReportSubevent = 13,
-        LePeriodicAdvertisingSyncEstablishedSubevent = 14,
-        LePeriodicAdvertisingReportSubevent = 15,
-        LePeriodicAdvertisingSyncLostSubevent = 16,
-        LeScanTimeoutSubevent = 17,
-        LeAdvertisingSetTerminatedSubevent = 18,
-        LeScanRequestReceivedSubevent = 19,
-        LeChannelSelectionAlgorithmSubevent = 20,
-        BluetoothHCIEventPhysicalLinkComplete = 64,
-        BluetoothHCIEventChannelSelected = 65,
-        BluetoothHCIEventDisconnectionPhysicalLinkComplete = 66,
-        BluetoothHCIEventPhysicalLinkLossEarlyWarning = 67,
-        BluetoothHCIEventPhysicalLinkRecovery = 68,
-        BluetoothHCIEventLogicalLinkComplete = 69,
-        BluetoothHCIEventDisconnectionLogicalLinkComplete = 70,
-        BluetoothHCIEventFlowSpecModifyComplete = 71,
-        BluetoothHCIEventNumberOfCompletedDataBlocks = 72,
-        BluetoothHCIEventShortRangeModeChangeComplete = 76,
-        BluetoothHCIEventAMPStatusChange = 77,
-        BluetoothHCIEventAMPStartTest = 73,
-        BluetoothHCIEventAMPTestEnd = 74,
-        BluetoothHCIEventAMPReceiverReport = 75,
-        BluetoothHCIEventLogoTesting = 254,
-        BluetoothHCIEventVendorSpecific = 255
+        RemoteNameRequestComplete = 7,
+        EncryptionChange = 8,
+        ChangeConnectionLinkKeyComplete = 9,
+        MasterLinkKeyComplete = 10,
+        ReadRemoteSupportedFeaturesComplete = 11,
+        ReadRemoteVersionInformationComplete = 12,
+        QoSSetupComplete = 13,
+        CommandComplete = 14,
+        CommandStatus = 15,
+        HardwareError = 16,
+        FlushOccurred = 17,
+        RoleChange = 18,
+        NumberOfCompletedPackets = 19,
+        ModeChange = 20,
+        ReturnLinkKeys = 21,
+        PINCodeRequest = 22,
+        LinkKeyRequest = 23,
+        LinkKeyNotification = 24,
+        LoopbackCommand = 25,
+        DataBufferOverflow = 26,
+        MaxSlotsChange = 27,
+        ReadClockOffsetComplete = 28,
+        ConnectionPacketType = 29,
+        QoSViolation = 30,
+        PageScanModeChange = 31,
+        PageScanRepetitionModeChange = 32,
+        FlowSpecificationComplete = 33,
+        InquiryResultWithRSSI = 34,
+        ReadRemoteExtendedFeaturesComplete = 35,
+        SynchronousConnectionComplete = 44,
+        SynchronousConnectionChanged = 45,
+        SniffSubrating = 46,
+        ExtendedInquiryResult = 47,
+        EncryptionKeyRefreshComplete = 48,
+        IOCapabilityRequest = 49,
+        IOCapabilityResponse = 50,
+        UserConfirmationRequest = 51,
+        UserPasskeyRequest = 52,
+        RemoteOOBDataRequest = 53,
+        SimplePairingComplete = 54,
+        LinkSupervisionTimeoutChanged = 56,
+        EnhancedFlushComplete = 57,
+        UserPasskeyNotification = 59,
+        KeypressNotification = 60,
+        RemoteHostSupportedFeaturesNotification = 61,
+        LEMetaEvent = 62,
+        
+        PhysicalLinkComplete = 64,
+        ChannelSelected = 65,
+        DisconnectionPhysicalLinkComplete = 66,
+        PhysicalLinkLossEarlyWarning = 67,
+        PhysicalLinkRecovery = 68,
+        LogicalLinkComplete = 69,
+        DisconnectionLogicalLinkComplete = 70,
+        FlowSpecModifyComplete = 71,
+        NumberOfCompletedDataBlocks = 72,
+        ShortRangeModeChangeComplete = 76,
+        AMPStatusChange = 77,
+        AMPStartTest = 73,
+        AMPTestEnd = 74,
+        AMPReceiverReport = 75,
+        LogoTesting = 254,
+        VendorSpecific = 255
+    }
+
+    public enum BluetoothHciSubEventLE
+    {
+        ConnectionComplete = 1,
+        AdvertisingReport = 2,
+        ConnectionUpdateComplete = 3,
+        ReadRemoteUsedFeaturesComplete = 4,
+        LongTermKeyRequest = 5,
+        RemoteConnectionParameterRequest = 6,
+        DataLengthChange = 7,
+        ReadLocalP256PublicKeyComplete = 8,
+        GenerateDHKeyComplete = 9,
+        EnhancedConnectionComplete = 10,
+        DirectAdvertisingReport = 11,
+        PhyUpdateComplete = 12,
+        ExtendedAdvertising = 13,
+        PeriodicAdvertisingSyncEstablished = 14,
+        PeriodicAdvertisingReport = 15,
+        PeriodicAdvertisingSyncLost = 16,
+        ScanTimeout = 17,
+        AdvertisingSetTerminated = 18,
+        ScanRequestReceived = 19,
+        ChannelSelectionAlgorithm = 20,
     }
 
     //[Verify (InferredFromMemberPrefix)]
@@ -2690,7 +2687,7 @@ namespace IOBluetooth
     //}
 
     [StructLayout(LayoutKind.Sequential)]
-    public struct BluetoothHCIEventConnectionCompleteResults
+    public struct BluetoothHciEventConnectionCompleteResults
     {
         public ushort ConnectionHandle;
 
@@ -2702,7 +2699,7 @@ namespace IOBluetooth
     }
 
     [StructLayout(LayoutKind.Sequential)]
-    public struct BluetoothHCIEventLEConnectionCompleteResults
+    public struct BluetoothHciEventLEConnectionCompleteResults
     {
         public ushort connectionHandle;
 
@@ -2722,7 +2719,7 @@ namespace IOBluetooth
     }
 
     [StructLayout(LayoutKind.Sequential)]
-    public struct BluetoothHCIEventLEConnectionUpdateCompleteResults
+    public struct BluetoothHciEventLEConnectionUpdateCompleteResults
     {
         public ushort connectionHandle;
 
@@ -3173,7 +3170,7 @@ namespace IOBluetooth
     //	ServiceSearchAttributeResponse = 7
     //}
 
-    public enum BluetoothSDPErrorCode : uint
+    public enum BluetoothSdpErrorCode : uint
     {
         Success = 0,
         Reserved = 0,
@@ -3188,7 +3185,7 @@ namespace IOBluetooth
     }
 
     [Native]
-    public enum BluetoothSDPDataElementType : ulong
+    public enum BluetoothSdpDataElementType : ulong
     {
         Nil = 0,
         UnsignedInt = 1,
@@ -3606,7 +3603,7 @@ namespace IOBluetooth
         UserDefinedRangeStart = 48,
         UserDefinedRangeEnd = 63,
         Type = 66,
-        TimeIso8601 = 68,
+        TimeISO = 68,
         Target = 70,
         Http = 71,
         Body = 72,
@@ -3620,12 +3617,11 @@ namespace IOBluetooth
         Length = 195,
         Time4Byte = 196,
         ConnectionID = 203,
-
-        WanUuid = 80,
-        Obex13ObjectClass = 81,
-        SessionParameters = 82,
-        SessionSequenceNumber = 147,
-        CreatorID = 207
+        Obex13wanuuid = 80,
+        OBEX13ObjectClass = 81,
+        OBEX13SessionParameters = 82,
+        OBEX13SessionSequenceNumber = 147,
+        OBEX13CreatorID = 207
     }
 
     public enum OBEXOpCodeResponseValues : uint
@@ -3809,27 +3805,27 @@ namespace IOBluetooth
     [StructLayout(LayoutKind.Sequential)]
     public struct OBEXConnectCommandResponseData
     {
-        public byte ServerResponseOpCode;
+        public byte serverResponseOpCode;
 
-        public unsafe void* HeaderDataPtr;
+        public unsafe void* headerDataPtr;
 
-        public nuint HeaderDataLength;
+        public nuint headerDataLength;
 
-        public ushort MaxPacketSize;
+        public ushort maxPacketSize;
 
-        public byte Version;
+        public byte version;
 
-        public byte Flags;
+        public byte flags;
     }
 
     [StructLayout(LayoutKind.Sequential)]
     public struct OBEXDisconnectCommandResponseData
     {
-        public byte ServerResponseOpCode;
+        public byte serverResponseOpCode;
 
-        public unsafe void* HeaderDataPtr;
+        public unsafe void* headerDataPtr;
 
-        public nuint HeaderDataLength;
+        public nuint headerDataLength;
     }
 
     [StructLayout(LayoutKind.Sequential)]

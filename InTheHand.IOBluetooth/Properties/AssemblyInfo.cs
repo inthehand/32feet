@@ -2,6 +2,7 @@
 using System.Runtime.CompilerServices;
 
 using Foundation;
+using ObjCRuntime;
 
 // This attribute allows you to mark your assemblies as “safe to link”. 
 // When the attribute is present, the linker—if enabled—will process the assembly 
@@ -13,7 +14,7 @@ using Foundation;
 // Change them to the values specific to your project.
 
 [assembly: AssemblyTitle("IOBluetooth")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("IOBluetooth bindings for Xamarin Mac")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("In The Hand Ltd")]
 [assembly: AssemblyProduct("32feet.NET")]
@@ -25,10 +26,11 @@ using Foundation;
 // The form "{Major}.{Minor}.*" will automatically update the build and revision,
 // and "{Major}.{Minor}.{Build}.*" will update just the revision.
 
-[assembly: AssemblyVersion("1.0.*")]
+[assembly: AssemblyVersion("1.0.0.0")]
 
 // The following attributes are used to specify the signing key for the assembly, 
 // if desired. See the Mono documentation for more information about signing.
 
 //[assembly: AssemblyDelaySign(false)]
 //[assembly: AssemblyKeyFile("")]
+[assembly: LinkWith("IOBluetooth.framework", LinkTarget.x86_64, SmartLink = true, ForceLoad = true)]
