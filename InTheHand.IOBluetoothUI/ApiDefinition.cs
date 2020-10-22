@@ -72,19 +72,19 @@ namespace IOBluetoothUI
 
         // -(void)addAllowedUUID:(IOBluetoothSDPUUID *)allowedUUID;
         /// <summary>
-        /// Adds a UUID to the list of UUIDs that are used to validate the user's selection.
+        /// Adds a Uuid to the list of Uuids that are used to validate the user's selection.
         /// </summary>
-        /// <param name="allowedUUID">Allowed UUID.</param>
+        /// <param name="allowedUuid">Allowed Uuid.</param>
         [Export("addAllowedUUID:")]
-        void AddAllowedUuid(SdpUuid allowedUUID);
+        void AddAllowedUuid(SdpUuid allowedUuid);
 
         // -(void)addAllowedUUIDArray:(NSArray *)allowedUUIDArray;
         /// <summary>
-        /// Adds an array of UUIDs to the list of UUIDs that are used to validate the user's selection.
+        /// Adds an array of Uuids to the list of Uuids that are used to validate the user's selection.
         /// </summary>
-        /// <param name="allowedUUIDArray">Allowed UUIDA rray.</param>
+        /// <param name="allowedUuidArray">Allowed Uuid Array.</param>
         [Export("addAllowedUUIDArray:")]
-        void AddAllowedUuidArray(SdpUuid[] allowedUUIDArray);
+        void AddAllowedUuidArray(SdpUuid[] allowedUuidArray);
 
         // -(void)clearAllowedUUIDs;
         /// <summary>
@@ -186,7 +186,7 @@ namespace IOBluetoothUI
 
         // -(void)addAllowedUUID:(IOBluetoothSDPUUID *)allowedUUID;
         [Export("addAllowedUUID:")]
-        void AddAllowedUuid(SdpUuid allowedUUID);
+        void AddAllowedUuid(SdpUuid allowedUuid);
 
         // -(void)addAllowedUUIDArray:(NSArray *)allowedUUIDArray;
         [Export("addAllowedUUIDArray:")]
@@ -234,7 +234,7 @@ namespace IOBluetoothUI
         // +(IOBluetoothServiceBrowserController *)serviceBrowserController:(IOBluetoothServiceBrowserControllerOptions)inOptions;
         [Static]
         [Export("serviceBrowserController:")]
-        ServiceBrowserController CreateServiceBrowserController(ServiceBrowserControllerOptions inOptions);
+        ServiceBrowserController CreateServiceBrowserController(ServiceBrowserControllerOptions options);
 
         // +(IOBluetoothServiceBrowserController *)withServiceBrowserControllerRef:(IOBluetoothServiceBrowserControllerRef)serviceBrowserControllerRef;
         //[Static]
@@ -296,17 +296,17 @@ namespace IOBluetoothUI
 
         // -(void)addAllowedUUID:(IOBluetoothSDPUUID *)allowedUUID;
         /// <summary>
-        /// Adds a UUID to the list of UUIDs that are used to validate the user's selection.
+        /// Adds a Uuid to the list of Uuids that are used to validate the user's selection.
         /// </summary>
-        /// <param name="allowedUuid">Allowed UUID.</param>
+        /// <param name="allowedUuid">Allowed Uuid.</param>
         [Export("addAllowedUUID:")]
         void AddAllowedUuid(SdpUuid allowedUuid);
 
         // -(void)addAllowedUUIDArray:(NSArray *)allowedUUIDArray;
         /// <summary>
-        /// Adds an array of UUIDs to the list of UUIDs that are used to validate the user's selection.
+        /// Adds an array of Uuids to the list of Uuids that are used to validate the user's selection.
         /// </summary>
-        /// <param name="allowedUuidArray">Allowed UUIDA rray.</param>
+        /// <param name="allowedUuidArray">Allowed Uuid Array.</param>
         [Export("addAllowedUUIDArray:")]
         void AddAllowedUuidArray(SdpUuid[] allowedUuidArray);
 
@@ -426,7 +426,7 @@ namespace IOBluetoothUI
 
         // -(void)setPasskey:(NSString *)inString forDevice:(IOBluetoothDevice *)device usingSSP:(BOOL)isSSP;
         [Export("setPasskey:forDevice:usingSSP:")]
-        void SetPasskey(string inString, BluetoothDevice device, bool isSSP);
+        void SetPasskey(string passkey, BluetoothDevice device, bool isSSP);
 
         // -(void)advancePasskeyIndicator;
         [Export("advancePasskeyIndicator")]

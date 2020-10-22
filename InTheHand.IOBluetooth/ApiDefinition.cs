@@ -50,7 +50,7 @@ namespace IOBluetooth
 
     // @interface IOBluetoothDevice : IOBluetoothObject <NSCoding, NSSecureCoding>
     /// <summary>
-    /// An instance of IOBluetoothDevice represents a single remote Bluetooth device.
+    /// Represents a single remote Bluetooth device.
     /// </summary>
     [BaseType(typeof(BluetoothObject), Name = "IOBluetoothDevice")]
     public interface BluetoothDevice : INSCoding, INSSecureCoding
@@ -88,6 +88,12 @@ namespace IOBluetooth
         int OpenL2CAPChannelAsync(out L2CapChannel newChannel, L2CapPsm psm, NSObject channelDelegate);
 
         // -(IOReturn)sendL2CAPEchoRequest:(void *)data length:(UInt16)length;
+        /// <summary>
+        /// Send an echo request over the L2CAP connection to a remote device.
+        /// </summary>
+        /// <param name="data">Pointer to buffer to send.</param>
+        /// <param name="length">Length of the buffer to send.</param>
+        /// <returns>Returns kIOReturnSuccess if the echo request was able to be sent.</returns>
         [Export("sendL2CAPEchoRequest:length:")]
         int SendL2CAPEchoRequest(NSArray data, ushort length);
 
@@ -184,15 +190,15 @@ namespace IOBluetooth
 
         // -(BluetoothPageScanRepetitionMode)getPageScanRepetitionMode;
         [Export("getPageScanRepetitionMode")]
-        byte PageScanRepetitionMode { get; }
+        PageScanRepetitionMode PageScanRepetitionMode { get; }
 
         // -(BluetoothPageScanPeriodMode)getPageScanPeriodMode;
         [Export("getPageScanPeriodMode")]
-        byte PageScanPeriodMode { get; }
+        PageScanPeriodMode PageScanPeriodMode { get; }
 
         // -(BluetoothPageScanMode)getPageScanMode;
         [Export("getPageScanMode")]
-        byte PageScanMode { get; }
+        PageScanMode PageScanMode { get; }
 
         // -(BluetoothClockOffset)getClockOffset;
         [Export("getClockOffset")]
@@ -489,7 +495,7 @@ namespace IOBluetooth
         void DeviceNameUpdated(DeviceInquiry sender, BluetoothDevice device, uint devicesRemaining);
 
         // @optional -(void)deviceInquiryComplete:(IOBluetoothDeviceInquiry *)sender error:(IOReturn)error aborted:(BOOL)aborted;
-        [Export("deviceInquiryComplete:error:aborted:"), EventArgs("DeviceInquiryCompleted")]
+        [Export("deviceInquiryComplete:error:aborted:"), EventName("Completed"), EventArgs("DeviceInquiryCompleted")]
         void Complete(DeviceInquiry sender, int error, bool aborted);
     }
 
@@ -527,7 +533,7 @@ namespace IOBluetooth
 
         // -(void)replyPINCode:(ByteCount)PINCodeSize PINCode:(BluetoothPINCode *)PINCode;
         [Export("replyPINCode:PINCode:")]
-        void ReplyPinCode(nuint pinCodeSize, IntPtr pinCode);
+        void ReplyPinCode(nuint pinCodeSize, NSArray pinCode);
 
         // -(void)replyUserConfirmation:(BOOL)reply;
         [Export("replyUserConfirmation:")]
@@ -564,7 +570,7 @@ namespace IOBluetooth
         void PairingFinished(NSObject sender, int error);
 
         // @optional -(void)deviceSimplePairingComplete:(id)sender status:(BluetoothHCIEventStatus)status;
-        [Export("deviceSimplePairingComplete:status:"), EventArgs("SimplePairingCompleted")]
+        [Export("deviceSimplePairingComplete:status:"), EventName("Completed"), EventArgs("SimplePairingCompleted")]
         void SimplePairingComplete(NSObject sender, byte status);
     }
 
@@ -588,7 +594,7 @@ namespace IOBluetooth
 
         // @property (readonly) BluetoothHCIPowerState powerState;
         [Export("powerState")]
-        uint PowerState { get; }
+        HciPowerState PowerState { get; }
 
         // -(BluetoothClassOfDevice)classOfDevice;
         [Export("classOfDevice")]
@@ -622,7 +628,7 @@ namespace IOBluetooth
     interface HostControllerDelegate
     {
         // -(void)readRSSIForDeviceComplete:(id)controller device:(IOBluetoothDevice *)device info:(BluetoothHCIRSSIInfo *)info error:(IOReturn)error;
-        [Export("readRSSIForDeviceComplete:device:info:error:"), EventArgs("RssiForDevice")]
+        [Export("readRSSIForDeviceComplete:device:info:error:"), EventName("ReadRssiForDeviceCompleted"), EventArgs("RssiForDevice")]
         unsafe void ReadRssiForDeviceComplete(NSObject controller, BluetoothDevice device, HciRssiInfo info, int error);
 
         // -(void)readLinkQualityForDeviceComplete:(id)controller device:(IOBluetoothDevice *)device info:(BluetoothHCILinkQualityInfo *)info error:(IOReturn)error;
@@ -738,28 +744,30 @@ namespace IOBluetooth
         void L2CapChannelData(L2CapChannel l2capChannel, IntPtr dataPointer, nuint dataLength);
 
         // @optional -(void)l2capChannelOpenComplete:(IOBluetoothL2CAPChannel *)l2capChannel status:(IOReturn)error;
-        [Export("l2capChannelOpenComplete:status:"), EventArgs("L2CapChannelOpenCompleted")]
+        [Export("l2capChannelOpenComplete:status:"), EventName("OpenCompleted"), EventArgs("L2CapChannelOpenCompleted")]
         void L2CapChannelOpenComplete(L2CapChannel l2capChannel, int error);
 
         // @optional -(void)l2capChannelClosed:(IOBluetoothL2CAPChannel *)l2capChannel;
-        [Export("l2capChannelClosed:")]
+        [Export("l2capChannelClosed:"), EventName("Closed")]
         void L2CapChannelClosed(L2CapChannel l2capChannel);
 
         // @optional -(void)l2capChannelReconfigured:(IOBluetoothL2CAPChannel *)l2capChannel;
-        [Export("l2capChannelReconfigured:")]
+        [Export("l2capChannelReconfigured:"), EventName("Reconfigured")]
         void L2CapChannelReconfigured(L2CapChannel l2capChannel);
 
         // @optional -(void)l2capChannelWriteComplete:(IOBluetoothL2CAPChannel *)l2capChannel refcon:(void *)refcon status:(IOReturn)error;
-        [Export("l2capChannelWriteComplete:refcon:status:"), EventArgs("L2CapChannelWriteCompleted")]
+        [Export("l2capChannelWriteComplete:refcon:status:"), EventName("WriteCompleted"), EventArgs("L2CapChannelWriteCompleted")]
         void L2CapChannelWriteComplete(L2CapChannel l2capChannel, IntPtr refcon, int error);
 
         // @optional -(void)l2capChannelQueueSpaceAvailable:(IOBluetoothL2CAPChannel *)l2capChannel;
-        [Export("l2capChannelQueueSpaceAvailable:")]
+        [Export("l2capChannelQueueSpaceAvailable:"), EventName("QueueSpaceAvailable")]
         void L2CapChannelQueueSpaceAvailable(L2CapChannel l2capChannel);
     }
 
     // @interface IOBluetoothRFCOMMChannel : IOBluetoothObject <NSPortDelegate>
-    [BaseType(typeof(BluetoothObject), Name = "IOBluetoothRFCOMMChannel")]
+    [BaseType(typeof(BluetoothObject), Name = "IOBluetoothRFCOMMChannel",
+        Delegates = new string[] { "Delegate" },
+        Events = new Type[] { typeof(RfcommChannelDelegate) })]
     public interface RfcommChannel : INSPortDelegate
     {
         // +(IOBluetoothUserNotification *)registerForChannelOpenNotifications:(id)object selector:(SEL)selector;
@@ -813,19 +821,24 @@ namespace IOBluetooth
 
         // -(IOReturn)setSerialParameters:(UInt32)speed dataBits:(UInt8)nBits parity:(BluetoothRFCOMMParityType)parity stopBits:(UInt8)bitStop;
         [Export("setSerialParameters:dataBits:parity:stopBits:")]
-        int SetSerialParameters(uint speed, byte bits, RFCommParityType parity, byte bitStop);
+        int SetSerialParameters(uint speed, byte bits, RfcommParityType parity, byte bitStop);
 
         // -(IOReturn)sendRemoteLineStatus:(BluetoothRFCOMMLineStatus)lineStatus;
         [Export("sendRemoteLineStatus:")]
-        int SendRemoteLineStatus(RFCommLineStatus lineStatus);
+        int SendRemoteLineStatus(RfcommLineStatus lineStatus);
+
+
+        [Wrap("WeakDelegate")]
+        RfcommChannelDelegate Delegate { get; set; }
 
         // -(IOReturn)setDelegate:(id)delegate;
+        [Internal]
         [Export("setDelegate:")]
         int SetDelegate(NSObject @delegate);
 
         // -(id)delegate;
-        [Export("delegate")]
-        RfcommChannelDelegate Delegate { get; }
+        [Export("delegate", ArgumentSemantic.Weak)]
+        NSObject WeakDelegate { get; [Bind("setDelegate:")] set; }
 
         // -(BluetoothRFCOMMChannelID)getChannelID;
         [Export("getChannelID")]
@@ -854,31 +867,31 @@ namespace IOBluetooth
     public interface RfcommChannelDelegate
     {
         // @optional -(void)rfcommChannelData:(IOBluetoothRFCOMMChannel *)rfcommChannel data:(void *)dataPointer length:(size_t)dataLength;
-        [Export("rfcommChannelData:data:length:"), EventArgs("RfcommChannelData")]
+        [Export("rfcommChannelData:data:length:"), EventName("Data"), EventArgs("RfcommChannelData")]
         void RfcommChannelData(RfcommChannel rfcommChannel, IntPtr dataPointer, nuint dataLength);
 
         // @optional -(void)rfcommChannelOpenComplete:(IOBluetoothRFCOMMChannel *)rfcommChannel status:(IOReturn)error;
-        [Export("rfcommChannelOpenComplete:status:"), EventArgs("RfcommChannelOpenCompleted")]
+        [Export("rfcommChannelOpenComplete:status:"), EventName("OpenCompleted"), EventArgs("RfcommChannelOpenCompleted")]
         void RfcommChannelOpenComplete(RfcommChannel rfcommChannel, int error);
 
         // @optional -(void)rfcommChannelClosed:(IOBluetoothRFCOMMChannel *)rfcommChannel;
-        [Export("rfcommChannelClosed:")]
+        [Export("rfcommChannelClosed:"), EventName("Closed")]
         void RfcommChannelClosed(RfcommChannel rfcommChannel);
 
         // @optional -(void)rfcommChannelControlSignalsChanged:(IOBluetoothRFCOMMChannel *)rfcommChannel;
-        [Export("rfcommChannelControlSignalsChanged:")]
+        [Export("rfcommChannelControlSignalsChanged:"), EventName("SignalsChanged")]
         void RfcommChannelControlSignalsChanged(RfcommChannel rfcommChannel);
 
         // @optional -(void)rfcommChannelFlowControlChanged:(IOBluetoothRFCOMMChannel *)rfcommChannel;
-        [Export("rfcommChannelFlowControlChanged:")]
+        [Export("rfcommChannelFlowControlChanged:"), EventName("FlowControlChanged")]
         void RfcommChannelFlowControlChanged(RfcommChannel rfcommChannel);
 
         // @optional -(void)rfcommChannelWriteComplete:(IOBluetoothRFCOMMChannel *)rfcommChannel refcon:(void *)refcon status:(IOReturn)error;
-        [Export("rfcommChannelWriteComplete:refcon:status:"), EventArgs("RfcommChannelWriteCompleted")]
+        [Export("rfcommChannelWriteComplete:refcon:status:"), EventName("WriteCompleted"), EventArgs("RfcommChannelWriteCompleted")]
         void RfcommChannelWriteComplete(RfcommChannel rfcommChannel, IntPtr refcon, int error);
 
         // @optional -(void)rfcommChannelQueueSpaceAvailable:(IOBluetoothRFCOMMChannel *)rfcommChannel;
-        [Export("rfcommChannelQueueSpaceAvailable:")]
+        [Export("rfcommChannelQueueSpaceAvailable:"), EventName("QueueSpaceAvailable")]
         void RfcommChannelQueueSpaceAvailable(RfcommChannel rfcommChannel);
     }
 
@@ -894,7 +907,7 @@ namespace IOBluetooth
         // +(instancetype)withType:(BluetoothSDPDataElementTypeDescriptor)type sizeDescriptor:(BluetoothSDPDataElementSizeDescriptor)newSizeDescriptor size:(uint32_t)newSize value:(NSObject *)newValue;
         [Static]
         [Export("withType:sizeDescriptor:size:value:")]
-        SdpDataElement WithType(BluetoothSdpDataElementType type, byte sizeDescriptor, uint size, NSObject value);
+        SdpDataElement WithType(SdpDataElementType type, byte sizeDescriptor, uint size, NSObject value);
 
         // +(instancetype)withSDPDataElementRef:(IOBluetoothSDPDataElementRef)sdpDataElementRef;
         //[Static]
@@ -907,7 +920,7 @@ namespace IOBluetooth
 
         // -(instancetype)initWithType:(BluetoothSDPDataElementTypeDescriptor)newType sizeDescriptor:(BluetoothSDPDataElementSizeDescriptor)newSizeDescriptor size:(uint32_t)newSize value:(NSObject *)newValue;
         [Export("initWithType:sizeDescriptor:size:value:")]
-        IntPtr Constructor(BluetoothSdpDataElementType type, byte sizeDescriptor, uint size, NSObject value);
+        IntPtr Constructor(SdpDataElementType type, byte sizeDescriptor, uint size, NSObject value);
 
         // -(IOBluetoothSDPDataElementRef)getSDPDataElementRef;
         //[Export ("getSDPDataElementRef")]
@@ -916,7 +929,7 @@ namespace IOBluetooth
 
         // -(BluetoothSDPDataElementTypeDescriptor)getTypeDescriptor;
         [Export("getTypeDescriptor")]
-        BluetoothSdpDataElementType TypeDescriptor { get; }
+        SdpDataElementType TypeDescriptor { get; }
 
         // -(BluetoothSDPDataElementSizeDescriptor)getSizeDescriptor;
         [Export("getSizeDescriptor")]
@@ -1052,7 +1065,7 @@ namespace IOBluetooth
 
         // -(IOReturn)getServiceRecordHandle:(BluetoothSDPServiceRecordHandle *)outServiceRecordHandle;
         [Export("getServiceRecordHandle:")]
-        int GetServiceRecordHandle(IntPtr outServiceRecordHandle);
+        int GetServiceRecordHandle(out uint outServiceRecordHandle);
 
         // -(BOOL)matchesUUID16:(BluetoothSDPUUID16)uuid16;
         [Export("matchesUUID16:")]
@@ -1073,6 +1086,11 @@ namespace IOBluetooth
         // @property (readonly, copy) NSArray * sortedAttributes;
         [Export("sortedAttributes", ArgumentSemantic.Copy)]
         SdpServiceAttribute[] SortedAttributes { get; }
+
+        // -(uint16_t)handsFreeSupportedFeatures __attribute__((availability(macos, introduced=10.7)));
+        [Introduced(PlatformName.MacOSX, 10, 7)]
+        [Export("handsFreeSupportedFeatures")]
+        HandsFreeDeviceFeatures HandsFreeSupportedFeatures { get; }
     }
 
     // @interface IOBluetoothSDPUUID : NSData
@@ -1081,11 +1099,13 @@ namespace IOBluetooth
     {
         // +(instancetype)uuidWithBytes:(const void *)bytes length:(unsigned int)length;
         [Static]
+        [New]
         [Export("uuidWithBytes:length:")]
         SdpUuid FromBytes(IntPtr bytes, nuint length);
 
         // +(instancetype)uuidWithData:(NSData *)data;
         [Static]
+        [New]
         [Export("uuidWithData:")]
         SdpUuid FromData(NSData data);
 
@@ -1226,56 +1246,56 @@ namespace IOBluetooth
     }*/
 
     // @interface OBEXSession : NSObject
-    [BaseType(typeof(NSObject))]
-    interface OBEXSession
+    [BaseType(typeof(NSObject), Name = "OBEXSession")]
+    interface ObexSession
     {
         // -(OBEXError)OBEXConnect:(OBEXFlags)inFlags maxPacketLength:(OBEXMaxPacketLength)inMaxPacketLength optionalHeaders:(void *)inOptionalHeaders optionalHeadersLength:(size_t)inOptionalHeadersLength eventSelector:(SEL)inSelector selectorTarget:(id)inTarget refCon:(void *)inUserRefCon;
         [Export("OBEXConnect:maxPacketLength:optionalHeaders:optionalHeadersLength:eventSelector:selectorTarget:refCon:")]
-        int OBEXConnect(byte flags, ushort maxPacketLength, IntPtr optionalHeaders, nuint optionalHeadersLength, Selector selector, NSObject target, IntPtr userRefCon);
+        int ObexConnect(byte flags, ushort maxPacketLength, IntPtr optionalHeaders, nuint optionalHeadersLength, Selector selector, NSObject target, IntPtr userRefCon);
 
         // -(OBEXError)OBEXDisconnect:(void *)inOptionalHeaders optionalHeadersLength:(size_t)inOptionalHeadersLength eventSelector:(SEL)inSelector selectorTarget:(id)inTarget refCon:(void *)inUserRefCon;
         [Export("OBEXDisconnect:optionalHeadersLength:eventSelector:selectorTarget:refCon:")]
-        int OBEXDisconnect(IntPtr optionalHeaders, nuint optionalHeadersLength, Selector selector, NSObject target, IntPtr userRefCon);
+        int ObexDisconnect(IntPtr optionalHeaders, nuint optionalHeadersLength, Selector selector, NSObject target, IntPtr userRefCon);
 
         // -(OBEXError)OBEXPut:(Boolean)isFinalChunk headersData:(void *)inHeadersData headersDataLength:(size_t)inHeadersDataLength bodyData:(void *)inBodyData bodyDataLength:(size_t)inBodyDataLength eventSelector:(SEL)inSelector selectorTarget:(id)inTarget refCon:(void *)inUserRefCon;
         [Export("OBEXPut:headersData:headersDataLength:bodyData:bodyDataLength:eventSelector:selectorTarget:refCon:")]
-        int OBEXPut(byte isFinalChunk, IntPtr headersData, nuint headersDataLength, IntPtr bodyData, nuint bodyDataLength, Selector selector, NSObject target, IntPtr userRefCon);
+        int ObexPut(byte isFinalChunk, IntPtr headersData, nuint headersDataLength, IntPtr bodyData, nuint bodyDataLength, Selector selector, NSObject target, IntPtr userRefCon);
 
         // -(OBEXError)OBEXGet:(Boolean)isFinalChunk headers:(void *)inHeaders headersLength:(size_t)inHeadersLength eventSelector:(SEL)inSelector selectorTarget:(id)inTarget refCon:(void *)inUserRefCon;
         [Export("OBEXGet:headers:headersLength:eventSelector:selectorTarget:refCon:")]
-        int OBEXGet(byte isFinalChunk, IntPtr headers, nuint headersLength, Selector selector, NSObject target, IntPtr userRefCon);
+        int ObexGet(byte isFinalChunk, IntPtr headers, nuint headersLength, Selector selector, NSObject target, IntPtr userRefCon);
 
         // -(OBEXError)OBEXAbort:(void *)inOptionalHeaders optionalHeadersLength:(size_t)inOptionalHeadersLength eventSelector:(SEL)inSelector selectorTarget:(id)inTarget refCon:(void *)inUserRefCon;
         [Export("OBEXAbort:optionalHeadersLength:eventSelector:selectorTarget:refCon:")]
-        int OBEXAbort(IntPtr optionalHeaders, nuint optionalHeadersLength, Selector selector, NSObject target, IntPtr userRefCon);
+        int ObexAbort(IntPtr optionalHeaders, nuint optionalHeadersLength, Selector selector, NSObject target, IntPtr userRefCon);
 
         // -(OBEXError)OBEXSetPath:(OBEXFlags)inFlags constants:(OBEXConstants)inConstants optionalHeaders:(void *)inOptionalHeaders optionalHeadersLength:(size_t)inOptionalHeadersLength eventSelector:(SEL)inSelector selectorTarget:(id)inTarget refCon:(void *)inUserRefCon;
         [Export("OBEXSetPath:constants:optionalHeaders:optionalHeadersLength:eventSelector:selectorTarget:refCon:")]
-        int OBEXSetPath(byte flags, byte constants, IntPtr optionalHeaders, nuint optionalHeadersLength, Selector selector, NSObject target, IntPtr userRefCon);
+        int ObexSetPath(byte flags, byte constants, IntPtr optionalHeaders, nuint optionalHeadersLength, Selector selector, NSObject target, IntPtr userRefCon);
 
         // -(OBEXError)OBEXConnectResponse:(OBEXOpCode)inResponseOpCode flags:(OBEXFlags)inFlags maxPacketLength:(OBEXMaxPacketLength)inMaxPacketLength optionalHeaders:(void *)inOptionalHeaders optionalHeadersLength:(size_t)inOptionalHeadersLength eventSelector:(SEL)inSelector selectorTarget:(id)inTarget refCon:(void *)inUserRefCon;
         [Export("OBEXConnectResponse:flags:maxPacketLength:optionalHeaders:optionalHeadersLength:eventSelector:selectorTarget:refCon:")]
-        int OBEXConnectResponse(byte responseOpCode, byte flags, ushort maxPacketLength, IntPtr optionalHeaders, nuint optionalHeadersLength, Selector selector, NSObject target, IntPtr userRefCon);
+        int ObexConnectResponse(byte responseOpCode, byte flags, ushort maxPacketLength, IntPtr optionalHeaders, nuint optionalHeadersLength, Selector selector, NSObject target, IntPtr userRefCon);
 
         // -(OBEXError)OBEXDisconnectResponse:(OBEXOpCode)inResponseOpCode optionalHeaders:(void *)inOptionalHeaders optionalHeadersLength:(size_t)inOptionalHeadersLength eventSelector:(SEL)inSelector selectorTarget:(id)inTarget refCon:(void *)inUserRefCon;
         [Export("OBEXDisconnectResponse:optionalHeaders:optionalHeadersLength:eventSelector:selectorTarget:refCon:")]
-        int OBEXDisconnectResponse(byte responseOpCode, IntPtr optionalHeaders, nuint optionalHeadersLength, Selector selector, NSObject target, IntPtr userRefCon);
+        int ObexDisconnectResponse(byte responseOpCode, IntPtr optionalHeaders, nuint optionalHeadersLength, Selector selector, NSObject target, IntPtr userRefCon);
 
         // -(OBEXError)OBEXPutResponse:(OBEXOpCode)inResponseOpCode optionalHeaders:(void *)inOptionalHeaders optionalHeadersLength:(size_t)inOptionalHeadersLength eventSelector:(SEL)inSelector selectorTarget:(id)inTarget refCon:(void *)inUserRefCon;
         [Export("OBEXPutResponse:optionalHeaders:optionalHeadersLength:eventSelector:selectorTarget:refCon:")]
-        int OBEXPutResponse(byte responseOpCode, IntPtr optionalHeaders, nuint optionalHeadersLength, Selector selector, NSObject target, IntPtr userRefCon);
+        int ObexPutResponse(byte responseOpCode, IntPtr optionalHeaders, nuint optionalHeadersLength, Selector selector, NSObject target, IntPtr userRefCon);
 
         // -(OBEXError)OBEXGetResponse:(OBEXOpCode)inResponseOpCode optionalHeaders:(void *)inOptionalHeaders optionalHeadersLength:(size_t)inOptionalHeadersLength eventSelector:(SEL)inSelector selectorTarget:(id)inTarget refCon:(void *)inUserRefCon;
         [Export("OBEXGetResponse:optionalHeaders:optionalHeadersLength:eventSelector:selectorTarget:refCon:")]
-        int OBEXGetResponse(byte responseOpCode, IntPtr optionalHeaders, nuint optionalHeadersLength, Selector selector, NSObject target, IntPtr userRefCon);
+        int ObexGetResponse(byte responseOpCode, IntPtr optionalHeaders, nuint optionalHeadersLength, Selector selector, NSObject target, IntPtr userRefCon);
 
         // -(OBEXError)OBEXAbortResponse:(OBEXOpCode)inResponseOpCode optionalHeaders:(void *)inOptionalHeaders optionalHeadersLength:(size_t)inOptionalHeadersLength eventSelector:(SEL)inSelector selectorTarget:(id)inTarget refCon:(void *)inUserRefCon;
         [Export("OBEXAbortResponse:optionalHeaders:optionalHeadersLength:eventSelector:selectorTarget:refCon:")]
-        int OBEXAbortResponse(byte responseOpCode, IntPtr optionalHeaders, nuint optionalHeadersLength, Selector selector, NSObject target, IntPtr userRefCon);
+        int ObexAbortResponse(byte responseOpCode, IntPtr optionalHeaders, nuint optionalHeadersLength, Selector selector, NSObject target, IntPtr userRefCon);
 
         // -(OBEXError)OBEXSetPathResponse:(OBEXOpCode)inResponseOpCode optionalHeaders:(void *)inOptionalHeaders optionalHeadersLength:(size_t)inOptionalHeadersLength eventSelector:(SEL)inSelector selectorTarget:(id)inTarget refCon:(void *)inUserRefCon;
         [Export("OBEXSetPathResponse:optionalHeaders:optionalHeadersLength:eventSelector:selectorTarget:refCon:")]
-        int OBEXSetPathResponse(byte responseOpCode, IntPtr optionalHeaders, nuint optionalHeadersLength, Selector selector, NSObject target, IntPtr userRefCon);
+        int ObexSetPathResponse(byte responseOpCode, IntPtr optionalHeaders, nuint optionalHeadersLength, Selector selector, NSObject target, IntPtr userRefCon);
 
         // -(OBEXMaxPacketLength)getAvailableCommandPayloadLength:(OBEXOpCode)inOpCode;
         [Export("getAvailableCommandPayloadLength:")]
@@ -1291,7 +1311,7 @@ namespace IOBluetooth
 
         // -(BOOL)hasOpenOBEXConnection;
         [Export("hasOpenOBEXConnection")]
-        bool HasOpenOBEXConnection { get; }
+        bool HasOpenObexConnection { get; }
 
     //    // -(void)setEventCallback:(OBEXSessionEventCallback)inEventCallback;
     //    //[Export ("setEventCallback:")]
@@ -1331,23 +1351,23 @@ namespace IOBluetooth
     }
 
     // @interface IOBluetoothOBEXSession : OBEXSession <IOBluetoothRFCOMMChannelDelegate>
-    [BaseType(typeof(OBEXSession))]
-    public interface IOBluetoothOBEXSession : RfcommChannelDelegate
+    [BaseType(typeof(ObexSession), Name = "IOBluetoothOBEXSession")]
+    public interface BluetoothObexSession : RfcommChannelDelegate
     {
         // +(instancetype)withSDPServiceRecord:(IOBluetoothSDPServiceRecord *)inSDPServiceRecord;
         [Static]
         [Export("withSDPServiceRecord:")]
-        IOBluetoothOBEXSession WithSDPServiceRecord(SdpServiceRecord sdpServiceRecord);
+        BluetoothObexSession WithSDPServiceRecord(SdpServiceRecord sdpServiceRecord);
 
         // +(instancetype)withDevice:(IOBluetoothDevice *)inDevice channelID:(BluetoothRFCOMMChannelID)inRFCOMMChannelID;
         [Static]
         [Export("withDevice:channelID:")]
-        IOBluetoothOBEXSession WithDevice(BluetoothDevice device, byte rfCOMMChannelID);
+        BluetoothObexSession WithDevice(BluetoothDevice device, byte rfcommChannelID);
 
         // +(instancetype)withIncomingRFCOMMChannel:(IOBluetoothRFCOMMChannel *)inChannel eventSelector:(SEL)inEventSelector selectorTarget:(id)inEventSelectorTarget refCon:(void *)inUserRefCon;
         [Static]
         [Export("withIncomingRFCOMMChannel:eventSelector:selectorTarget:refCon:")]
-        IOBluetoothOBEXSession WithIncomingRFCOMMChannel(RfcommChannel channel, Selector eventSelector, NSObject eventSelectorTarget, IntPtr userRefCon);
+        BluetoothObexSession WithIncomingRFCOMMChannel(RfcommChannel channel, Selector eventSelector, NSObject eventSelectorTarget, IntPtr userRefCon);
 
         // -(instancetype)initWithSDPServiceRecord:(IOBluetoothSDPServiceRecord *)inSDPServiceRecord;
         [Export("initWithSDPServiceRecord:")]
@@ -1383,6 +1403,7 @@ namespace IOBluetooth
 
         // -(OBEXError)openTransportConnection:(SEL)inSelector selectorTarget:(id)inTarget refCon:(void *)inUserRefCon;
         [Export("openTransportConnection:selectorTarget:refCon:")]
+        [Override]
         int OpenTransportConnection(Selector selector, NSObject target, IntPtr userRefCon);
 
         // -(BOOL)hasOpenTransportConnection;
@@ -1397,6 +1418,7 @@ namespace IOBluetooth
 
         // -(OBEXError)sendDataToTransport:(void *)inDataToSend dataLength:(size_t)inDataLength;
         [Export("sendDataToTransport:dataLength:")]
+        [Override]
         int SendDataToTransport(IntPtr dataToSend, nuint dataLength);
 
         // -(void)setOpenTransportConnectionAsyncSelector:(SEL)inSelector target:(id)inSelectorTarget refCon:(id)inUserRefCon;
@@ -1409,11 +1431,13 @@ namespace IOBluetooth
     }
 
     // @interface OBEXFileTransferServices : NSObject
-    [BaseType(typeof(NSObject))]
-    interface OBEXFileTransferServices
+    [BaseType(typeof(NSObject), Name = "OBEXFileTransferServices",
+        Delegates = new string[] { "WeakDelegate" },
+        Events = new Type[] { typeof(ObexFileTransferServicesDelegate) })]
+    interface ObexFileTransferServices
     {
         [Wrap("WeakDelegate")]
-        OBEXFileTransferServicesDelegate Delegate { get; set; }
+        ObexFileTransferServicesDelegate Delegate { get; set; }
 
         // @property (assign) id delegate;
         [NullAllowed, Export("delegate", ArgumentSemantic.Assign)]
@@ -1422,11 +1446,11 @@ namespace IOBluetooth
         // +(instancetype)withOBEXSession:(IOBluetoothOBEXSession *)inOBEXSession;
         [Static]
         [Export("withOBEXSession:")]
-        OBEXFileTransferServices WithOBEXSession(IOBluetoothOBEXSession obexSession);
+        ObexFileTransferServices WithOBEXSession(BluetoothObexSession obexSession);
 
         // -(instancetype)initWithOBEXSession:(IOBluetoothOBEXSession *)inOBEXSession;
         [Export("initWithOBEXSession:")]
-        IntPtr Constructor(IOBluetoothOBEXSession obexSession);
+        IntPtr Constructor(BluetoothObexSession obexSession);
 
         // -(NSString *)currentPath;
         [Export("currentPath")]
@@ -1462,11 +1486,11 @@ namespace IOBluetooth
 
         // -(OBEXError)changeCurrentFolderForwardToPath:(NSString *)inDirName;
         [Export("changeCurrentFolderForwardToPath:")]
-        int ChangeCurrentFolderForwardToPath(string dirName);
+        int ChangeCurrentFolderForwardToPath(string directoryName);
 
         // -(OBEXError)createFolder:(NSString *)inDirName;
         [Export("createFolder:")]
-        int CreateFolder(string dirName);
+        int CreateFolder(string directoryName);
 
         // -(OBEXError)removeItem:(NSString *)inItemName;
         [Export("removeItem:")]
@@ -1498,57 +1522,57 @@ namespace IOBluetooth
     }
 
     // @interface OBEXFileTransferServicesDelegate (NSObject)
-    [BaseType (typeof(NSObject))]
+    [BaseType (typeof(NSObject), Name = "OBEXFileTransferServicesDelegate")]
     [Protocol]
-    interface OBEXFileTransferServicesDelegate
+    interface ObexFileTransferServicesDelegate
     {
     	// -(void)fileTransferServicesConnectionComplete:(OBEXFileTransferServices *)inServices error:(OBEXError)inError;
-    	[Export ("fileTransferServicesConnectionComplete:error:"), EventName("ConnectionComplete")]
-    	void FileTransferServicesConnectionComplete (OBEXFileTransferServices services, int error);
+    	[Export ("fileTransferServicesConnectionComplete:error:"), EventName("ConnectionCompleted"), EventArgs("FileTransferServices")]
+    	void FileTransferServicesConnectionComplete (ObexFileTransferServices services, int error);
 
     	// -(void)fileTransferServicesDisconnectionComplete:(OBEXFileTransferServices *)inServices error:(OBEXError)inError;
-    	[Export ("fileTransferServicesDisconnectionComplete:error:"), EventName("DisconnectionComplete")]
-    	void FileTransferServicesDisconnectionComplete (OBEXFileTransferServices services, int error);
+    	[Export ("fileTransferServicesDisconnectionComplete:error:"), EventName("DisconnectionCompleted"), EventArgs("FileTransferServices")]
+    	void FileTransferServicesDisconnectionComplete (ObexFileTransferServices services, int error);
 
     	// -(void)fileTransferServicesAbortComplete:(OBEXFileTransferServices *)inServices error:(OBEXError)inError;
-    	[Export ("fileTransferServicesAbortComplete:error:"), EventName("AbortComplete")]
-    	void FileTransferServicesAbortComplete (OBEXFileTransferServices services, int error);
+    	[Export ("fileTransferServicesAbortComplete:error:"), EventName("AbortCompleted"), EventArgs("FileTransferServices")]
+    	void FileTransferServicesAbortComplete (ObexFileTransferServices services, int error);
 
     	// -(void)fileTransferServicesRemoveItemComplete:(OBEXFileTransferServices *)inServices error:(OBEXError)inError removedItem:(NSString *)inItemName;
-    	[Export ("fileTransferServicesRemoveItemComplete:error:removedItem:"), EventName("RemoveItemComplete")]
-    	void FileTransferServicesRemoveItemComplete (OBEXFileTransferServices services, int error, string itemName);
+    	[Export ("fileTransferServicesRemoveItemComplete:error:removedItem:"), EventName("RemoveItemCompleted"), EventArgs("FileTransferServicesItem")]
+    	void FileTransferServicesRemoveItemComplete (ObexFileTransferServices services, int error, string itemName);
 
     	// -(void)fileTransferServicesCreateFolderComplete:(OBEXFileTransferServices *)inServices error:(OBEXError)inError folder:(NSString *)inFolderName;
-    	[Export ("fileTransferServicesCreateFolderComplete:error:folder:"), EventName("CreateFolderComplete")]
-    	void FileTransferServicesCreateFolderComplete (OBEXFileTransferServices services, int error, string folderName);
+    	[Export ("fileTransferServicesCreateFolderComplete:error:folder:"), EventName("CreateFolderCompleted"), EventArgs("FileTransferServicesFolder")]
+    	void FileTransferServicesCreateFolderComplete (ObexFileTransferServices services, int error, string folderName);
 
     	// -(void)fileTransferServicesPathChangeComplete:(OBEXFileTransferServices *)inServices error:(OBEXError)inError finalPath:(NSString *)inPath;
-    	[Export ("fileTransferServicesPathChangeComplete:error:finalPath:"), EventName("PathChangeComplete")]
-    	void FileTransferServicesPathChangeComplete (OBEXFileTransferServices services, int error, string path);
+    	[Export ("fileTransferServicesPathChangeComplete:error:finalPath:"), EventName("PathChangeCompleted"), EventArgs("FileTransferServicesPath")]
+    	void FileTransferServicesPathChangeComplete (ObexFileTransferServices services, int error, string path);
 
     	// -(void)fileTransferServicesRetrieveFolderListingComplete:(OBEXFileTransferServices *)inServices error:(OBEXError)inError listing:(NSArray *)inListing;
-    	[Export ("fileTransferServicesRetrieveFolderListingComplete:error:listing:"), EventName("RetrieveFolderListingComplete"), EventArgs("FolderListing")]
-    	void FileTransferServicesRetrieveFolderListingComplete (OBEXFileTransferServices services, int error, NSString[] listing);
+    	[Export ("fileTransferServicesRetrieveFolderListingComplete:error:listing:"), EventName("RetrieveFolderListingCompleted"), EventArgs("FolderListing")]
+    	void FileTransferServicesRetrieveFolderListingComplete (ObexFileTransferServices services, int error, NSString[] listing);
 
     	// -(void)fileTransferServicesFilePreparationComplete:(OBEXFileTransferServices *)inServices error:(OBEXError)inError;
-    	[Export ("fileTransferServicesFilePreparationComplete:error:"), EventName("FilePreparationComplete")]
-    	void FileTransferServicesFilePreparationComplete (OBEXFileTransferServices services, int error);
+    	[Export ("fileTransferServicesFilePreparationComplete:error:"), EventName("FilePreparationCompleted"), EventArgs("FileTransferServices")]
+    	void FileTransferServicesFilePreparationComplete (ObexFileTransferServices services, int error);
 
     	// -(void)fileTransferServicesSendFileProgress:(OBEXFileTransferServices *)inServices transferProgress:(NSDictionary *)inProgressDescription;
-    	[Export ("fileTransferServicesSendFileProgress:transferProgress:"), EventName("SendFileProgress")]
-    	void FileTransferServicesSendFileProgress (OBEXFileTransferServices services, NSDictionary progressDescription);
+    	[Export ("fileTransferServicesSendFileProgress:transferProgress:"), EventName("SendFileProgress"), EventArgs("FileTransferServicesProgress")]
+    	void FileTransferServicesSendFileProgress (ObexFileTransferServices services, NSDictionary progressDescription);
 
     	// -(void)fileTransferServicesSendFileComplete:(OBEXFileTransferServices *)inServices error:(OBEXError)inError;
-    	[Export ("fileTransferServicesSendFileComplete:error:"), EventName("SendFileComplete")]
-    	void FileTransferServicesSendFileComplete (OBEXFileTransferServices services, int error);
+    	[Export ("fileTransferServicesSendFileComplete:error:"), EventName("SendFileCompleted"), EventArgs("FileTransferServices")]
+    	void FileTransferServicesSendFileComplete (ObexFileTransferServices services, int error);
 
     	// -(void)fileTransferServicesCopyRemoteFileProgress:(OBEXFileTransferServices *)inServices transferProgress:(NSDictionary *)inProgressDescription;
-    	[Export ("fileTransferServicesCopyRemoteFileProgress:transferProgress:"), EventName("CopyRemoteFileProgress")]
-    	void FileTransferServicesCopyRemoteFileProgress (OBEXFileTransferServices services, NSDictionary progressDescription);
+    	[Export ("fileTransferServicesCopyRemoteFileProgress:transferProgress:"), EventName("CopyRemoteFileProgress"), EventArgs("FileTransferServicesProgress")]
+    	void FileTransferServicesCopyRemoteFileProgress (ObexFileTransferServices services, NSDictionary progressDescription);
 
     	// -(void)fileTransferServicesCopyRemoteFileComplete:(OBEXFileTransferServices *)inServices error:(OBEXError)inError;
-    	[Export ("fileTransferServicesCopyRemoteFileComplete:error:"), EventName("CopyRemoteFileComplete")]
-    	void FileTransferServicesCopyRemoteFileComplete (OBEXFileTransferServices services, int error);
+    	[Export ("fileTransferServicesCopyRemoteFileComplete:error:"), EventName("CopyRemoteFileCompleted"), EventArgs("FileTransferServices")]
+    	void FileTransferServicesCopyRemoteFileComplete (ObexFileTransferServices services, int error);
     }
 
     /*[Static]
@@ -1597,23 +1621,23 @@ namespace IOBluetooth
     }*/
 
     //// @interface NSDictionaryOBEXExtensions (NSMutableDictionary)
-    //[Category]
-    //[BaseType (typeof(NSMutableDictionary))]
-    //interface NSDictionaryOBEXExtensions
-    //{
-    //	//// +(instancetype)dictionaryWithOBEXHeadersData:(const void *)inHeadersData headersDataSize:(size_t)inDataSize;
-    //	[Static]
-    //	[Export ("dictionaryWithOBEXHeadersData:headersDataSize:")]
-    //	unsafe NSMutableDictionary DictionaryWithOBEXHeadersData (IntPtr inHeadersData, nuint inDataSize);
+    [Category]
+    [BaseType (typeof(NSMutableDictionary), Name = "NSDictionaryOBEXExtensions")]
+    interface NSDictionaryObexExtensions
+    {
+        //	//// +(instancetype)dictionaryWithOBEXHeadersData:(const void *)inHeadersData headersDataSize:(size_t)inDataSize;
+        //	[Static]
+        //	[Export ("dictionaryWithOBEXHeadersData:headersDataSize:")]
+        //	unsafe NSMutableDictionary DictionaryWithOBEXHeadersData (IntPtr inHeadersData, nuint inDataSize);
 
-    //	// +(instancetype)dictionaryWithOBEXHeadersData:(NSData *)inHeadersData;
-    //	[Static]
-    //	[Export ("dictionaryWithOBEXHeadersData:")]
-    //	NSMutableDictionary DictionaryWithOBEXHeadersData (NSData inHeadersData);
+        //	// +(instancetype)dictionaryWithOBEXHeadersData:(NSData *)inHeadersData;
+        //	[Static]
+        //	[Export ("dictionaryWithOBEXHeadersData:")]
+        //	NSMutableDictionary DictionaryWithOBEXHeadersData (NSData inHeadersData);
 
-    //	// -(NSMutableData *)getHeaderBytes;
-    //	[Export ("getHeaderBytes")]
-    //	NSMutableData HeaderBytes { get; }
+        //	// -(NSMutableData *)getHeaderBytes;
+        [Export("getHeaderBytes")]
+        NSMutableData GetHeaderBytes();
 
     //	// -(OBEXError)addTargetHeader:(const void *)inHeaderData length:(uint32_t)inHeaderDataLength;
     //	[Export ("addTargetHeader:length:")]
@@ -1660,41 +1684,41 @@ namespace IOBluetooth
     //	int AddTimeISOHeader (IntPtr inHeaderData, uint inHeaderDataLength);
 
     //	// -(OBEXError)addTypeHeader:(NSString *)type;
-    //	[Export ("addTypeHeader:")]
-    //	int AddTypeHeader (string type);
+    	[Export ("addTypeHeader:")]
+    	int AddTypeHeader (string type);
 
     //	// -(OBEXError)addLengthHeader:(uint32_t)length;
-    //	[Export ("addLengthHeader:")]
-    //	int AddLengthHeader (uint length);
+    	[Export ("addLengthHeader:")]
+    	int AddLengthHeader (uint length);
 
     //	// -(OBEXError)addTime4ByteHeader:(uint32_t)time4Byte;
-    //	[Export ("addTime4ByteHeader:")]
-    //	int AddTime4ByteHeader (uint time4Byte);
+    	[Export ("addTime4ByteHeader:")]
+    	int AddTime4ByteHeader (uint time4Byte);
 
     //	// -(OBEXError)addCountHeader:(uint32_t)inCount;
-    //	[Export ("addCountHeader:")]
-    //	int AddCountHeader (uint inCount);
+    	[Export ("addCountHeader:")]
+    	int AddCountHeader (uint inCount);
 
     //	// -(OBEXError)addDescriptionHeader:(NSString *)inDescriptionString;
-    //	[Export ("addDescriptionHeader:")]
-    //	int AddDescriptionHeader (string inDescriptionString);
+    	[Export ("addDescriptionHeader:")]
+    	int AddDescriptionHeader (string descriptionString);
 
     //	// -(OBEXError)addNameHeader:(NSString *)inNameString;
-    //	[Export ("addNameHeader:")]
-    //	int AddNameHeader (string inNameString);
+    	[Export ("addNameHeader:")]
+    	int AddNameHeader (string nameString);
 
     //	// -(OBEXError)addUserDefinedHeader:(const void *)inHeaderData length:(uint32_t)inHeaderDataLength;
     //	[Export ("addUserDefinedHeader:length:")]
     //	unsafe int AddUserDefinedHeader (IntPtr inHeaderData, uint inHeaderDataLength);
 
     //	// -(OBEXError)addImageHandleHeader:(NSString *)type;
-    //	[Export ("addImageHandleHeader:")]
-    //	int AddImageHandleHeader (string type);
+    	[Export ("addImageHandleHeader:")]
+    	int AddImageHandleHeader (string type);
 
     //	// -(OBEXError)addImageDescriptorHeader:(const void *)inHeaderData length:(uint32_t)inHeaderDataLength;
     //	[Export ("addImageDescriptorHeader:length:")]
     //	int AddImageDescriptorHeader (IntPtr inHeaderData, uint inHeaderDataLength);
-    //}
+    }
 
     /*[Static]
     [Verify (ConstantsInterfaceAssociation)]
@@ -1850,7 +1874,7 @@ namespace IOBluetooth
         // @property (readonly) uint32_t deviceCallHoldModes __attribute__((availability(macos, introduced=10.7)));
         [Introduced(PlatformName.MacOSX, 10, 7)]
         [Export("deviceCallHoldModes")]
-        HandsFreeCallHoldModes DeviceCallHoldModes { get; }
+        HandsFreeCallHoldMode DeviceCallHoldModes { get; }
 
         // @property (readonly) IOBluetoothSMSMode SMSMode __attribute__((availability(macos, introduced=10.7)));
         [Introduced(PlatformName.MacOSX, 10, 7)]
@@ -1968,10 +1992,10 @@ namespace IOBluetooth
     //    bool IsHandsFreeDevice { [Bind("isHandsFreeDevice")] get; }
     //}
 
-    //// @interface HandsFreeSDPServiceRecordAdditions (IOBluetoothSDPServiceRecord)
+    // @interface HandsFreeSDPServiceRecordAdditions (IOBluetoothSDPServiceRecord)
     //[Category]
-    //[BaseType(typeof(IOBluetoothSDPServiceRecord))]
-    //interface IOBluetoothSDPServiceRecord_HandsFreeSDPServiceRecordAdditions
+    //[BaseType(typeof(SdpServiceRecord))]
+    //interface HandsFreeSDPServiceRecordAdditions
     //{
     //    // -(uint16_t)handsFreeSupportedFeatures __attribute__((availability(macos, introduced=10.7)));
     //    [Introduced(PlatformName.MacOSX, 10, 7)]
@@ -1987,7 +2011,7 @@ namespace IOBluetooth
         // -(instancetype)initWithDevice:(IOBluetoothDevice *)device delegate:(id)inDelegate __attribute__((availability(macos, introduced=10.7)));
         [Introduced(PlatformName.MacOSX, 10, 7)]
         [Export("initWithDevice:delegate:")]
-        IntPtr Constructor(BluetoothDevice device, NSObject inDelegate);
+        IntPtr Constructor(BluetoothDevice device, NSObject @delegate);
 
         // -(void)createIndicator:(NSString *)indicatorName min:(int)minValue max:(int)maxValue currentValue:(int)currentValue __attribute__((availability(macos, introduced=10.7)));
         [Introduced(PlatformName.MacOSX, 10, 7)]
