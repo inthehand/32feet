@@ -509,6 +509,84 @@ namespace InTheHand.Bluetooth
         [BluetoothUti("org.bluetooth.characteristic.Longitude")]
         public static readonly BluetoothUuid Longitude = 0x2AAF;
 
+        [BluetoothUti("org.bluetooth.characteristic.magnetic_declination")]
+        public static readonly BluetoothUuid MagneticDeclination = 0x2A2C;
+    
+        [BluetoothUti("org.bluetooth.characteristic.Magnetic_flux_density_2D")]
+        public static readonly BluetoothUuid MagneticFluxDensity2D = 0x2AA0;
+
+        [BluetoothUti("org.bluetooth.characteristic.Magnetic_flux_density_3D")]
+        public static readonly BluetoothUuid MagneticFluxDensity3D = 0x2AA1;
+       
+        [BluetoothUti("org.bluetooth.characteristic.manufacturer_name_string")]
+        public static readonly BluetoothUuid ManufacturerNameString = 0x2A29;
+               
+        [BluetoothUti("org.bluetooth.characteristic.maximum_recommended_heart_rate")]
+        public static readonly BluetoothUuid MaximumRecommendedHeartRate = 0x2A91;
+
+        [BluetoothUti("org.bluetooth.characteristic.measurement_interval")]
+        public static readonly BluetoothUuid MeasurementInterval = 0x2A21;
+
+        [BluetoothUti("org.bluetooth.characteristic.model_number_string")]
+        public static readonly BluetoothUuid ModelNumberString = 0x2A24;
+
+        [BluetoothUti("org.bluetooth.characteristic.navigation")]
+        public static readonly BluetoothUuid Navigation = 0x2A68;
+        
+        [BluetoothUti("org.bluetooth.characteristic.network_availability")]
+        public static readonly BluetoothUuid NetworkAvailability = 0x2A3E;
+
+        [BluetoothUti("org.bluetooth.characteristic.new_alert")]
+        public static readonly BluetoothUuid NewAlert = 0x2A46;
+        
+        [BluetoothUti("org.bluetooth.characteristic.object_action_control_point")]
+        public static readonly BluetoothUuid ObjectActionControlPoint = 0x2AC5;
+    
+        [BluetoothUti("org.bluetooth.characteristic.object_changed")]
+        public static readonly BluetoothUuid ObjectChanged = 0x2AC8;
+        
+        [BluetoothUti("org.bluetooth.characteristic.object_first_created")]
+        public static readonly BluetoothUuid ObjectFirstCreated = 0x2AC1;
+        
+        [BluetoothUti("org.bluetooth.characteristic.object_id")]
+        public static readonly BluetoothUuid ObjectID = 0x2AC3;
+        
+        [BluetoothUti("org.bluetooth.characteristic.object_last_modified")]
+        public static readonly BluetoothUuid ObjectLastModified = 0x2AC2;
+        
+        [BluetoothUti("org.bluetooth.characteristic.object_list_control_point")]
+        public static readonly BluetoothUuid ObjectListControlPoint = 0x2AC6;
+
+        [BluetoothUti("org.bluetooth.characteristic.object_list_filter")]
+        public static readonly BluetoothUuid ObjectListFilter = 0x2AC7;
+
+        [BluetoothUti("org.bluetooth.characteristic.object_name")]
+        public static readonly BluetoothUuid ObjectName = 0x2ABE;
+        
+        [BluetoothUti("org.bluetooth.characteristic.object_properties")]
+        public static readonly BluetoothUuid ObjectProperties = 0x2AC4;
+        
+        [BluetoothUti("org.bluetooth.characteristic.object_size")]
+        public static readonly BluetoothUuid ObjectSize = 0x2AC0;
+        
+        [BluetoothUti("org.bluetooth.characteristic.object_type")]
+        public static readonly BluetoothUuid ObjectType = 0x2ABF;
+
+        [BluetoothUti("org.bluetooth.characteristic.ots_feature")]
+        public static readonly BluetoothUuid OTSFeature = 0x2ABD;
+
+        [BluetoothUti("org.bluetooth.characteristic.gap.peripheral_preferred_connectn_parameters")]
+        public static readonly BluetoothUuid PeripheralPreferredConnectionParameters = 0x2A04;
+        
+        [BluetoothUti("org.bluetooth.characteristic.gap.peripheral_privacy_flag")]
+        public static readonly BluetoothUuid PeripheralPrivacyFlag = 0x2A02;
+        
+        [BluetoothUti("org.bluetooth.characteristic.plx_continuous_measurement")]
+        public static readonly BluetoothUuid PLXContinuousMeasurement = 0x2A5F;
+        
+        [BluetoothUti("org.bluetooth.characteristic.plx_features")]
+        public static readonly BluetoothUuid PLXFeatures = 0x2A60;
+       
         // TODO: Complete list of Characteristics
         //...
     }
