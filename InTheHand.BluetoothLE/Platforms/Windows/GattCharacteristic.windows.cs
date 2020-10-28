@@ -71,8 +71,10 @@ namespace InTheHand.Bluetooth
 
         byte[] PlatformGetValue()
         {
-            var result = _characteristic.ReadValueAsync(Windows.Devices.Bluetooth.BluetoothCacheMode.Cached).GetResults();
-            
+            var t = _characteristic.ReadValueAsync(Windows.Devices.Bluetooth.BluetoothCacheMode.Cached).AsTask();
+            t.Wait();
+            var result = t.Result;
+
             if(result.Status == Uap.GattCommunicationStatus.Success)
             {
                 return result.Value.ToArray();
