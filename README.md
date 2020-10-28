@@ -3,8 +3,9 @@
 # 32feet.NET - Personal Area Networking for .NET
 32feet.NET is an open-source project to make personal area networking technologies such as Bluetooth, Infrared (IrDA) and more, easily accessible from .NET code. Supports desktop, mobile or embedded systems.  32feet.NET is free for commercial or non-commercial use. If you use the binaries you can just use the library as-is, if you make modifications to the source you need to include the 32feet.NET License.txt document and ensure the file headers are not modified/removed.  The project currently consists of the following libraries:-
 
-- Bluetooth 
+- Bluetooth Classic
 - Bluetooth LE (Preview)
+- IOBluetooth/IOBluetoothUI bindings for Xamarin Mac
 - IrDA
 - Object Exchange (Obex)
 - USB (Coming soon)
@@ -20,6 +21,12 @@ Downloads are available here on the _Downloads_ tab. Packages are also available
 
 - InTheHand.BluetoothLE - Bluetooth Low Energy (v4.x)
 [![NuGet version](https://badge.fury.io/nu/InTheHand.BluetoothLE.svg)](https://badge.fury.io/nu/InTheHand.BluetoothLE)
+
+- InTheHand.IOBluetooth - IOBluetooth bindings for Xamarin Mac
+[![NuGet version](https://badge.fury.io/nu/InTheHand.IOBluetooth.svg)](https://badge.fury.io/nu/InTheHand.IOBluetooth)
+
+- InTheHand.IOBluetooth - IOBluetoothUI bindings for Xamarin Mac
+[![NuGet version](https://badge.fury.io/nu/InTheHand.IOBluetoothUI.svg)](https://badge.fury.io/nu/InTheHand.IOBluetoothUI)
 
 - InTheHand.Net.IrDA (v4.x)
 [![NuGet version](https://badge.fury.io/nu/InTheHand.Net.IrDA.svg)](https://badge.fury.io/nu/InTheHand.Net.IrDA)
