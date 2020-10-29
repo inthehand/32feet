@@ -10,29 +10,35 @@ using InTheHand.Net.Sockets;
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using System.Threading.Tasks;
 
 namespace InTheHand.Net.Bluetooth
 {
     partial class BluetoothSecurity
     {
         private static List<Win32BluetoothAuthentication> _authenticationHandlers = new List<Win32BluetoothAuthentication>();
-
-        static bool DoPairRequest(BluetoothAddress device, string pin)
+                
+        static bool PlatformPairRequest(BluetoothAddress device, string pin)
         {
-            if (pin.Length > BLUETOOTH_PIN_INFO.BTH_MAX_PIN_SIZE)
-                throw new ArgumentOutOfRangeException(nameof(pin));
+            if (pin != null)
+            {
+                if (pin.Length > BLUETOOTH_PIN_INFO.BTH_MAX_PIN_SIZE)
+                    throw new ArgumentOutOfRangeException(nameof(pin));
+            }
 
             BLUETOOTH_DEVICE_INFO info = new BLUETOOTH_DEVICE_INFO();
             info.dwSize = Marshal.SizeOf(info);
             info.Address = device;
 
             RemoveRedundantAuthHandler(device);
-
+            var authHandler = new Win32BluetoothAuthentication(device, pin);
+           
             // Handle response without prompt
-            _authenticationHandlers.Add(new Win32BluetoothAuthentication(device, pin));
+            _authenticationHandlers.Add(authHandler);
 
             bool success = NativeMethods.BluetoothAuthenticateDeviceEx(IntPtr.Zero, IntPtr.Zero, ref info, null, BluetoothAuthenticationRequirements.MITMProtectionNotRequired) == 0;
 
+            authHandler.WaitOne();
             BluetoothDeviceInfo deviceInfo = new BluetoothDeviceInfo(info);
             deviceInfo.Refresh();
 
@@ -46,7 +52,7 @@ namespace InTheHand.Net.Bluetooth
             return success;
         }
 
-        static void RemoveRedundantAuthHandler(ulong address)
+        internal static void RemoveRedundantAuthHandler(ulong address)
         {
             Win32BluetoothAuthentication redundantAuth = null;
 
@@ -66,7 +72,7 @@ namespace InTheHand.Net.Bluetooth
             }
         }
 
-        static bool DoRemoveDevice(BluetoothAddress device)
+        static bool PlatformRemoveDevice(BluetoothAddress device)
         {
             ulong addr = device;
             RemoveRedundantAuthHandler(addr);

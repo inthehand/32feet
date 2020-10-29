@@ -7,6 +7,7 @@
 
 using System;
 using System.Runtime.InteropServices;
+using System.Threading;
 
 namespace InTheHand.Net.Bluetooth.Win32
 {
@@ -15,6 +16,7 @@ namespace InTheHand.Net.Bluetooth.Win32
         string _pin;
         IntPtr _handle = IntPtr.Zero;
         NativeMethods.BluetoothAuthenticationCallbackEx _callback;
+        EventWaitHandle _waitHandle = new EventWaitHandle(false, EventResetMode.AutoReset);
 
         public ulong Address { get; set; }
 
@@ -28,36 +30,56 @@ namespace InTheHand.Net.Bluetooth.Win32
             _callback = new NativeMethods.BluetoothAuthenticationCallbackEx(Callback);
 
             int result = NativeMethods.BluetoothRegisterForAuthenticationEx(ref device, out _handle, _callback, IntPtr.Zero);
+
+            if (result != 0)
+                _waitHandle.Set();
         }
 
         private bool Callback(IntPtr pvParam, ref BLUETOOTH_AUTHENTICATION_CALLBACK_PARAMS pAuthCallbackParams)
         {
-            switch (pAuthCallbackParams.authenticationMethod)
+            try
             {
-                case BluetoothAuthenticationMethod.Passkey:
-                case BluetoothAuthenticationMethod.NumericComparison:
-                    BLUETOOTH_AUTHENTICATE_RESPONSE__NUMERIC_COMPARISON_PASSKEY_INFO nresponse = new BLUETOOTH_AUTHENTICATE_RESPONSE__NUMERIC_COMPARISON_PASSKEY_INFO
-                    {
-                        authMethod = pAuthCallbackParams.authenticationMethod,
-                        bthAddressRemote = pAuthCallbackParams.deviceInfo.Address,
-                        numericComp_passkey = pAuthCallbackParams.Numeric_Value_Passkey
-                    };
-                    return NativeMethods.BluetoothSendAuthenticationResponseEx(IntPtr.Zero, ref nresponse) == 0;
+                switch (pAuthCallbackParams.authenticationMethod)
+                {
+                    case BluetoothAuthenticationMethod.Passkey:
+                    case BluetoothAuthenticationMethod.NumericComparison:
+                        BLUETOOTH_AUTHENTICATE_RESPONSE__NUMERIC_COMPARISON_PASSKEY_INFO nresponse = new BLUETOOTH_AUTHENTICATE_RESPONSE__NUMERIC_COMPARISON_PASSKEY_INFO
+                        {
+                            authMethod = pAuthCallbackParams.authenticationMethod,
+                            bthAddressRemote = pAuthCallbackParams.deviceInfo.Address,
+                            numericComp_passkey = pAuthCallbackParams.Numeric_Value_Passkey
+                        };
 
-                case BluetoothAuthenticationMethod.Legacy:
-                    BLUETOOTH_AUTHENTICATE_RESPONSE__PIN_INFO response = new BLUETOOTH_AUTHENTICATE_RESPONSE__PIN_INFO
-                    {
-                        authMethod = pAuthCallbackParams.authenticationMethod,
-                        bthAddressRemote = pAuthCallbackParams.deviceInfo.Address
-                    };
-                    response.pinInfo.pin = new byte[16];
-                    System.Text.Encoding.ASCII.GetBytes(_pin).CopyTo(response.pinInfo.pin, 0);
-                    response.pinInfo.pinLength = _pin.Length;
-                    
-                    return NativeMethods.BluetoothSendAuthenticationResponseEx(IntPtr.Zero, ref response) == 0;
+                        int result = NativeMethods.BluetoothSendAuthenticationResponseEx(IntPtr.Zero, ref nresponse);
+                        System.Diagnostics.Debug.WriteLine($"{result} {nresponse.negativeResponse}");
+                        return result == 0;
+
+                    case BluetoothAuthenticationMethod.Legacy:
+                        BLUETOOTH_AUTHENTICATE_RESPONSE__PIN_INFO response = new BLUETOOTH_AUTHENTICATE_RESPONSE__PIN_INFO
+                        {
+                            authMethod = pAuthCallbackParams.authenticationMethod,
+                            bthAddressRemote = pAuthCallbackParams.deviceInfo.Address
+                        };
+                        response.pinInfo.pin = new byte[16];
+                        System.Text.Encoding.ASCII.GetBytes(_pin).CopyTo(response.pinInfo.pin, 0);
+                        response.pinInfo.pinLength = _pin.Length;
+
+                        return NativeMethods.BluetoothSendAuthenticationResponseEx(IntPtr.Zero, ref response) == 0;
+                }
+
+                return false;
             }
+            finally
+            {
+                _waitHandle.Set();
+                // after one call remove the registration
+                BluetoothSecurity.RemoveRedundantAuthHandler(Address);
+            }
+        }
 
-            return false;
+        public void WaitOne()
+        {
+            _waitHandle.WaitOne();
         }
 
         #region IDisposable Support
@@ -115,7 +137,7 @@ namespace InTheHand.Net.Bluetooth.Win32
         internal byte negativeResponse;
     }
     
-    [StructLayout(LayoutKind.Sequential, Size =52)]
+    [StructLayout(LayoutKind.Sequential, Size = 52)]
     internal struct BLUETOOTH_AUTHENTICATE_RESPONSE__NUMERIC_COMPARISON_PASSKEY_INFO // see above
     {
         internal ulong bthAddressRemote;

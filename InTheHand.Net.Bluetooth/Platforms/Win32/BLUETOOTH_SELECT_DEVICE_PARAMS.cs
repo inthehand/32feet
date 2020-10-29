@@ -49,7 +49,7 @@ namespace InTheHand.Net.Bluetooth.Win32
             fShowRemembered = true;
             fShowUnknown = true;
             fAddNewDeviceWizard = false;
-            fSkipServicesPage = false;
+            fSkipServicesPage = true;
             pfnDeviceCallback = null;
             pvParam = IntPtr.Zero;
             cNumDevices = 0;
@@ -72,11 +72,11 @@ namespace InTheHand.Net.Bluetooth.Win32
             else
             {
                 cNumOfClasses = classOfDevices.Length;
-                prgClassOfDevices = Marshal.AllocHGlobal(8 * classOfDevices.Length);
+                prgClassOfDevices = Marshal.AllocHGlobal((IntPtr.Size * 4) * classOfDevices.Length);
                 for (int i = 0; i < cNumOfClasses; i++)
                 {
-                    Marshal.WriteInt32(prgClassOfDevices, i * 8, (int)classOfDevices[i].Value);
-
+                    Marshal.WriteInt32(prgClassOfDevices, (i * (IntPtr.Size * 2)), (int)classOfDevices[i].Value);
+                    
                     //prgClassOfDevices[i] = new BLUETOOTH_COD_PAIRS();
                     //prgClassOfDevices[i].ulCODMask = classOfDevices[i].Value;
                     //prgClassOfDevices[i].pcszDescription = classOfDevices[i].ToString();

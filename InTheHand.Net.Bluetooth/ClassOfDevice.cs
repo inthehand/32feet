@@ -21,7 +21,9 @@ namespace InTheHand.Net.Bluetooth
     /// <see cref="P:InTheHand.Net.Bluetooth.BluetoothRadio.ClassOfDevice">BluetoothRadio.ClassOfDevice</see>.
     /// </para>
     /// </remarks>
+#if !UAP
     [Serializable]
+#endif
     public sealed class ClassOfDevice : IEquatable<ClassOfDevice>
     {
         private readonly uint _cod;

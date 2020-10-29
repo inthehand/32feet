@@ -15,7 +15,6 @@ using System.Globalization;
 
 namespace InTheHand.Net.Bluetooth.Sdp
 {
-
     /// <summary>
     /// Some useful methods for working with a SDP <see cref="T:InTheHand.Net.Bluetooth.ServiceRecord"/>
     /// including creating and accessing the <see cref="F:InTheHand.Net.Bluetooth.AttributeIds.UniversalAttributeId.ProtocolDescriptorList"/>
@@ -90,12 +89,12 @@ namespace InTheHand.Net.Bluetooth.Sdp
             ServiceElement e0 = attr.Value;
             if (e0.ElementType == ElementType.ElementAlternative) {
 
-                Trace.WriteLine("Don't support ElementAlternative ProtocolDescriptorList values.");
+                Debug.WriteLine("Don't support ElementAlternative ProtocolDescriptorList values.");
 
                 goto NotFound;
             } else if (e0.ElementType != ElementType.ElementSequence) {
 
-                Trace.WriteLine("Bad ProtocolDescriptorList base element.");
+                Debug.WriteLine("Bad ProtocolDescriptorList base element.");
 
                 goto NotFound;
             }
@@ -107,7 +106,7 @@ namespace InTheHand.Net.Bluetooth.Sdp
             // -- L2CAP Layer --
             if (!etor.MoveNext()) {
 
-                Trace.WriteLine(string.Format(CultureInfo.InvariantCulture,
+                Debug.WriteLine(string.Format(CultureInfo.InvariantCulture,
                     "Protocol stack truncated before {0}.", "L2CAP"));
 
                 goto NotFound;
@@ -116,7 +115,7 @@ namespace InTheHand.Net.Bluetooth.Sdp
             layerContent = layer.GetValueAsElementList();
             if (layerContent[0].GetValueAsUuid() != BluetoothProtocol.L2CapProtocol) {
 
-                Trace.WriteLine(String.Format(CultureInfo.InvariantCulture,
+                Debug.WriteLine(String.Format(CultureInfo.InvariantCulture,
                     "Bad protocol stack, layer {0} is not {1}.", 1, "L2CAP"));
                 goto NotFound;
             }
@@ -126,7 +125,7 @@ namespace InTheHand.Net.Bluetooth.Sdp
             if (proto == BluetoothProtocolDescriptorType.L2Cap) {
                 if (layerContent.Count < 2) {
 
-                    Trace.WriteLine("L2CAP PSM element was requested but the L2CAP layer in this case hasn't a second element.");
+                    Debug.WriteLine("L2CAP PSM element was requested but the L2CAP layer in this case hasn't a second element.");
 
                     goto NotFound;
                 }
@@ -137,7 +136,7 @@ namespace InTheHand.Net.Bluetooth.Sdp
             // -- RFCOMM Layer --
             if (!etor.MoveNext()) {
 
-                Trace.WriteLine(string.Format(CultureInfo.InvariantCulture,
+                Debug.WriteLine(string.Format(CultureInfo.InvariantCulture,
                     "Protocol stack truncated before {0}.", "RFCOMM"));
 
                 goto NotFound;
@@ -146,7 +145,7 @@ namespace InTheHand.Net.Bluetooth.Sdp
             layerContent = layer.GetValueAsElementList();
             if (layerContent[0].GetValueAsUuid() != BluetoothProtocol.RFCommProtocol) {
 
-                Trace.WriteLine(String.Format(CultureInfo.InvariantCulture,
+                Debug.WriteLine(string.Format(CultureInfo.InvariantCulture,
                     "Bad protocol stack, layer {0} is not {1}.", 2, "RFCOMM"));
 
                 goto NotFound;
@@ -154,15 +153,15 @@ namespace InTheHand.Net.Bluetooth.Sdp
             //
             if (layerContent.Count < 2) {
 
-                Trace.WriteLine(String.Format(CultureInfo.InvariantCulture,
+                Debug.WriteLine(string.Format(CultureInfo.InvariantCulture,
                     "Bad protocol stack, layer {0} hasn't a second element.", 2));
 
                 goto NotFound;
             }
-            channelElement = (ServiceElement)layerContent[1];
+            channelElement = layerContent[1];
             if (channelElement.ElementType != ElementType.UInt8) {
 
-                Trace.WriteLine(String.Format(CultureInfo.InvariantCulture,
+                Debug.WriteLine(string.Format(CultureInfo.InvariantCulture,
                     "Bad protocol stack, layer {0} is not UInt8.", 2));
 
                 goto NotFound;
@@ -205,7 +204,7 @@ namespace InTheHand.Net.Bluetooth.Sdp
         internal static int GetRfcommChannelNumber(ServiceElement channelElement)
         {
             Debug.Assert(channelElement != null, "channelElement != null");
-            System.Diagnostics.Debug.Assert(channelElement.ElementType == ElementType.UInt8);
+            Debug.Assert(channelElement.ElementType == ElementType.UInt8);
             byte value = (byte)channelElement.Value;
             return value;
         }
@@ -235,8 +234,8 @@ namespace InTheHand.Net.Bluetooth.Sdp
         internal static int GetL2CapChannelNumber(ServiceElement channelElement)
         {
             Debug.Assert(channelElement != null, "channelElement != null");
-            System.Diagnostics.Debug.Assert(channelElement.ElementType == ElementType.UInt16);
-            var value = (UInt16)channelElement.Value;
+            Debug.Assert(channelElement.ElementType == ElementType.UInt16);
+            var value = (ushort)channelElement.Value;
             return value;
         }
 
@@ -260,7 +259,8 @@ namespace InTheHand.Net.Bluetooth.Sdp
             if (channelElement == null) {
                 throw new InvalidOperationException("ProtocolDescriptorList element does not exist or is not in the RFCOMM format.");
             }
-            System.Diagnostics.Debug.Assert(channelElement.ElementType == ElementType.UInt8);
+            
+            Debug.Assert(channelElement.ElementType == ElementType.UInt8);
             channelElement.SetValue(channelNumber);
         }
 
@@ -293,9 +293,9 @@ namespace InTheHand.Net.Bluetooth.Sdp
         /// </exception>
         public static void SetL2CapPsmNumber(ServiceRecord record, int psm)
         {
-            if (psm < 0 || psm > UInt16.MaxValue)
+            if (psm < 0 || psm > ushort.MaxValue)
                 throw new ArgumentOutOfRangeException("psm", "A PSM is a UInt16 value.");
-            var psm16 = checked((UInt16)psm);
+            var psm16 = checked((ushort)psm);
             ServiceElement rfcommElement = GetRfcommChannelElement(record);
             if (rfcommElement != null) {
                 Debug.WriteLine("Setting L2CAP PSM for a PDL that includes RFCOMM.");
@@ -377,7 +377,7 @@ namespace InTheHand.Net.Bluetooth.Sdp
         public static ServiceElement CreateGoepProtocolDescriptorList()
         {
             return CreateRfcommProtocolDescriptorListWithUpperLayers(
-               CreatePdlLayer((UInt16)ServiceRecordUtilities.HackProtocolId.Obex));
+               CreatePdlLayer((ushort)ServiceRecordUtilities.HackProtocolId.Obex));
         }
 
         private static ServiceElement CreateRfcommProtocolDescriptorListWithUpperLayers(params ServiceElement[] upperLayers)

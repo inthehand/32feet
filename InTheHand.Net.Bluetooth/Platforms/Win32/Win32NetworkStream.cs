@@ -11,7 +11,7 @@ using System.Net.Sockets;
 
 namespace InTheHand.Net.Sockets
 {
-    internal sealed class Win32NetworkStream : InTheHand.Net.Sockets.NetworkStream
+    internal sealed class Win32NetworkStream : NonSocketNetworkStream
     {
         private readonly Win32Socket _socket;
         private readonly bool _ownsSocket;

@@ -9,10 +9,10 @@
 using InTheHand.Net.Bluetooth.AttributeIds;
 using System;
 using System.Diagnostics;
+using System.IO;
 
 namespace InTheHand.Net.Bluetooth.Sdp
 {
-
     /// <summary>
     /// Utilities method working on SDP <see cref="T:InTheHand.Net.Bluetooth.ServiceRecord"/>s, for instance to
     /// produce a 'dump' of the record's contents.
@@ -150,7 +150,7 @@ namespace InTheHand.Net.Bluetooth.Sdp
         /// <seealso cref="M:InTheHand.Net.Bluetooth.ServiceRecordUtilities.DumpRaw(System.IO.TextWriter,InTheHand.Net.Bluetooth.ServiceRecord)"/>
         public static string DumpRaw(ServiceRecord record)
         {
-            using (System.IO.StringWriter writer = new System.IO.StringWriter(
+            using (StringWriter writer = new StringWriter(
                             System.Globalization.CultureInfo.InvariantCulture)) {
                 DumpRaw(writer, record);
                 writer.Close(); // close here, and to be sure to be sure also with using()
@@ -167,7 +167,7 @@ namespace InTheHand.Net.Bluetooth.Sdp
         /// text is to be written.</param>
         /// <param name="record">A <see cref="T:InTheHand.Net.Bluetooth.ServiceRecord"/> to be dumped.</param>
         /// <seealso cref="M:InTheHand.Net.Bluetooth.ServiceRecordUtilities.DumpRaw(InTheHand.Net.Bluetooth.ServiceRecord)"/>
-        public static void DumpRaw(System.IO.TextWriter writer, ServiceRecord record)
+        public static void DumpRaw(TextWriter writer, ServiceRecord record)
         {
             if (writer == null) { throw new ArgumentNullException("writer"); }
             if (record == null) { throw new ArgumentNullException("record"); }
@@ -185,7 +185,7 @@ namespace InTheHand.Net.Bluetooth.Sdp
             }//for
         }
 
-        private static void DumpRawElement(System.IO.TextWriter writer, int depth, ServiceElement elem)
+        private static void DumpRawElement(TextWriter writer, int depth, ServiceElement elem)
         {
             WritePrefix(writer, depth);
             if (elem.ElementType == ElementType.ElementSequence
@@ -286,7 +286,7 @@ namespace InTheHand.Net.Bluetooth.Sdp
         /// for the attributes contained in this record.  See the 
         /// </param>
         /// <seealso cref="M:InTheHand.Net.Bluetooth.ServiceRecordUtilities.Dump(InTheHand.Net.Bluetooth.ServiceRecord,System.Type[])"/>
-        public static void Dump(System.IO.TextWriter writer, ServiceRecord record, params Type[] attributeIdEnumDefiningTypes)
+        public static void Dump(TextWriter writer, ServiceRecord record, params Type[] attributeIdEnumDefiningTypes)
         {
             if (writer == null) { throw new ArgumentNullException("writer"); }
             if (record == null) { throw new ArgumentNullException("record"); }
@@ -306,7 +306,7 @@ namespace InTheHand.Net.Bluetooth.Sdp
                 if (!firstAttr) {
                     writer.WriteLine();
                 }
-                ServiceAttributeId id = (ServiceAttributeId)attr.Id;
+                ServiceAttributeId id = attr.Id;
                 LanguageBaseItem applicableLangBase;
                 string name = AttributeIdLookup.GetName(id, allAttributeIdEnumDefiningTypes, langBaseList, out applicableLangBase);
                 if (name == null) {
@@ -350,9 +350,9 @@ namespace InTheHand.Net.Bluetooth.Sdp
         }
 
         //--------
-        private static void DumpAdditionalProtocolDescriptorLists(System.IO.TextWriter writer, int depth, ServiceElement element)
+        private static void DumpAdditionalProtocolDescriptorLists(TextWriter writer, int depth, ServiceElement element)
         {
-            System.Diagnostics.Debug.Assert(element.ElementType == ElementType.ElementSequence);
+            Debug.Assert(element.ElementType == ElementType.ElementSequence);
             //
             // Is a list of PDLs
             foreach (ServiceElement curList in element.GetValueAsElementList()) {
@@ -360,9 +360,9 @@ namespace InTheHand.Net.Bluetooth.Sdp
             }//foreach
         }
 
-        private static void DumpProtocolDescriptorList(System.IO.TextWriter writer, int depth, ServiceElement element)
+        private static void DumpProtocolDescriptorList(TextWriter writer, int depth, ServiceElement element)
         {
-            System.Diagnostics.Debug.Assert(element.ElementType == ElementType.ElementAlternative
+            Debug.Assert(element.ElementType == ElementType.ElementAlternative
                 || element.ElementType == ElementType.ElementSequence);
             //
             // If passes a list of alternatives, each a protocol descriptor list,
@@ -378,34 +378,34 @@ namespace InTheHand.Net.Bluetooth.Sdp
         }
 
 
-        private static void DumpProtocolDescriptorListList(System.IO.TextWriter writer, int depth, ServiceElement element)
+        private static void DumpProtocolDescriptorListList(TextWriter writer, int depth, ServiceElement element)
         {
             // The list.
-            System.Diagnostics.Debug.Assert(element.ElementType == ElementType.ElementSequence);
+            Debug.Assert(element.ElementType == ElementType.ElementSequence);
             WritePrefix(writer, depth);
             writer.Write("( ");
             bool firstLayer = true;
             foreach (ServiceElement layer in element.GetValueAsElementList()) {
                 ServiceElement[] items = layer.GetValueAsElementArray();
                 int used = 0;
-                System.Diagnostics.Debug.Assert(items[used].ElementTypeDescriptor == ElementTypeDescriptor.Uuid);
+                Debug.Assert(items[used].ElementTypeDescriptor == ElementTypeDescriptor.Uuid);
                 Guid protoGuid = items[used].GetValueAsUuid();
-                String protoStr;
+                string protoStr;
                 HackProtocolId proto = GuidToHackProtocolId(protoGuid, out protoStr);
                 //
                 used++;
                 writer.Write("{0}( {1}", (firstLayer ? string.Empty : ", "), protoStr);
                 if (proto == HackProtocolId.L2Cap) {
                     if (used < items.Length) {
-                        System.Diagnostics.Debug.Assert(items[used].ElementType == ElementType.UInt16);
-                        UInt16 u16 = (UInt16)items[used].Value;
+                        Debug.Assert(items[used].ElementType == ElementType.UInt16);
+                        var u16 = (ushort)items[used].Value;
                         HackProtocolServiceMultiplexer psm = unchecked((HackProtocolServiceMultiplexer)u16);
                         used++;
                         writer.Write(", PSM={0}", Enum_ToStringNameOrHex(psm));
                     }
                 } else if (proto == HackProtocolId.Rfcomm) {
                     if (used < items.Length) {
-                        System.Diagnostics.Debug.Assert(items[used].ElementType == ElementType.UInt8);
+                        Debug.Assert(items[used].ElementType == ElementType.UInt8);
                         byte channelNumber = (byte)items[used].Value;
                         used++;
                         writer.Write(", ChannelNumber={0}", channelNumber);
@@ -421,7 +421,7 @@ namespace InTheHand.Net.Bluetooth.Sdp
             writer.WriteLine(" )");
         }
 
-        private static String Enum_ToStringNameOrHex(Enum value) //NoWorkee--<T>...where T : Enum
+        private static string Enum_ToStringNameOrHex(Enum value) //NoWorkee--<T>...where T : Enum
         {
             // Which of these is best?
             //if (Enum.IsDefined(value.GetType(), value)) {
@@ -447,9 +447,9 @@ namespace InTheHand.Net.Bluetooth.Sdp
             return text;
         }
 
-        private static bool HackIsNumeric(String text)
+        private static bool HackIsNumeric(string text)
         {
-            return Char.IsDigit(text[0]) || text[0] == '-';
+            return char.IsDigit(text[0]) || text[0] == '-';
         }
 
         //--------
@@ -520,22 +520,22 @@ namespace InTheHand.Net.Bluetooth.Sdp
             return proto.Value;
         }
 
-        internal static UInt16 GetAsUuid16Value_(Guid protocolGuid) //BluetoothGuidHelper.
+        internal static ushort GetAsUuid16Value_(Guid protocolGuid) //BluetoothGuidHelper.
         {
             if (!IsUuid16Value(protocolGuid))
                 throw new ArgumentException("Guid is not a Bluetooth UUID.");
             byte[] bytes = protocolGuid.ToByteArray();
-            Int32 i32 = BitConverter.ToInt32(bytes, 0);
-            System.Diagnostics.Debug.Assert(i32 > 0, "Int32 conversion is negative!");
-            System.Diagnostics.Debug.Assert(i32 < (int)UInt16.MaxValue + 1, "Int32 conversion is in UInt32 range.");
-            UInt16 u16 = checked((UInt16)i32);
+            int i32 = BitConverter.ToInt32(bytes, 0);
+            Debug.Assert(i32 > 0, "Int32 conversion is negative!");
+            Debug.Assert(i32 < (int)UInt16.MaxValue + 1, "Int32 conversion is in UInt32 range.");
+            ushort u16 = checked((ushort)i32);
             return u16;
         }
 
         internal static HackProtocolId GetAsUuid16Value(Guid protocolGuid) //BluetoothGuidHelper.
         {
-            UInt16 u16 = GetAsUuid16Value_(protocolGuid);
-            Int16 i16 = unchecked((Int16)u16);
+            ushort u16 = GetAsUuid16Value_(protocolGuid);
+            short i16 = unchecked((short)u16);
             HackProtocolId pid = (HackProtocolId)i16;
             return pid;
         }
@@ -556,12 +556,12 @@ namespace InTheHand.Net.Bluetooth.Sdp
             return copyWithZeros.Equals(BluetoothService.BluetoothBase);
         }
 
-        internal static UInt32 GetAsUuid32Value(Guid protocolGuid) //BluetoothGuidHelper.
+        internal static uint GetAsUuid32Value(Guid protocolGuid) //BluetoothGuidHelper.
         {
             if (!IsUuid32Value(protocolGuid))
                 throw new ArgumentException("Guid is not a Bluetooth UUID.");
             byte[] bytes = protocolGuid.ToByteArray();
-            UInt32 u32 = BitConverter.ToUInt32(bytes, 0);
+            var u32 = BitConverter.ToUInt32(bytes, 0);
             return u32;
         }
 
@@ -569,15 +569,15 @@ namespace InTheHand.Net.Bluetooth.Sdp
 #if CODE_ANALYSIS
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "depth", Justification = "consistency with peers")]
 #endif
-        private static void DumpString(System.IO.TextWriter writer, int depth, ServiceElement element, LanguageBaseItem langBase)
+        private static void DumpString(TextWriter writer, int depth, ServiceElement element, LanguageBaseItem langBase)
         {
             if (langBase != null) {
                 try {
-                    String value = element.GetValueAsString(langBase);
+                    string value = element.GetValueAsString(langBase);
                     writer.WriteLine("{0}: [{1}] '{2}'", element.ElementType, langBase.NaturalLanguage, value);
                 } catch (NotSupportedException ex) {
-                    System.Diagnostics.Debug.Assert(ex.Message != null);
-                    System.Diagnostics.Debug.Assert(ex.Message.StartsWith("Unrecognized character encoding"));
+                    Debug.Assert(ex.Message != null);
+                    Debug.Assert(ex.Message.StartsWith("Unrecognized character encoding"));
                     writer.WriteLine("{0}: Failure: {1}", element.ElementType, ex.Message);
                 }
             } else {
@@ -597,7 +597,7 @@ namespace InTheHand.Net.Bluetooth.Sdp
             }
         }
 
-        private static void DumpElement(System.IO.TextWriter writer, int depth, ServiceElement elem)
+        private static void DumpElement(TextWriter writer, int depth, ServiceElement elem)
         {
             WritePrefix(writer, depth);
             if (elem.ElementType == ElementType.ElementSequence || elem.ElementType == ElementType.ElementAlternative) {
@@ -614,15 +614,15 @@ namespace InTheHand.Net.Bluetooth.Sdp
                 // Non-numeric types
                 writer.WriteLine("{0}: {1}", elem.ElementType, elem.Value);
             } else {
-                String name = null;
-                String valueText = null;
+                string name = null;
+                string valueText = null;
                 if (elem.ElementTypeDescriptor == ElementTypeDescriptor.Uuid) {
                     if (elem.ElementType == ElementType.Uuid16) {
-                        name = BluetoothService.GetName((UInt16)elem.Value);
+                        name = BluetoothService.GetName((ushort)elem.Value);
                     } else if (elem.ElementType == ElementType.Uuid32) {
-                        name = BluetoothService.GetName((UInt32)elem.Value);
+                        name = BluetoothService.GetName((uint)elem.Value);
                     } else {
-                        System.Diagnostics.Debug.Assert(elem.ElementType == ElementType.Uuid128);
+                        Debug.Assert(elem.ElementType == ElementType.Uuid128);
                         name = BluetoothService.GetName((Guid)elem.Value);
                         valueText = ((Guid)elem.Value).ToString();
                     }
@@ -634,7 +634,7 @@ namespace InTheHand.Net.Bluetooth.Sdp
                                 || elem.ElementType == ElementType.Int128) {
                         valueText = BitConverter.ToString((byte[])elem.Value);
                     } else {
-                        valueText = String.Format(System.Globalization.CultureInfo.InvariantCulture, "0x{0:X}", elem.Value);
+                        valueText = string.Format(System.Globalization.CultureInfo.InvariantCulture, "0x{0:X}", elem.Value);
                     }
                 }
                 if (name == null) {
@@ -656,8 +656,8 @@ namespace InTheHand.Net.Bluetooth.Sdp
 
         //--------------------------------------------------------------
 
-        static char[] s_lotsOfSpaces = new String(' ', 100).ToCharArray();
-        private static void WritePrefix(System.IO.TextWriter writer, int depth)
+        static char[] s_lotsOfSpaces = new string(' ', 100).ToCharArray();
+        private static void WritePrefix(TextWriter writer, int depth)
         {
             const int StepSize = 4;
             int count = depth * StepSize;
@@ -666,5 +666,4 @@ namespace InTheHand.Net.Bluetooth.Sdp
         }
 
     }//class
-
 }

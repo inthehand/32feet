@@ -11,11 +11,21 @@ using System.Net.Sockets;
 
 namespace InTheHand.Net
 {
+    /// <summary>
+    /// Represents a network endpoint as a Bluetooth address and a Service Class Id and/or a port number.
+    /// </summary>
     public sealed class BluetoothEndPoint : EndPoint
     {
         private ulong _bluetoothAddress;
         private Guid _serviceId;
-        
+
+        /// <summary>
+        /// Initializes a new instance of the BluetoothEndPoint class with the specified address and service.
+        /// </summary>
+        /// <param name="address">The Bluetooth address of the device.</param>
+        /// <param name="service">The Bluetooth service to use.</param>
+        public BluetoothEndPoint(BluetoothAddress address, Guid service) : this(address.ToUInt64(), service) { }
+
         internal BluetoothEndPoint(ulong bluetoothAddress, Guid serviceId)
         {
             _bluetoothAddress = bluetoothAddress;
@@ -45,6 +55,9 @@ namespace InTheHand.Net
             _serviceId = new Guid(servicebytes);
         }
 
+        /// <summary>
+        /// Gets the address family of the Bluetooth address.
+        /// </summary>
         public override AddressFamily AddressFamily
         {
             get
@@ -53,6 +66,9 @@ namespace InTheHand.Net
             }
         }
 
+        /// <summary>
+        /// Gets the Bluetooth address of the endpoint.
+        /// </summary>
         public BluetoothAddress Address
         {
             get
@@ -61,6 +77,9 @@ namespace InTheHand.Net
             }
         }
 
+        /// <summary>
+        /// Gets the Bluetooth service to use for the connection.
+        /// </summary>
         public Guid Service
         {
             get
@@ -69,6 +88,11 @@ namespace InTheHand.Net
             }
         }
 
+        /// <summary>
+        /// Creates an endpoint from a socket address.
+        /// </summary>
+        /// <param name="socketAddress"></param>
+        /// <returns></returns>
         public override EndPoint Create(SocketAddress socketAddress)
         {
             if (socketAddress == null)
@@ -103,6 +127,10 @@ namespace InTheHand.Net
             return base.Create(socketAddress);
         }
 
+        /// <summary>
+        /// Serializes endpoint information into a SocketAddress instance.
+        /// </summary>
+        /// <returns></returns>
         public override SocketAddress Serialize()
         {
             SocketAddress btsa = new SocketAddress(AddressFamily, 30);
@@ -132,6 +160,10 @@ namespace InTheHand.Net
             return btsa;
         }
 
+        /// <summary>
+        /// Returns the string representation of the BluetoothEndPoint.
+        /// </summary>
+        /// <returns></returns>
         public override string ToString()
         {
             return _bluetoothAddress.ToString("X6") + ":" + _serviceId.ToString("D");

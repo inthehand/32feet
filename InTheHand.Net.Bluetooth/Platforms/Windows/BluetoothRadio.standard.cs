@@ -1,9 +1,11 @@
 ﻿// 32feet.NET - Personal Area Networking for .NET
 //
-// InTheHand.Net.Bluetooth.BluetoothRadio (iOS)
+// InTheHand.Net.Bluetooth.BluetoothRadio (.NET Standard)
 // 
 // Copyright (c) 2003-2020 In The Hand Ltd, All rights reserved.
 // This source code is licensed under the MIT License
+
+using System.Collections.Generic;
 
 namespace InTheHand.Net.Bluetooth
 {
@@ -11,7 +13,7 @@ namespace InTheHand.Net.Bluetooth
     {
         private static BluetoothRadio GetDefault()
         {
-            return new BluetoothRadio();
+            return null;
         }
         
         private string GetName()

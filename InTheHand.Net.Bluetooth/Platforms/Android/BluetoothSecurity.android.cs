@@ -9,14 +9,19 @@ namespace InTheHand.Net.Bluetooth
 {
     partial class BluetoothSecurity
     {
-        static bool DoPairRequest(BluetoothAddress device, string pin)
+        static bool PlatformPairRequest(BluetoothAddress device, string pin)
         {
             var nativeDevice = Android.Bluetooth.BluetoothAdapter.DefaultAdapter.GetRemoteDevice(device.ToSixByteArray());
-            nativeDevice.SetPin(System.Text.Encoding.ASCII.GetBytes(pin));
+            
+            if (pin != null)
+            {
+                nativeDevice.SetPin(System.Text.Encoding.ASCII.GetBytes(pin));
+            }
+
             return nativeDevice.CreateBond();
         }
 
-        static bool DoRemoveDevice(BluetoothAddress device)
+        static bool PlatformRemoveDevice(BluetoothAddress device)
         {
             var nativeDevice = Android.Bluetooth.BluetoothAdapter.DefaultAdapter.GetRemoteDevice(device.ToSixByteArray());
             var method = nativeDevice.Class.GetMethod("removeBond");

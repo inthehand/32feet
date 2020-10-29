@@ -6,6 +6,7 @@
 // This source code is licensed under the MIT License
 
 using ExternalAccessory;
+using Foundation;
 using InTheHand.Net.Sockets.iOS;
 using System;
 using System.Collections.Generic;
@@ -18,9 +19,15 @@ namespace InTheHand.Net.Sockets
         private EASession _session;
         private EAAccessory _accessory;
         private ExternalAccessoryNetworkStream _stream;
+        private NSObject _connectionObserver;
 
         private void PlatformInitialize()
         {
+            EAAccessoryManager.SharedAccessoryManager.RegisterForLocalNotifications(); 
+            _connectionObserver = EAAccessoryManager.Notifications.ObserveDidConnect((s, e) =>
+            {
+                System.Diagnostics.Debug.WriteLine(e.Notification + " " + e.Accessory + " " + e.Selected);
+            });
         }
 
         IEnumerable<BluetoothDeviceInfo> GetPairedDevices()
@@ -100,23 +107,13 @@ namespace InTheHand.Net.Sockets
             return null;
         }
 
-        #region IDisposable Support
-        private bool disposedValue = false; // To detect redundant calls
-
         void Dispose(bool disposing)
         {
-            if (!disposedValue)
+            if (_connectionObserver != null)
             {
-                if (disposing)
-                {
-                }
-
-                disposedValue = true;
+                _connectionObserver.Dispose();
+                _connectionObserver = null;
             }
         }
-
-        // This code added to correctly implement the disposable pattern.
-        
-        #endregion
     }
 }

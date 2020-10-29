@@ -6,6 +6,7 @@
 // This source code is licensed under the MIT License
 
 using System;
+using System.Reflection;
 
 namespace InTheHand.Net.Bluetooth
 {

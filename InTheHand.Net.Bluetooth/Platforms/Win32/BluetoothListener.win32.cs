@@ -27,7 +27,7 @@ namespace InTheHand.Net.Sockets
             if (handle != IntPtr.Zero)
                 throw new InvalidOperationException();
 
-            endPoint = new BluetoothEndPoint(0, serviceUuid);
+            endPoint = new BluetoothEndPoint(BluetoothAddress.None, serviceUuid);
             socket = new Win32Socket();
             socket.Bind(endPoint);
 

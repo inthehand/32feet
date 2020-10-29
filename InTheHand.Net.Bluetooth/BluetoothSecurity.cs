@@ -11,12 +11,12 @@ namespace InTheHand.Net.Bluetooth
     {
         public static bool PairRequest(BluetoothAddress device, string pin)
         {
-            return DoPairRequest(device, pin);
+            return PlatformPairRequest(device, pin);
         }
 
         public static bool RemoveDevice(BluetoothAddress device)
         {
-            return DoRemoveDevice(device);
+            return PlatformRemoveDevice(device);
         }
     }
 }

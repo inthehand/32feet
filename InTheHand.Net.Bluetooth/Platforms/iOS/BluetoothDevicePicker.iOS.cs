@@ -10,6 +10,7 @@ using Foundation;
 using InTheHand.Net.Sockets;
 using System;
 using System.Threading.Tasks;
+using UIKit;
 
 namespace InTheHand.Net.Bluetooth
 {
@@ -35,29 +36,65 @@ namespace InTheHand.Net.Bluetooth
 
             try
             {
-                await EAAccessoryManager.SharedAccessoryManager.ShowBluetoothAccessoryPickerAsync(null);
+                await EAAccessoryManager.SharedAccessoryManager.ShowBluetoothAccessoryPickerAsync(null);//, new Action<NSError>((e) =>
+
+                /* {
+                     System.Diagnostics.Debug.WriteLine(e.Code);
+
+                     switch(e.Code)
+                     {
+                         case (long)EABluetoothAccessoryPickerError.Cancelled:
+                             tcs.SetCanceled();
+                             break;
+
+                         case (long)EABluetoothAccessoryPickerError.Failed:
+                         case (long)EABluetoothAccessoryPickerError.NotFound:
+                             tcs.SetException(new Exception(e.Code.ToString()));
+                             break;
+
+                         default:
+                             tcs.SetResult(EAAccessoryManager.SharedAccessoryManager.ConnectedAccessories[0]);
+                             break;
+                     }
+                 }));
+             });*/
+
+                if (EAAccessoryManager.SharedAccessoryManager.ConnectedAccessories.Length > 0)
+                {
+                    tcs.SetResult(EAAccessoryManager.SharedAccessoryManager.ConnectedAccessories[0]);
+                }
+                else
+                {
+                    tcs.SetResult(null);
+                }
             }
-            catch(Exception ex)
+            catch (NSErrorException ex)
             {
                 System.Diagnostics.Debug.WriteLine(ex);
-                EAAccessoryManager.SharedAccessoryManager.UnregisterForLocalNotifications();
-                return null;
-            }
 
-            EAAccessory accessory = null;
-            if (EAAccessoryManager.SharedAccessoryManager.ConnectedAccessories.GetLength(0) > 0)
-            {
-                accessory = EAAccessoryManager.SharedAccessoryManager.ConnectedAccessories[0];
+                switch(ex.Code)
+                {
+                    case (long)EABluetoothAccessoryPickerError.AlreadyConnected:
+                        tcs.SetResult(EAAccessoryManager.SharedAccessoryManager.ConnectedAccessories[0]);
+                        break;
+
+                    case (long)EABluetoothAccessoryPickerError.Cancelled:
+                        tcs.SetCanceled();
+                        break;
+
+                    case (long)EABluetoothAccessoryPickerError.Failed:
+                    case (long)EABluetoothAccessoryPickerError.NotFound:
+                        tcs.SetException(ex);
+                        break;
+                }
             }
-            else
+            finally
             {
-                accessory = await tcs.Task;
+                EAAccessoryManager.SharedAccessoryManager.UnregisterForLocalNotifications();
+                connectionObserver.Dispose();
             }
             
-            EAAccessoryManager.SharedAccessoryManager.UnregisterForLocalNotifications();
-            connectionObserver.Dispose();
-
-            return accessory;
+            return await tcs.Task;
         }
     }
 }

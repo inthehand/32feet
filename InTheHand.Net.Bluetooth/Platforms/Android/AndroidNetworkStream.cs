@@ -11,7 +11,7 @@ using System.IO;
 
 namespace InTheHand.Net.Bluetooth.Droid
 {
-    internal sealed class AndroidNetworkStream : NetworkStream
+    internal sealed class AndroidNetworkStream : NonSocketNetworkStream
     {
         private Stream _inputStream;
         private Stream _outputStream;

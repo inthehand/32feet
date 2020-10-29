@@ -9,12 +9,12 @@ namespace InTheHand.Net.Bluetooth
 {
     partial class BluetoothSecurity
     {
-        static bool DoPairRequest(BluetoothAddress device, string pin)
+        static bool PlatformPairRequest(BluetoothAddress device, string pin)
         {
             return false;
         }
 
-        static bool DoRemoveDevice(BluetoothAddress device)
+        static bool PlatformRemoveDevice(BluetoothAddress device)
         {
             return false;
         }  

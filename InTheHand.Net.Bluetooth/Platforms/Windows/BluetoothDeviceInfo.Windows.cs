@@ -1,6 +1,6 @@
 ﻿// 32feet.NET - Personal Area Networking for .NET
 //
-// InTheHand.Net.Sockets.BluetoothDeviceInfo (iOS)
+// InTheHand.Net.Sockets.BluetoothDeviceInfo (Windows 10)
 // 
 // Copyright (c) 2003-2020 In The Hand Ltd, All rights reserved.
 // This source code is licensed under the MIT License
@@ -8,42 +8,42 @@
 using InTheHand.Net.Bluetooth;
 using System;
 using System.Collections.Generic;
-using ExternalAccessory;
+using Windows.Devices.Bluetooth;
 
 namespace InTheHand.Net.Sockets
 {
     partial class BluetoothDeviceInfo
     {
-        private EAAccessory _accessory;
+        internal BluetoothDevice NativeDevice;
 
-        internal BluetoothDeviceInfo(EAAccessory accessory)
+        internal BluetoothDeviceInfo(BluetoothDevice device)
         {
-            _accessory = accessory;
+            NativeDevice = device;
         }
 
-        public static implicit operator EAAccessory(BluetoothDeviceInfo deviceInfo)
+        public static implicit operator BluetoothDevice(BluetoothDeviceInfo device)
         {
-            return deviceInfo._accessory;
+            return device.NativeDevice;
         }
 
-        public static implicit operator BluetoothDeviceInfo(EAAccessory accessory)
+        public static implicit operator BluetoothDeviceInfo(BluetoothDevice device)
         {
-            return new BluetoothDeviceInfo(accessory);
+            return new BluetoothDeviceInfo(device);
         }
 
         BluetoothAddress GetDeviceAddress()
         {
-            return new BluetoothAddress(_accessory);
+            return NativeDevice.BluetoothAddress;
         }
 
         string GetDeviceName()
         {
-            return _accessory.Name;
+            return NativeDevice.Name;
         }
 
         ClassOfDevice GetClassOfDevice()
         {
-            return (ClassOfDevice)0;
+            return (ClassOfDevice)NativeDevice.ClassOfDevice.RawValue;
         }
 
         IReadOnlyCollection<Guid> GetInstalledServices()
@@ -57,12 +57,12 @@ namespace InTheHand.Net.Sockets
 
         bool GetConnected()
         {
-            return _accessory.Connected;
+            return NativeDevice.ConnectionStatus == BluetoothConnectionStatus.Connected;
         }
 
         bool GetAuthenticated()
         {
-            return true;
+            return NativeDevice.DeviceInformation.Pairing.IsPaired;
         }
 
         void DoRefresh()

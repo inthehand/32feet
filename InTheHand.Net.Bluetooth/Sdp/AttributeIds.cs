@@ -7,6 +7,8 @@
 // This source code is licensed under the MIT License
 
 using System;
+using System.Reflection;
+
 namespace InTheHand.Net.Bluetooth.AttributeIds
 {
 
@@ -156,7 +158,7 @@ namespace InTheHand.Net.Bluetooth.AttributeIds
                 foreach (System.Reflection.FieldInfo curField in fieldArr) {
                     if (curField.FieldType == typeof(ServiceAttributeId)) {
                         // A multi-language attribute or a just a normal one?
-                        Object[] dotnetAtttrs = curField.GetCustomAttributes(typeof(StringWithLanguageBaseAttribute), false);
+                        object[] dotnetAtttrs = curField.GetCustomAttributes(typeof(StringWithLanguageBaseAttribute), false);
                         if (dotnetAtttrs.Length != 0) {
                             System.Diagnostics.Debug.Assert(dotnetAtttrs.Length == 1,
                                 "Not that it's a problem for us at all, but that Attribute should only be applied once.");

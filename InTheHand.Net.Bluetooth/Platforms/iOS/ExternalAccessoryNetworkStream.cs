@@ -9,16 +9,17 @@ using ExternalAccessory;
 using Foundation;
 using System;
 using System.IO;
+using System.Net.Sockets;
 
 namespace InTheHand.Net.Sockets.iOS
 {
-    internal class ExternalAccessoryNetworkStream : NetworkStream
+    internal class ExternalAccessoryNetworkStream : NonSocketNetworkStream
     {
         private NSInputStream _inputStream;
         private NSOutputStream _outputStream;
-        MemoryStream _outputBuffer = new MemoryStream();
-        EAStreamDelegate _delegate;
-        bool _streamReady = false;
+        private MemoryStream _outputBuffer = new MemoryStream();
+        private EAStreamDelegate _delegate;
+        private bool _streamReady = false;
 
         internal ExternalAccessoryNetworkStream(EASession session)
         {

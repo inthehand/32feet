@@ -26,6 +26,11 @@ namespace InTheHand.Net.Bluetooth
             }
         }
         
+        private BluetoothRadio()
+        {
+
+        }
+
         public string Name
         {
             get

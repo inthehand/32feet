@@ -15,15 +15,16 @@ namespace InTheHand.Net.Sockets
     public class Win32Socket : Socket
     {
         private int _socket = 0;
+        private Socket _listener;
 
         // TODO: find a way of using this just for MONO and a "bare" Socket for .NET
-        public Win32Socket() : base(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp)
+        public Win32Socket() : base(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Unspecified)
         {
             // AF_BT, Type_Stream, Protocol_Rfcomm
-            _socket = NativeMethods.socket(32, SocketType.Stream, BluetoothProtocolType.RFComm);
+            _socket = NativeMethods.socket(BluetoothClient.AddressFamilyBluetooth, SocketType.Stream, BluetoothProtocolType.RFComm);
         }
 
-        internal Win32Socket(int socket) : base(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp)
+        internal Win32Socket(int socket) : base(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Unspecified)
         {
             _socket = socket;
         }
@@ -135,9 +136,11 @@ namespace InTheHand.Net.Sockets
         {
             if (_socket != 0)
             {
+                base.Close();
                 int result = NativeMethods.closesocket(_socket);
                 _socket = 0;
                 ThrowOnSocketError(result, true);
+
             }
         }
 
@@ -154,6 +157,14 @@ namespace InTheHand.Net.Sockets
             int result = NativeMethods.connect(_socket, SocketAddressToArray(sockAddr), 30);
 
             ThrowOnSocketError(result, true);
+            using (Socket lstnr = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Unspecified))
+            {
+                lstnr.Bind(new IPEndPoint(IPAddress.Loopback, 0));
+                lstnr.Listen(1);
+                EndPoint svrEp = lstnr.LocalEndPoint;
+                base.Connect(svrEp);
+                _listener = lstnr.Accept();
+            }
         }
 
         /// <inheritdoc/>
@@ -368,7 +379,7 @@ namespace InTheHand.Net.Sockets
 
             [DllImport(winsockDll)]
 #pragma warning disable IDE1006 // Naming Styles - these are Win32 function names
-            internal static extern int socket(int af, SocketType type, ProtocolType protocol);
+            internal static extern int socket(AddressFamily af, SocketType type, ProtocolType protocol);
 
             [DllImport(winsockDll)]
             internal static extern int closesocket(int s);

@@ -10,18 +10,19 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net.Sockets;
+using System.Threading.Tasks;
 
 namespace InTheHand.Net.Sockets
 {
     partial class BluetoothClient
     {
-        private Win32Socket _socket;
+        private Socket _socket;
 
         private void PlatformInitialize()
         {
         }
 
-        internal BluetoothClient(Win32Socket s)
+        internal BluetoothClient(Socket s)
         {
             _socket = s;
         }
@@ -109,14 +110,43 @@ namespace InTheHand.Net.Sockets
         }
 
         void DoConnect(BluetoothAddress address, Guid service)
-        {           
-            _socket = new Win32Socket();
-            _socket.Connect(new BluetoothEndPoint(address, service));
+        {
+            var ep = new BluetoothEndPoint(address, service);
+            if (NativeMethods.IsRunningOnMono())
+            {
+                _socket = new Win32Socket();
+                ((Win32Socket)_socket).Connect(ep);
+            }
+            else
+            {
+                _socket = new Socket(AddressFamilyBluetooth, SocketType.Stream, BluetoothProtocolType.RFComm);
+                _socket.Connect(ep);
+            }
+            
+        }
+
+        public IAsyncResult BeginConnect(BluetoothEndPoint endpoint, AsyncCallback requestCallback, object state)
+        {
+            IAsyncResult result = Client.BeginConnect(endpoint, requestCallback, state);
+            return result;
+        }
+
+        public void EndConnect(IAsyncResult asyncResult)
+        {
+            Client.EndConnect(asyncResult);
+        }
+
+        public Task ConnectAsync(BluetoothEndPoint endpoint)
+        {
+            if (NativeMethods.IsRunningOnMono())
+                throw new PlatformNotSupportedException();
+
+            return Task.Factory.FromAsync(BeginConnect, EndConnect, endpoint, null);
         }
 
         void DoClose()
         {
-            if(_socket is object && _socket.Connected)
+            if(_socket != null && _socket.Connected)
                 _socket.Close();
         }
 
@@ -146,6 +176,9 @@ namespace InTheHand.Net.Sockets
             if (_socket == null)
                 return false;
 
+            if (NativeMethods.IsRunningOnMono())
+                return ((Win32Socket)_socket).Connected;
+
             return _socket.Connected;
         }
 
@@ -164,7 +197,8 @@ namespace InTheHand.Net.Sockets
                 _encrypt = value;
             }
         }
-
+        
+        internal const AddressFamily AddressFamilyBluetooth = (AddressFamily)32;
         private const SocketOptionLevel SocketOptionLevelRFComm = (SocketOptionLevel)0x03;
         private const SocketOptionName SocketOptionNameAuthenticate = unchecked((SocketOptionName)0x80000001);
         private const SocketOptionName SocketOptionNameEncrypt = (SocketOptionName)0x00000002;
@@ -183,11 +217,19 @@ namespace InTheHand.Net.Sockets
             return string.Empty;
         }
 
-        NetworkStream DoGetStream()
+        System.Net.Sockets.NetworkStream DoGetStream()
         {
             if (Connected)
-                return new Win32NetworkStream(_socket, true);
-
+            {
+                if (NativeMethods.IsRunningOnMono())
+                {
+                    return new Win32NetworkStream((Win32Socket)_socket, true);
+                }
+                else
+                {
+                    return new System.Net.Sockets.NetworkStream(_socket, true);
+                }
+            }
             return null;
         }
 

@@ -8,7 +8,7 @@
 namespace InTheHand.Net.Bluetooth
 {
     /// <summary>
-    /// The BLUETOOTH_IO_CAPABILITY enumeration defines the input/output capabilities of a Bluetooth Device.
+    /// Defines the input/output capabilities of a Bluetooth Device.
     /// </summary>
     internal enum BluetoothIoCapability : int // MSFT+Win32 BLUETOOTH_IO_CAPABILITY
     {
