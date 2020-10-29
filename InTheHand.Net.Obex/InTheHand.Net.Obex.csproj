@@ -5,7 +5,7 @@
     <Company>In The Hand Ltd</Company>
     <Authors>Peter Foot</Authors>
     <Product>32feet.NET</Product>
-    <Version>4.0.1-pre</Version>
+    <Version>4.0.2-pre</Version>
     <RepositoryUrl>https://github.com/inthehand/32feet</RepositoryUrl>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <IncludeSymbols>true</IncludeSymbols>
@@ -13,8 +13,8 @@
     <PackageProjectUrl>https://github.com/inthehand/32feet</PackageProjectUrl>
     <Copyright>Copyright (c) 2004-2020 In The Hand Ltd</Copyright>
     <Description>32feet.NET is an open-source project to make personal area networking technologies such as Bluetooth easily accessible from .NET code.</Description>
-    <FileVersion>4.0.1.824</FileVersion>
-    <AssemblyVersion>4.0.1.0</AssemblyVersion>
+    <FileVersion>4.0.2.1029</FileVersion>
+    <AssemblyVersion>4.0.0.0</AssemblyVersion>
     <AssemblyName>InTheHand.Net.Obex</AssemblyName>
     <DebugType>portable</DebugType>
     <GenerateDocumentationFile Condition=" '$(Configuration)' == 'Release' ">true</GenerateDocumentationFile>
@@ -25,7 +25,10 @@
     <PackageId>InTheHand.Net.Obex</PackageId>
     <PackageIcon>32feet-package-icon.png</PackageIcon>
     <RepositoryType>GIT</RepositoryType>
-    <PackageReleaseNotes>Initial preview of ported 32feet code.</PackageReleaseNotes>
+    <PackageReleaseNotes>Strong named</PackageReleaseNotes>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>InTheHand.snk</AssemblyOriginatorKeyFile>
+    <DelaySign>false</DelaySign>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
@@ -40,8 +43,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="InTheHand.Net.Bluetooth" Version="4.0.8" />
-    <PackageReference Include="InTheHand.Net.IrDA" Version="4.0.0" />
+    <PackageReference Include="InTheHand.Net.Bluetooth" Version="4.0.12" />
+    <PackageReference Include="InTheHand.Net.IrDA" Version="4.0.1" />
   </ItemGroup>
 
 </Project>
