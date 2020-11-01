@@ -574,12 +574,6 @@ namespace InTheHand.Bluetooth
 
         [BluetoothUti("org.bluetooth.characteristic.ots_feature")]
         public static readonly BluetoothUuid OTSFeature = 0x2ABD;
-
-        [BluetoothUti("org.bluetooth.characteristic.gap.peripheral_preferred_connectn_parameters")]
-        public static readonly BluetoothUuid PeripheralPreferredConnectionParameters = 0x2A04;
-        
-        [BluetoothUti("org.bluetooth.characteristic.gap.peripheral_privacy_flag")]
-        public static readonly BluetoothUuid PeripheralPrivacyFlag = 0x2A02;
         
         [BluetoothUti("org.bluetooth.characteristic.plx_continuous_measurement")]
         public static readonly BluetoothUuid PLXContinuousMeasurement = 0x2A5F;
