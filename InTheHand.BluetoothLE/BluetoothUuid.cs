@@ -206,15 +206,15 @@ namespace InTheHand.Bluetooth
         /// <returns></returns>
         public static BluetoothUuid FromId(string uuidName)
         {
-            if(uuidName.StartsWith("org.bluetooth.service"))
+            if(uuidName.StartsWith(GattServiceUuids.Namespace))
             {
                 return GattServiceUuids.FromBluetoothUti(uuidName);
             }
-            else if(uuidName.StartsWith("org.bluetooth.characteristic"))
+            else if(uuidName.StartsWith(GattCharacteristicUuids.Namespace))
             {
                 return GattCharacteristicUuids.FromBluetoothUti(uuidName);
             }
-            else if(uuidName.StartsWith("org.bluetooth.descriptor"))
+            else if(uuidName.StartsWith(GattDescriptorUuids.Namespace))
             {
                 return GattDescriptorUuids.FromBluetoothUti(uuidName);
             }

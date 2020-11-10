@@ -37,6 +37,23 @@ namespace InTheHand.Bluetooth
             uint len = 64;
             byte[] buffer = new byte[len];
 
+            IntPtr hwnd = IntPtr.Zero;
+
+            try
+            {
+                // a console app will return a non-null string for title
+                if (!string.IsNullOrEmpty(Console.Title))
+                {
+                    bounds = new Rect(0, 0, 480, 480);
+                    hwnd = GetConsoleWindow();
+                    // set console host window as parent for picker
+                    ((IInitializeWithWindow)(object)picker).Initialize(hwnd);
+                }
+            }
+            catch
+            {
+            }
+
             int hasPackage = GetCurrentPackageId(ref len, buffer);
 
             if (hasPackage == 0x3d54)
@@ -169,6 +186,12 @@ namespace InTheHand.Bluetooth
 #if !UAP
         [DllImport("Kernel32", ExactSpelling = true, SetLastError = true)]
         private static extern int GetCurrentPackageId(ref uint bufferLength, byte[] buffer);
+
+        [DllImport("Kernel32")]
+        static extern IntPtr GetConsoleWindow();
+
+        [DllImport("User32")]
+        static extern IntPtr GetActiveWindow();
 
         [ComImport]
         [Guid("3E68D4BD-7135-4D10-8018-9FB6D9F33FA1")]

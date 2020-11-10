@@ -107,7 +107,7 @@ namespace InTheHand.Bluetooth
 
         private void Characteristic_ValueChanged(Uap.GattCharacteristic sender, Uap.GattValueChangedEventArgs args)
         {
-            OnCharacteristicValueChanged();
+            OnCharacteristicValueChanged(new GattCharacteristicValueChangedEventArgs(args.CharacteristicValue.ToArray()));
         }
 
         void RemoveCharacteristicValueChanged()

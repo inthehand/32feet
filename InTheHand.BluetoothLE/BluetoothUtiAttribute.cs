@@ -12,7 +12,9 @@ namespace InTheHand.Bluetooth
     /// <summary>
     /// Attribute to attach a Uniform Type Identifier to a Bluetooth UUID.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field)]
+    /// <remarks>
+    /// Usage on a class indicates a namespace such as org.bluetooth.characteristic and on a field represents the individual name.</remarks>
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Field)]
     public sealed class BluetoothUtiAttribute : Attribute
     {
         public BluetoothUtiAttribute() { }

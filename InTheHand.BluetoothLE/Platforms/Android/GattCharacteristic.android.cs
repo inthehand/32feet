@@ -132,8 +132,8 @@ namespace InTheHand.Bluetooth
 
         private void Gatt_CharacteristicChanged(object sender, CharacteristicEventArgs e)
         {
-            if(e.Characteristic == _characteristic)
-                characteristicValueChanged?.Invoke(this, EventArgs.Empty);
+            if (e.Characteristic == _characteristic)
+                OnCharacteristicValueChanged(new GattCharacteristicValueChangedEventArgs(e.Characteristic.GetValue()));
         }
 
         void RemoveCharacteristicValueChanged()

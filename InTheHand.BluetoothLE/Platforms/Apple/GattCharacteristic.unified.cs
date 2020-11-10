@@ -189,8 +189,8 @@ namespace InTheHand.Bluetooth
 
         void Peripheral_UpdatedCharacterteristicValue(object sender, CBCharacteristicEventArgs e)
         {
-            if(e.Characteristic == _characteristic)
-                characteristicValueChanged?.Invoke(this, EventArgs.Empty);
+            if (e.Characteristic == _characteristic)
+                OnCharacteristicValueChanged(new GattCharacteristicValueChangedEventArgs(e.Characteristic.Value.ToArray()));
         }
 
         void RemoveCharacteristicValueChanged()

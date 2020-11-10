@@ -37,7 +37,9 @@ namespace InTheHand.Bluetooth
 
         private static async Task<BluetoothDevice> PlatformFromId(string id)
         {
-            if (ulong.TryParse(id, out var parsedId))
+            BluetoothLEDevice device = null;
+
+            if (ulong.TryParse(id, System.Globalization.NumberStyles.HexNumber, null, out var parsedId))
             {
                 if(Bluetooth.KnownDevices.ContainsKey(parsedId))
                 {
@@ -45,12 +47,20 @@ namespace InTheHand.Bluetooth
                     if (knownDevice != null)
                         return knownDevice;
                 }
-                var device = await BluetoothLEDevice.FromBluetoothAddressAsync(parsedId);
-                var success = device.RequestAccessAsync();
-                return device;
+                device = await BluetoothLEDevice.FromBluetoothAddressAsync(parsedId);
+            }
+            else
+            {
+                device = await BluetoothLEDevice.FromIdAsync(id);
             }
 
-            return null;
+            if (device != null)
+            {
+                var success = await device.RequestAccessAsync();
+                System.Diagnostics.Debug.WriteLine($"RequestAccessAsync {success}");
+            }
+
+            return device;
         }
 
         string GetId()

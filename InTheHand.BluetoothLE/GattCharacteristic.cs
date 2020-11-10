@@ -127,17 +127,17 @@ namespace InTheHand.Bluetooth
             return PlatformGetDescriptors();
         }
 
-        private event EventHandler characteristicValueChanged;
+        private event EventHandler<GattCharacteristicValueChangedEventArgs> characteristicValueChanged;
 
-        void OnCharacteristicValueChanged()
+        void OnCharacteristicValueChanged(GattCharacteristicValueChangedEventArgs args)
         {
-            characteristicValueChanged?.Invoke(this, EventArgs.Empty);
+            characteristicValueChanged?.Invoke(this, args);
         }
 
         /// <summary>
         /// 
         /// </summary>
-        public event EventHandler CharacteristicValueChanged
+        public event EventHandler<GattCharacteristicValueChangedEventArgs> CharacteristicValueChanged
         {
             add
             {
@@ -161,5 +161,15 @@ namespace InTheHand.Bluetooth
         {
             return PlatformStopNotifications();
         }
+    }
+
+    public sealed class GattCharacteristicValueChangedEventArgs : EventArgs
+    {
+        internal GattCharacteristicValueChangedEventArgs(byte[] newValue)
+        {
+            Value = newValue;
+        }
+
+        public byte[] Value { get; private set; }
     }
 }
