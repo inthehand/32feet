@@ -57,15 +57,16 @@ namespace InTheHand.Bluetooth
         async Task<List<GattService>> PlatformGetPrimaryServices(BluetoothUuid? service)
         {
             var services = new List<GattService>();
-
+            var nativeDevice = Device.NativeDevice;
+            Windows.Devices.Bluetooth.BluetoothCacheMode cacheMode = nativeDevice.DeviceInformation.Pairing.IsPaired ? Windows.Devices.Bluetooth.BluetoothCacheMode.Cached : Windows.Devices.Bluetooth.BluetoothCacheMode.Uncached;
             Windows.Devices.Bluetooth.GenericAttributeProfile.GattDeviceServicesResult result;
             if (service == null)
             {
-                result = await Device.NativeDevice.GetGattServicesAsync(Windows.Devices.Bluetooth.BluetoothCacheMode.Uncached);
+                result = await nativeDevice.GetGattServicesAsync(cacheMode);
             }
             else
             {
-                result = await Device.NativeDevice.GetGattServicesForUuidAsync(service.Value, Windows.Devices.Bluetooth.BluetoothCacheMode.Uncached);
+                result = await nativeDevice.GetGattServicesForUuidAsync(service.Value, cacheMode);
             }
 
             if (result != null && result.Services.Count > 0)

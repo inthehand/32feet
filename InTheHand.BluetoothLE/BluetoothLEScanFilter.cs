@@ -12,11 +12,19 @@ namespace InTheHand.Bluetooth
 {
     public sealed partial class BluetoothLEScanFilter
     {
-        public string Name { get; set; }
-
-        public string NamePrefix { get; set; }
-        
+        /// <summary>
+        /// List of service UUIDs which a device must expose to match the filter.
+        /// </summary>
         public IList<BluetoothUuid> Services { get; } = new List<BluetoothUuid>();
 
+        /// <summary>
+        /// If present requires a device to exactly match the supplied name.
+        /// </summary>
+        public string Name { get; set; }
+
+        /// <summary>
+        /// If present requires a device name to start with the supplied prefix.
+        /// </summary>
+        public string NamePrefix { get; set; }       
     }
 }

@@ -7,6 +7,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
@@ -40,7 +41,17 @@ namespace InTheHand.Bluetooth
         /// <returns>A BluetoothDevice or null if unsuccessful.</returns>
         public static Task<BluetoothDevice> RequestDeviceAsync(RequestDeviceOptions options = null)
         {
+            ThrowOnInvalidOptions(options);
             return PlatformRequestDevice(options);
+        }
+
+        private static void ThrowOnInvalidOptions(RequestDeviceOptions options)
+        {
+            if (options != null)
+            {
+                if ((options.Filters != null && options.Filters.Count > 0) == options.AcceptAllDevices)
+                    throw new ArgumentException("Cannot set both Filters and AcceptAllDevices");
+            }
         }
 
         private static event EventHandler availabilityChanged;
@@ -81,6 +92,7 @@ namespace InTheHand.Bluetooth
 
         public static Task<IReadOnlyCollection<BluetoothDevice>> ScanForDevicesAsync(RequestDeviceOptions options = null)
         {
+            ThrowOnInvalidOptions(options);
             return PlatformScanForDevices(options);
         }
 
