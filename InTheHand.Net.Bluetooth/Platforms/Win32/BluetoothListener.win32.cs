@@ -19,7 +19,7 @@ namespace InTheHand.Net.Sockets
     partial class BluetoothListener
     {
         private BluetoothEndPoint endPoint;
-        private Win32Socket socket;
+        private Socket socket;
         private IntPtr handle = IntPtr.Zero;
 
         void DoStart()
@@ -28,11 +28,28 @@ namespace InTheHand.Net.Sockets
                 throw new InvalidOperationException();
 
             endPoint = new BluetoothEndPoint(BluetoothAddress.None, serviceUuid);
-            socket = new Win32Socket();
-            socket.Bind(endPoint);
 
-            System.Diagnostics.Debug.WriteLine(socket.IsBound);
-            socket.Listen(1);
+            if (NativeMethods.IsRunningOnMono())
+            {
+                socket = new Win32Socket();
+                ((Win32Socket)socket).Bind(endPoint);
+                Debug.WriteLine(socket.IsBound);
+                ((Win32Socket)socket).Listen(1);
+                // get endpoint with channel
+                endPoint = ((Win32Socket)socket).LocalEndPoint as BluetoothEndPoint;
+            }
+            else
+            {
+                socket = new Socket(BluetoothClient.AddressFamilyBluetooth, SocketType.Stream, BluetoothProtocolType.RFComm);
+                socket.Bind(endPoint);
+                Debug.WriteLine(socket.IsBound);
+                socket.Listen(1);
+                // get endpoint with channel
+                endPoint = socket.LocalEndPoint as BluetoothEndPoint;
+            }
+
+            var socketAddressBytes = endPoint.Serialize().ToByteArray();
+            
 
             WSAQUERYSET qs = new WSAQUERYSET();
             qs.dwSize = Marshal.SizeOf(qs);
@@ -42,16 +59,15 @@ namespace InTheHand.Net.Sockets
             //qs.lpszServiceInstanceName = ServiceName;
 
             qs.dwNumberOfCsAddrs = 1;
-            var ep = socket.LocalEndPoint as BluetoothEndPoint;
 
             var csa = new CSADDR_INFO
             {
-                lpLocalSockaddr = Marshal.AllocHGlobal(30),
-                iLocalSockaddrLength = 30,
+                lpLocalSockaddr = Marshal.AllocHGlobal(NativeMethods.BluetoothSocketAddressLength),
+                iLocalSockaddrLength = NativeMethods.BluetoothSocketAddressLength,
                 iSocketType = SocketType.Stream,
                 iProtocol = NativeMethods.PROTOCOL_RFCOMM
             };
-            Marshal.Copy(socket.LocalEndPointRaw, 0, csa.lpLocalSockaddr, 30);
+            Marshal.Copy(socketAddressBytes, 0, csa.lpLocalSockaddr, NativeMethods.BluetoothSocketAddressLength);
 
             IntPtr pcsa = Marshal.AllocHGlobal(24);
             Marshal.StructureToPtr(csa, pcsa, false);
@@ -78,7 +94,7 @@ namespace InTheHand.Net.Sockets
 
                 ServiceRecord = builder.ServiceRecord;
             }
-            ServiceRecordHelper.SetRfcommChannelNumber(ServiceRecord, socket.LocalEndPointRaw[26]);
+            ServiceRecordHelper.SetRfcommChannelNumber(ServiceRecord, socketAddressBytes[26]);
 
             byte[] rawBytes = ServiceRecord.ToByteArray();
             blobData.ulRecordLength = (uint)rawBytes.Length;
@@ -120,7 +136,7 @@ namespace InTheHand.Net.Sockets
         {
             Debug.WriteLine("BluetoothListener Stop");
 
-            if(handle != IntPtr.Zero)
+            if (handle != IntPtr.Zero)
             {
                 WSAQUERYSET qs = new WSAQUERYSET();
                 qs.dwSize = Marshal.SizeOf(qs);
@@ -135,7 +151,7 @@ namespace InTheHand.Net.Sockets
 
                 blob.blobData = Marshal.AllocHGlobal(blob.size);
                 Marshal.StructureToPtr(setService, blob.blobData, false);
-                
+
                 qs.lpBlob = Marshal.AllocHGlobal(Marshal.SizeOf(blob));
                 Marshal.StructureToPtr(blob, qs.lpBlob, false);
 
@@ -152,16 +168,43 @@ namespace InTheHand.Net.Sockets
                     throw new SocketException(werr);
                 }
             }
+
+            if (NativeMethods.IsRunningOnMono())
+            {
+                ((Win32Socket)socket).Close();
+            }
+            else
+            {
+                socket.Close();
+            }
+
+            socket = null;
         }
 
         bool DoPending()
         {
-            return socket.Poll(0, SelectMode.SelectRead);
+            if (NativeMethods.IsRunningOnMono())
+            {
+                return ((Win32Socket)socket).Poll(0, SelectMode.SelectRead);
+            }
+            else
+            {
+                return socket.Poll(0, SelectMode.SelectRead);
+            }
         }
 
         BluetoothClient DoAcceptBluetoothClient()
         {
-            var s = socket.Accept();
+            Socket s;
+
+            if (NativeMethods.IsRunningOnMono())
+            {
+                s = ((Win32Socket)socket).Accept();
+            }
+            else
+            {
+                s = socket.Accept();
+            }
 
             return new BluetoothClient(s);
         }

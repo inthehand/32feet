@@ -18,18 +18,21 @@ namespace InTheHand.Net
     {
         private ulong _bluetoothAddress;
         private Guid _serviceId;
+        private int _port;
 
         /// <summary>
         /// Initializes a new instance of the BluetoothEndPoint class with the specified address and service.
         /// </summary>
         /// <param name="address">The Bluetooth address of the device.</param>
         /// <param name="service">The Bluetooth service to use.</param>
-        public BluetoothEndPoint(BluetoothAddress address, Guid service) : this(address.ToUInt64(), service) { }
+        /// <param name="port">Optional port number.</param>
+        public BluetoothEndPoint(BluetoothAddress address, Guid service, int port = 0) : this(address.ToUInt64(), service, port) { }
 
-        internal BluetoothEndPoint(ulong bluetoothAddress, Guid serviceId)
+        internal BluetoothEndPoint(ulong bluetoothAddress, Guid serviceId, int port = 0)
         {
             _bluetoothAddress = bluetoothAddress;
             _serviceId = serviceId;
+            _port = port;
         }
 
         internal BluetoothEndPoint(byte[] sockaddr_bt)
@@ -37,13 +40,7 @@ namespace InTheHand.Net
             if (sockaddr_bt[0] != 32)
                 throw new ArgumentException(nameof(sockaddr_bt));
 
-            byte[] addrbytes = new byte[8];
-
-            for (int ibyte = 0; ibyte < 8; ibyte++)
-            {
-                addrbytes[ibyte] = sockaddr_bt[2 + ibyte];
-            }
-            _bluetoothAddress = BitConverter.ToUInt64(addrbytes, 0);
+            _bluetoothAddress = BitConverter.ToUInt64(sockaddr_bt, 2);
 
             byte[] servicebytes = new byte[16];
 
@@ -53,6 +50,8 @@ namespace InTheHand.Net
             }
 
             _serviceId = new Guid(servicebytes);
+            
+            _port = BitConverter.ToInt32(sockaddr_bt, 26);
         }
 
         /// <summary>
@@ -89,6 +88,17 @@ namespace InTheHand.Net
         }
 
         /// <summary>
+        /// Gets the port number (or -1 for any).
+        /// </summary>
+        public int Port
+        {
+            get
+            {
+                return _port;
+            }
+        }
+
+        /// <summary>
         /// Creates an endpoint from a socket address.
         /// </summary>
         /// <param name="socketAddress"></param>
@@ -104,15 +114,11 @@ namespace InTheHand.Net
             {
                 int ibyte;
 
-
+                var socketAddressBytes = socketAddress.ToByteArray();
 
                 byte[] addrbytes = new byte[8];
 
-                for (ibyte = 0; ibyte < 8; ibyte++)
-                {
-                    addrbytes[ibyte] = socketAddress[2 + ibyte];
-                }
-                ulong address = BitConverter.ToUInt64(addrbytes, 0);
+                ulong address = BitConverter.ToUInt64(socketAddressBytes, 2);
 
                 byte[] servicebytes = new byte[16];
 
@@ -121,7 +127,9 @@ namespace InTheHand.Net
                     servicebytes[ibyte] = socketAddress[10 + ibyte];
                 }
 
-                return new BluetoothEndPoint(address, new Guid(servicebytes));
+                int port = BitConverter.ToInt32(socketAddressBytes, 26);
+
+                return new BluetoothEndPoint(address, new Guid(servicebytes), port);
             }
 
             return base.Create(socketAddress);
@@ -157,6 +165,12 @@ namespace InTheHand.Net
                 }
             }
 
+            var portBytes = BitConverter.GetBytes(_port);
+            for(int i = 0; i < portBytes.Length; i++)
+            {
+                btsa[26 + i] = portBytes[i];
+            }
+
             return btsa;
         }
 
@@ -166,7 +180,7 @@ namespace InTheHand.Net
         /// <returns></returns>
         public override string ToString()
         {
-            return _bluetoothAddress.ToString("X6") + ":" + _serviceId.ToString("D");
+            return $"{_bluetoothAddress:X6}:{_serviceId:D} ({_port})";
         }
     }
 }

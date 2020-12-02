@@ -41,8 +41,15 @@ namespace InTheHand.Net.Sockets
             {
                 int socketError = NativeMethods.WSAGetLastError();
 
-                if (socketError == 10057 && !throwOnDisconnected)
-                    return;
+                if (!throwOnDisconnected)
+                {
+                    switch (result)
+                    {
+                        case 10057:
+                        case 10060:
+                            return;
+                    }
+                }
 
                 if (socketError != 0)
                     throw new SocketException(socketError);
@@ -136,11 +143,10 @@ namespace InTheHand.Net.Sockets
         {
             if (_socket != 0)
             {
-                base.Close();
                 int result = NativeMethods.closesocket(_socket);
                 _socket = 0;
-                ThrowOnSocketError(result, true);
-
+                base.Close();
+                ThrowOnSocketError(result, false);  
             }
         }
 
@@ -369,7 +375,8 @@ namespace InTheHand.Net.Sockets
         /// <inheritdoc/>
         protected override void Dispose(bool disposing)
         {
-            Close();
+            if (Connected)
+                Close();
         }
 
         private static class NativeMethods
