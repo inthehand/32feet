@@ -11,7 +11,7 @@ using System.Runtime.InteropServices;
 
 namespace InTheHand.Net.Bluetooth.Win32
 {
-    [StructLayout(LayoutKind.Sequential, Size = 24)]
+    [StructLayout(LayoutKind.Sequential)]
     internal struct CSADDR_INFO
     {
         public IntPtr lpLocalSockaddr;

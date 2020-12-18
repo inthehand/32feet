@@ -69,7 +69,7 @@ namespace InTheHand.Net.Sockets
             };
             Marshal.Copy(socketAddressBytes, 0, csa.lpLocalSockaddr, NativeMethods.BluetoothSocketAddressLength);
 
-            IntPtr pcsa = Marshal.AllocHGlobal(24);
+            IntPtr pcsa = Marshal.AllocHGlobal(Marshal.SizeOf(csa));
             Marshal.StructureToPtr(csa, pcsa, false);
             qs.lpcsaBuffer = pcsa;
 
@@ -77,10 +77,10 @@ namespace InTheHand.Net.Sockets
             var blobData = new BTH_SET_SERVICE();
             int sdpVer = 1;
 
-            blobData.pSdpVersion = Marshal.AllocHGlobal(4);
+            blobData.pSdpVersion = Marshal.AllocHGlobal(IntPtr.Size);
             Marshal.WriteInt32(blobData.pSdpVersion, sdpVer);
-            blobData.pRecordHandle = Marshal.AllocHGlobal(4);
-            Marshal.WriteInt32(blobData.pRecordHandle, 0);
+            blobData.pRecordHandle = Marshal.AllocHGlobal(IntPtr.Size);
+            Marshal.WriteIntPtr(blobData.pRecordHandle, 0, IntPtr.Zero);
             blobData.fCodService = ServiceClass;
 
             if (ServiceRecord == null)
@@ -144,9 +144,9 @@ namespace InTheHand.Net.Sockets
                 var blob = new BLOB();
                 var setService = new BTH_SET_SERVICE();
                 blob.size = (2 * IntPtr.Size) + (7 * 4);
-                setService.pRecordHandle = Marshal.AllocHGlobal(4);
+                setService.pRecordHandle = Marshal.AllocHGlobal(IntPtr.Size);
                 Marshal.WriteIntPtr(setService.pRecordHandle, handle);
-                setService.pSdpVersion = Marshal.AllocHGlobal(4);
+                setService.pSdpVersion = Marshal.AllocHGlobal(IntPtr.Size);
                 Marshal.WriteInt32(setService.pSdpVersion, 1);
 
                 blob.blobData = Marshal.AllocHGlobal(blob.size);
