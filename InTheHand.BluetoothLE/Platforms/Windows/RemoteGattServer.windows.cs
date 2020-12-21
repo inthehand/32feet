@@ -34,6 +34,9 @@ namespace InTheHand.Bluetooth
             var status = await Device.NativeDevice.RequestAccessAsync();
             if(status == Windows.Devices.Enumeration.DeviceAccessStatus.Allowed)
             {
+                var session = await Windows.Devices.Bluetooth.GenericAttributeProfile.GattSession.FromDeviceIdAsync(Device.NativeDevice.BluetoothDeviceId);
+                session.MaintainConnection = true;
+
                 // need to request something to force a connection
                 await Device.NativeDevice.GetGattServicesAsync(cacheMode: Windows.Devices.Bluetooth.BluetoothCacheMode.Uncached);
             }
