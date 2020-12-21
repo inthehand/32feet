@@ -69,7 +69,7 @@ namespace InTheHand.Net.Sockets
             };
             Marshal.Copy(socketAddressBytes, 0, csa.lpLocalSockaddr, NativeMethods.BluetoothSocketAddressLength);
 
-            IntPtr pcsa = Marshal.AllocHGlobal(24);
+            IntPtr pcsa = Marshal.AllocHGlobal(Marshal.SizeOf(csa));
             Marshal.StructureToPtr(csa, pcsa, false);
             qs.lpcsaBuffer = pcsa;
 
@@ -77,10 +77,10 @@ namespace InTheHand.Net.Sockets
             var blobData = new BTH_SET_SERVICE();
             int sdpVer = 1;
 
-            blobData.pSdpVersion = Marshal.AllocHGlobal(4);
+            blobData.pSdpVersion = Marshal.AllocHGlobal(IntPtr.Size);
             Marshal.WriteInt32(blobData.pSdpVersion, sdpVer);
-            blobData.pRecordHandle = Marshal.AllocHGlobal(4);
-            Marshal.WriteInt32(blobData.pRecordHandle, 0);
+            blobData.pRecordHandle = Marshal.AllocHGlobal(IntPtr.Size);
+            Marshal.WriteIntPtr(blobData.pRecordHandle, 0, IntPtr.Zero);
             blobData.fCodService = ServiceClass;
 
             if (ServiceRecord == null)
@@ -142,30 +142,43 @@ namespace InTheHand.Net.Sockets
                 qs.dwSize = Marshal.SizeOf(qs);
                 qs.dwNameSpace = NativeMethods.NS_BTH;
                 var blob = new BLOB();
-                var setService = new BTH_SET_SERVICE();
-                blob.size = (2 * IntPtr.Size) + (7 * 4);
-                setService.pRecordHandle = Marshal.AllocHGlobal(4);
-                Marshal.WriteIntPtr(setService.pRecordHandle, handle);
-                setService.pSdpVersion = Marshal.AllocHGlobal(4);
-                Marshal.WriteInt32(setService.pSdpVersion, 1);
+                var blobData = new BTH_SET_SERVICE();
+                int sdpVer = 1;
 
+                blobData.pSdpVersion = Marshal.AllocHGlobal(IntPtr.Size);
+                Marshal.WriteInt32(blobData.pSdpVersion, sdpVer);
+                blobData.pRecordHandle = Marshal.AllocHGlobal(IntPtr.Size);
+                Marshal.WriteIntPtr(blobData.pRecordHandle, 0, handle);
+
+                blob.size = (2 * IntPtr.Size) + (7 * 4) + 1;
                 blob.blobData = Marshal.AllocHGlobal(blob.size);
-                Marshal.StructureToPtr(setService, blob.blobData, false);
+                Marshal.StructureToPtr(blobData, blob.blobData, false);
 
-                qs.lpBlob = Marshal.AllocHGlobal(Marshal.SizeOf(blob));
-                Marshal.StructureToPtr(blob, qs.lpBlob, false);
+                var blobh = GCHandle.Alloc(blob, GCHandleType.Pinned);
+                qs.lpBlob = blobh.AddrOfPinnedObject();
 
                 /*qs.lpBlob = new BLOB();
                 qs.lpBlob.blobData = new BTH_SET_SERVICE();
                 qs.lpBlob.size = Marshal.SizeOf(qs.lpBlob.blobData);
                 qs.lpBlob.blobData.pRecordHandle = handle;
                 qs.lpBlob.blobData.pSdpVersion = 1;*/
-                int result = NativeMethods.WSASetService(ref qs, WSAESETSERVICEOP.RNRSERVICE_DELETE, 0);
-                handle = IntPtr.Zero;
-                if (result == -1)
+                try
                 {
-                    int werr = Marshal.GetLastWin32Error();
-                    throw new SocketException(werr);
+                    int result = NativeMethods.WSASetService(ref qs, WSAESETSERVICEOP.RNRSERVICE_DELETE, 0);
+                    handle = IntPtr.Zero;
+                    if (result == -1)
+                    {
+                        int werr = Marshal.GetLastWin32Error();
+                        throw new SocketException(werr);
+                    }
+                }
+                finally
+                {
+                    Marshal.FreeHGlobal(blobData.pSdpVersion);
+                    Marshal.FreeHGlobal(blobData.pRecordHandle);
+
+                    Marshal.FreeHGlobal(blob.blobData);
+                    blobh.Free();
                 }
             }
 
