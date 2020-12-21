@@ -24,7 +24,7 @@ namespace InTheHand.Net.Bluetooth.Win32
         public static bool IsRunningOnMono()
         {
 #if DEBUG
-            return true;
+            //return true;
 #endif
             if (!_isRunningOnMono.HasValue)
             {

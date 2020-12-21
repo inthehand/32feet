@@ -10,11 +10,14 @@ using System.Collections.Generic;
 using System.Net.Sockets;
 using Windows.Devices.Bluetooth;
 using Windows.Devices.Enumeration;
+using Windows.Networking.Sockets;
 
 namespace InTheHand.Net.Sockets
 {
     partial class BluetoothClient
     {
+        private StreamSocket _socket;
+
         private void PlatformInitialize()
         {
         }
