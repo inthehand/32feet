@@ -70,6 +70,11 @@ namespace InTheHand.Bluetooth
 
         string GetName()
         {
+            if(NativeDevice.Name.StartsWith("Bluetooth "))
+            {
+                return NativeDevice.DeviceInformation.Name;
+            }
+
             return NativeDevice.Name;
         }
 

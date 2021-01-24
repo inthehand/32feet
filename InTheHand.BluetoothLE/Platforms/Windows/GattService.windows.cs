@@ -31,7 +31,7 @@ namespace InTheHand.Bluetooth
 
         async Task<GattCharacteristic> PlatformGetCharacteristic(BluetoothUuid characteristic)
         {
-            var result = await _service.GetCharacteristicsForUuidAsync(characteristic, Windows.Devices.Bluetooth.BluetoothCacheMode.Uncached);
+            var result = await _service.GetCharacteristicsForUuidAsync(characteristic, Windows.Devices.Bluetooth.BluetoothCacheMode.Cached);
 
             if (result.Status == WBluetooth.GattCommunicationStatus.Success && result.Characteristics.Count > 0)
                 return new GattCharacteristic(this, result.Characteristics[0]);
@@ -43,7 +43,7 @@ namespace InTheHand.Bluetooth
         {
             List<GattCharacteristic> characteristics = new List<GattCharacteristic>();
 
-            var result = await _service.GetCharacteristicsAsync(BluetoothCacheMode.Uncached);
+            var result = await _service.GetCharacteristicsAsync(BluetoothCacheMode.Cached);
             if(result.Status == WBluetooth.GattCommunicationStatus.Success)
             {
                 foreach(var c in result.Characteristics)
@@ -57,7 +57,7 @@ namespace InTheHand.Bluetooth
 
         private async Task<GattService> PlatformGetIncludedServiceAsync(BluetoothUuid service)
         {
-            var servicesResult = await _service.GetIncludedServicesForUuidAsync(service);
+            var servicesResult = await _service.GetIncludedServicesForUuidAsync(service, BluetoothCacheMode.Cached);
 
             if(servicesResult.Status == WBluetooth.GattCommunicationStatus.Success)
             {
