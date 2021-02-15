@@ -19,6 +19,7 @@ namespace InTheHand.Net.Bluetooth.Win32
         internal const int NS_BTH = 16;
         internal const int PROTOCOL_RFCOMM = 3;
         internal const int BluetoothSocketAddressLength = 30;
+        internal const int BTH_PORT_ANY = -1;
 
         private static bool? _isRunningOnMono; 
         public static bool IsRunningOnMono()

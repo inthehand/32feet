@@ -6,7 +6,7 @@
     <Company>In The Hand Ltd</Company>
     <Authors>Peter Foot</Authors>
     <Product>32feet.NET</Product>
-    <Version>4.0.13</Version>
+    <Version>4.0.15</Version>
     <RepositoryUrl>https://github.com/inthehand/32feet</RepositoryUrl>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <IncludeSymbols>true</IncludeSymbols>
@@ -15,9 +15,9 @@
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <PackageProjectUrl>https://github.com/inthehand/32feet</PackageProjectUrl>
     <PackageLicenseUrl></PackageLicenseUrl>
-    <Copyright>Copyright (c) 2004-2020 In The Hand Ltd</Copyright>
+    <Copyright>Copyright (c) 2004-2021 In The Hand Ltd</Copyright>
     <Description>32feet.NET is an open-source project to make personal area networking technologies such as Bluetooth easily accessible from .NET code.</Description>
-    <FileVersion>4.0.13.1211</FileVersion>
+    <FileVersion>4.0.15.0215</FileVersion>
     <AssemblyVersion>4.0.0.0</AssemblyVersion>
     <AssemblyName>InTheHand.Net.Bluetooth</AssemblyName>
     <GenerateDocumentationFile Condition=" '$(Configuration)' == 'Release' ">true</GenerateDocumentationFile>
@@ -26,7 +26,7 @@
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageId>InTheHand.Net.Bluetooth</PackageId>
-    <PackageReleaseNotes>Reworked for new Socket/Win32Socket architecture</PackageReleaseNotes>
+    <PackageReleaseNotes>Fix for BluetoothListener Port on Win32</PackageReleaseNotes>
     <PackageIcon>32feet-package-icon.png</PackageIcon>
     <RepositoryType>GIT</RepositoryType>
     <SignAssembly>true</SignAssembly>
