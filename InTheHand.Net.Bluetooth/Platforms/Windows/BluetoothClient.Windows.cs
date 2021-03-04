@@ -87,6 +87,16 @@ namespace InTheHand.Net.Sockets
             return false;
         }
 
+        TimeSpan GetInquiryLength()
+        {
+            return TimeSpan.Zero;
+        }
+
+        void SetInquiryLength(TimeSpan length)
+        {
+
+        }
+
         void SetEncrypt(bool value)
         {
         }

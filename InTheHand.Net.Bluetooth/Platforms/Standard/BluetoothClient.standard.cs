@@ -65,6 +65,16 @@ namespace InTheHand.Net.Sockets
         {
         }
 
+        TimeSpan GetInquiryLength()
+        {
+            return TimeSpan.Zero;
+        }
+
+        void SetInquiryLength(TimeSpan length)
+        {
+
+        }
+
         public string GetRemoteMachineName()
         {
             return string.Empty;

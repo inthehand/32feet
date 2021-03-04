@@ -59,13 +59,13 @@ namespace InTheHand.Net.Sockets
             List<BluetoothDeviceInfo> devices = new List<BluetoothDeviceInfo>();
 
             BLUETOOTH_DEVICE_SEARCH_PARAMS search = BLUETOOTH_DEVICE_SEARCH_PARAMS.Create();
-            search.cTimeoutMultiplier = 8;
             search.fReturnAuthenticated = false;
             search.fReturnRemembered = true;
             search.fReturnUnknown = true;
             search.fReturnConnected = true;
             search.fIssueInquiry = true;
-
+            search.cTimeoutMultiplier = Convert.ToByte(inquiryLength.TotalSeconds / 1.28);
+            
             BLUETOOTH_DEVICE_INFO device = BLUETOOTH_DEVICE_INFO.Create();
             IntPtr searchHandle = NativeMethods.BluetoothFindFirstDevice(ref search, ref device);
             if(searchHandle != IntPtr.Zero)
@@ -197,7 +197,28 @@ namespace InTheHand.Net.Sockets
                 _encrypt = value;
             }
         }
-        
+
+        //length of time for query
+        private TimeSpan inquiryLength = new TimeSpan(0, 0, 10);
+
+        TimeSpan GetInquiryLength()
+        {
+            return inquiryLength;
+        }
+
+        void SetInquiryLength(TimeSpan length)
+        {
+            if ((length.TotalSeconds > 0) && (length.TotalSeconds <= 61))
+            {
+                inquiryLength = length;
+            }
+            else
+            {
+                throw new ArgumentOutOfRangeException("length",
+                    "InquiryLength must be a positive TimeSpan between 0 and 61 seconds.");
+            }
+        }
+
         internal const AddressFamily AddressFamilyBluetooth = (AddressFamily)32;
         private const SocketOptionLevel SocketOptionLevelRFComm = (SocketOptionLevel)0x03;
         private const SocketOptionName SocketOptionNameAuthenticate = unchecked((SocketOptionName)0x80000001);

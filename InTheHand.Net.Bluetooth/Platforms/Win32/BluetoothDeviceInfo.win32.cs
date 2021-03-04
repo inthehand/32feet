@@ -2,7 +2,7 @@
 //
 // InTheHand.Net.Sockets.BluetoothDeviceInfo (Win32)
 // 
-// Copyright (c) 2003-2020 In The Hand Ltd, All rights reserved.
+// Copyright (c) 2003-2021 In The Hand Ltd, All rights reserved.
 // This source code is licensed under the MIT License
 
 using InTheHand.Net.Bluetooth;
@@ -21,6 +21,10 @@ namespace InTheHand.Net.Sockets
             _info = info;
         }
 
+        /// <summary>
+        /// Initializes an instance of the BluetoothDeviceInfo class for the device with the given address.
+        /// </summary>
+        /// <param name="address">The BluetoothAddress.</param>
         public BluetoothDeviceInfo(BluetoothAddress address)
         {
             _info = BLUETOOTH_DEVICE_INFO.Create();
@@ -82,6 +86,28 @@ namespace InTheHand.Net.Sockets
         void DoRefresh()
         {
             NativeMethods.BluetoothGetDeviceInfo(IntPtr.Zero, ref _info);
+        }
+
+        /// <summary>
+        /// Date and Time this device was last seen by the system.
+        /// </summary>
+        public DateTime LastSeen
+        {
+            get
+            {
+                return _info.LastSeen;
+            }
+        }
+
+        /// <summary>
+        /// Date and Time this device was last used by the system.
+        /// </summary>
+        public DateTime LastUsed
+        {
+            get
+            {
+                return _info.LastUsed;
+            }
         }
     }
 }

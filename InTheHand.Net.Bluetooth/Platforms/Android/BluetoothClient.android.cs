@@ -168,6 +168,16 @@ namespace InTheHand.Net.Sockets
             _encrypt = value;
         }
 
+        TimeSpan GetInquiryLength()
+        {
+            return TimeSpan.Zero;
+        }
+
+        void SetInquiryLength(TimeSpan length)
+        {
+
+        }
+
         public string GetRemoteMachineName()
         {
             if(_socket is object && _socket.IsConnected)

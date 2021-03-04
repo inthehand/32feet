@@ -8,6 +8,7 @@
 using InTheHand.Net.Bluetooth;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Net.Sockets;
 
 namespace InTheHand.Net.Sockets
@@ -71,28 +72,56 @@ namespace InTheHand.Net.Sockets
             DoClose();
         }
 
+        /// <summary>
+        /// Sets whether an authenticated connection is required.
+        /// </summary>
         public bool Authenticate
         {
             get => GetAuthenticate();
             set => SetAuthenticate(value);
         }
 
+        /// <summary>
+        /// Gets the underlying Socket.
+        /// </summary>
         public Socket Client
         {
             get => GetClient();
         }
 
+        /// <summary>
+        /// Gets a value indicating whether the underlying Socket for a BluetoothClient is connected to a remote host.
+        /// </summary>
         public bool Connected
         {
             get => GetConnected();
         }
 
+        /// <summary>
+        /// Sets whether an encrypted connection is required.
+        /// </summary>
         public bool Encrypt
         {
             get => GetEncrypt();
             set => SetEncrypt(value);
         }
 
+        /// <summary>
+        /// Amount of time allowed to perform the query.
+        /// </summary>
+        /// <remarks>On Windows the actual value used is expressed in units of 1.28 seconds, so will be the nearest match for the value supplied.
+        /// The default value is 10 seconds. The maximum is 61 seconds.</remarks>
+        public TimeSpan InquiryLength
+        {
+            [DebuggerStepThrough]
+            get { return GetInquiryLength(); }
+            [DebuggerStepThrough]
+            set { SetInquiryLength(value); }
+        }
+
+        /// <summary>
+        /// Gets the name of the remote device.
+        /// </summary>
         public string RemoteMachineName
         {
             get
@@ -101,11 +130,18 @@ namespace InTheHand.Net.Sockets
             }
         }
 
+        /// <summary>
+        /// Gets the underlying stream of data.
+        /// </summary>
+        /// <returns></returns>
         public NetworkStream GetStream()
         {
             return DoGetStream();
         }
 
+        /// <summary>
+        /// Closes the BluetoothClient and the underlying connection.
+        /// </summary>
         public void Dispose()
         {
             // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
