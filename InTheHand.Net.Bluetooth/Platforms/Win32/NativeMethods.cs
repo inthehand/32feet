@@ -2,7 +2,7 @@
 //
 // InTheHand.Net.Bluetooth.Win32.NativeMethods
 // 
-// Copyright (c) 2003-2020 In The Hand Ltd, All rights reserved.
+// Copyright (c) 2003-2021 In The Hand Ltd, All rights reserved.
 // This source code is licensed under the MIT License
 
 using System;
@@ -35,10 +35,8 @@ namespace InTheHand.Net.Bluetooth.Win32
             return _isRunningOnMono.Value;
         }
 
-        [DllImport("User32", ExactSpelling = true)]
-        internal static extern IntPtr GetActiveWindow();
-
-        // Requires Vista SP2 or later
+        
+        // Authentication
         [DllImport(bthpropsDll, ExactSpelling = true, SetLastError = true, CharSet = CharSet.Unicode)]
         internal static extern int BluetoothRegisterForAuthenticationEx(ref BLUETOOTH_DEVICE_INFO pbtdi, out IntPtr phRegHandle, BluetoothAuthenticationCallbackEx pfnCallback, IntPtr pvParam);
 
@@ -48,7 +46,6 @@ namespace InTheHand.Net.Bluetooth.Win32
         [DllImport(bthpropsDll, ExactSpelling = true, SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
         internal static extern bool BluetoothUnregisterAuthentication(IntPtr hRegHandle);
-
 
         [DllImport(bthpropsDll, ExactSpelling = true, SetLastError = false, CharSet = CharSet.Unicode)]
         internal static extern int BluetoothSendAuthenticationResponseEx(IntPtr hRadio, ref BLUETOOTH_AUTHENTICATE_RESPONSE__PIN_INFO pauthResponse);
@@ -67,6 +64,7 @@ namespace InTheHand.Net.Bluetooth.Win32
 
         [DllImport(bthpropsDll, ExactSpelling = true, SetLastError = true)]
         internal static extern int BluetoothRemoveDevice(ref ulong pAddress);
+
 
         // Radio
         [DllImport(bthpropsDll, ExactSpelling = true, SetLastError = true)]
@@ -100,6 +98,7 @@ namespace InTheHand.Net.Bluetooth.Win32
         [return: MarshalAs(UnmanagedType.Bool)]
         internal static extern bool BluetoothEnableIncomingConnections(IntPtr hRadio, bool fEnabled);
 
+
         // Discovery
         [DllImport(bthpropsDll, ExactSpelling = true, SetLastError = true)]
         internal static extern IntPtr BluetoothFindFirstDevice(ref BLUETOOTH_DEVICE_SEARCH_PARAMS pbtsp, ref BLUETOOTH_DEVICE_INFO pbtdi);
@@ -118,20 +117,23 @@ namespace InTheHand.Net.Bluetooth.Win32
         [DllImport(bthpropsDll, ExactSpelling = true, SetLastError = true)]
         internal static extern int BluetoothSetServiceState(IntPtr hRadio, ref BLUETOOTH_DEVICE_INFO pbtdi, ref Guid pGuidService, uint dwServiceFlags);
 
-        [DllImport("kernel32.dll", ExactSpelling = true, SetLastError = true)]
+        [DllImport("kernel32", ExactSpelling = true, SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
         internal static extern bool CloseHandle(IntPtr handle);
 
-        //SetService
-        [DllImport(wsDll, EntryPoint = "WSASetService", SetLastError = true)]
+        // SetService
+        [DllImport(wsDll, ExactSpelling = true, EntryPoint = "WSASetService", SetLastError = true)]
         internal static extern int WSASetService(ref WSAQUERYSET lpqsRegInfo, WSAESETSERVICEOP essoperation, int dwControlFlags);
         
         // Last Error
-        [DllImport(wsDll, EntryPoint = "WSAGetLastError", SetLastError = true)]
+        [DllImport(wsDll, ExactSpelling = true, EntryPoint = "WSAGetLastError", SetLastError = true)]
         internal static extern int WSAGetLastError();
 
 
         // Picker
+        [DllImport("user32", ExactSpelling = true, SetLastError = true)]
+        internal static extern IntPtr GetActiveWindow();
+
         [DllImport(bthpropsDll, ExactSpelling = true, SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
         internal static extern bool BluetoothSelectDevices(ref BLUETOOTH_SELECT_DEVICE_PARAMS pbtsdp);
@@ -142,9 +144,18 @@ namespace InTheHand.Net.Bluetooth.Win32
 
         internal delegate bool PFN_DEVICE_CALLBACK(IntPtr pvParam, ref BLUETOOTH_DEVICE_INFO pDevice);
 
+
         [DllImport(bthpropsDll, ExactSpelling = true, SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
         internal static extern bool BluetoothDisplayDeviceProperties(IntPtr hwndParent, ref BLUETOOTH_DEVICE_INFO pbtdi);
+
+        // Events
+        [DllImport("user32", CharSet = CharSet.Unicode, SetLastError = true, EntryPoint = "RegisterDeviceNotification")]
+        internal static extern RegisterDeviceNotificationSafeHandle RegisterDeviceNotification(
+               IntPtr hRecipient,
+               ref DEV_BROADCAST_HANDLE notificationFilter,
+               RegisterDeviceNotificationFlags flags
+               );
     }
 
     /// <summary>
@@ -184,5 +195,104 @@ namespace InTheHand.Net.Bluetooth.Win32
         /// A ULONG value used as the passkey used for authentication.
         /// </summary>
         internal uint Numeric_Value_Passkey;
+    }
+
+    struct DEV_BROADCAST_HANDLE
+    {
+        // 32-bit:     3*4 + 2*4 + 16 + 4 + a = 6*4+16 = 24+16 + a = 40 + a = 44
+        // 64-bit: (3+1)*4 + 2*8 + 16 + 4 + a = 16+16+16+4 + a     = 52 + a = 56
+        const int SizeWithoutFakeDataArray = 40;
+        const int SizeOfOneByteWithPadding = 4;
+        const int SizeWithFakeDataArray = SizeWithoutFakeDataArray + SizeOfOneByteWithPadding;
+        static int ActualSizeWithFakeDataArray;
+
+        public DEV_BROADCAST_HDR header;
+        //--
+        internal readonly IntPtr dbch_handle;
+        internal readonly IntPtr dbch_hdevnotify;
+        internal readonly Guid dbch_eventguid;
+        internal readonly Int32 dbch_nameoffset;
+        // We can't include the fake data array because we use this struct as 
+        // the first field in other structs!
+        // byte dbch_data__0; //dbch_data[1];
+
+        //----
+        public DEV_BROADCAST_HANDLE(IntPtr deviceHandle)
+        {
+            this.header.dbch_reserved = 0;
+            this.dbch_hdevnotify = IntPtr.Zero;
+            this.dbch_eventguid = Guid.Empty;
+            this.dbch_nameoffset = 0;
+            //--
+            this.header.dbch_devicetype = DbtDevTyp.Handle;
+            this.dbch_handle = deviceHandle;
+            //System.Diagnostics.Debug.Assert(
+            //    SizeWithoutFakeDataArray == System.Runtime.InteropServices.Marshal.SizeOf(typeof(DEV_BROADCAST_HANDLE)),
+            //    "Size not as expected");
+            if (ActualSizeWithFakeDataArray == 0)
+            {
+                int actualSizeWithoutFakeDataArray = System.Runtime.InteropServices.Marshal.SizeOf(typeof(DEV_BROADCAST_HANDLE));
+                ActualSizeWithFakeDataArray = Pad(1 + actualSizeWithoutFakeDataArray, IntPtr.Size);
+            }
+            this.header.dbch_size = ActualSizeWithFakeDataArray;
+            //this.header.dbch_size = actualSizeWithoutFakeDataArray;
+
+        }
+
+        private static int Pad(int size, int alignment)
+        {
+            int x = size + alignment - 1;
+            x /= alignment;
+            x *= alignment;
+            return x;
+        }
+
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    internal struct DEV_BROADCAST_HDR
+    {
+        internal int dbch_size;
+        internal DbtDevTyp dbch_devicetype;
+        internal int dbch_reserved;
+    }
+
+    internal enum DbtDevTyp : uint
+    {
+        /// <summary>
+        /// OEM-defined device type
+        /// </summary>
+        Oem = 0x00000000,
+        /// <summary>
+        /// Devnode number
+        /// /// </summary>
+        DevNode = 0x00000001,
+        /// <summary>
+        /// 
+        /// </summary>
+        Volume = 0x00000002,
+        /// <summary>
+        /// 
+        /// </summary>
+        Port = 0x00000003,
+        /// <summary>
+        /// Network resource
+        /// </summary>
+        Network = 0x00000004,
+        /// <summary>
+        /// Device interface class
+        /// </summary>
+        DeviceInterface = 0x00000005,
+        /// <summary>
+        /// File system handle
+        /// </summary>
+        Handle = 0x00000006
+    }
+
+    internal enum RegisterDeviceNotificationFlags
+    {
+        WINDOW_HANDLE = 0x00000000,
+        SERVICE_HANDLE = 0x00000001,
+        ALL_INTERFACE_CLASSES = 0x00000004
     }
 }

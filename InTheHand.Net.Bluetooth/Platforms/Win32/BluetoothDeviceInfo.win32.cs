@@ -29,7 +29,7 @@ namespace InTheHand.Net.Sockets
         {
             _info = BLUETOOTH_DEVICE_INFO.Create();
             _info.Address = address;
-            NativeMethods.BluetoothGetDeviceInfo(IntPtr.Zero, ref _info);
+            DoRefresh();
         }
 
         BluetoothAddress GetDeviceAddress()
