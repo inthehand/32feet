@@ -29,8 +29,31 @@ namespace InTheHand.Bluetooth
             return service._service;
         }
 
+        async Task<bool> OpenAsync()
+        {
+            return IsOpenSuccess(await _service.OpenAsync(WBluetooth.GattSharingMode.SharedReadAndWrite));
+        }
+
+        static bool IsOpenSuccess(WBluetooth.GattOpenStatus status)
+        {
+            switch(status)
+            {
+                case WBluetooth.GattOpenStatus.Success:
+                case WBluetooth.GattOpenStatus.AlreadyOpened:
+                    return true;
+
+                default:
+                    return false;
+            }
+        }
+
         async Task<GattCharacteristic> PlatformGetCharacteristic(BluetoothUuid characteristic)
         {
+            if(!await OpenAsync())
+            {
+                return null;
+            }
+
             var result = await _service.GetCharacteristicsForUuidAsync(characteristic, Windows.Devices.Bluetooth.BluetoothCacheMode.Cached);
 
             if (result.Status == WBluetooth.GattCommunicationStatus.Success && result.Characteristics.Count > 0)
@@ -41,6 +64,11 @@ namespace InTheHand.Bluetooth
 
         async Task<IReadOnlyList<GattCharacteristic>> PlatformGetCharacteristics()
         {
+            if (!await OpenAsync())
+            {
+                return null;
+            }
+
             List<GattCharacteristic> characteristics = new List<GattCharacteristic>();
 
             var result = await _service.GetCharacteristicsAsync(BluetoothCacheMode.Cached);
@@ -57,6 +85,11 @@ namespace InTheHand.Bluetooth
 
         private async Task<GattService> PlatformGetIncludedServiceAsync(BluetoothUuid service)
         {
+            if (!await OpenAsync())
+            {
+                return null;
+            }
+
             var servicesResult = await _service.GetIncludedServicesForUuidAsync(service, BluetoothCacheMode.Cached);
 
             if(servicesResult.Status == WBluetooth.GattCommunicationStatus.Success)
@@ -69,6 +102,11 @@ namespace InTheHand.Bluetooth
 
         private async Task<IReadOnlyList<GattService>> PlatformGetIncludedServicesAsync()
         {
+            if (!await OpenAsync())
+            {
+                return null;
+            }
+
             List<GattService> services = new List<GattService>();
 
             var servicesResult = await _service.GetIncludedServicesAsync();
