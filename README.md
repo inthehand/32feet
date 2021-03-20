@@ -45,6 +45,7 @@ Please start by reading it.  It contains general information firstly on the vari
 ## Blogs
 
 [Alan's 32feet.NET Development Blog](http://32feetnetdev.wordpress.com/)
+
 [Peter's Blog](http://inthehand.com/blog)
 
 [In The Hand Ltd](http://inthehand.com)
