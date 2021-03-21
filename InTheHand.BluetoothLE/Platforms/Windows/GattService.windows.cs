@@ -1,6 +1,6 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="GattService.windows.cs" company="In The Hand Ltd">
-//   Copyright (c) 2018-20 In The Hand Ltd, All rights reserved.
+//   Copyright (c) 2018-21 In The Hand Ltd, All rights reserved.
 //   This source code is licensed under the MIT License - see License.txt
 // </copyright>
 //-----------------------------------------------------------------------
@@ -27,6 +27,13 @@ namespace InTheHand.Bluetooth
         public static implicit operator WBluetooth.GattDeviceService(GattService service)
         {
             return service._service;
+        }
+
+        public static implicit operator GattService(WBluetooth.GattDeviceService service)
+        {
+#pragma warning disable CS0618 // Type or member is obsolete
+            return new GattService(service.Device, service, false);
+#pragma warning restore CS0618 // Type or member is obsolete
         }
 
         async Task<bool> OpenAsync()
