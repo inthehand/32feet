@@ -28,8 +28,6 @@
   <array>
     <string>external-accessory</string>
   </array>
-  <key>NSBluetoothPeripheralUsageDescription</key>
-  <string>This app uses Bluetooth to connect to peripherals</string>
     <key>MinimumOSVersion</key>
     <string>8.0</string>
     <key>CFBundleDisplayName</key>

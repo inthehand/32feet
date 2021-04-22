@@ -50,7 +50,7 @@ namespace NfcReaderApp
             options.Signal = cts.Token;
             await reader.ScanAsync(options);
 
-            cts.CancelAfter(30000);
+            //cts.CancelAfter(30000);
         }
     }
 }

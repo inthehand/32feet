@@ -487,7 +487,6 @@ namespace InTheHand.Net.Sockets
         /// <exception cref="T:System.Net.Sockets.SocketException">
         /// A connection could not be formed.  See the exception message or 
         /// <see cref="P:System.Net.Sockets.SocketException.SocketErrorCode"/> 
-        /// (or <see cref="P:System.Net.Sockets.SocketException.ErrorCode"/> on NETCF) 
         /// for what error occurred.
         /// </exception>
         public void Connect(string service)

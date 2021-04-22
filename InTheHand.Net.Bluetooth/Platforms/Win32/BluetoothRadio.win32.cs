@@ -2,7 +2,7 @@
 //
 // InTheHand.Net.Bluetooth.BluetoothRadio (Win32)
 // 
-// Copyright (c) 2003-2020 In The Hand Ltd, All rights reserved.
+// Copyright (c) 2003-2021 In The Hand Ltd, All rights reserved.
 // This source code is licensed under the MIT License
 
 using InTheHand.Net.Bluetooth.Win32;
@@ -102,6 +102,28 @@ namespace InTheHand.Net.Bluetooth
 
                     NativeMethods.BluetoothEnableIncomingConnections(_handle, false);
                     break;
+            }
+        }
+
+        /// <summary>
+        /// Manufacturer's revision number of the LMP implementation.
+        /// </summary>
+        public int LmpSubversion
+        {
+            get
+            {
+                return _radio.lmpSubversion;
+            }
+        }
+
+        /// <summary>
+        /// Returns the manufacturer of the BluetoothRadio device.
+        /// </summary>
+        public ushort Manufacturer
+        {
+            get
+            {
+                return _radio.manufacturer;
             }
         }
 

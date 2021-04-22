@@ -1,4 +1,4 @@
-﻿<Project Sdk="MSBuild.Sdk.Extras/2.1.2">
+﻿<Project Sdk="MSBuild.Sdk.Extras/3.0.23">
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;netcoreapp3.1;net461;monoandroid90;Xamarin.iOS10;uap10.0</TargetFrameworks>
@@ -36,7 +36,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
-    <PackageReference Include="MSBuild.Sdk.Extras" Version="2.1.2" PrivateAssets="All" />
+    <PackageReference Include="MSBuild.Sdk.Extras" Version="3.0.23" PrivateAssets="All" />
   </ItemGroup>
   <ItemGroup>
     <Compile Remove="Platforms\**\*.*" />
@@ -75,7 +75,7 @@
   </PropertyGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'monoandroid90' ">
-    <PackageReference Include="Xamarin.Essentials" Version="1.5.3.2" />
+    <PackageReference Include="Xamarin.Essentials" Version="1.6.1" />
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">

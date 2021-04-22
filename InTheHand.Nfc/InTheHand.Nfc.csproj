@@ -1,4 +1,4 @@
-﻿<Project Sdk="MSBuild.Sdk.Extras/2.1.2">
+﻿<Project Sdk="MSBuild.Sdk.Extras/3.0.23">
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;uap10.0;monoandroid90;Xamarin.iOS10</TargetFrameworks>
@@ -12,7 +12,7 @@
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <PackageProjectUrl>https://github.com/inthehand/32feet</PackageProjectUrl>
-    <Copyright>Copyright (c) 2020 In The Hand Ltd</Copyright>
+    <Copyright>Copyright (c) 2020-21 In The Hand Ltd</Copyright>
     <Description>32feet.NET is an open-source project to make personal area networking technologies such as Bluetooth easily accessible from .NET code.</Description>
     <FileVersion>1.0.1.908</FileVersion>
     <AssemblyVersion>1.0.0.0</AssemblyVersion>
@@ -30,11 +30,11 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
-    <PackageReference Include="MSBuild.Sdk.Extras" Version="2.1.2" PrivateAssets="All" /> 
+    <PackageReference Include="MSBuild.Sdk.Extras" Version="3.0.23" PrivateAssets="All" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'monoandroid90'">
-    <PackageReference Include="Xamarin.Essentials" Version="1.5.3.2" />
+    <PackageReference Include="Xamarin.Essentials" Version="1.6.1" />
   </ItemGroup>
 
   <ItemGroup>
