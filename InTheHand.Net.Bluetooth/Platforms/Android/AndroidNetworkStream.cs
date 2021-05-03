@@ -8,6 +8,8 @@
 using InTheHand.Net.Sockets;
 using System;
 using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace InTheHand.Net.Bluetooth.Droid
 {
@@ -45,9 +47,34 @@ namespace InTheHand.Net.Bluetooth.Droid
 
         public override bool CanSeek => false;
 
+        public override bool CanTimeout => false;
+
         public override bool CanWrite => _outputStream.CanWrite;
 
-        public override long Length => _inputStream.Length;
+        public override bool DataAvailable
+        {
+            get
+            {
+                return Length > 0;
+            }
+        }
+
+        public override long Length
+        {
+            get
+            {
+                try
+                {
+                    var js = _inputStream as Android.Runtime.InputStreamInvoker;
+                    return js.BaseInputStream.Available();
+                }
+                catch (Java.IO.IOException)
+                {
+                }
+
+                return 0;
+            }
+        }
 
         public override long Position { get => throw new NotSupportedException(); set => throw new NotSupportedException(); }
 
@@ -56,9 +83,39 @@ namespace InTheHand.Net.Bluetooth.Droid
             _outputStream.Flush();
         }
 
+        public override Task FlushAsync(CancellationToken cancellationToken)
+        {
+            return _outputStream.FlushAsync(cancellationToken);
+        }
+
+        public override IAsyncResult BeginRead(byte[] buffer, int offset, int size, AsyncCallback callback, object state)
+        {
+            return _inputStream.BeginRead(buffer, offset, size, callback, state);
+        }
+
+        public override int EndRead(IAsyncResult asyncResult)
+        {
+            return _inputStream.EndRead(asyncResult);
+        }
+
         public override int Read(byte[] buffer, int offset, int count)
         {
             return _inputStream.Read(buffer, offset, count);
+        }
+
+        public override int Read(Span<byte> destination)
+        {
+            return _inputStream.Read(destination);
+        }
+
+        public override Task<int> ReadAsync(byte[] buffer, int offset, int size, CancellationToken cancellationToken)
+        {
+            return _inputStream.ReadAsync(buffer, offset, size, cancellationToken);
+        }
+
+        public override ValueTask<int> ReadAsync(Memory<byte> buffer, CancellationToken cancellationToken)
+        {
+            return _inputStream.ReadAsync(buffer, cancellationToken);
         }
 
         public override long Seek(long offset, SeekOrigin origin)
@@ -71,26 +128,36 @@ namespace InTheHand.Net.Bluetooth.Droid
             throw new NotSupportedException();
         }
 
+        public override IAsyncResult BeginWrite(byte[] buffer, int offset, int size, AsyncCallback callback, object state)
+        {
+            return _outputStream.BeginWrite(buffer, offset, size, callback, state);
+        }
+
+        public override void EndWrite(IAsyncResult asyncResult)
+        {
+            _outputStream.EndWrite(asyncResult);
+        }
+
         public override void Write(byte[] buffer, int offset, int count)
         {
             _outputStream.Write(buffer, offset, count);
         }
 
-        public override bool DataAvailable
+        public override void Write(ReadOnlySpan<byte> source)
         {
-            get
-            {
-                try
-                {
-                    var js = _inputStream as Android.Runtime.InputStreamInvoker;
-                    return js.BaseInputStream.Available() > 0;
-                }
-                catch (Java.IO.IOException)
-                {
-                }
-
-                return false;
-            }
+            _outputStream.Write(source);
         }
+
+        public override Task WriteAsync(byte[] buffer, int offset, int size, CancellationToken cancellationToken)
+        {
+            return _outputStream.WriteAsync(buffer, offset, size, cancellationToken);
+        }
+
+        public override ValueTask WriteAsync(ReadOnlyMemory<byte> buffer, CancellationToken cancellationToken)
+        {
+            return _outputStream.WriteAsync(buffer, cancellationToken);
+        }
+
+        
     }
 }
