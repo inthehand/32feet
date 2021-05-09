@@ -6,7 +6,6 @@
 // This source code is licensed under the MIT License
 
 using System;
-using System.Net.Sockets;
 using System.Runtime.InteropServices;
 
 namespace InTheHand.Net.Bluetooth.Win32
@@ -122,7 +121,7 @@ namespace InTheHand.Net.Bluetooth.Win32
         internal static extern bool CloseHandle(IntPtr handle);
 
         // SetService
-        [DllImport(wsDll, ExactSpelling = true, EntryPoint = "WSASetService", SetLastError = true)]
+        [DllImport(wsDll, ExactSpelling = true, EntryPoint = "WSASetServiceW", SetLastError = true)]
         internal static extern int WSASetService(ref WSAQUERYSET lpqsRegInfo, WSAESETSERVICEOP essoperation, int dwControlFlags);
         
         // Last Error
