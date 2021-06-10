@@ -8,11 +8,13 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 using Windows.Devices.Bluetooth;
 using Windows.Devices.Bluetooth.Advertisement;
+using Windows.Foundation;
 
 namespace InTheHand.Bluetooth
 {
@@ -41,14 +43,33 @@ namespace InTheHand.Bluetooth
                 _appearance = BitConverter.ToUInt16(appearanceArray, 0);
             }
 
-            Task.Run(async () =>
-            {
-                var device = await BluetoothLEDevice.FromBluetoothAddressAsync(args.BluetoothAddress, args.BluetoothAddressType);
-                
-                if (device != null)
-                    Device = device;
-            });
+            // https://docs.microsoft.com/en-us/uwp/api/windows.devices.bluetooth.bluetoothledevice.frombluetoothaddressasync?view=winrt-20348
+            // If there are no other pending request, and the remote device is unreachable,
+            // then the system will wait for seven (7) seconds before it times out. If
+            // there are other pending requests, then each of the requests in the queue can
+            // take seven (7) seconds to process, so the further yours is toward the back
+            // of the queue, the longer you'll wait.
+            IAsyncOperation<BluetoothLEDevice> deviceAsync = BluetoothLEDevice.FromBluetoothAddressAsync(args.BluetoothAddress, args.BluetoothAddressType);
 
+            // https://github.com/inthehand/32feet/issues/96
+            // Wait some time for this task to complete otherwise the event will fire
+            // before the 'Device' property as been set.
+            if (deviceAsync.AsTask().Wait(7000))
+            {
+                Device = deviceAsync.GetResults();
+            }
+            else
+            {
+                try
+                {
+                    // The documents state that it is not possible to cancel 'FromBluetoothAddressAsync'
+                    // so mask any exceptions before calling this.
+                    deviceAsync.Cancel();
+                }
+                catch
+                {
+                }
+            }
             _advertisement = args.Advertisement;
         }
 
