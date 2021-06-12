@@ -102,6 +102,10 @@ namespace InTheHand.Bluetooth
         {
         }
 
+        void PlatformCleanup()
+        {
+        }
+
         Task<GattService> PlatformGetPrimaryService(BluetoothUuid service)
         {
             return Task.Run(() =>

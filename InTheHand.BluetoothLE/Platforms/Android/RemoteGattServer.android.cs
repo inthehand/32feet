@@ -179,6 +179,11 @@ namespace InTheHand.Bluetooth
             _gatt.Disconnect();
         }
 
+        void PlatformCleanup()
+        {
+            // Android has no explicit cleanup 🤪
+        }
+
         async Task<GattService> PlatformGetPrimaryService(BluetoothUuid service)
         {
             await WaitForServiceDiscovery();

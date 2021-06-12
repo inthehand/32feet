@@ -22,6 +22,7 @@ namespace InTheHand.Bluetooth
         {
             _service = service;
             _isPrimary = isPrimary;
+            device.AddDisposableObject(this,service);
         }
 
         public static implicit operator WBluetooth.GattDeviceService(GattService service)
