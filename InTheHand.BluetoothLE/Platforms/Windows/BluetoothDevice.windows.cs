@@ -6,6 +6,8 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Windows.Devices.Bluetooth;
 
@@ -14,15 +16,101 @@ namespace InTheHand.Bluetooth
     partial class BluetoothDevice
     {
         internal BluetoothLEDevice NativeDevice;
+        internal readonly ConcurrentDictionary<int,IDisposable> NativeDisposeList = new ConcurrentDictionary<int, IDisposable>();
+        private string _cachedId;
+        private string _cachedName;
+        internal ulong LastKnownAddress;
 
         internal BluetoothDevice(BluetoothLEDevice device)
         {
             NativeDevice = device;
+            AddDisposableObject(this, device);
+
+
+            if (device == null) return;
+
+            LastKnownAddress = device.BluetoothAddress;
+
+            // this will cache the Id and Name for use in cases where 'NativeDevice' has been disposed. 
+            GetId();
+            GetName();
         }
 
         ~BluetoothDevice()
         {
-            NativeDevice.Dispose();
+            DisposeAllNativeObjects();
+        }
+
+        /// <summary>Adds a native (IDisposable) object to the dispose list</summary>
+        /// <param name="container">This is generally the managed object that contains the native object but it can be anything that can serve as a unique key.</param>
+        /// <param name="disposableObject">The native object that we will disposed when the user requests a disconnect</param>
+        internal void AddDisposableObject(object container, IDisposable disposableObject)
+        {
+            if (NativeDisposeList.TryGetValue(container.GetHashCode(), out IDisposable existingValue))
+            {
+                NativeDisposeList.TryUpdate(container.GetHashCode(), disposableObject, existingValue);
+            }
+            else
+            {
+                NativeDisposeList.TryAdd(container.GetHashCode(), disposableObject);
+            }
+        }
+
+        /// <summary>Called in RemoteServer.PlatformCleanup to dispose all of the native object that have been collected.</summary>
+        internal void DisposeAllNativeObjects()
+        {
+            Dictionary<int, IDisposable> itemsDisposed = new Dictionary<int, IDisposable>();
+            foreach (var kv in NativeDisposeList)
+            {
+                kv.Value?.Dispose();
+                itemsDisposed.Add(kv.Key, kv.Value);
+            }
+
+            foreach (var kv in itemsDisposed)
+            {
+                NativeDisposeList.TryUpdate(kv.Key, null, kv.Value);
+            }
+        }
+
+        /// <summary>
+        /// Used to Recreate 'NativeDevice' if it is in a disposed state.
+        /// </summary>
+        /// <param name="deviceAddress">The bluetooth device address</param>
+        /// <returns>True if 'NativeDevice' was recreated</returns>
+        internal async Task<bool> CreateNativeInstance()
+        {
+            if (LastKnownAddress == 0) return false;
+
+            if (NativeDisposeList.TryGetValue(GetHashCode(), out IDisposable existingItem))
+            {
+                if (existingItem == null)
+                {
+                    // The native object was disposed as the result of a call to RemoteGattServer.Disconnect.
+                    // we need to create another one.
+                    BluetoothLEDevice nativeDevice = await BluetoothLEDevice.FromBluetoothAddressAsync(LastKnownAddress);
+                    if (nativeDevice != null)
+                    {
+                        AddDisposableObject(this, nativeDevice);
+                        NativeDevice = nativeDevice;
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>Checks if the native object for this container has been disposed.</summary>
+        /// <param name="container">This is generally the managed object that contains the native object but it can be anything that can serve as a unique key.</param>
+        /// <returns>True if the container exists and it's native object has been disposed.</returns>
+        internal bool IsDisposedItem(object container)
+        {
+            if (NativeDisposeList.TryGetValue(container.GetHashCode(), out IDisposable existingItem))
+            {
+                return existingItem == null;
+            }
+
+            return false;
         }
 
         public static implicit operator BluetoothLEDevice(BluetoothDevice device)
@@ -63,24 +151,34 @@ namespace InTheHand.Bluetooth
             return device;
         }
 
-        string GetId()
+        internal string GetId()
         {
-            return NativeDevice.BluetoothAddress.ToString("X6");
+            if (IsDisposedItem(this)) return _cachedId;
+            _cachedId = NativeDevice.BluetoothAddress.ToString("X6");
+            return _cachedId;
         }
 
-        string GetName()
+        internal string GetName()
         {
-            if(NativeDevice.Name.StartsWith("Bluetooth "))
+            if (IsDisposedItem(this)) return _cachedName;
+            if (NativeDevice.Name.StartsWith("Bluetooth "))
             {
-                return NativeDevice.DeviceInformation.Name;
+                _cachedName = NativeDevice.DeviceInformation.Name;
+            }
+            else
+            {
+                _cachedName = NativeDevice.Name;
             }
 
-            return NativeDevice.Name;
+            return _cachedName;
         }
 
+        private RemoteGattServer _remoteGattServer;
         RemoteGattServer GetGatt()
         {
-            return new RemoteGattServer(this);
+            if (_remoteGattServer == null)
+                _remoteGattServer = new RemoteGattServer(this);
+            return _remoteGattServer;
         }
 
         /*bool GetWatchingAdvertisements()

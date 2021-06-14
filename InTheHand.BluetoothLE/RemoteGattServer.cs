@@ -56,6 +56,7 @@ namespace InTheHand.Bluetooth
         {
             PlatformDisconnect();
             Device.OnGattServerDisconnected();
+            PlatformCleanup();
         }
 
         /// <summary>
