@@ -128,7 +128,6 @@ namespace InTheHand.Bluetooth
                 }
                 catch(System.ArgumentException)
                 {
-
                 }
             }
 
@@ -141,7 +140,13 @@ namespace InTheHand.Bluetooth
 
             foreach (var device in await DeviceInformation.FindAllAsync(BluetoothLEDevice.GetDeviceSelectorFromPairingState(true)))
             {
-                devices.Add(await BluetoothLEDevice.FromIdAsync(device.Id));
+                try
+                {
+                    devices.Add(await BluetoothLEDevice.FromIdAsync(device.Id));
+                }
+                catch (System.ArgumentException)
+                {
+                }
             }
 
             return devices.AsReadOnly();
