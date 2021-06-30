@@ -121,9 +121,15 @@ namespace InTheHand.Bluetooth
             List<BluetoothDevice> devices = new List<BluetoothDevice>();
 
             // None of the build in selectors do a scan and return both paired and unpaired devices so here is the raw AQS string
-            foreach(var device in await DeviceInformation.FindAllAsync("System.Devices.DevObjectType:=5 AND System.Devices.Aep.ProtocolId:=\"{BB7BB05E-5972-42B5-94FC-76EAA7084D49}\" AND (System.Devices.Aep.IsPaired:=System.StructuredQueryType.Boolean#False OR System.Devices.Aep.IsPaired:=System.StructuredQueryType.Boolean#True OR System.Devices.Aep.Bluetooth.IssueInquiry:=System.StructuredQueryType.Boolean#True)"))
+            foreach (var device in await DeviceInformation.FindAllAsync("System.Devices.DevObjectType:=5 AND System.Devices.Aep.ProtocolId:=\"{BB7BB05E-5972-42B5-94FC-76EAA7084D49}\" AND (System.Devices.Aep.IsPaired:=System.StructuredQueryType.Boolean#False OR System.Devices.Aep.IsPaired:=System.StructuredQueryType.Boolean#True OR System.Devices.Aep.Bluetooth.IssueInquiry:=System.StructuredQueryType.Boolean#True)"))
             {
-                devices.Add(await BluetoothLEDevice.FromIdAsync(device.Id));
+                try {
+                    devices.Add(await BluetoothLEDevice.FromIdAsync(device.Id));
+                }
+                catch(System.ArgumentException)
+                {
+
+                }
             }
 
             return devices.AsReadOnly();
