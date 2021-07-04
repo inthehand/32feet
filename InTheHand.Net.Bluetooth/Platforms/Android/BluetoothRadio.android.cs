@@ -13,6 +13,9 @@ namespace InTheHand.Net.Bluetooth
     {
         private static BluetoothRadio GetDefault()
         {
+            if (BluetoothAdapter.DefaultAdapter == null)
+                return null;
+
             return new BluetoothRadio(BluetoothAdapter.DefaultAdapter);
         }
 

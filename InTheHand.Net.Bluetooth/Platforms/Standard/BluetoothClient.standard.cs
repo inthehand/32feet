@@ -2,7 +2,7 @@
 //
 // InTheHand.Net.Sockets.BluetoothClient (.NET Standard)
 // 
-// Copyright (c) 2018-2020 In The Hand Ltd, All rights reserved.
+// Copyright (c) 2018-2021 In The Hand Ltd, All rights reserved.
 // This source code is licensed under the MIT License
 
 using System;
@@ -15,6 +15,7 @@ namespace InTheHand.Net.Sockets
     {
         private void PlatformInitialize()
         {
+            throw Exceptions.GetNotImplementedException();
         }
 
         IEnumerable<BluetoothDeviceInfo> GetPairedDevices()

@@ -2,7 +2,7 @@
 //
 // InTheHand.Net.Bluetooth.AndroidNetworkStream (Android)
 // 
-// Copyright (c) 2003-2020 In The Hand Ltd, All rights reserved.
+// Copyright (c) 2003-2021 In The Hand Ltd, All rights reserved.
 // This source code is licensed under the MIT License
 
 using InTheHand.Net.Sockets;
@@ -108,6 +108,11 @@ namespace InTheHand.Net.Bluetooth.Droid
             return _inputStream.Read(destination);
         }
 
+        public override int ReadByte()
+        {
+            return _inputStream.ReadByte();
+        }
+
         public override Task<int> ReadAsync(byte[] buffer, int offset, int size, CancellationToken cancellationToken)
         {
             return _inputStream.ReadAsync(buffer, offset, size, cancellationToken);
@@ -116,6 +121,18 @@ namespace InTheHand.Net.Bluetooth.Droid
         public override ValueTask<int> ReadAsync(Memory<byte> buffer, CancellationToken cancellationToken)
         {
             return _inputStream.ReadAsync(buffer, cancellationToken);
+        }
+
+        public override int ReadTimeout { get => _inputStream.ReadTimeout; set => _inputStream.ReadTimeout = value; }
+
+        public override void CopyTo(Stream destination, int bufferSize)
+        {
+            _inputStream.CopyTo(destination, bufferSize);
+        }
+
+        public override Task CopyToAsync(Stream destination, int bufferSize, CancellationToken cancellationToken)
+        {
+            return _inputStream.CopyToAsync(destination, bufferSize, cancellationToken);
         }
 
         public override long Seek(long offset, SeekOrigin origin)
@@ -148,6 +165,11 @@ namespace InTheHand.Net.Bluetooth.Droid
             _outputStream.Write(source);
         }
 
+        public override void WriteByte(byte value)
+        {
+            _outputStream.WriteByte(value);
+        }
+
         public override Task WriteAsync(byte[] buffer, int offset, int size, CancellationToken cancellationToken)
         {
             return _outputStream.WriteAsync(buffer, offset, size, cancellationToken);
@@ -158,6 +180,6 @@ namespace InTheHand.Net.Bluetooth.Droid
             return _outputStream.WriteAsync(buffer, cancellationToken);
         }
 
-        
+        public override int WriteTimeout { get => _outputStream.WriteTimeout; set => _outputStream.WriteTimeout = value; }
     }
 }

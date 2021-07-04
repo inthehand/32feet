@@ -5,8 +5,6 @@
 // Copyright (c) 2003-2020 In The Hand Ltd, All rights reserved.
 // This source code is licensed under the MIT License
 
-using System.Collections.Generic;
-
 namespace InTheHand.Net.Bluetooth
 {
     partial class BluetoothRadio

@@ -2,7 +2,7 @@
 //
 // InTheHand.Net.Bluetooth.BluetoothClient (Android)
 // 
-// Copyright (c) 2018-2020 In The Hand Ltd, All rights reserved.
+// Copyright (c) 2018-2021 In The Hand Ltd, All rights reserved.
 // This source code is licensed under the MIT License
 
 using Android.Bluetooth;
@@ -23,7 +23,7 @@ namespace InTheHand.Net.Sockets
 
         private void PlatformInitialize()
         {
-            if (!BluetoothAdapter.DefaultAdapter.IsEnabled)
+            if (BluetoothAdapter.DefaultAdapter != null && !BluetoothAdapter.DefaultAdapter.IsEnabled)
                 BluetoothAdapter.DefaultAdapter.Enable();
         }
 
