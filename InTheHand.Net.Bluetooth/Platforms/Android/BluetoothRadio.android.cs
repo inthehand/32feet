@@ -2,9 +2,10 @@
 //
 // InTheHand.Net.Bluetooth.BluetoothRadio (Android)
 // 
-// Copyright (c) 2003-2020 In The Hand Ltd, All rights reserved.
+// Copyright (c) 2003-2021 In The Hand Ltd, All rights reserved.
 // This source code is licensed under the MIT License
 
+using Android.App;
 using Android.Bluetooth;
 
 namespace InTheHand.Net.Bluetooth
@@ -13,10 +14,12 @@ namespace InTheHand.Net.Bluetooth
     {
         private static BluetoothRadio GetDefault()
         {
-            if (BluetoothAdapter.DefaultAdapter == null)
+            var manager = (BluetoothManager)Application.Context.GetSystemService(Application.BluetoothService);
+
+            if (manager.Adapter == null)
                 return null;
 
-            return new BluetoothRadio(BluetoothAdapter.DefaultAdapter);
+            return new BluetoothRadio(manager.Adapter);
         }
 
         public static implicit operator BluetoothAdapter(BluetoothRadio radio)

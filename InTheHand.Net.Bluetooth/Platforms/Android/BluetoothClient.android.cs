@@ -8,6 +8,7 @@
 using Android.Bluetooth;
 using Android.Content;
 using Android.OS;
+using InTheHand.Net.Bluetooth;
 using InTheHand.Net.Bluetooth.Droid;
 using System;
 using System.Collections.Generic;
@@ -20,16 +21,18 @@ namespace InTheHand.Net.Sockets
     partial class BluetoothClient
     {
         private BluetoothSocket _socket;
+        private BluetoothRadio _radio;
 
         private void PlatformInitialize()
         {
-            if (BluetoothAdapter.DefaultAdapter != null && !BluetoothAdapter.DefaultAdapter.IsEnabled)
-                BluetoothAdapter.DefaultAdapter.Enable();
+            _radio = BluetoothRadio.Default;
+            if (_radio != null && _radio.Mode == RadioMode.PowerOff)
+                _radio.Mode = RadioMode.Connectable;
         }
 
         IEnumerable<BluetoothDeviceInfo> GetPairedDevices()
         {
-            foreach(BluetoothDevice device in BluetoothAdapter.DefaultAdapter.BondedDevices)
+            foreach(BluetoothDevice device in ((BluetoothAdapter)_radio).BondedDevices)
             {
                 yield return device;
             }
@@ -63,12 +66,12 @@ namespace InTheHand.Net.Sockets
 
                     if(devices.Count == maxDevices)
                     {
-                        BluetoothAdapter.DefaultAdapter.CancelDiscovery();
+                        ((BluetoothAdapter)_radio).CancelDiscovery();
                     }
                 }
             };
-            
-            BluetoothAdapter.DefaultAdapter.StartDiscovery();
+
+            ((BluetoothAdapter)_radio).StartDiscovery();
 
             receiver.DiscoveryComplete += (s, e) =>
             {
@@ -84,7 +87,7 @@ namespace InTheHand.Net.Sockets
 
         async void DoConnect(BluetoothAddress address, Guid service)
         {
-            var nativeDevice = BluetoothAdapter.DefaultAdapter.GetRemoteDevice(address.ToString("C"));
+            var nativeDevice = ((BluetoothAdapter)_radio).GetRemoteDevice(address.ToString("C"));
 
             if (!Authenticate && !Encrypt)
             {
