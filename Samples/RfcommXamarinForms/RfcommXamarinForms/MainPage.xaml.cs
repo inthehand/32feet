@@ -43,10 +43,13 @@ namespace RfcommXamarinForms
             if (device != null)
             {
                 client.Connect(device.DeviceAddress, BluetoothService.SerialPort);
-                stream = client.GetStream();
-                StreamWriter sw = new StreamWriter(stream, System.Text.Encoding.ASCII);
-                sw.WriteLine("Hello world!\r\n\r\n");
-                sw.Close();
+                if (client.Connected)
+                {
+                    stream = client.GetStream();
+                    StreamWriter sw = new StreamWriter(stream, System.Text.Encoding.ASCII);
+                    sw.WriteLine("Hello world!\r\n\r\n");
+                    sw.Close();
+                }
 
                 /*byte[] data = System.Text.Encoding.ASCII.GetBytes("Hello world!\r\n\r\n"); //! 0 200 200 210 1\r\nTEXT 4 0 30 40 Hello World\r\nFORM\r\nPRINT\r\n");
                 stream.Write(data, 0, data.Length);
