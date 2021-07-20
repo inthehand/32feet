@@ -103,6 +103,7 @@ namespace InTheHand.Net.Sockets
                 try
                 {
                     _socket.Connect();
+
                 }
                 catch(Exception ex)
                 {
@@ -111,6 +112,7 @@ namespace InTheHand.Net.Sockets
                     try
                     {
                         _socket.Connect();
+                        AndroidNetworkStream.GetAvailable(_socket.InputStream as Android.Runtime.InputStreamInvoker);
                     }
                     catch (Exception ex2)
                     {

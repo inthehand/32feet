@@ -59,20 +59,27 @@ namespace InTheHand.Net.Bluetooth.Droid
             }
         }
 
+        internal static int GetAvailable(Android.Runtime.InputStreamInvoker stream)
+        {
+            if (stream == null)
+                return 0;
+
+            try
+            {
+                return stream.BaseInputStream.Available();
+            }
+            catch (Java.IO.IOException)
+            {
+            }
+
+            return 0;
+        }
+
         public override long Length
         {
             get
             {
-                try
-                {
-                    var js = _inputStream as Android.Runtime.InputStreamInvoker;
-                    return js.BaseInputStream.Available();
-                }
-                catch (Java.IO.IOException)
-                {
-                }
-
-                return 0;
+                return GetAvailable(_inputStream as Android.Runtime.InputStreamInvoker);
             }
         }
 
