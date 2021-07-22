@@ -226,5 +226,40 @@ namespace InTheHand.Net.Bluetooth.AttributeIds
         /// </remarks>
         public const ServiceAttributeId ProfileVersion = (ServiceAttributeId)0x020B;
 
+        /// <summary>
+        /// HIDSSRHostMaxLatency
+        /// </summary>
+        /// <remarks>
+        /// <para>[<c>16-bit unsigned integer</c>]</para>
+        /// <para>
+        /// This parameter is used to inform the Bluetooth HID Host that the Bluetooth HID device
+        /// supports Sniff Subrating AND requires that the Bluetooth HID Host send a Sniff
+        /// Subrating request to the Bluetooth HID device with a Maximum Remote Latency setting 
+        /// if set in the HIDSSRHostMaxLatency attribute.This setting is usually used in a
+        /// Bluetooth HID device that supports features which require data to be sent with a well-
+        /// controlled latency from the Bluetooth HID Host to the Bluetooth HID device. The units of
+        /// this attribute are baseband slots (625µs), identical to the units used in the HCI Sniff
+        /// Subrating command.
+        /// </para>
+        /// </remarks>
+        public const ServiceAttributeId SSRHostMaxLatency = (ServiceAttributeId)0x020F;
+
+        /// <summary>
+        /// SSRHostMinTimeout
+        /// </summary>
+        /// <remarks>
+        /// <para>[<c>16-bit unsigned integer</c>]</para>
+        /// <para>
+        /// This parameter is used to inform the Bluetooth HID Host that the Bluetooth HID device
+        /// supports Sniff Subrating AND requires that the Bluetooth HID Host send a Sniff
+        /// Subrating request to the Bluetooth HID device with a Minimum Timeout setting if set in
+        /// the HIDSSRHostMinTimeout attribute.This setting is usually used in a Bluetooth HID
+        /// device that supports features which require data to be sent with a well-controlled latency
+        /// from the Bluetooth HID Host to the Bluetooth HID device.The units of this attribute are
+        /// baseband slots (625µs), identical to the units used in the HCI Sniff Subrating command.
+        /// </para>
+        /// </remarks>
+        public const ServiceAttributeId HostMinTimeout = (ServiceAttributeId)0x0210;
+
     }//class
 }
