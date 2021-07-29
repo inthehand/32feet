@@ -120,7 +120,7 @@ namespace InTheHand.Bluetooth
 
         public static implicit operator BluetoothDevice(BluetoothLEDevice device)
         {
-            return new BluetoothDevice(device);
+            return device == null ? null : new BluetoothDevice(device);
         }
 
         private static async Task<BluetoothDevice> PlatformFromId(string id)
