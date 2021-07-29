@@ -1,6 +1,6 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="BluetoothDevice.unified.cs" company="In The Hand Ltd">
-//   Copyright (c) 2018-20 In The Hand Ltd, All rights reserved.
+//   Copyright (c) 2018-21 In The Hand Ltd, All rights reserved.
 //   This source code is licensed under the MIT License - see License.txt
 // </copyright>
 //-----------------------------------------------------------------------
@@ -27,7 +27,7 @@ namespace InTheHand.Bluetooth
 
         public static implicit operator BluetoothDevice(CBPeripheral peripheral)
         {
-            return new BluetoothDevice(peripheral);
+            return peripheral == null ? null : new BluetoothDevice(peripheral);
         }
 
         public static implicit operator CBPeripheral(BluetoothDevice device)
