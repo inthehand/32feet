@@ -2,7 +2,7 @@
 //
 // InTheHand.Net.BluetoothAddress
 // 
-// Copyright (c) 2003-2020 In The Hand Ltd, All rights reserved.
+// Copyright (c) 2003-2021 In The Hand Ltd, All rights reserved.
 // This source code is licensed under the MIT License
 
 using System;
@@ -15,7 +15,7 @@ namespace InTheHand.Net
     /// <summary>
     /// Represents a Bluetooth device address.
     /// </summary>
-    public partial class BluetoothAddress : IComparable<BluetoothAddress>, IEquatable<BluetoothAddress>, IFormattable
+    public partial class BluetoothAddress : IComparable<BluetoothAddress>, IEquatable<BluetoothAddress>, IFormattable, ICloneable
     {
         private readonly ulong _address;
 
@@ -383,6 +383,11 @@ namespace InTheHand.Net
             BitConverter.GetBytes(IPAddress.HostToNetworkOrder(BitConverter.ToInt16(guidBytes, 6))).CopyTo(guidBytes, 6);
 
             return new Guid(guidBytes);
+        }
+
+        public object Clone()
+        {
+            return new BluetoothAddress(_address);
         }
     }
 }
