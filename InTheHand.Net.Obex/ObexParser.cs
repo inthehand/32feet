@@ -19,7 +19,7 @@ namespace InTheHand.Net
         internal static void ParseHeaders(byte[] packet, bool isConnectPacket, ref ushort remoteMaxPacket, Stream bodyStream, WebHeaderCollection headers)
         {
             ObexMethod method = (ObexMethod)packet[0];
-            int packetLength = IPAddress.NetworkToHostOrder(BitConverter.ToUInt16(packet, 1));
+            int packetLength = IPAddress.NetworkToHostOrder(BitConverter.ToInt16(packet, 1));
 
             int pos = 3;
             int lastPos = int.MinValue;
@@ -39,6 +39,8 @@ namespace InTheHand.Net
                         Debug.Assert(isConnectPacket, "NOT isConnectPacket");
                         Debug.Assert(pos == 3, "NOT before any headers!");
                         remoteMaxPacket = (ushort)IPAddress.NetworkToHostOrder(BitConverter.ToUInt16(packet, pos + 2));
+                        if (remoteMaxPacket == 0)
+                            remoteMaxPacket = ushort.MaxValue;
                         pos += 4;
                         break;
 
