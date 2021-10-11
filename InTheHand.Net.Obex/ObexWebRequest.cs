@@ -2,13 +2,14 @@
 //
 // InTheHand.Net.ObexWebRequest
 // 
-// Copyright (c) 2003-2020 In The Hand Ltd, All rights reserved.
+// Copyright (c) 2003-2021 In The Hand Ltd, All rights reserved.
 // This source code is licensed under the MIT License
 
 using System;
 using System.IO;
 using System.Net;
 using System.Net.Sockets;
+using InTheHand.Net.IrDA;
 using InTheHand.Net.Sockets;
 using InTheHand.Net.Bluetooth;
 using System.Diagnostics;
@@ -89,7 +90,7 @@ namespace InTheHand.Net
     /// </code>
     /// See also the ObexPushApplication and ObexPushVB sample programs.
     /// </example>
-    [SuppressMessage("Microsoft.Usage", "CA2237:MarkISerializableTypesWithSerializable", Justification = "Are we!?!")]
+    //[SuppressMessage("Microsoft.Usage", "CA2237:MarkISerializableTypesWithSerializable", Justification = "Are we!?!")]
     public class ObexWebRequest : WebRequest
     {
         private const int INVALID_CONNECTION_ID = -1;
@@ -328,9 +329,33 @@ namespace InTheHand.Net
                             System.Diagnostics.Debug.Assert(m_alreadyConnectedObexStream.CanRead
                                 && m_alreadyConnectedObexStream.CanWrite);
                             ns = m_alreadyConnectedObexStream;
-                        } else {
+                        } 
+                        else 
+                        {
 
-                            if (BluetoothAddress.TryParse(uri.Host, out BluetoothAddress ba))
+                                if(IrDAAddress.TryParse(uri.Host, out var address))
+                                {
+                                    IrDAClient client = new IrDAClient();
+
+                                    string serviceName;
+
+                                    switch(uri.Scheme)
+                                    {
+                                        //potential for other obex based profiles to be added
+
+                                        default:
+                                            serviceName = IrDAService.ObjectExchange;
+                                            break;
+                                    }
+
+                                    client.Connect(new IrDAEndPoint(address, serviceName));
+
+                                    if (!client.Connected)
+                                        return ObexStatusCode.NotFound;
+
+                                    ns = client.GetStream();
+                            }
+                            else if (BluetoothAddress.TryParse(uri.Host, out BluetoothAddress ba))
                             {
                                 BluetoothClient cli = new BluetoothClient();
                                 Guid serviceGuid;
@@ -357,8 +382,11 @@ namespace InTheHand.Net
                                 }
 
                                 cli.Connect(ba, serviceGuid);
-                                ns = cli.GetStream();
 
+                                if (!cli.Connected)
+                                    return ObexStatusCode.NotFound;
+
+                                ns = cli.GetStream();
                             }
                             else
                             {
@@ -669,7 +697,7 @@ namespace InTheHand.Net
 
             if (CheckResponse(ref status, false)) {
 
-                int totalBytes = 0;
+                int totalBytes;
 
                 byte[] requestBuffer = requestStream.GetBuffer();
 
@@ -1123,7 +1151,7 @@ namespace InTheHand.Net
             return ar;
         }
 
-        [SuppressMessage("Microsoft.Design", "CA1031", Justification = "Is rethrown by APM caller.")]
+        //[SuppressMessage("Microsoft.Design", "CA1031", Justification = "Is rethrown by APM caller.")]
         void HackApmRunner_GetResponse(object state)
         {
             AsyncResult<WebResponse> ar = (AsyncResult<WebResponse>)state;
