@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;netcoreapp3.1;net461;monoandroid90;Xamarin.iOS10;uap10.0</TargetFrameworks>
+    <RuntimeIdentifiers Condition=" '$(TargetFramework)' == 'netcoreapp3.1' ">win</RuntimeIdentifiers>
     <Company>In The Hand Ltd</Company>
     <Authors>Peter Foot</Authors>
     <Product>32feet.NET</Product>
@@ -28,10 +29,9 @@
     <PackageReleaseNotes>Updated  for Android API 31 support. Fixes issue with Emulators and devices with no Bluetooth radio.</PackageReleaseNotes>
     <PackageIcon>32feet-package-icon.png</PackageIcon>
     <RepositoryType>GIT</RepositoryType>
-    <SignAssembly Condition=" '$(Configuration)' == 'Release' ">false</SignAssembly>
+    <SignAssembly Condition=" '$(Configuration)' == 'Release' ">true</SignAssembly>
     <AssemblyOriginatorKeyFile Condition=" '$(Configuration)' == 'Release' ">InTheHand.snk</AssemblyOriginatorKeyFile>
     <DelaySign>false</DelaySign>
-    <Platforms>AnyCPU;x86</Platforms>
   </PropertyGroup>
 
   <ItemGroup>
