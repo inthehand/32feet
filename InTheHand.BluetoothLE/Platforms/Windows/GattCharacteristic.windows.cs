@@ -129,7 +129,7 @@ namespace InTheHand.Bluetooth
             {
                 var result = await _characteristic.WriteClientCharacteristicConfigurationDescriptorAsync(value);
             }
-            catch(UnauthorizedAccessException ex)
+            catch(UnauthorizedAccessException)
             {
                 // not supported
             }
