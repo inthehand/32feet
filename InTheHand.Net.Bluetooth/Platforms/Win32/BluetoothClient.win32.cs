@@ -70,10 +70,12 @@ namespace InTheHand.Net.Sockets
             IntPtr searchHandle = NativeMethods.BluetoothFindFirstDevice(ref search, ref device);
             if(searchHandle != IntPtr.Zero)
             {
+                NativeMethods.BluetoothGetDeviceInfo(IntPtr.Zero, ref device);
                 devices.Add(new BluetoothDeviceInfo(device));
 
                 while (NativeMethods.BluetoothFindNextDevice(searchHandle, ref device) && devices.Count < maxDevices)
                 {
+                    NativeMethods.BluetoothGetDeviceInfo(IntPtr.Zero, ref device);
                     devices.Add(new BluetoothDeviceInfo(device));
                 }
 
