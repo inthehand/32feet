@@ -14,6 +14,12 @@ namespace InTheHand.Bluetooth
 {
     public sealed partial class RemoteGattServer
     {
+        /// <summary>
+        /// Permit to manage autoconnect in GattServer
+        /// </summary>
+        /// <remarks>available only on monoandroid</remarks>
+        public bool AutoConnect { get; set; } = false;
+        
         internal RemoteGattServer(BluetoothDevice device)
         {
             Device = device;
