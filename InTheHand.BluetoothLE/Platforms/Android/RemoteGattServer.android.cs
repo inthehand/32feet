@@ -48,6 +48,12 @@ namespace InTheHand.Bluetooth
                 _owner = owner;
             }
 
+            public override void OnMtuChanged(ABluetooth.BluetoothGatt gatt, int mtu, [GeneratedEnum] ABluetooth.GattStatus status)
+            {
+                System.Diagnostics.Debug.WriteLine($"OnMtuChanged Status:{status} Size:{mtu}");
+                base.OnMtuChanged(gatt, mtu, status);
+            }
+            
             public override void OnConnectionStateChange(ABluetooth.BluetoothGatt gatt, ABluetooth.GattStatus status, ABluetooth.ProfileState newState)
             {
                 System.Diagnostics.Debug.WriteLine($"ConnectionStateChanged Status:{status} NewState:{newState}");
