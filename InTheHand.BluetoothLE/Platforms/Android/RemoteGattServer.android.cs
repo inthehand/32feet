@@ -20,7 +20,7 @@ namespace InTheHand.Bluetooth
         private void PlatformInit()
         {
             _gattCallback = new GattCallback(this);
-            _gatt = ((ABluetooth.BluetoothDevice)Device).ConnectGatt(Android.App.Application.Context, true, _gattCallback, ABluetooth.BluetoothTransports.Le);
+            _gatt = ((ABluetooth.BluetoothDevice)Device).ConnectGatt(Android.App.Application.Context, AutoConnect, _gattCallback, ABluetooth.BluetoothTransports.Le);
         }
 
         public static implicit operator ABluetooth.BluetoothGatt(RemoteGattServer gatt)
