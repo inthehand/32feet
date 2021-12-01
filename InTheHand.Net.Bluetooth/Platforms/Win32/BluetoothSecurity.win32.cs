@@ -2,7 +2,7 @@
 //
 // InTheHand.Net.Bluetooth.BluetoothSecurity (Win32)
 // 
-// Copyright (c) 2003-2020 In The Hand Ltd, All rights reserved.
+// Copyright (c) 2003-2021 In The Hand Ltd, All rights reserved.
 // This source code is licensed under the MIT License
 
 using InTheHand.Net.Bluetooth.Win32;
@@ -31,6 +31,12 @@ namespace InTheHand.Net.Bluetooth
             info.Address = device;
 
             RemoveRedundantAuthHandler(device);
+            
+            NativeMethods.BluetoothGetDeviceInfo(IntPtr.Zero, ref info);
+            // don't wait on this process if already paired
+            if (info.fAuthenticated)
+                return true;
+
             var authHandler = new Win32BluetoothAuthentication(device, pin);
            
             // Handle response without prompt
@@ -61,7 +67,6 @@ namespace InTheHand.Net.Bluetooth
                 if (authHandler.Address == address)
                 {
                     redundantAuth = authHandler;
-                    redundantAuth.Dispose();
                     break;
                 }
             }
@@ -69,6 +74,7 @@ namespace InTheHand.Net.Bluetooth
             if (redundantAuth != null)
             {
                 _authenticationHandlers.Remove(redundantAuth);
+                redundantAuth.Dispose();
             }
         }
 

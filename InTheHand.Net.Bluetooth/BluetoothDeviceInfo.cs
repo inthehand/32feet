@@ -80,7 +80,8 @@ namespace InTheHand.Net.Sockets
         }
 
         /// <summary>
-        /// Specifies whether the device is authenticated, paired, or bonded. All authenticated devices are remembered.
+        /// Specifies whether the device is authenticated, paired, or bonded.
+        /// All authenticated devices are remembered.
         /// </summary>
         public bool Authenticated
         {

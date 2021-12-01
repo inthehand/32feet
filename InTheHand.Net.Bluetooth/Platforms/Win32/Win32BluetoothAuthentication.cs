@@ -2,7 +2,7 @@
 //
 // InTheHand.Net.Bluetooth.Win32.Win32BluetoothAuthentication
 // 
-// Copyright (c) 2003-2020 In The Hand Ltd, All rights reserved.
+// Copyright (c) 2003-2021 In The Hand Ltd, All rights reserved.
 // This source code is licensed under the MIT License
 
 using System;
@@ -64,7 +64,9 @@ namespace InTheHand.Net.Bluetooth.Win32
                         System.Text.Encoding.ASCII.GetBytes(_pin).CopyTo(response.pinInfo.pin, 0);
                         response.pinInfo.pinLength = _pin.Length;
 
-                        return NativeMethods.BluetoothSendAuthenticationResponseEx(IntPtr.Zero, ref response) == 0;
+                        int authResult = NativeMethods.BluetoothSendAuthenticationResponseEx(IntPtr.Zero, ref response);
+                        System.Diagnostics.Debug.WriteLine($"BluetoothSendAuthenticationResponseEx: {authResult}");
+                        return authResult == 0;
                 }
 
                 return false;
@@ -89,14 +91,16 @@ namespace InTheHand.Net.Bluetooth.Win32
         {
             if (!disposedValue)
             {
+                disposedValue = true;
+
                 if (disposing)
                 {
                     // TODO: dispose managed state (managed objects).
                 }
 
-                NativeMethods.BluetoothUnregisterAuthentication(_handle);
-
-                disposedValue = true;
+                if(_handle != IntPtr.Zero)
+                    NativeMethods.BluetoothUnregisterAuthentication(_handle);
+                _handle = IntPtr.Zero;
             }
         }
         
