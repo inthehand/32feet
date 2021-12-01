@@ -37,7 +37,7 @@ namespace InTheHand.Net.Sockets
         /// <summary>
         /// Discovers accessible Bluetooth devices, and returns their names and addresses.
         /// </summary>
-        /// <returns>An array of BluetoothDeviceInfo objects describing the devices discovered.</returns>
+        /// <returns>A collection of BluetoothDeviceInfo objects describing the devices discovered.</returns>
         public IReadOnlyCollection<BluetoothDeviceInfo> DiscoverDevices()
         {
             return DiscoverDevices(255);
@@ -46,7 +46,7 @@ namespace InTheHand.Net.Sockets
         /// <summary>
         /// Discovers accessible Bluetooth devices, and returns their names and addresses.
         /// </summary>
-        /// <returns>An array of BluetoothDeviceInfo objects describing the devices discovered.</returns>
+        /// <returns>A collection of BluetoothDeviceInfo objects describing the devices discovered.</returns>
         public IReadOnlyCollection<BluetoothDeviceInfo> DiscoverDevices(int maxDevices)
         {
             return DoDiscoverDevices(maxDevices);
