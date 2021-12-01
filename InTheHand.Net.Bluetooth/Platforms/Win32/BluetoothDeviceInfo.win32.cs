@@ -83,6 +83,19 @@ namespace InTheHand.Net.Sockets
             return _info.fAuthenticated;
         }
 
+        /// <summary>
+        /// Specifies whether the device is a remembered device.
+        /// Not all remembered devices are authenticated.
+        /// </summary>
+        /// <remarks>Windows caches information about previously seen devices even if not authenticated.</remarks>
+        public bool Remembered
+        { 
+            get
+            {
+                return _info.fRemembered;
+            } 
+        }
+
         void DoRefresh()
         {
             NativeMethods.BluetoothGetDeviceInfo(IntPtr.Zero, ref _info);
