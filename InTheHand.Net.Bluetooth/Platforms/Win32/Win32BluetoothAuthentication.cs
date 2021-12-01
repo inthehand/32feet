@@ -13,10 +13,10 @@ namespace InTheHand.Net.Bluetooth.Win32
 {
     internal sealed class Win32BluetoothAuthentication
     {
-        string _pin;
+        readonly string _pin;
         IntPtr _handle = IntPtr.Zero;
-        NativeMethods.BluetoothAuthenticationCallbackEx _callback;
-        EventWaitHandle _waitHandle = new EventWaitHandle(false, EventResetMode.AutoReset);
+        readonly NativeMethods.BluetoothAuthenticationCallbackEx _callback;
+        readonly EventWaitHandle _waitHandle = new EventWaitHandle(false, EventResetMode.AutoReset);
 
         public ulong Address { get; set; }
 
@@ -128,7 +128,7 @@ namespace InTheHand.Net.Bluetooth.Win32
         internal BLUETOOTH_PIN_INFO pinInfo;
 
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 12)]
-        private byte[] _padding;
+        private readonly byte[] _padding;
         internal byte negativeResponse;
     }
 
@@ -149,7 +149,7 @@ namespace InTheHand.Net.Bluetooth.Win32
         internal uint numericComp_passkey;
 
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 28)]
-        private byte[] _padding;
+        private readonly byte[] _padding;
 
         internal byte negativeResponse;
     }

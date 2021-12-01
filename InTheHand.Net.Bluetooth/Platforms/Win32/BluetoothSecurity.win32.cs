@@ -16,7 +16,7 @@ namespace InTheHand.Net.Bluetooth
 {
     partial class BluetoothSecurity
     {
-        private static List<Win32BluetoothAuthentication> _authenticationHandlers = new List<Win32BluetoothAuthentication>();
+        private static readonly List<Win32BluetoothAuthentication> _authenticationHandlers = new List<Win32BluetoothAuthentication>();
                 
         static bool PlatformPairRequest(BluetoothAddress device, string pin)
         {

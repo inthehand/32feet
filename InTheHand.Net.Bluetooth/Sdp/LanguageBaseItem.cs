@@ -346,14 +346,13 @@ namespace InTheHand.Net.Bluetooth.AttributeIds
         /// Gets the value of the Natural Language field of the entry, as a <see cref="T:System.UInt16"/>.
         /// </summary>
         /// <example>Some example value may be 0x656e for "en", and 0x6672 for "fr".</example>
-        [CLSCompliant(false)] //use NaturalLanguageAsInt16 
-        public UInt16 NaturalLanguageAsUInt16 { get { return m_naturalLanguage; } }
+        public ushort NaturalLanguageAsUInt16 { get { return m_naturalLanguage; } }
 
         /// <summary>
         /// Gets the value of the Natural Language field of the entry, as a <see cref="T:System.UInt16"/>.
         /// </summary>
         /// <example>Some example value may be 0x656e for "en", and 0x6672 for "fr".</example>
-        public Int16 NaturalLanguageAsInt16 { get { return unchecked((Int16)m_naturalLanguage); } }
+        public short NaturalLanguageAsInt16 { get { return unchecked((short)m_naturalLanguage); } }
 
         /// <summary>
         /// Gets the base Attribute Id for this language.
@@ -372,8 +371,7 @@ namespace InTheHand.Net.Bluetooth.AttributeIds
         /// </remarks>
         /// -
         /// <seealso cref="P:InTheHand.Net.Bluetooth.LanguageBaseItem.EncodingIdAsInt16"/>
-        [CLSCompliant(false)] //use EncodingIdAsInt16
-        public UInt16 EncodingId { get { return m_encodingId; } }
+        public ushort EncodingId { get { return m_encodingId; } }
 
         /// <summary>
         /// Get the IETF Charset identifier for this language, as an Int16.
@@ -386,7 +384,7 @@ namespace InTheHand.Net.Bluetooth.AttributeIds
         /// </remarks>
         /// -
         /// <seealso cref="P:InTheHand.Net.Bluetooth.LanguageBaseItem.EncodingId"/>
-        public Int16 EncodingIdAsInt16 { get { return unchecked((Int16)m_encodingId); } }
+        public short EncodingIdAsInt16 { get { return unchecked((short)m_encodingId); } }
 
         //--------------------
 

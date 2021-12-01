@@ -38,7 +38,6 @@ namespace InTheHand.Net
         /// Initializes a new instance of the BluetoothAddress class with the specified address.
         /// </summary>
         /// <param name="address">UInt64 representation of the address.</param>
-        [CLSCompliant(false)]
         public BluetoothAddress(ulong address)
         {
             _address = address;

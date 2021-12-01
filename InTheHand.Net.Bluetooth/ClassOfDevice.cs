@@ -46,7 +46,6 @@ namespace InTheHand.Net.Bluetooth
             _cod = cod;
         }
         
-        [CLSCompliant(false)]
         public static implicit operator uint(ClassOfDevice cod)
         {
             if (cod == null)
@@ -55,7 +54,6 @@ namespace InTheHand.Net.Bluetooth
             return cod._cod;
         }
 
-        [CLSCompliant(false)]
         public static explicit operator ClassOfDevice(uint cod)
         {
             return new ClassOfDevice(cod);
@@ -113,8 +111,6 @@ namespace InTheHand.Net.Bluetooth
         /// <summary>
         /// Gets the numerical value.
         /// </summary>
-        /// <seealso cref="P:InTheHand.Net.Bluetooth.ClassOfDevice.ValueAsInt32"/>
-        [CLSCompliant(false)]//use ValueAsInt32
         public uint Value
         {
             get { return _cod; }

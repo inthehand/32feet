@@ -117,12 +117,21 @@ namespace InTheHand.Net.Sockets
 
         public override bool Equals(object obj)
         {
-            if(obj is BluetoothDeviceInfo)
+            if(obj is BluetoothDeviceInfo info)
             {
-                return Equals((BluetoothDeviceInfo)obj);
+                return Equals(info);
             }
 
             return false;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public override int GetHashCode()
+        {
+            return DeviceAddress.GetHashCode();
         }
     }
 }

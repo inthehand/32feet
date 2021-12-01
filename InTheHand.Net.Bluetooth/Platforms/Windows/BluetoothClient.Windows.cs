@@ -16,7 +16,7 @@ namespace InTheHand.Net.Sockets
 {
     partial class BluetoothClient
     {
-        private StreamSocket _socket;
+        private readonly StreamSocket _socket;
 
         private void PlatformInitialize()
         {
