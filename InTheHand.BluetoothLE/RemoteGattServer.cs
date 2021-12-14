@@ -46,6 +46,11 @@ namespace InTheHand.Bluetooth
         public bool IsConnected { get { return GetConnected(); } }
 
         /// <summary>
+        /// Gets the maximum transmission unit (MTU) size.
+        /// </summary>
+        public int Mtu { get; internal set; }
+
+        /// <summary>
         /// Open a connection to the remote GATT server.
         /// </summary>
         /// <returns></returns>

@@ -44,6 +44,8 @@ namespace InTheHand.Bluetooth
                 var session = await Windows.Devices.Bluetooth.GenericAttributeProfile.GattSession.FromDeviceIdAsync(Device.NativeDevice.BluetoothDeviceId);
                 if(session != null)
                 {
+                    Mtu = session.MaxPduSize;
+                    session.MaxPduSizeChanged += Session_MaxPduSizeChanged;
                     // Even though this is a local variable, we still want to add it to our dispose list so
                     // we don't have to rely on the GC to clean it up.
                     Device.AddDisposableObject(this, session);
@@ -61,6 +63,12 @@ namespace InTheHand.Bluetooth
             {
                 throw new SecurityException();
             }
+        }
+
+        private void Session_MaxPduSizeChanged(Windows.Devices.Bluetooth.GenericAttributeProfile.GattSession sender, object args)
+        {
+            System.Diagnostics.Debug.WriteLine($"MaxPduSizeChanged Size:{sender.MaxPduSize}");
+            Mtu = sender.MaxPduSize;
         }
 
         void PlatformDisconnect()

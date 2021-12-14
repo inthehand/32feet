@@ -19,8 +19,11 @@ namespace InTheHand.Bluetooth
 
         private void PlatformInit()
         {
+            // android default - replaced by callback after request or change
+            Mtu = 20;
             _gattCallback = new GattCallback(this);
             _gatt = ((ABluetooth.BluetoothDevice)Device).ConnectGatt(Android.App.Application.Context, AutoConnect, _gattCallback, ABluetooth.BluetoothTransports.Le);
+            _gatt.RequestMtu(512);
         }
 
         public static implicit operator ABluetooth.BluetoothGatt(RemoteGattServer gatt)
@@ -48,9 +51,10 @@ namespace InTheHand.Bluetooth
                 _owner = owner;
             }
 
-            public override void OnMtuChanged(ABluetooth.BluetoothGatt gatt, int mtu, [GeneratedEnum] ABluetooth.GattStatus status)
+            public override void OnMtuChanged(ABluetooth.BluetoothGatt gatt, int mtu, ABluetooth.GattStatus status)
             {
                 System.Diagnostics.Debug.WriteLine($"OnMtuChanged Status:{status} Size:{mtu}");
+                _owner.Mtu = mtu;
                 base.OnMtuChanged(gatt, mtu, status);
             }
             

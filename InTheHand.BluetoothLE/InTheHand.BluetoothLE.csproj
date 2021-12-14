@@ -7,7 +7,7 @@
     <Company>In The Hand Ltd</Company>
     <Authors>Peter Foot</Authors>
     <Product>32feet.NET</Product>
-    <Version>4.0.21</Version>
+    <Version>4.0.22</Version>
     <IncludeSymbols>true</IncludeSymbols>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>portable</DebugType>
@@ -20,7 +20,7 @@
     <PackageLicenseUrl></PackageLicenseUrl>
     <Copyright>Copyright (c) 2004-2021 In The Hand Ltd</Copyright>
     <Description>32feet.NET is an open-source project to make personal area networking technologies such as Bluetooth easily accessible from .NET code.</Description>
-    <FileVersion>4.0.21.1014</FileVersion>
+    <FileVersion>4.0.22.1214</FileVersion>
     <AssemblyVersion>4.0.0.0</AssemblyVersion>
     <AssemblyName>InTheHand.BluetoothLE</AssemblyName>
     <PackageIconUrl></PackageIconUrl>
@@ -30,7 +30,7 @@
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <RootNamespace>InTheHand.Bluetooth</RootNamespace>
     <PackageIcon>32feet-package-icon.png</PackageIcon>
-    <PackageReleaseNotes>Includes .NET 5.0 build.</PackageReleaseNotes>
+    <PackageReleaseNotes>Includes .NET 5.0 build. Adds property to query actual MTU size and requests Android to use 512 bytes rather than default of 20 bytes.</PackageReleaseNotes>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>InTheHand.snk</AssemblyOriginatorKeyFile>
     <DelaySign>false</DelaySign>
@@ -90,7 +90,7 @@
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net461' ">
-    <PackageReference Include="Microsoft.Windows.SDK.Contracts" Version="10.0.19041.0" />
+    <PackageReference Include="Microsoft.Windows.SDK.Contracts" Version="10.0.19041.1" />
     <Compile Include="Platforms\Windows\*.cs" />
   </ItemGroup>
 
@@ -115,7 +115,7 @@
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp3.1' ">
-    <PackageReference Include="Microsoft.Windows.SDK.Contracts" Version="10.0.19041.0" />
+    <PackageReference Include="Microsoft.Windows.SDK.Contracts" Version="10.0.19041.1" />
     <Compile Include="Platforms\Windows\*.cs" />
   </ItemGroup>
 
