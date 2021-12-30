@@ -19,14 +19,14 @@
     <GenerateDocumentationFile Condition=" '$(Configuration)' == 'Release' ">true</GenerateDocumentationFile>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <SignAssembly Condition=" '$(Configuration)' == 'Release' ">true</SignAssembly>
-    <AssemblyOriginatorKeyFile Condition=" '$(Configuration)' == 'Release' ">InTheHand.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile Condition=" '$(Configuration)' == 'Release' ">..\\InTheHand.snk</AssemblyOriginatorKeyFile>
     <DelaySign>false</DelaySign>
     <PackageReleaseNotes>Code signed assembly</PackageReleaseNotes>
     <Description>32feet.NET is an open-source project to make personal area networking technologies easily accessible from .NET code. This library supports IrDA networking using .NET Sockets on Windows Desktop.</Description>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Misc\32feet-package-icon.png">
