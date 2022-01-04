@@ -14,6 +14,7 @@ namespace InTheHand.Net
     /// </summary>
     public enum ObexTransport
     {
+        Unknown = 0,
         /// <summary>
         /// Infrared (IrDA)
         /// </summary>

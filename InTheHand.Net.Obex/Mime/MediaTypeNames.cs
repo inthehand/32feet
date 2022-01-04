@@ -109,5 +109,27 @@ namespace InTheHand.Net.Mime
 			/// </summary>
 			public const string EventReport = "x-bt/MAP-event-report";
 		}
+
+		/// <summary>
+		/// Specifies the type of Phone Book Access Profile (PBAP) specific data.
+		/// </summary>
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1034:NestedTypesShouldNotBeVisible")]
+		public static class PhoneBookAccess
+		{
+			/// <summary>
+			/// Used to retrieve a phone book. This is a collection of vCard items with custom fields.
+			/// </summary>
+			public const string PhoneBook = "x-bt/phonebook";
+
+			/// <summary>
+			/// Used to retrieve an individual vCard entry.
+			/// </summary>
+			public const string VCard = "x-bt/vcard";
+
+			/// <summary>
+			/// Used to retrieve a vCard listing from a query.
+			/// </summary>
+			public const string VCardListing = "x-bt/vcard-listing";
+		}
 	}
 }

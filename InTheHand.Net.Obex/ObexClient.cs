@@ -2,7 +2,7 @@
 //
 // InTheHand.Net.Obex.ObexClient
 // 
-// Copyright (c) 2020 In The Hand Ltd, All rights reserved.
+// Copyright (c) 2020-2022 In The Hand Ltd, All rights reserved.
 // This source code is licensed under the MIT License
 
 using System;
@@ -18,6 +18,29 @@ namespace InTheHand.Net.Obex
         private Stream _stream;
 
         private bool disposedValue;
+
+        private Uri _baseAddress;
+        public Uri BaseAddress
+        {
+            get
+            {
+                return _baseAddress;
+            }
+            set
+            {
+                if (_baseAddress != value)
+                {
+                    if (ObexParser.GetObexTransportFromHost(value.Host) != ObexTransport.Unknown)
+                    {
+                        _baseAddress = value;
+                    }
+                    else
+                    {
+                        throw new UriFormatException("Invalid OBEX Uri Host");
+                    }
+                }
+            }
+        }
 
         public Headers.ObexRequestHeaders DefaultRequestHeaders { get; } = new Headers.ObexRequestHeaders();
 

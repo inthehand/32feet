@@ -15,8 +15,28 @@ namespace InTheHand.Net
 {
     internal static class ObexParser
     {
+        internal static ObexTransport GetObexTransportFromHost(string hostname)
+        {
+            if (string.IsNullOrEmpty(hostname))
+                return ObexTransport.Unknown;
 
-        internal static void ParseHeaders(byte[] packet, bool isConnectPacket, ref ushort remoteMaxPacket, Stream bodyStream, WebHeaderCollection headers)
+            if (IrDAAddress.TryParse(hostname, out var address))
+            {
+                return ObexTransport.IrDA;
+            }
+            else if (BluetoothAddress.TryParse(hostname, out BluetoothAddress ba))
+            {
+                return ObexTransport.Bluetooth;
+            }
+            else if (IPAddress.TryParse(hostname, out IPAddress ipAddress))
+            {
+                return ObexTransport.Tcp;
+            }
+
+            return ObexTransport.Unknown;
+        }
+
+            internal static void ParseHeaders(byte[] packet, bool isConnectPacket, ref ushort remoteMaxPacket, Stream bodyStream, WebHeaderCollection headers)
         {
             ObexMethod method = (ObexMethod)packet[0];
             int packetLength = IPAddress.NetworkToHostOrder(BitConverter.ToInt16(packet, 1));
