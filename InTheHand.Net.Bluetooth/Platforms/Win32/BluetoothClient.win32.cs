@@ -2,7 +2,7 @@
 //
 // InTheHand.Net.Bluetooth.BluetoothClient (Win32)
 // 
-// Copyright (c) 2003-2020 In The Hand Ltd, All rights reserved.
+// Copyright (c) 2003-2022 In The Hand Ltd, All rights reserved.
 // This source code is licensed under the MIT License
 
 using InTheHand.Net.Bluetooth.Win32;
@@ -20,6 +20,14 @@ namespace InTheHand.Net.Sockets
 
         private void PlatformInitialize()
         {
+            if (NativeMethods.IsRunningOnMono())
+            {
+                _socket = new Win32Socket();
+            }
+            else
+            {
+                _socket = new Socket(AddressFamilyBluetooth, SocketType.Stream, BluetoothProtocolType.RFComm);
+            }
         }
 
         internal BluetoothClient(Socket s)
@@ -114,36 +122,122 @@ namespace InTheHand.Net.Sockets
         void DoConnect(BluetoothAddress address, Guid service)
         {
             var ep = new BluetoothEndPoint(address, service);
+
+            Connect(ep);
+        }
+
+        /// <summary>
+        /// Connects the client to a remote Bluetooth host using the specified endpoint.
+        /// </summary>
+        /// <param name="remoteEP">The <see cref="BluetoothEndPoint"/> to which you intend to connect.</param>
+        public void Connect(BluetoothEndPoint remoteEP)
+        {
+            if (remoteEP == null)
+                throw new ArgumentNullException(nameof(remoteEP));
+
             if (NativeMethods.IsRunningOnMono())
             {
-                _socket = new Win32Socket();
-                ((Win32Socket)_socket).Connect(ep);
+                ((Win32Socket)_socket).Connect(remoteEP);
             }
             else
             {
-                _socket = new Socket(AddressFamilyBluetooth, SocketType.Stream, BluetoothProtocolType.RFComm);
-                _socket.Connect(ep);
+                _socket.Connect(remoteEP);
             }
-            
         }
 
-        public IAsyncResult BeginConnect(BluetoothEndPoint endpoint, AsyncCallback requestCallback, object state)
-        {
-            IAsyncResult result = Client.BeginConnect(endpoint, requestCallback, state);
-            return result;
-        }
-
-        public void EndConnect(IAsyncResult asyncResult)
-        {
-            Client.EndConnect(asyncResult);
-        }
-
-        public Task ConnectAsync(BluetoothEndPoint endpoint)
+        /// <summary>
+        /// Begins an asynchronous request for a remote host connection.
+        /// </summary>
+        /// <param name="remoteEP">The <see cref="BluetoothEndPoint"/> to which you intend to connect.</param>
+        /// <param name="requestCallback">An <see cref="AsyncCallback"/> delegate that references the method to invoke when the operation is complete.</param>
+        /// <param name="state">A user-defined object that contains information about the connect operation.
+        /// This object is passed to the requestCallback delegate when the operation is complete.</param>
+        /// <returns>An <see cref="IAsyncResult"/> object that references the asynchronous connection.</returns>
+        /// <exception cref="ObjectDisposedException">The underlying Socket has been closed.</exception>
+        /// <exception cref="PlatformNotSupportedException">Async Socket operations not currently supported on Mono</exception>
+        public IAsyncResult BeginConnect(BluetoothEndPoint remoteEP, AsyncCallback requestCallback, object state)
         {
             if (NativeMethods.IsRunningOnMono())
-                throw new PlatformNotSupportedException();
+                throw new PlatformNotSupportedException("Async Socket operations not currently supported on Mono");
 
-            return Task.Factory.FromAsync(BeginConnect, EndConnect, endpoint, null);
+            if (remoteEP == null)
+                throw new ArgumentNullException(nameof(remoteEP));
+
+            if (_socket == null)
+                throw new ObjectDisposedException(nameof(Client));
+
+            return _socket.BeginConnect(remoteEP, requestCallback, state);
+        }
+
+        /// <summary>
+        /// Begins an asynchronous request for a remote host connection.
+        /// The remote host is specified by a <see cref="BluetoothAddress"/> and a service UUID (Guid).
+        /// </summary>
+        /// <param name="address">The BluetoothAddress of the remote host.</param>
+        /// <param name="service">The service UUID of the remote host.</param>
+        /// <param name="requestCallback">An <see cref="AsyncCallback"/> delegate that references the method to invoke when the operation is complete.</param>
+        /// <param name="state">A user-defined object that contains information about the connect operation.
+        /// This object is passed to the requestCallback delegate when the operation is complete.</param>
+        /// <returns>An <see cref="IAsyncResult"/> object that references the asynchronous connection.</returns>
+        /// <exception cref="ObjectDisposedException">The underlying Socket has been closed.</exception>
+        /// <exception cref="PlatformNotSupportedException">Async Socket operations not currently supported on Mono</exception>
+        public IAsyncResult BeginConnect(BluetoothAddress address, Guid service, AsyncCallback requestCallback, object state)
+        {
+            var ep = new BluetoothEndPoint(address, service);
+            return BeginConnect(ep, requestCallback, state);
+        }
+
+        /// <summary>
+        /// Ends a pending asynchronous connection attempt.
+        /// </summary>
+        /// <param name="asyncResult">An IAsyncResult object returned by a call to <see cref="BeginConnect"/>.</param>
+        /// <exception cref="ArgumentNullException">The asyncResult parameter is null.</exception>
+        /// <exception cref="ObjectDisposedException">The underlying Socket has been closed.</exception>
+        /// <exception cref="PlatformNotSupportedException">Async Socket operations not currently supported on Mono</exception>
+        public void EndConnect(IAsyncResult asyncResult)
+        {
+            if (NativeMethods.IsRunningOnMono())
+                throw new PlatformNotSupportedException("Async Socket operations not currently supported on Mono");
+
+            if (_socket == null)
+                throw new ObjectDisposedException(nameof(Client));
+
+            if (asyncResult == null)
+                throw new ArgumentNullException(nameof(asyncResult));
+
+            _socket.EndConnect(asyncResult);
+        }
+
+        /// <summary>
+        /// Connects the client to a remote Bluetooth host using the specified endpoint as an asynchronous operation.
+        /// </summary>
+        /// <param name="remoteEP">The <see cref="BluetoothEndPoint"/> to which you intend to connect.</param>
+        /// <returns></returns>
+        /// <exception cref="PlatformNotSupportedException"></exception>
+        public Task ConnectAsync(BluetoothEndPoint remoteEP)
+        {
+            if (NativeMethods.IsRunningOnMono())
+                throw new PlatformNotSupportedException("Async Socket operations not currently supported on Mono");
+            
+            if (remoteEP == null)
+                throw new ArgumentNullException(nameof(remoteEP));
+
+            return Task.Factory.FromAsync(BeginConnect, EndConnect, remoteEP, null);
+        }
+
+        /// <summary>
+        /// Connects the client to a remote Bluetooth host using the specified address and service UUID as an asynchronous operation.
+        /// </summary>
+        /// <param name="address">The BluetoothAddress of the remote host.</param>
+        /// <param name="service">The service UUID of the remote host.</param>
+        /// <returns></returns>
+        /// <exception cref="PlatformNotSupportedException"></exception>
+        public Task ConnectAsync(BluetoothAddress address, Guid service)
+        {
+            if (NativeMethods.IsRunningOnMono())
+                throw new PlatformNotSupportedException("Async Socket operations not currently supported on Mono");
+
+            return Task.Factory.FromAsync(BeginConnect, EndConnect, address, service, null);
         }
 
         void DoClose()

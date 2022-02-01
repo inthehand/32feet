@@ -2,7 +2,7 @@
 //
 // InTheHand.Net.Bluetooth.BluetoothClient
 // 
-// Copyright (c) 2003-2020 In The Hand Ltd, All rights reserved.
+// Copyright (c) 2003-2022 In The Hand Ltd, All rights reserved.
 // This source code is licensed under the MIT License
 
 using InTheHand.Net.Bluetooth;
@@ -14,7 +14,7 @@ using System.Net.Sockets;
 namespace InTheHand.Net.Sockets
 {
     /// <summary>
-    /// Provides client connections for Bluetooth RfComm network services.
+    /// Provides client connections for Bluetooth Rfcomm network services.
     /// </summary>
     public sealed partial class BluetoothClient : IDisposable
     {
