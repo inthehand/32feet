@@ -2,7 +2,7 @@
 //
 // InTheHand.Net.Sockets.BluetoothClient (.NET Standard)
 // 
-// Copyright (c) 2018-2021 In The Hand Ltd, All rights reserved.
+// Copyright (c) 2018-2022 In The Hand Ltd, All rights reserved.
 // This source code is licensed under the MIT License
 
 using System;
@@ -23,18 +23,18 @@ namespace InTheHand.Net.Sockets
             yield break;
         }
 
-        IReadOnlyCollection<BluetoothDeviceInfo> DoDiscoverDevices(int maxDevices)
+        IReadOnlyCollection<BluetoothDeviceInfo> PlatformDiscoverDevices(int maxDevices)
         {
             List<BluetoothDeviceInfo> devices = new List<BluetoothDeviceInfo>();
 
             return devices.AsReadOnly();
         }
 
-        void DoConnect(BluetoothAddress address, Guid service)
+        void PlatformConnect(BluetoothAddress address, Guid service)
         {
         }
 
-        void DoClose()
+        void PlatformClose()
         {
         }
 
@@ -81,7 +81,7 @@ namespace InTheHand.Net.Sockets
             return string.Empty;
         }
 
-        NetworkStream DoGetStream()
+        NetworkStream PlatformGetStream()
         {
             return null;
         }

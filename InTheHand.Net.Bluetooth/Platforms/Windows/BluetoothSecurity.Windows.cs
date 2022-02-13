@@ -2,7 +2,7 @@
 //
 // InTheHand.Net.Bluetooth.BluetoothSecurity (Windows)
 // 
-// Copyright (c) 2003-2020 In The Hand Ltd, All rights reserved.
+// Copyright (c) 2019-2022 In The Hand Ltd, All rights reserved.
 // This source code is licensed under the MIT License
 
 using System;
@@ -23,7 +23,10 @@ namespace InTheHand.Net.Bluetooth
             var t = Task<bool>.Run(async () =>
             {
                 bluetoothDevice = await BluetoothDevice.FromBluetoothAddressAsync(device.ToUInt64());
-                DevicePairingResultStatus status = DevicePairingResultStatus.NotPaired;
+                DevicePairingResultStatus status = bluetoothDevice.DeviceInformation.Pairing.IsPaired ? DevicePairingResultStatus.Paired : DevicePairingResultStatus.NotPaired;
+
+                if (status == DevicePairingResultStatus.Paired)
+                    return true;
 
                 if (string.IsNullOrEmpty(pin))
                 {
@@ -58,9 +61,10 @@ namespace InTheHand.Net.Bluetooth
             var t = Task<bool>.Run(async () =>
             {
                 bluetoothDevice = await BluetoothDevice.FromBluetoothAddressAsync(device.ToUInt64());
-                var result = await bluetoothDevice.DeviceInformation.Pairing.UnpairAsync();
+                if (!bluetoothDevice.DeviceInformation.Pairing.IsPaired)
+                    return true;
 
-                return result.Status == DeviceUnpairingResultStatus.Unpaired;
+                return (await bluetoothDevice.DeviceInformation.Pairing.UnpairAsync()).Status == DeviceUnpairingResultStatus.Unpaired;
             });
 
             t.Wait();

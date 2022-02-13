@@ -1,8 +1,8 @@
 ﻿// 32feet.NET - Personal Area Networking for .NET
 //
-// InTheHand.Net.Bluetooth.BluetoothDevicePicker (Windows 10)
+// InTheHand.Net.Bluetooth.BluetoothDevicePicker (WinRT)
 // 
-// Copyright (c) 2018-2020 In The Hand Ltd, All rights reserved.
+// Copyright (c) 2018-2022 In The Hand Ltd, All rights reserved.
 // This source code is licensed under the MIT License
 
 using InTheHand.Net.Sockets;
@@ -16,12 +16,12 @@ namespace InTheHand.Net.Bluetooth
 {
     partial class BluetoothDevicePicker
     {
-        DevicePicker picker = new DevicePicker();
+        private DevicePicker picker = new DevicePicker();
             
         private async Task<BluetoothDeviceInfo> DoPickSingleDeviceAsync()
         {
-            Rect bounds = Rect.Empty;
-
+            Rect bounds = Windows.UI.Core.CoreWindow.GetForCurrentThread().Bounds;
+            picker.Filter.SupportedDeviceSelectors.Add(BluetoothDevice.GetDeviceSelector());
             var deviceInfo = await picker.PickSingleDeviceAsync(bounds);
 
             if (deviceInfo == null)

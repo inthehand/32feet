@@ -62,7 +62,7 @@ namespace InTheHand.Net.Sockets
             yield break;
         }
 
-        IReadOnlyCollection<BluetoothDeviceInfo> DoDiscoverDevices(int maxDevices)
+        IReadOnlyCollection<BluetoothDeviceInfo> PlatformDiscoverDevices(int maxDevices)
         {
             List<BluetoothDeviceInfo> devices = new List<BluetoothDeviceInfo>();
 
@@ -119,7 +119,7 @@ namespace InTheHand.Net.Sockets
             return devices.AsReadOnly();
         }
 
-        void DoConnect(BluetoothAddress address, Guid service)
+        void PlatformConnect(BluetoothAddress address, Guid service)
         {
             var ep = new BluetoothEndPoint(address, service);
 
@@ -240,7 +240,7 @@ namespace InTheHand.Net.Sockets
             return Task.Factory.FromAsync(BeginConnect, EndConnect, address, service, null);
         }
 
-        void DoClose()
+        void PlatformClose()
         {
             if(_socket != null && _socket.Connected)
                 _socket.Close();
@@ -334,7 +334,7 @@ namespace InTheHand.Net.Sockets
             return string.Empty;
         }
 
-        System.Net.Sockets.NetworkStream DoGetStream()
+        NetworkStream PlatformGetStream()
         {
             if (Connected)
             {
@@ -344,7 +344,7 @@ namespace InTheHand.Net.Sockets
                 }
                 else
                 {
-                    return new System.Net.Sockets.NetworkStream(_socket, true);
+                    return new NetworkStream(_socket, true);
                 }
             }
             return null;

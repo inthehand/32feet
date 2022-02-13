@@ -1,14 +1,16 @@
 ﻿// 32feet.NET - Personal Area Networking for .NET
 //
-// InTheHand.Net.Sockets.BluetoothClient (Windows 10)
+// InTheHand.Net.Sockets.BluetoothClient (WinRT)
 // 
-// Copyright (c) 2018-2020 In The Hand Ltd, All rights reserved.
+// Copyright (c) 2018-2022 In The Hand Ltd, All rights reserved.
 // This source code is licensed under the MIT License
 
 using System;
 using System.Collections.Generic;
 using System.Net.Sockets;
+using System.Threading.Tasks;
 using Windows.Devices.Bluetooth;
+using Windows.Devices.Bluetooth.Rfcomm;
 using Windows.Devices.Enumeration;
 using Windows.Networking.Sockets;
 
@@ -16,11 +18,16 @@ namespace InTheHand.Net.Sockets
 {
     partial class BluetoothClient
     {
-        private readonly StreamSocket _socket;
+        private StreamSocket streamSocket;
 
         private void PlatformInitialize()
         {
         }
+
+        internal const AddressFamily AddressFamilyBluetooth = (AddressFamily)32;
+        private const SocketOptionLevel SocketOptionLevelRFComm = (SocketOptionLevel)0x03;
+        private const SocketOptionName SocketOptionNameAuthenticate = unchecked((SocketOptionName)0x80000001);
+        private const SocketOptionName SocketOptionNameEncrypt = (SocketOptionName)0x00000002;
 
         IEnumerable<BluetoothDeviceInfo> GetPairedDevices()
         {
@@ -41,7 +48,7 @@ namespace InTheHand.Net.Sockets
             yield break;
         }
 
-        IReadOnlyCollection<BluetoothDeviceInfo> DoDiscoverDevices(int maxDevices)
+        IReadOnlyCollection<BluetoothDeviceInfo> PlatformDiscoverDevices(int maxDevices)
         {
             List<BluetoothDeviceInfo> results = new List<BluetoothDeviceInfo>();
 
@@ -55,12 +62,48 @@ namespace InTheHand.Net.Sockets
             return results.AsReadOnly();
         }
 
-        void DoConnect(BluetoothAddress address, Guid service)
+        void PlatformConnect(BluetoothAddress address, Guid service)
         {
+            var t = Task.Run(async () =>
+            {
+                var device = await BluetoothDevice.FromBluetoothAddressAsync(address);
+                var rfcommServices = await device.GetRfcommServicesForIdAsync(RfcommServiceId.FromUuid(service));
+
+                if(rfcommServices.Error == BluetoothError.Success)
+                {
+                    var rfCommService = rfcommServices.Services[0];
+                    streamSocket = new StreamSocket();
+                    await streamSocket.ConnectAsync(rfCommService.ConnectionHostName, rfCommService.ConnectionServiceName);
+                }
+            });
+
+            t.Wait();
+
+            /*var ep = new BluetoothEndPoint(address, service);
+
+            Connect(ep);*/
         }
 
-        void DoClose()
+        /*
+        /// <summary>
+        /// Connects the client to a remote Bluetooth host using the specified endpoint.
+        /// </summary>
+        /// <param name="remoteEP">The <see cref="BluetoothEndPoint"/> to which you intend to connect.</param>
+        public void Connect(BluetoothEndPoint remoteEP)
         {
+            if (remoteEP == null)
+                throw new ArgumentNullException(nameof(remoteEP));
+
+            _socket.Connect(remoteEP);
+        }*/
+
+        void PlatformClose()
+        {
+            if (streamSocket != null)
+            {
+                streamSocket.Dispose();
+                streamSocket = null;
+            }
         }
 
         bool GetAuthenticate()
@@ -79,7 +122,10 @@ namespace InTheHand.Net.Sockets
 
         bool GetConnected()
         {
-            return false;
+            if (streamSocket == null)
+                return false;
+
+            return true;
         }
 
         bool GetEncrypt()
@@ -101,13 +147,23 @@ namespace InTheHand.Net.Sockets
         {
         }
 
-        public string GetRemoteMachineName()
+        string GetRemoteMachineName()
         {
+            if (GetConnected())
+            {
+                return streamSocket.Information.RemoteHostName.DisplayName;
+            }
+
             return string.Empty;
         }
 
-        NetworkStream DoGetStream()
+        NetworkStream PlatformGetStream()
         {
+            if (Connected)
+            {
+                return new WinRTNetworkStream(streamSocket, true);
+            }
+
             return null;
         }
 

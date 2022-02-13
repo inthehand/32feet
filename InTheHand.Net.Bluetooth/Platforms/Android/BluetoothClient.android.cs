@@ -40,7 +40,7 @@ namespace InTheHand.Net.Sockets
             yield break;
         }
 
-        IReadOnlyCollection<BluetoothDeviceInfo> DoDiscoverDevices(int maxDevices)
+        IReadOnlyCollection<BluetoothDeviceInfo> PlatformDiscoverDevices(int maxDevices)
         {
             List<BluetoothDeviceInfo> devices = new List<BluetoothDeviceInfo>();
 
@@ -85,7 +85,7 @@ namespace InTheHand.Net.Sockets
             return devices.AsReadOnly();
         }
 
-        async void DoConnect(BluetoothAddress address, Guid service)
+        async void PlatformConnect(BluetoothAddress address, Guid service)
         {
             var nativeDevice = ((BluetoothAdapter)_radio).GetRemoteDevice(address.ToString("C"));
 
@@ -123,7 +123,7 @@ namespace InTheHand.Net.Sockets
             }
         }
 
-        void DoClose()
+        void PlatformClose()
         {
             if (_socket is object)
             {
@@ -190,7 +190,7 @@ namespace InTheHand.Net.Sockets
             return null;
         }
 
-        NetworkStream DoGetStream()
+        NetworkStream PlatformGetStream()
         {
             if(Connected)
                 return new AndroidNetworkStream(_socket.InputStream, _socket.OutputStream);

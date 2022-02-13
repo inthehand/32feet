@@ -49,7 +49,7 @@ namespace InTheHand.Net.Sockets
         /// <returns>A collection of BluetoothDeviceInfo objects describing the devices discovered.</returns>
         public IReadOnlyCollection<BluetoothDeviceInfo> DiscoverDevices(int maxDevices)
         {
-            return DoDiscoverDevices(maxDevices);
+            return PlatformDiscoverDevices(maxDevices);
         }
 
         /// <summary>
@@ -60,7 +60,7 @@ namespace InTheHand.Net.Sockets
         /// The standard Bluetooth service classes are provided on <see cref="BluetoothService"/>.</param>
         public void Connect(BluetoothAddress address, Guid service)
         {
-            DoConnect(address, service);
+            PlatformConnect(address, service);
         }
 
         /// <summary>
@@ -69,7 +69,7 @@ namespace InTheHand.Net.Sockets
         /// <remarks>The Close method marks the instance as disposed and requests that the associated Socket close the Bluetooth connection</remarks>
         public void Close()
         {
-            DoClose();
+            PlatformClose();
         }
 
         /// <summary>
@@ -136,7 +136,7 @@ namespace InTheHand.Net.Sockets
         /// <returns></returns>
         public NetworkStream GetStream()
         {
-            return DoGetStream();
+            return PlatformGetStream();
         }
 
         /// <summary>
