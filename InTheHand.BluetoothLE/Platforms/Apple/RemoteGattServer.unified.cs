@@ -100,6 +100,8 @@ namespace InTheHand.Bluetooth
 
         void PlatformDisconnect()
         {
+            if (Device != null)
+            { Bluetooth._manager.CancelPeripheralConnection(Device); }
         }
 
         void PlatformCleanup()
