@@ -146,6 +146,10 @@
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform" Version="6.2.12" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\InTheHand.Net.Bluetooth\InTheHand.Net.Bluetooth.csproj">
+      <Project>{63b0e457-2909-44ab-b8e6-3737f5aba0e3}</Project>
+      <Name>InTheHand.Net.Bluetooth</Name>
+    </ProjectReference>
     <ProjectReference Include="..\RfcommXamarinForms\RfcommXamarinForms.csproj">
       <Project>{DDE66EBD-4276-45EC-B865-13D034410A78}</Project>
       <Name>RfcommXamarinForms</Name>

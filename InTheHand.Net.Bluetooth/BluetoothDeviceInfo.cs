@@ -2,7 +2,7 @@
 //
 // InTheHand.Net.Sockets.BluetoothDeviceInfo
 // 
-// Copyright (c) 2003-2021 In The Hand Ltd, All rights reserved.
+// Copyright (c) 2003-2022 In The Hand Ltd, All rights reserved.
 // This source code is licensed under the MIT License
 
 using InTheHand.Net.Bluetooth;
@@ -115,6 +115,11 @@ namespace InTheHand.Net.Sockets
             return DeviceAddress == other.DeviceAddress;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
         public override bool Equals(object obj)
         {
             if(obj is BluetoothDeviceInfo info)

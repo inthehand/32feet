@@ -203,8 +203,9 @@ namespace InTheHand.Bluetooth
             currentController.PresentViewController(controller, true, null);
 
             return tcs.Task;
-#endif
+#else
             return null;
+#endif
         }
 
         static Task<IReadOnlyCollection<BluetoothDevice>> PlatformScanForDevices(RequestDeviceOptions options)

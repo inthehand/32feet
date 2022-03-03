@@ -1,12 +1,12 @@
 ﻿<Project Sdk="MSBuild.Sdk.Extras/3.0.44">
 
 	<PropertyGroup>
-		<TargetFrameworks>netstandard2.0;netcoreapp3.1;net5.0-windows7.0;net461;monoandroid90;Xamarin.iOS10;uap10.0</TargetFrameworks>
+		<TargetFrameworks>netstandard2.0;netcoreapp3.1;net5.0-windows7.0;net6.0-windows7.0;net461;monoandroid10.0;xamarinios10;uap10.0</TargetFrameworks>
 		<RuntimeIdentifiers Condition=" '$(TargetFramework)' == 'netcoreapp3.1' ">win</RuntimeIdentifiers>
 		<Company>In The Hand Ltd</Company>
 		<Authors>Peter Foot</Authors>
 		<Product>32feet.NET</Product>
-		<Version>4.0.27</Version>
+		<Version>4.0.28</Version>
 		<RepositoryUrl>https://github.com/inthehand/32feet</RepositoryUrl>
 		<PublishRepositoryUrl>true</PublishRepositoryUrl>
 		<IncludeSymbols>true</IncludeSymbols>
@@ -17,7 +17,7 @@
 		<PackageLicenseUrl></PackageLicenseUrl>
 		<Copyright>Copyright (c) 2004-2022 In The Hand Ltd</Copyright>
 		<Description>32feet.NET is an open-source project to make personal area networking technologies such as Bluetooth easily accessible from .NET code.</Description>
-		<FileVersion>4.0.27.0213</FileVersion>
+		<FileVersion>4.0.28.0303</FileVersion>
 		<AssemblyVersion>4.0.0.0</AssemblyVersion>
 		<AssemblyName>InTheHand.Net.Bluetooth</AssemblyName>
 		<GenerateDocumentationFile Condition=" '$(Configuration)' == 'Release' ">true</GenerateDocumentationFile>
@@ -46,11 +46,11 @@
 		<None Include="Platforms\**\*.*" />
 	</ItemGroup>
 
-	<PropertyGroup Condition="'$(TargetFramework)' == 'monoandroid90'">
+	<PropertyGroup Condition="'$(TargetFramework)' == 'monoandroid10.0'">
 		<TargetFrameworkIdentifier>MonoAndroid</TargetFrameworkIdentifier>
-		<TargetFrameworkVersion>v9.0</TargetFrameworkVersion>
+		<TargetFrameworkVersion>v11.0</TargetFrameworkVersion>
 		<AndroidUseLatestPlatformSdk>False</AndroidUseLatestPlatformSdk>
-		<DefineConstants>$(DefineConstants);MONOANDROID9_0</DefineConstants>
+		<DefineConstants>$(DefineConstants);MONOANDROID11_0</DefineConstants>
 		<LanguageTargets>$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets</LanguageTargets>
 	</PropertyGroup>
 
@@ -75,11 +75,11 @@
 		<ProduceReferenceAssembly>true</ProduceReferenceAssembly>
 	</PropertyGroup>
 	
-	<PropertyGroup Condition=" '$(TargetFramework)' == 'Xamarin.iOS10' ">
+	<PropertyGroup Condition=" '$(TargetFramework)' == 'xamarinios10' ">
 	</PropertyGroup>
 
-	<ItemGroup Condition=" '$(TargetFramework)' == 'monoandroid90' ">
-		<PackageReference Include="Xamarin.Essentials" Version="1.6.1" />
+	<ItemGroup Condition=" '$(TargetFramework)' == 'monoandroid10.0' ">
+		<PackageReference Include="Xamarin.Essentials" Version="1.7.1" />
 		<Reference Include="System.Xml.Linq" />
 	</ItemGroup>
 
@@ -87,7 +87,7 @@
 		<Compile Include="Platforms\Standard\*.cs" />
 	</ItemGroup>
 
-	<ItemGroup Condition=" '$(TargetFramework)' == 'monoandroid90' ">
+	<ItemGroup Condition=" '$(TargetFramework)' == 'monoandroid10.0' ">
 		<Compile Include="Platforms\Android\*.cs" />
 	</ItemGroup>
 
@@ -95,7 +95,7 @@
 		<Compile Include="Platforms\Windows\*.cs" />
 	</ItemGroup>
 
-	<ItemGroup Condition=" '$(TargetFramework)' == 'Xamarin.iOS10' ">
+	<ItemGroup Condition=" '$(TargetFramework)' == 'xamarinios10' ">
 		<Reference Include="System.Xml.Linq" />
 		<Compile Include="Platforms\iOS\*.cs" />
 	</ItemGroup>
@@ -114,6 +114,18 @@
 
 	<ItemGroup Condition=" '$(TargetFramework)' == 'net5.0-windows7.0' ">
 		<Compile Include="Platforms\Win32\*.cs" />
+	</ItemGroup>
+
+	<ItemGroup Condition=" '$(TargetFramework)' == 'net6.0-windows7.0' ">
+		<Compile Include="Platforms\Win32\*.cs" />
+	</ItemGroup>
+
+	<ItemGroup Condition=" '$(TargetFramework)' == 'net5.0-windows10.0.19041.0' ">
+		<Compile Include="Platforms\Windows\*.cs" />
+	</ItemGroup>
+
+	<ItemGroup Condition=" '$(TargetFramework)' == 'net6.0-windows10.0.19041.0' ">
+		<Compile Include="Platforms\Windows\*.cs" />
 	</ItemGroup>
 
 </Project>

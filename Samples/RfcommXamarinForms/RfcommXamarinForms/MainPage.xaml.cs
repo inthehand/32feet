@@ -30,6 +30,9 @@ namespace RfcommXamarinForms
 
         private async void Button_Clicked(object sender, System.EventArgs e)
         {
+            var r = BluetoothRadio.Default;
+            r.Mode = RadioMode.PowerOff;
+
             BluetoothDeviceInfo device = null;
 
             BluetoothClient client = new BluetoothClient();
@@ -42,6 +45,9 @@ namespace RfcommXamarinForms
 
             if (device != null)
             {
+                bool paired = BluetoothSecurity.PairRequest(device.DeviceAddress, "0000");
+                await Task.Delay(2000);
+                //bool unpaired = BluetoothSecurity.RemoveDevice(device.DeviceAddress);
                 client.Connect(device.DeviceAddress, BluetoothService.SerialPort);
                 if (client.Connected)
                 {

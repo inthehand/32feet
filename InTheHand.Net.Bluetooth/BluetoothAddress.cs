@@ -2,7 +2,7 @@
 //
 // InTheHand.Net.BluetoothAddress
 // 
-// Copyright (c) 2003-2021 In The Hand Ltd, All rights reserved.
+// Copyright (c) 2003-2022 In The Hand Ltd, All rights reserved.
 // This source code is licensed under the MIT License
 
 using System;
@@ -134,6 +134,11 @@ namespace InTheHand.Net
         /// <returns>A hash code for the current object.</returns>
         public override int GetHashCode() => _address.GetHashCode();
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
         public int CompareTo(BluetoothAddress other)
         {
             if (other != null)
@@ -211,6 +216,10 @@ namespace InTheHand.Net
             return result.ToString();
         }
 
+        /// <summary>
+        /// Returns a default string representation of the BluetoothAddress.
+        /// </summary>
+        /// <returns></returns>
         public override string ToString()
         {
             return ToString("N");

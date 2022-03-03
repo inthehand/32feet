@@ -1,6 +1,6 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="Bluetooth.android.cs" company="In The Hand Ltd">
-//   Copyright (c) 2018-20 In The Hand Ltd, All rights reserved.
+//   Copyright (c) 2018-22 In The Hand Ltd, All rights reserved.
 //   This source code is licensed under the MIT License - see License.txt
 // </copyright>
 //-----------------------------------------------------------------------
@@ -15,7 +15,6 @@ using Android.Bluetooth.LE;
 using Android.Content;
 using Android.Content.PM;
 using Android.OS;
-using Android.Runtime;
 using Xamarin.Essentials;
 
 namespace InTheHand.Bluetooth
@@ -47,13 +46,7 @@ namespace InTheHand.Bluetooth
         static Task<BluetoothDevice> PlatformRequestDevice(RequestDeviceOptions options)
         {
             _currentRequest = options;
-            //Intent i = new Intent("android.bluetooth.devicepicker.action.LAUNCH");
-            //i.PutExtra("android.bluetooth.devicepicker.extra.LAUNCH_PACKAGE", Application.Context.PackageName);
-            //i.PutExtra("android.bluetooth.devicepicker.extra.DEVICE_PICKER_LAUNCH_CLASS", Java.Lang.Class.FromType(typeof(DevicePickerReceiver)).Name);
-            //i.PutExtra("android.bluetooth.devicepicker.extra.NEED_AUTH", false);
-
-            //Plugin.CurrentActivity.CrossCurrentActivity.Current.Activity.StartActivityForResult(i, 1);
-
+            
             Intent i = new Intent(Platform.CurrentActivity, typeof(DevicePickerActivity));
             Platform.CurrentActivity.StartActivity(i);
 

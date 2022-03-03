@@ -95,6 +95,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\InTheHand.Net.Bluetooth\InTheHand.Net.Bluetooth.csproj">
+      <Project>{63b0e457-2909-44ab-b8e6-3737f5aba0e3}</Project>
+      <Name>InTheHand.Net.Bluetooth</Name>
+    </ProjectReference>
     <ProjectReference Include="..\RfcommXamarinForms\RfcommXamarinForms.csproj">
       <Project>{9ab2d665-1148-4214-ba17-77acd56cb20f}</Project>
       <Name>RfcommXamarinForms</Name>
@@ -102,7 +106,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Xamarin.Forms.Platform.WPF">
-      <Version>5.0.0.2012</Version>
+      <Version>5.0.0.2337</Version>
     </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

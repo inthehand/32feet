@@ -2,7 +2,7 @@
 //
 // InTheHand.Net.Bluetooth.ServiceRecordBuilder
 // 
-// Copyright (c) 2003-2020 In The Hand Ltd, All rights reserved.
+// Copyright (c) 2003-2022 In The Hand Ltd, All rights reserved.
 // This source code is licensed under the MIT License
 
 using System;
@@ -385,8 +385,7 @@ namespace InTheHand.Net.Bluetooth.Sdp
         /// <param name="uuid16">A <see cref="T:System.UInt16"/> containing a short-form 
         /// UUID for the advertised service.
         /// </param>
-        [CLSCompliant(false)] //->
-        public void AddServiceClass(UInt16 uuid16)
+        public void AddServiceClass(ushort uuid16)
         {
             m_classIds.Add((int)uuid16);
         }
@@ -405,8 +404,7 @@ namespace InTheHand.Net.Bluetooth.Sdp
         /// <param name="uuid32">A <see cref="T:System.UInt32"/> containing a short-form 
         /// UUID for the advertised service.
         /// </param>
-        [CLSCompliant(false)] //->
-        public void AddServiceClass(UInt32 uuid32)
+        public void AddServiceClass(uint uuid32)
         {
             m_classIds.Add(unchecked((int)uuid32));
         }
@@ -580,7 +578,6 @@ namespace InTheHand.Net.Bluetooth.Sdp
         /// <param name="id">The Attribute Id as a <see cref="T:System.UInt16"/>.</param>
         /// <param name="elementType">The type of the element as an <see cref="T:InTheHand.Net.Bluetooth.ElementType"/>.</param>
         /// <param name="value">The value for the new element.</param>
-        [CLSCompliant(false)]
         public void AddCustomAttribute(ushort id, ElementType elementType, object value)
         {
             var ids = unchecked((short)id);

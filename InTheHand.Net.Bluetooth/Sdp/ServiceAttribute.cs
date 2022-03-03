@@ -2,7 +2,7 @@
 //
 // InTheHand.Net.Bluetooth.ServiceAttribute
 // 
-// Copyright (c) 2003-2020 In The Hand Ltd, All rights reserved.
+// Copyright (c) 2003-2022 In The Hand Ltd, All rights reserved.
 // This source code is licensed under the MIT License
 
 using InTheHand.Net.Bluetooth.AttributeIds;
@@ -50,7 +50,6 @@ namespace InTheHand.Net.Bluetooth.Sdp
         /// -
         /// <param name="id">The Attribute Id as a <see cref="T:System.UInt16"/>.</param>
         /// <param name="value">The value as a <see cref="T:InTheHand.Net.Bluetooth.ServiceElement"/>.</param>
-        [CLSCompliant(false)] // instead use .ctor(ServiceAttributeId,AttributeValue).
         public ServiceAttribute(ushort id, ServiceElement value)
             : this(unchecked((ServiceAttributeId)(Int16)id), value)
         { }

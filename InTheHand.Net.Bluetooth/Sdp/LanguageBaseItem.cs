@@ -2,7 +2,7 @@
 //
 // InTheHand.Net.Bluetooth.LanguageBaseItem
 // 
-// Copyright (c) 2003-2020 In The Hand Ltd, All rights reserved.
+// Copyright (c) 2003-2022 In The Hand Ltd, All rights reserved.
 // This source code is licensed under the MIT License
 
 using InTheHand.Net.Bluetooth.AttributeIds;
@@ -74,8 +74,7 @@ namespace InTheHand.Net.Bluetooth.AttributeIds
         /// in the record.
         /// e.g. 0x100 for the Primary language.
         /// </param>
-        [CLSCompliant(false)] // internal use only
-        public LanguageBaseItem(UInt16 naturalLanguage, UInt16 encodingId, UInt16 baseAttributeId)
+        public LanguageBaseItem(ushort naturalLanguage, ushort encodingId, ushort baseAttributeId)
             : this(naturalLanguage, encodingId, unchecked((ServiceAttributeId)baseAttributeId))
         { }
 
@@ -119,8 +118,7 @@ namespace InTheHand.Net.Bluetooth.AttributeIds
         /// in the record.
         /// e.g. 0x100 for the Primary language.
         /// </param>
-        [CLSCompliant(false)] // internal use only
-        public LanguageBaseItem(UInt16 naturalLanguage, UInt16 encodingId, ServiceAttributeId baseAttributeId)
+        public LanguageBaseItem(ushort naturalLanguage, ushort encodingId, ServiceAttributeId baseAttributeId)
         {
             if (baseAttributeId == 0) {
                 throw new ArgumentOutOfRangeException("baseAttributeId");
@@ -145,8 +143,8 @@ namespace InTheHand.Net.Bluetooth.AttributeIds
         /// in the record.
         /// e.g. 0x100 for the Primary language.
         /// </param>
-        public LanguageBaseItem(Int16 naturalLanguage, Int16 encodingId, ServiceAttributeId baseAttributeId)
-            :this(unchecked((UInt16)naturalLanguage), unchecked((UInt16)encodingId), baseAttributeId)
+        public LanguageBaseItem(short naturalLanguage, short encodingId, ServiceAttributeId baseAttributeId)
+            :this(unchecked((ushort)naturalLanguage), unchecked((ushort)encodingId), baseAttributeId)
         { }
 
 
@@ -167,8 +165,7 @@ namespace InTheHand.Net.Bluetooth.AttributeIds
         /// in the record.
         /// e.g. 0x100 for the Primary language.
         /// </param>
-        [CLSCompliant(false)]
-        public LanguageBaseItem(String naturalLanguage, UInt16 encodingId, ServiceAttributeId baseAttributeId)
+        public LanguageBaseItem(string naturalLanguage, ushort encodingId, ServiceAttributeId baseAttributeId)
             : this(GetLanguageIdStringAsBytes(naturalLanguage), encodingId, baseAttributeId)
         { }
 
@@ -187,32 +184,32 @@ namespace InTheHand.Net.Bluetooth.AttributeIds
         /// in the record.
         /// e.g. 0x100 for the Primary language.
         /// </param>
-        public LanguageBaseItem(String naturalLanguage, Int16 encodingId, ServiceAttributeId baseAttributeId)
-            : this(GetLanguageIdStringAsBytes(naturalLanguage), unchecked((UInt16)encodingId), baseAttributeId)
+        public LanguageBaseItem(string naturalLanguage, short encodingId, ServiceAttributeId baseAttributeId)
+            : this(GetLanguageIdStringAsBytes(naturalLanguage), unchecked((ushort)encodingId), baseAttributeId)
         { }
 
         //--------------------
-        private static UInt16 GetLanguageIdStringAsBytes(String language)
+        private static ushort GetLanguageIdStringAsBytes(string language)
         {
             if (language.Length != 2) {
                 throw new ArgumentException(ErrorMsgLangMustAsciiTwoChars);
             }
-            byte[] strBytes = System.Text.Encoding.UTF8.GetBytes(language);
+            byte[] strBytes = Encoding.UTF8.GetBytes(language);
             if (strBytes.Length != 2) {
                 throw new ArgumentException(ErrorMsgLangMustAsciiTwoChars);
             }
-            Int16 net16 = BitConverter.ToInt16(strBytes, 0);
-            Int16 host16 = System.Net.IPAddress.NetworkToHostOrder(net16);
-            UInt16 u16 = unchecked((UInt16)host16);
+            short net16 = BitConverter.ToInt16(strBytes, 0);
+            short host16 = System.Net.IPAddress.NetworkToHostOrder(net16);
+            ushort u16 = unchecked((ushort)host16);
             return u16;
         }
 
         private string GetLanguageIdBytesAsString()
         {
-            Int16 host16 = unchecked((Int16)m_naturalLanguage);
-            Int16 net16 = System.Net.IPAddress.HostToNetworkOrder(host16);
+            short host16 = unchecked((short)m_naturalLanguage);
+            short net16 = System.Net.IPAddress.HostToNetworkOrder(host16);
             byte[] asBytes = BitConverter.GetBytes(net16);
-            String asString = Encoding.ASCII.GetString(asBytes, 0, asBytes.Length);
+            string asString = Encoding.ASCII.GetString(asBytes, 0, asBytes.Length);
             return asString;
         }
 
@@ -268,11 +265,11 @@ namespace InTheHand.Net.Bluetooth.AttributeIds
                 if (e1Lang.ElementType != ElementType.UInt16 || e2EncId.ElementType != ElementType.UInt16 || e3BaseId.ElementType != ElementType.UInt16) {
                     throw new System.Net.ProtocolViolationException(ErrorMsgLangBaseListParseNotU16);
                 }
-                if ((UInt16)e3BaseId.Value == 0) {
+                if ((ushort)e3BaseId.Value == 0) {
                     throw new System.Net.ProtocolViolationException(ErrorMsgLangBaseListParseBaseInvalid);
                 }
                 LanguageBaseItem item = new LanguageBaseItem(
-                        (UInt16)e1Lang.Value, (UInt16)e2EncId.Value, (UInt16)e3BaseId.Value);
+                        (ushort)e1Lang.Value, (ushort)e2EncId.Value, (ushort)e3BaseId.Value);
                 items[i] = item;
             }
             return items;
@@ -304,13 +301,13 @@ namespace InTheHand.Net.Bluetooth.AttributeIds
             foreach (LanguageBaseItem item in list) {
                 //String lang = item.NaturalLanguage;
                 //UInt16 langNumerical = GetLanguageIdStringAsBytes(lang);
-                UInt16 langNumerical = item.NaturalLanguageAsUInt16;
+                ushort langNumerical = item.NaturalLanguageAsUInt16;
                 children.Add(new ServiceElement(ElementType.UInt16,
-                    (UInt16)langNumerical));
+                    (ushort)langNumerical));
                 children.Add(new ServiceElement(ElementType.UInt16,
-                    (UInt16)item.EncodingId));
+                    (ushort)item.EncodingId));
                 children.Add(new ServiceElement(ElementType.UInt16,
-                    (UInt16)item.AttributeIdBase));
+                    (ushort)item.AttributeIdBase));
             }
             return new ServiceElement(ElementType.ElementSequence,
                 children);
@@ -453,7 +450,7 @@ namespace InTheHand.Net.Bluetooth.AttributeIds
             }
             //TODO LanguageBaseItem.GetEncoding--NotImplementedException rather than NotSupportedException?
             throw new NotSupportedException(
-                String.Format(System.Globalization.CultureInfo.InvariantCulture,
+                string.Format(System.Globalization.CultureInfo.InvariantCulture,
                     ErrorMsgFormatUnrecognizedEncodingId,
                     m_encodingId));
         }
@@ -462,11 +459,11 @@ namespace InTheHand.Net.Bluetooth.AttributeIds
 
         private struct IetfCharsetIdToDotNetEncodingNameMap
         {
-            public readonly UInt16 IetfCharsetId;
-            public readonly String DotNetEncodingName;
+            public readonly ushort IetfCharsetId;
+            public readonly string DotNetEncodingName;
 
             internal IetfCharsetIdToDotNetEncodingNameMap(
-                UInt16 ietfCharsetId_, String DotNetEncodingName_)
+                ushort ietfCharsetId_, string DotNetEncodingName_)
             {
                 this.IetfCharsetId = ietfCharsetId_;
                 this.DotNetEncodingName = DotNetEncodingName_;
@@ -518,7 +515,7 @@ namespace InTheHand.Net.Bluetooth.AttributeIds
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1021:AvoidOutParameters", MessageId = "0#")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1021:AvoidOutParameters", MessageId = "1#")]
 #endif
-        public static String TestAllDefinedEncodingMappingRows(out int numberSuccessful, out int numberFailed)
+        public static string TestAllDefinedEncodingMappingRows(out int numberSuccessful, out int numberFailed)
         {
             numberSuccessful = 0;
             numberFailed = 0;
@@ -542,22 +539,22 @@ namespace InTheHand.Net.Bluetooth.AttributeIds
 
         //--------------------------------------------------------------
         /// <exclude/>
-        public const String ErrorMsgLangBaseListParseNotU16
+        public const string ErrorMsgLangBaseListParseNotU16
             = "Element in LanguageBaseAttributeIdList not type UInt16.";
         /// <exclude/>
-        public const String ErrorMsgLangBaseListParseBaseInvalid
+        public const string ErrorMsgLangBaseListParseBaseInvalid
             = "Base element in LanguageBaseAttributeIdList has unacceptable value."; 
         /// <exclude/>
-        public const String ErrorMsgLangBaseListParseNotSequence
+        public const string ErrorMsgLangBaseListParseNotSequence
             = "LanguageBaseAttributeIdList elementSequence not an ElementSequence.";
         /// <exclude/>
-        public const String ErrorMsgLangBaseListParseNotInThrees
+        public const string ErrorMsgLangBaseListParseNotInThrees
             = "LanguageBaseAttributeIdList must contain items in groups of three.";
         /// <exclude/>
-        public const String ErrorMsgFormatUnrecognizedEncodingId
+        public const string ErrorMsgFormatUnrecognizedEncodingId
             = "Unrecognized character encoding ({0}); add to LanguageBaseItem mapping table.";
         /// <exclude/>
-        public const String ErrorMsgLangMustAsciiTwoChars
+        public const string ErrorMsgLangMustAsciiTwoChars
             = "A language code must be a two byte ASCII string.";
             
     }//class
