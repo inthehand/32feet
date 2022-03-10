@@ -67,9 +67,10 @@ namespace InTheHand.Bluetooth
 
         static async Task<IReadOnlyCollection<BluetoothDevice>> PlatformScanForDevices(RequestDeviceOptions options)
         {
+            List<ScanFilter> filters = new List<ScanFilter>();
+                
             if (options != null)
             {
-                List<ScanFilter> filters = new List<ScanFilter>();
                 foreach (var f in options.Filters)
                 {
                     foreach (var u in f.Services)
@@ -86,9 +87,13 @@ namespace InTheHand.Bluetooth
             var settings = sb.Build();
             var callback = new DevicesCallback();
 
-            _manager.Adapter.BluetoothLeScanner.StartScan(callback);
+            _manager.Adapter.BluetoothLeScanner.StartScan(filters, settings, callback);
 
-            callback.WaitOne();
+            await Task.Run(() =>
+            {
+                callback.WaitOne();
+            });
+            
 
             return callback.Devices.AsReadOnly();
         }
@@ -116,6 +121,12 @@ namespace InTheHand.Bluetooth
 
             public void WaitOne()
             {
+                Task.Run(async () =>
+                {
+                    // ensure discovery times out after fixed delay
+                    await Task.Delay(5000);
+                    handle.Set();
+                });
                 handle.WaitOne();
             }
 
@@ -130,9 +141,10 @@ namespace InTheHand.Bluetooth
             {
                 System.Diagnostics.Debug.WriteLine("OnScanResult");
 
-                Devices.Add(result.Device);
-                if (callbackType == ScanCallbackType.AllMatches)
-                    handle.Set();
+                if (!Devices.Contains(result.Device))
+                {
+                    Devices.Add(result.Device);
+                }
 
                 base.OnScanResult(callbackType, result);
             }

@@ -52,5 +52,16 @@ namespace InTheHand.Bluetooth
         /// Fired when an active GATT connection is lost.
         /// </summary>
         public event EventHandler GattServerDisconnected;
+
+        public override bool Equals(object obj)
+        {
+            BluetoothDevice device = obj as BluetoothDevice;
+            if (device != null)
+            {
+                return Id.Equals(device.Id);
+            }
+
+            return base.Equals(obj);
+        }
     }
 }
