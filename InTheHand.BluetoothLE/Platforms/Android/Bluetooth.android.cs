@@ -93,6 +93,8 @@ namespace InTheHand.Bluetooth
             {
                 callback.WaitOne();
             });
+
+            _manager.Adapter.BluetoothLeScanner.StopScan(callback);
             
 
             return callback.Devices.AsReadOnly();
