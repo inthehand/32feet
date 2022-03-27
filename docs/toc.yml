@@ -1,0 +1,14 @@
+- name: Welcome
+  href: articles/
+- name: InTheHand.BluetoothLE
+  href: api/InTheHand.BluetoothLE
+  homepage: api/InTheHand.BluetoothLE/InTheHand.Bluetooth.html
+- name: InTheHand.Net.Bluetooth
+  href: api/InTheHand.Net.Bluetooth
+  homepage: api/InTheHand.Net.Bluetooth/InTheHand.Net.Bluetooth.html
+- name: InTheHand.Net.IrDA
+  href: api/InTheHand.Net.IrDA
+  homepage: api/InTheHand.Net.IrDA/InTheHand.Net.IrDA.html
+- name: InTheHand.Net.Obex
+  href: api/InTheHand.Net.Obex
+  homepage: api/InTheHand.Net.Obex/InTheHand.Net.Obex.html

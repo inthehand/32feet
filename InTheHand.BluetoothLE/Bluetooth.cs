@@ -20,7 +20,7 @@ namespace InTheHand.Bluetooth
     /// Several platforms require permissions for this functionality to work:-
     /// iOS 13 (and above) - Set NSBluetoothAlwaysUsageDescription in your Info.plist to a descriptive message to be displayed to the user
     /// iOS (older versions) - Set NSBluetoothPeripheralUsageDescription in your Info.plist to a descriptive message to be displayed to the user
-    /// Android - Add <uses-permission android:name="android.permission.BLUETOOTH" /> to your android manifest. To enable scanning also add <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" /> and <uses-permission android:name="android.permission.COARSE_LOCATION" />
+    /// Android - Add &lt;uses-permission android:name="android.permission.BLUETOOTH" /&gt; to your android manifest. To enable scanning also add &lt;uses-permission android:name="android.permission.BLUETOOTH_ADMIN" /&gt; and &lt;uses-permission android:name="android.permission.COARSE_LOCATION" /&gt;
     /// Windows - Add the Bluetooth permission
     /// </remarks>
     public static partial class Bluetooth
