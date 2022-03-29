@@ -2,17 +2,23 @@
 //
 // InTheHand.Net.Bluetooth.BluetoothRadio
 // 
-// Copyright (c) 2003-2020 In The Hand Ltd, All rights reserved.
+// Copyright (c) 2003-2022 In The Hand Ltd, All rights reserved.
 // This source code is licensed under the MIT License
 
 using System;
 
 namespace InTheHand.Net.Bluetooth
 {
+    /// <summary>
+    /// Represents a local Bluetooth Radio device.
+    /// </summary>
     public sealed partial class BluetoothRadio : IDisposable
     {
         private static  BluetoothRadio s_default;
 
+        /// <summary>
+        /// Returns the default Bluetooth radio (if present).
+        /// </summary>
         public static BluetoothRadio Default
         {
             get
@@ -31,6 +37,9 @@ namespace InTheHand.Net.Bluetooth
 
         }
 
+        /// <summary>
+        /// Returns the friendly name of the local Bluetooth radio.
+        /// </summary>
         public string Name
         {
             get
@@ -39,6 +48,9 @@ namespace InTheHand.Net.Bluetooth
             }
         }
 
+        /// <summary>
+        /// Get the address of the local Bluetooth radio device.
+        /// </summary>
         public BluetoothAddress LocalAddress
         {
             get
@@ -47,6 +59,9 @@ namespace InTheHand.Net.Bluetooth
             }
         }
 
+        /// <summary>
+        /// Gets or sets the Scan Mode of the radio.
+        /// </summary>
         public RadioMode Mode
         {
             get

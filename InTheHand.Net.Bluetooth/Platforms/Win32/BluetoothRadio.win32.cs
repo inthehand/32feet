@@ -2,11 +2,12 @@
 //
 // InTheHand.Net.Bluetooth.BluetoothRadio (Win32)
 // 
-// Copyright (c) 2003-2021 In The Hand Ltd, All rights reserved.
+// Copyright (c) 2003-2022 In The Hand Ltd, All rights reserved.
 // This source code is licensed under the MIT License
 
 using InTheHand.Net.Bluetooth.Win32;
 using System;
+using System.Runtime.InteropServices;
 
 namespace InTheHand.Net.Bluetooth
 {
@@ -19,16 +20,16 @@ namespace InTheHand.Net.Bluetooth
             IntPtr findHandle = NativeMethods.BluetoothFindFirstRadio(ref p, out IntPtr hRadio);
 
             if (hRadio != IntPtr.Zero)
-            {              
+            {
                 int result = NativeMethods.BluetoothGetRadioInfo(hRadio, ref info);
             }
 
-            if(findHandle != IntPtr.Zero)
+            if (findHandle != IntPtr.Zero)
             {
                 NativeMethods.BluetoothFindRadioClose(findHandle);
             }
 
-            if(hRadio != IntPtr.Zero)
+            if (hRadio != IntPtr.Zero)
             {
                 return new BluetoothRadio(info, hRadio);
             }
@@ -55,8 +56,19 @@ namespace InTheHand.Net.Bluetooth
             return _radio.address;
         }
 
+        /*private void ReadLocalRadioInfo()
+        {
+            NativeMethods.BTH_LOCAL_RADIO_INFO buffer = new NativeMethods.BTH_LOCAL_RADIO_INFO();
+            int returned;
+            bool result = NativeMethods.DeviceIoControl(_handle, IOCTL_BTH.GET_LOCAL_INFO, IntPtr.Zero, 0, ref buffer, Marshal.SizeOf(buffer), out returned, IntPtr.Zero);
+        }*/
+
         private RadioMode GetMode()
         {
+            // if radio has been turned off enumeration will no longer return a radio handle
+            if (GetDefault() == null)
+                return RadioMode.PowerOff;
+
             if (NativeMethods.BluetoothIsDiscoverable(_handle))
             {
                 return RadioMode.Discoverable;
