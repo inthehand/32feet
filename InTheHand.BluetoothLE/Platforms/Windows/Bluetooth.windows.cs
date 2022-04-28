@@ -1,12 +1,13 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="Bluetooth.windows.cs" company="In The Hand Ltd">
-//   Copyright (c) 2018-20 In The Hand Ltd, All rights reserved.
+//   Copyright (c) 2018-22 In The Hand Ltd, All rights reserved.
 //   This source code is licensed under the MIT License - see License.txt
 // </copyright>
 //-----------------------------------------------------------------------
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
@@ -31,6 +32,8 @@ namespace InTheHand.Bluetooth
 
         static async Task<BluetoothDevice> PlatformRequestDevice(RequestDeviceOptions options)
         {
+            string namePrefix = options.Filters.FirstOrDefault(f => !string.IsNullOrEmpty(f.NamePrefix))?.NamePrefix;
+
             DevicePicker picker = new DevicePicker();
             Rect bounds = Rect.Empty;
 #if !UAP
@@ -78,6 +81,10 @@ namespace InTheHand.Bluetooth
             {
                 foreach (var filter in options.Filters)
                 {
+                    if(!string.IsNullOrEmpty(filter.NamePrefix))
+                    {
+                        picker.Filter.SupportedDeviceSelectors.Add($"System.ItemNameDisplay:~<\"{namePrefix}\" AND " + BluetoothLEDevice.GetDeviceSelector());
+                    }
                     if (!string.IsNullOrEmpty(filter.Name))
                     {
                         picker.Filter.SupportedDeviceSelectors.Add(BluetoothLEDevice.GetDeviceSelectorFromDeviceName(filter.Name));
