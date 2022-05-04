@@ -19,11 +19,8 @@ namespace InTheHand.Bluetooth
 
         private void PlatformInit()
         {
-            // android default - replaced by callback after request or change
-            Mtu = 20;
             _gattCallback = new GattCallback(this);
             _gatt = ((ABluetooth.BluetoothDevice)Device).ConnectGatt(Android.App.Application.Context, AutoConnect, _gattCallback, ABluetooth.BluetoothTransports.Le);
-            _gatt.RequestMtu(512);
         }
 
         public static implicit operator ABluetooth.BluetoothGatt(RemoteGattServer gatt)
