@@ -119,5 +119,15 @@ namespace InTheHand.Bluetooth
                 PlatformSetPreferredPhy(value);
             }
         }
+        
+        /// <summary>
+        /// Set the maximum transmission unit (MTU) size.        
+        /// <param name="mtu">mtu size from 0 to 512</param>
+        /// <returns>true if succesfully</returns>
+        /// <remarks>Works only in Android platform</remarks>
+        public bool SetMtu(int mtu)
+        {
+            return PlatformSetMtu(mtu);
+        }
     }
 }
