@@ -51,5 +51,11 @@ namespace InTheHand.Bluetooth
         void PlatformSetPreferredPhy(BluetoothPhy phy)
         {
         }
+        
+        bool PlatformSetMtu(int mtu)
+        {
+            return false;
+        }
+
     }
 }
