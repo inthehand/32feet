@@ -259,6 +259,11 @@ namespace InTheHand.Bluetooth
                 _gatt.SetPreferredPhy(ToAndroidPhy(phy), ToAndroidPhy(phy), ABluetooth.BluetoothPhyOption.NoPreferred);
         }
 
+        bool PlatformSetMtu(int mtu)
+        {
+            return _gatt.RequestMtu(mtu);
+        }
+        
         private static ABluetooth.BluetoothPhy ToAndroidPhy(BluetoothPhy phy)
         {
             switch(phy)
