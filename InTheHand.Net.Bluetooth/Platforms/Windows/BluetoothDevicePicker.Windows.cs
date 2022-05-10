@@ -11,6 +11,10 @@ using System;
 using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Devices.Bluetooth;
+#if WinRT
+using System.Diagnostics;
+using System.Runtime.InteropServices;
+#endif
 
 namespace InTheHand.Net.Bluetooth
 {
@@ -20,7 +24,19 @@ namespace InTheHand.Net.Bluetooth
             
         private async Task<BluetoothDeviceInfo> DoPickSingleDeviceAsync()
         {
-            Rect bounds = Windows.UI.Core.CoreWindow.GetForCurrentThread().Bounds;
+            Rect bounds = new Rect(0, 0, 0, 0);
+            var window = Windows.UI.Core.CoreWindow.GetForCurrentThread();
+            if (window != null)
+            {
+                bounds = window.Bounds;
+            }
+            else
+            {
+#if WinRT
+                var hwnd = NativeMethods.GetConsoleWindow();
+                WinRT.Interop.InitializeWithWindow.Initialize(picker, hwnd);
+#endif
+            }
             picker.Filter.SupportedDeviceSelectors.Add(BluetoothDevice.GetDeviceSelector());
             var deviceInfo = await picker.PickSingleDeviceAsync(bounds);
 
@@ -32,5 +48,13 @@ namespace InTheHand.Net.Bluetooth
 
             return new BluetoothDeviceInfo(device);
         }
+
+#if WinRT
+        internal static class NativeMethods
+        {
+            [DllImport("kernel32")]
+            public static extern IntPtr GetConsoleWindow();
+        }
+#endif
     }
 }
