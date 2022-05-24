@@ -14,7 +14,11 @@ using System;
 using System.Collections.Generic;
 using System.Net.Sockets;
 using System.Threading;
+#if NET6_0_OR_GREATER
+using Microsoft.Maui.ApplicationModel;
+#else
 using Xamarin.Essentials;
+#endif
 
 namespace InTheHand.Net.Sockets
 {
@@ -198,7 +202,7 @@ namespace InTheHand.Net.Sockets
             return null;
         }
 
-        #region IDisposable Support
+#region IDisposable Support
         private bool disposedValue = false; // To detect redundant calls
 
         void Dispose(bool disposing)
@@ -215,6 +219,6 @@ namespace InTheHand.Net.Sockets
 
         // This code added to correctly implement the disposable pattern.
         
-        #endregion
+#endregion
     }
 }

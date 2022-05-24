@@ -1,12 +1,12 @@
 ﻿<Project Sdk="MSBuild.Sdk.Extras/3.0.44">
 
 	<PropertyGroup>
-		<TargetFrameworks>netstandard2.0;monoandroid10.0;xamarinios10;xamarintvos10;xamarin.watchos10;xamarinmac20;uap10.0;netcoreapp3.1;net5.0-windows10.0.19041.0;net6.0-windows10.0.19041.0;net461</TargetFrameworks>
+		<TargetFrameworks>netstandard2.0;monoandroid90;monoandroid10.0;xamarinios10;xamarintvos10;xamarin.watchos10;xamarinmac20;uap10.0;netcoreapp3.1;net5.0-windows10.0.19041.0;net6.0-windows10.0.19041.0;net6.0-android;net6.0-ios;net6.0-maccatalyst;net461</TargetFrameworks>
 		<RuntimeIdentifiers Condition=" '$(TargetFramework)' == 'netcoreapp3.1' ">win</RuntimeIdentifiers>
 		<Company>In The Hand Ltd</Company>
 		<Authors>Peter Foot</Authors>
 		<Product>32feet.NET</Product>
-		<Version>4.0.23</Version>
+		<Version>4.0.24</Version>
 		<IncludeSymbols>true</IncludeSymbols>
 		<DebugSymbols>true</DebugSymbols>
 		<DebugType>portable</DebugType>
@@ -19,7 +19,7 @@
 		<PackageLicenseUrl></PackageLicenseUrl>
 		<Copyright>Copyright (c) 2004-2022 In The Hand Ltd</Copyright>
 		<Description>32feet.NET is an open-source project to make personal area networking technologies such as Bluetooth easily accessible from .NET code.</Description>
-		<FileVersion>4.0.23.327</FileVersion>
+		<FileVersion>4.0.24.524</FileVersion>
 		<AssemblyVersion>4.0.0.0</AssemblyVersion>
 		<AssemblyName>InTheHand.BluetoothLE</AssemblyName>
 		<PackageIconUrl></PackageIconUrl>
@@ -34,25 +34,25 @@
 		<AssemblyOriginatorKeyFile Condition=" '$(Configuration)' == 'Release' ">..\\InTheHand.snk</AssemblyOriginatorKeyFile>
 	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
-    <PackageReference Include="MSBuild.Sdk.Extras" Version="3.0.44" PrivateAssets="All" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
+		<PackageReference Include="MSBuild.Sdk.Extras" Version="3.0.44" PrivateAssets="All" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <Compile Remove="Platforms\**\*.*" />
-    <None Include="..\Misc\32feet-package-icon.png">
-      <Pack>True</Pack>
-      <PackagePath></PackagePath>
-    </None>
-    <None Include="Platforms\**\*.*" />
-  </ItemGroup>
+	<ItemGroup>
+		<Compile Remove="Platforms\**\*.*" />
+		<None Include="..\Misc\32feet-package-icon.png">
+			<Pack>True</Pack>
+			<PackagePath></PackagePath>
+		</None>
+		<None Include="Platforms\**\*.*" />
+	</ItemGroup>
 
-  <PropertyGroup Condition="'$(Configuration)'=='Debug'">
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-  </PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)'=='Debug'">
+		<DefineConstants>DEBUG;TRACE</DefineConstants>
+		<DebugSymbols>true</DebugSymbols>
+		<DebugType>full</DebugType>
+	</PropertyGroup>
 
 	<PropertyGroup Condition=" '$(TargetFramework)' == 'netcoreapp3.1' ">
 		<ProduceReferenceAssembly>true</ProduceReferenceAssembly>
@@ -70,42 +70,58 @@
 	</PropertyGroup>
 
 	<PropertyGroup Condition=" '$(TargetFramework)' == 'uap10.0' ">
-    <DefineConstants>UAP</DefineConstants>
-    <RuntimeIdentifiers>win10-x64;win10-x86;win10-arm;win10-arm64</RuntimeIdentifiers>
-    <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.19041.0</TargetPlatformVersion>
-    <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
-  </PropertyGroup>
+		<DefineConstants>UAP</DefineConstants>
+		<RuntimeIdentifiers>win10-x64;win10-x86;win10-arm;win10-arm64</RuntimeIdentifiers>
+		<TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.19041.0</TargetPlatformVersion>
+		<TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
+	</PropertyGroup>
 
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'net461' ">
-    <RuntimeIdentifiers>win10-x64;win10-x86</RuntimeIdentifiers>
-    <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.19041.0</TargetPlatformVersion>
-    <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
-  </PropertyGroup>
-  
-  <ItemGroup Condition=" '$(TargetFramework)' == 'monoandroid10.0' ">
-	  <PackageReference Include="Xamarin.Essentials" Version="1.7.1" />
-  </ItemGroup>
+	<PropertyGroup Condition=" '$(TargetFramework)' == 'net461' ">
+		<RuntimeIdentifiers>win10-x64;win10-x86</RuntimeIdentifiers>
+		<TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.19041.0</TargetPlatformVersion>
+		<TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
+	</PropertyGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
-    <Compile Include="Platforms\Standard\*.cs" />
-  </ItemGroup>
+	<ItemGroup Condition=" '$(TargetFramework)' == 'monoandroid90' ">
+		<PackageReference Include="Xamarin.Essentials" Version="1.6.1" />
+	</ItemGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)' == 'uap10.0' ">
-    <Compile Include="Platforms\Windows\*.cs" />
-  </ItemGroup>
+	<ItemGroup Condition=" '$(TargetFramework)' == 'monoandroid10.0' ">
+		<PackageReference Include="Xamarin.Essentials" Version="1.7.1" />
+	</ItemGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net461' ">
-    <PackageReference Include="Microsoft.Windows.SDK.Contracts" Version="10.0.19041.1" />
-    <Compile Include="Platforms\Windows\*.cs" />
-  </ItemGroup>
+	<ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
+		<Compile Include="Platforms\Standard\*.cs" />
+	</ItemGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)' == 'monoandroid10.0' ">
-    <Compile Include="Platforms\Android\*.cs" />
-  </ItemGroup>
+	<ItemGroup Condition=" '$(TargetFramework)' == 'uap10.0' ">
+		<Compile Include="Platforms\Windows\*.cs" />
+	</ItemGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)' == 'xamarinios10' ">
-    <Compile Include="Platforms\Apple\*.cs" />
-  </ItemGroup>
+	<ItemGroup Condition=" '$(TargetFramework)' == 'net461' ">
+		<PackageReference Include="Microsoft.Windows.SDK.Contracts" Version="10.0.19041.1" />
+		<Compile Include="Platforms\Windows\*.cs" />
+	</ItemGroup>
+
+	<ItemGroup Condition=" '$(TargetFramework)' == 'monoandroid90' ">
+		<Compile Include="Platforms\Android\*.cs" />
+	</ItemGroup>
+	
+	<ItemGroup Condition=" '$(TargetFramework)' == 'monoandroid10.0' ">
+		<Compile Include="Platforms\Android\*.cs" />
+	</ItemGroup>
+
+	<PropertyGroup Condition=" '$(TargetFramework)' == 'net6.0-android' ">
+		<UseMaui>True</UseMaui>
+	</PropertyGroup>
+	
+	<ItemGroup Condition=" '$(TargetFramework)' == 'net6.0-android' ">
+		<Compile Include="Platforms\Android\*.cs" />
+	</ItemGroup>
+
+	<ItemGroup Condition=" '$(TargetFramework)' == 'xamarinios10' ">
+		<Compile Include="Platforms\Apple\*.cs" />
+	</ItemGroup>
 
 	<ItemGroup Condition=" '$(TargetFramework)' == 'net6.0-ios' ">
 		<Compile Include="Platforms\Apple\*.cs" />
@@ -114,37 +130,38 @@
 	<ItemGroup Condition=" '$(TargetFramework)' == 'net6.0-macos' ">
 		<Compile Include="Platforms\Apple\*.cs" />
 	</ItemGroup>
-	
+
 	<ItemGroup Condition=" '$(TargetFramework)' == 'net6.0-maccatalyst' ">
 		<Compile Include="Platforms\Apple\*.cs" />
 	</ItemGroup>
-	
+
 	<ItemGroup Condition=" '$(TargetFramework)' == 'net6.0-tvos' ">
 		<Compile Include="Platforms\Apple\*.cs" />
 	</ItemGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)' == 'xamarintvos10' ">
-    <Compile Include="Platforms\Apple\*.cs" />
-  </ItemGroup>
+	<ItemGroup Condition=" '$(TargetFramework)' == 'xamarintvos10' ">
+		<Compile Include="Platforms\Apple\*.cs" />
+	</ItemGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)' == 'xamarin.watchos10' ">
-    <Compile Include="Platforms\Apple\*.cs" />
-  </ItemGroup>
+	<ItemGroup Condition=" '$(TargetFramework)' == 'xamarin.watchos10' ">
+		<Compile Include="Platforms\Apple\*.cs" />
+	</ItemGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)' == 'xamarinmac20' ">
-    <Compile Include="Platforms\Apple\*.cs" />
-  </ItemGroup>
+	<ItemGroup Condition=" '$(TargetFramework)' == 'xamarinmac20' ">
+		<Compile Include="Platforms\Apple\*.cs" />
+	</ItemGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp3.1' ">
-    <PackageReference Include="Microsoft.Windows.SDK.Contracts" Version="10.0.19041.1" />
-    <Compile Include="Platforms\Windows\*.cs" />
-  </ItemGroup>
+	<ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp3.1' ">
+		<PackageReference Include="Microsoft.Windows.SDK.Contracts" Version="10.0.19041.1" />
+		<Compile Include="Platforms\Windows\*.cs" />
+	</ItemGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net5.0-windows10.0.19041.0' ">
-    <Compile Include="Platforms\Windows\*.cs" />
-  </ItemGroup>
+	<ItemGroup Condition=" '$(TargetFramework)' == 'net5.0-windows10.0.19041.0' ">
+		<Compile Include="Platforms\Windows\*.cs" />
+	</ItemGroup>
 
 	<ItemGroup Condition=" '$(TargetFramework)' == 'net6.0-windows10.0.19041.0' ">
 		<Compile Include="Platforms\Windows\*.cs" />
 	</ItemGroup>
+
 </Project>

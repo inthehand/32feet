@@ -29,8 +29,12 @@ namespace InTheHand.Bluetooth.Platforms.Apple
             _options = options;
 
             Bluetooth.DiscoveredPeripheral += Bluetooth_DiscoveredPeripheral;
-            
+
+#if NET6_0_OR_GREATER
+            if (Bluetooth._manager.State == CBManagerState.PoweredOn)
+#else
             if (Bluetooth._manager.State == CBCentralManagerState.PoweredOn)
+#endif
             {
                 StartScanning();
             }
@@ -56,7 +60,11 @@ namespace InTheHand.Bluetooth.Platforms.Apple
 
         private async void _manager_UpdatedState(object sender, EventArgs e)
         {
+#if NET6_0_OR_GREATER
+            if (Bluetooth._manager.State == CBManagerState.PoweredOn)
+#else
             if (Bluetooth._manager.State == CBCentralManagerState.PoweredOn)
+#endif
             {
                 if(!Bluetooth._manager.IsScanning)
                     await StartScanning();

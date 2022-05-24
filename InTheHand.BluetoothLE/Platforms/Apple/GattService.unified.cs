@@ -1,6 +1,6 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="GattService.unified.cs" company="In The Hand Ltd">
-//   Copyright (c) 2018-20 In The Hand Ltd, All rights reserved.
+//   Copyright (c) 2018-22 In The Hand Ltd, All rights reserved.
 //   This source code is licensed under the MIT License - see License.txt
 // </copyright>
 //-----------------------------------------------------------------------
@@ -62,8 +62,11 @@ namespace InTheHand.Bluetooth
            
             void handler(object sender, CBServiceEventArgs args)
             {
+#if NET6_0_OR_GREATER
+                peripheral.DiscoveredCharacteristics -= handler;
+#else
                 peripheral.DiscoveredCharacteristic -= handler;
-
+#endif
                 if (args.Error != null)
                     tcs.SetException(new Exception(args.Error.ToString()));
 
@@ -77,7 +80,11 @@ namespace InTheHand.Bluetooth
                 tcs.SetResult(characteristics.AsReadOnly());
             }
 
+#if NET6_0_OR_GREATER
+            peripheral.DiscoveredCharacteristics+= handler;
+#else
             peripheral.DiscoveredCharacteristic += handler;
+#endif
             peripheral.DiscoverCharacteristics(_service);
 
             return tcs.Task;

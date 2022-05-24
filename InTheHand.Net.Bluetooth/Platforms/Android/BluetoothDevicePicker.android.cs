@@ -2,7 +2,7 @@
 //
 // InTheHand.Net.Bluetooth.BluetoothDevicePicker (Android)
 // 
-// Copyright (c) 2018-2020 In The Hand Ltd, All rights reserved.
+// Copyright (c) 2018-2022 In The Hand Ltd, All rights reserved.
 // This source code is licensed under the MIT License
 
 using Android.App;
@@ -13,7 +13,11 @@ using InTheHand.Net.Bluetooth.Droid;
 using InTheHand.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
+#if NET6_0_OR_GREATER
+using Microsoft.Maui.ApplicationModel;
+#else
 using Xamarin.Essentials;
+#endif
 
 namespace InTheHand.Net.Bluetooth
 {
