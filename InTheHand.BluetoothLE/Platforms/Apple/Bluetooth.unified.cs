@@ -63,8 +63,13 @@ namespace InTheHand.Bluetooth
 #if !__WATCHOS__
                 switch(central.State)
                 {
+#if NET6_0_OR_GREATER
+                    case CBManagerState.PoweredOn:
+                    case CBManagerState.Resetting:
+#else
                     case CBCentralManagerState.PoweredOn:
                     case CBCentralManagerState.Resetting:
+#endif
                         newAvailability = true;
                         break;
 
@@ -105,11 +110,6 @@ namespace InTheHand.Bluetooth
             }
 
 #if __IOS__
-            public override void RetrievedConnectedPeripherals(CBCentralManager central, CBPeripheral[] peripherals)
-            {
-                base.RetrievedConnectedPeripherals(central, peripherals);
-            }
-
             public override void WillRestoreState(CBCentralManager central, NSDictionary dict)
             {
                 base.WillRestoreState(central, dict);
@@ -142,7 +142,7 @@ namespace InTheHand.Bluetooth
 
             switch(_manager.State)
             {
-#if __WATCHOS__
+#if NET6_0_OR_GREATER || __WATCHOS__
                 case CBManagerState.PoweredOn:
                 case CBManagerState.Resetting:
 #else
@@ -164,7 +164,11 @@ namespace InTheHand.Bluetooth
 #if __IOS__
             TaskCompletionSource<BluetoothDevice> tcs = new TaskCompletionSource<BluetoothDevice>();
 
+#if NET6_0_OR_GREATER
+            if (_manager.State != CBManagerState.PoweredOn)
+#else
             if(_manager.State != CBCentralManagerState.PoweredOn)
+#endif
             {
                 throw new InvalidOperationException();
             }

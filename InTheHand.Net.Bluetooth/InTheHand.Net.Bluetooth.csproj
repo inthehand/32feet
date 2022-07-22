@@ -1,12 +1,12 @@
 ﻿<Project Sdk="MSBuild.Sdk.Extras/3.0.44">
 
 	<PropertyGroup>
-		<TargetFrameworks>netstandard2.0;netcoreapp3.1;net5.0-windows7.0;net6.0-windows7.0;net461;net452;monoandroid90;monoandroid10.0;xamarinios10;uap10.0</TargetFrameworks>
+		<TargetFrameworks>netstandard2.0;net5.0-windows7.0;net5.0-windows10.0.19041.0;net6.0-windows7.0;net6.0-windows10.0.19041.0;net6.0-android;net452;net461;monoandroid90;monoandroid10.0;xamarinios10;uap10.0</TargetFrameworks>
 		<RuntimeIdentifiers Condition=" '$(TargetFramework)' == 'netcoreapp3.1' ">win</RuntimeIdentifiers>
 		<Company>In The Hand Ltd</Company>
 		<Authors>Peter Foot</Authors>
 		<Product>32feet.NET</Product>
-		<Version>4.0.29</Version>
+		<Version>4.0.30</Version>
 		<RepositoryUrl>https://github.com/inthehand/32feet</RepositoryUrl>
 		<PublishRepositoryUrl>true</PublishRepositoryUrl>
 		<IncludeSymbols>true</IncludeSymbols>
@@ -17,7 +17,7 @@
 		<PackageLicenseUrl></PackageLicenseUrl>
 		<Copyright>Copyright (c) 2004-2022 In The Hand Ltd</Copyright>
 		<Description>32feet.NET is an open-source project to make personal area networking technologies such as Bluetooth easily accessible from .NET code.</Description>
-		<FileVersion>4.0.29.0414</FileVersion>
+		<FileVersion>4.0.30.0524</FileVersion>
 		<AssemblyVersion>4.0.0.0</AssemblyVersion>
 		<AssemblyName>InTheHand.Net.Bluetooth</AssemblyName>
 		<GenerateDocumentationFile Condition=" '$(Configuration)' == 'Release' ">true</GenerateDocumentationFile>
@@ -26,7 +26,7 @@
 		<PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<PackageId>InTheHand.Net.Bluetooth</PackageId>
-		<PackageReleaseNotes>Fix for BluetoothRadio.Mode when radio is disabled (Win32 implementations).</PackageReleaseNotes>
+		<PackageReleaseNotes>Added .NET 6.0 support for Android for MAUI.</PackageReleaseNotes>
 		<PackageIcon>32feet-package-icon.png</PackageIcon>
 		<RepositoryType>GIT</RepositoryType>
 		<SignAssembly Condition=" '$(Configuration)' == 'Release' ">true</SignAssembly>
@@ -54,6 +54,10 @@
 		<LanguageTargets>$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets</LanguageTargets>
 	</PropertyGroup>
 
+	<PropertyGroup Condition="'$(TargetFramework)' == 'net6.0-android'">
+		<UseMaui>True</UseMaui>
+	</PropertyGroup>
+
 	<PropertyGroup Condition="'$(Configuration)'=='Debug'">
 		<DefineConstants>DEBUG;TRACE</DefineConstants>
 		<DebugSymbols>true</DebugSymbols>
@@ -67,12 +71,16 @@
 		<TargetPlatformMinVersion>10.0.16299.0</TargetPlatformMinVersion>
 	</PropertyGroup>
 
-	<PropertyGroup Condition=" '$(TargetFramework)' == 'netcoreapp3.1' ">
-		<ExtrasBuildEachRuntimeIdentifier>true</ExtrasBuildEachRuntimeIdentifier>
-	</PropertyGroup>
-
 	<PropertyGroup Condition=" '$(TargetFramework)' == 'net5.0-windows7.0' ">
 		<ProduceReferenceAssembly>true</ProduceReferenceAssembly>
+	</PropertyGroup>
+
+	<PropertyGroup Condition=" '$(TargetFramework)' == 'net5.0-windows10.0.19041.0' ">
+		<DefineConstants>WinRT</DefineConstants>
+	</PropertyGroup>
+	
+	<PropertyGroup Condition=" '$(TargetFramework)' == 'net6.0-windows10.0.19041.0' ">
+		<DefineConstants>WinRT</DefineConstants>
 	</PropertyGroup>
 	
 	<PropertyGroup Condition=" '$(TargetFramework)' == 'xamarinios10' ">
@@ -84,7 +92,7 @@
 	</ItemGroup>
 	
 	<ItemGroup Condition=" '$(TargetFramework)' == 'monoandroid10.0' ">
-		<PackageReference Include="Xamarin.Essentials" Version="1.7.2" />
+		<PackageReference Include="Xamarin.Essentials" Version="1.7.3" />
 		<Reference Include="System.Xml.Linq" />
 	</ItemGroup>
 
@@ -109,11 +117,11 @@
 		<Compile Include="Platforms\iOS\*.cs" />
 	</ItemGroup>
 
-	<ItemGroup Condition=" '$(TargetFramework)' == 'net35' ">
-		<Compile Include="Platforms\Win32\*.cs" />
+	<ItemGroup Condition=" '$(TargetFramework)' == 'net6.0-ios' ">
+		<Compile Include="Platforms\iOS\*.cs" />
 	</ItemGroup>
 
-	<ItemGroup Condition=" '$(TargetFramework)' == 'net461' ">
+	<ItemGroup Condition=" '$(TargetFramework)' == 'net35' ">
 		<Compile Include="Platforms\Win32\*.cs" />
 	</ItemGroup>
 
@@ -121,7 +129,7 @@
 		<Compile Include="Platforms\Win32\*.cs" />
 	</ItemGroup>
 
-	<ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp3.1' ">
+	<ItemGroup Condition=" '$(TargetFramework)' == 'net461' ">
 		<Compile Include="Platforms\Win32\*.cs" />
 	</ItemGroup>
 
@@ -129,16 +137,20 @@
 		<Compile Include="Platforms\Win32\*.cs" />
 	</ItemGroup>
 
-	<ItemGroup Condition=" '$(TargetFramework)' == 'net6.0-windows7.0' ">
-		<Compile Include="Platforms\Win32\*.cs" />
-	</ItemGroup>
-
 	<ItemGroup Condition=" '$(TargetFramework)' == 'net5.0-windows10.0.19041.0' ">
 		<Compile Include="Platforms\Windows\*.cs" />
 	</ItemGroup>
 
+	<ItemGroup Condition=" '$(TargetFramework)' == 'net6.0-windows7.0' ">
+		<Compile Include="Platforms\Win32\*.cs" />
+	</ItemGroup>
+
 	<ItemGroup Condition=" '$(TargetFramework)' == 'net6.0-windows10.0.19041.0' ">
 		<Compile Include="Platforms\Windows\*.cs" />
+	</ItemGroup>
+
+	<ItemGroup Condition=" '$(TargetFramework)' == 'net6.0-android' ">
+		<Compile Include="Platforms\Android\*.cs" />
 	</ItemGroup>
 
 </Project>

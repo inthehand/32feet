@@ -2,7 +2,7 @@
 //
 // InTheHand.Net.Bluetooth.BluetoothDevicePicker (iOS)
 // 
-// Copyright (c) 2018-2020 In The Hand Ltd, All rights reserved.
+// Copyright (c) 2018-2022 In The Hand Ltd, All rights reserved.
 // This source code is licensed under the MIT License
 
 using ExternalAccessory;
@@ -72,18 +72,18 @@ namespace InTheHand.Net.Bluetooth
             {
                 System.Diagnostics.Debug.WriteLine(ex);
 
-                switch(ex.Code)
+                switch((int)ex.Code)
                 {
-                    case (long)EABluetoothAccessoryPickerError.AlreadyConnected:
+                    case (int)EABluetoothAccessoryPickerError.AlreadyConnected:
                         tcs.SetResult(EAAccessoryManager.SharedAccessoryManager.ConnectedAccessories[0]);
                         break;
 
-                    case (long)EABluetoothAccessoryPickerError.Cancelled:
+                    case (int)EABluetoothAccessoryPickerError.Cancelled:
                         tcs.SetCanceled();
                         break;
 
-                    case (long)EABluetoothAccessoryPickerError.Failed:
-                    case (long)EABluetoothAccessoryPickerError.NotFound:
+                    case (int)EABluetoothAccessoryPickerError.Failed:
+                    case (int)EABluetoothAccessoryPickerError.NotFound:
                         tcs.SetException(ex);
                         break;
                 }

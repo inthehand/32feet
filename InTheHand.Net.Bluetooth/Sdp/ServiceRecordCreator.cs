@@ -444,9 +444,6 @@ namespace InTheHand.Net.Bluetooth.Sdp
             public readonly SizeIndex SizeIndex;
             /// <exclude/>
             public readonly int HeaderLength;
-            //
-            /// <exclude/>
-            internal bool widcommNeedsStoring;
 
             internal HeaderWriteState(ElementTypeDescriptor elementTypeDescriptor, byte[] buf, int offset, SizeIndex sizeIndex, int headerLength)
             {

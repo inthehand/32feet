@@ -2,7 +2,7 @@
 //
 // InTheHand.Net.Sockets.iOS.ExternalAccessoryNetworkStream (iOS)
 // 
-// Copyright (c) 2018-2020 In The Hand Ltd, All rights reserved.
+// Copyright (c) 2018-2022 In The Hand Ltd, All rights reserved.
 // This source code is licensed under the MIT License
 
 using ExternalAccessory;
@@ -29,7 +29,13 @@ namespace InTheHand.Net.Sockets.iOS
 
             _inputStream.Open();
             _outputStream.Delegate = _delegate;
-            _outputStream.Schedule(NSRunLoop.Current, NSRunLoop.NSDefaultRunLoopMode);
+            _outputStream.Schedule(NSRunLoop.Current,
+#if NET6_0_OR_GREATER
+                NSRunLoopMode.Default 
+#else
+                NSRunLoop.NSDefaultRunLoopMode
+#endif
+                );
             _outputStream.Open();
         }
 
@@ -65,7 +71,13 @@ namespace InTheHand.Net.Sockets.iOS
             if(_outputStream is object)
             {
                 _outputStream.Close();
-                _outputStream.Unschedule(NSRunLoop.Current, NSRunLoop.NSDefaultRunLoopMode);
+                _outputStream.Unschedule(NSRunLoop.Current,
+#if NET6_0_OR_GREATER
+                NSRunLoopMode.Default
+#else
+                NSRunLoop.NSDefaultRunLoopMode
+#endif
+                );
                 _outputStream.Dispose();
                 _outputStream = null;
             }

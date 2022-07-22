@@ -15,7 +15,11 @@ using Android.Bluetooth.LE;
 using Android.Content;
 using Android.Content.PM;
 using Android.OS;
+#if NET6_0_OR_GREATER
+using Microsoft.Maui.ApplicationModel;
+#else
 using Xamarin.Essentials;
+#endif
 
 namespace InTheHand.Bluetooth
 {
@@ -46,9 +50,11 @@ namespace InTheHand.Bluetooth
         static Task<BluetoothDevice> PlatformRequestDevice(RequestDeviceOptions options)
         {
             _currentRequest = options;
-            
-            Intent i = new Intent(Platform.CurrentActivity, typeof(DevicePickerActivity));
-            Platform.CurrentActivity.StartActivity(i);
+
+            Activity currentActivity = Platform.CurrentActivity;
+
+            Intent i = new Intent(currentActivity, typeof(DevicePickerActivity));
+            currentActivity.StartActivity(i);
 
             return Task.Run(() =>
             {
@@ -172,14 +178,15 @@ namespace InTheHand.Bluetooth
             protected override void OnCreate(Bundle savedInstanceState)
             {
                 base.OnCreate(savedInstanceState);
-                
+
+                Activity currentActivity = Platform.CurrentActivity;
 
                 Intent i = new Intent("android.bluetooth.devicepicker.action.LAUNCH");
                 i.PutExtra("android.bluetooth.devicepicker.extra.LAUNCH_PACKAGE", Application.Context.PackageName);
                 i.PutExtra("android.bluetooth.devicepicker.extra.DEVICE_PICKER_LAUNCH_CLASS", Java.Lang.Class.FromType(typeof(DevicePickerReceiver)).Name);
                 i.PutExtra("android.bluetooth.devicepicker.extra.NEED_AUTH", false);
 
-                Platform.CurrentActivity.StartActivityForResult(i, 1);
+                currentActivity.StartActivityForResult(i, 1);
 
             }
 
