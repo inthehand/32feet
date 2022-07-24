@@ -1,6 +1,6 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="RemoteGattServer.android.cs" company="In The Hand Ltd">
-//   Copyright (c) 2018-20 In The Hand Ltd, All rights reserved.
+//   Copyright (c) 2018-22 In The Hand Ltd, All rights reserved.
 //   This source code is licensed under the MIT License - see License.txt
 // </copyright>
 //-----------------------------------------------------------------------
@@ -61,11 +61,17 @@ namespace InTheHand.Bluetooth
                 _owner.ConnectionStateChanged?.Invoke(_owner, new ConnectionStateEventArgs { Status = status, State = newState });
                 if (newState == ABluetooth.ProfileState.Connected)
                 {
+                    // set MTU if previously requested
+                    if (_owner.requestedMtu != 0)
+                        gatt.RequestMtu(_owner.requestedMtu);
+
                     if (!_owner._servicesDiscovered)
                         gatt.DiscoverServices();
                 }
                 else
                 {
+                    // reset requested MTU
+                    _owner.requestedMtu = 0;
                     _owner.Device.OnGattServerDisconnected();
                 }
             }
@@ -256,9 +262,17 @@ namespace InTheHand.Bluetooth
                 _gatt.SetPreferredPhy(ToAndroidPhy(phy), ToAndroidPhy(phy), ABluetooth.BluetoothPhyOption.NoPreferred);
         }
 
-        bool PlatformSetMtu(int mtu)
+        private int requestedMtu;
+
+        bool PlatformRequestMtu(int mtu)
         {
-            return _gatt.RequestMtu(mtu);
+            requestedMtu = mtu;
+            if (IsConnected)
+            {
+                return _gatt.RequestMtu(mtu);
+            }
+
+            return false;
         }
         
         private static ABluetooth.BluetoothPhy ToAndroidPhy(BluetoothPhy phy)

@@ -1,6 +1,6 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="RemoteGattServer.cs" company="In The Hand Ltd">
-//   Copyright (c) 2018-20 In The Hand Ltd, All rights reserved.
+//   Copyright (c) 2018-22 In The Hand Ltd, All rights reserved.
 //   This source code is licensed under the MIT License - see License.txt
 // </copyright>
 //-----------------------------------------------------------------------
@@ -121,13 +121,13 @@ namespace InTheHand.Bluetooth
         }
         
         /// <summary>
-        /// Set the maximum transmission unit (MTU) size.        
+        /// Request the maximum transmission unit (MTU) size.        
         /// <param name="mtu">mtu size from 0 to 512</param>
-        /// <returns>true if succesfully</returns>
-        /// <remarks>Works only in Android platform</remarks>
-        public bool SetMtu(int mtu)
+        /// <returns>true if succesful.</returns>
+        /// <remarks>Currently supported only on Android.</remarks>
+        public bool RequestMtu(int mtu)
         {
-            return PlatformSetMtu(mtu);
+            return PlatformRequestMtu(mtu);
         }
     }
 }
