@@ -1,6 +1,6 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="RemoteGattServer.standard.cs" company="In The Hand Ltd">
-//   Copyright (c) 2018-20 In The Hand Ltd, All rights reserved.
+//   Copyright (c) 2018-22 In The Hand Ltd, All rights reserved.
 //   This source code is licensed under the MIT License - see License.txt
 // </copyright>
 //-----------------------------------------------------------------------
@@ -52,7 +52,7 @@ namespace InTheHand.Bluetooth
         {
         }
         
-        bool PlatformSetMtu(int mtu)
+        bool PlatformRequestMtu(int mtu)
         {
             return false;
         }
