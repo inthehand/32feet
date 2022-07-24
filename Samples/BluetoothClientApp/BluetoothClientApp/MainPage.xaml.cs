@@ -34,8 +34,15 @@ namespace BluetoothClientApp
                 Debug.WriteLine($"{d.Id} {d.Name}");
             }
 
-            Bluetooth.AdvertisementReceived += Bluetooth_AdvertisementReceived;
-            scan = await Bluetooth.RequestLEScanAsync();
+            RequestDeviceOptions scanOptions = new RequestDeviceOptions();
+            scanOptions.AcceptAllDevices = true;
+            foreach (var d2 in await Bluetooth.ScanForDevicesAsync(scanOptions))
+            {
+                Debug.WriteLine($"{d2.Id} {d2.Name}");
+            }
+
+            /*Bluetooth.AdvertisementReceived += Bluetooth_AdvertisementReceived;
+            scan = await Bluetooth.RequestLEScanAsync();*/
 
             RequestDeviceOptions options = new RequestDeviceOptions();
             options.AcceptAllDevices = true;

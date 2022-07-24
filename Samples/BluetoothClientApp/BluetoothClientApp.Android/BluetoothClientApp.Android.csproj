@@ -42,16 +42,14 @@
     <AndroidUseSharedRuntime>false</AndroidUseSharedRuntime>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="InTheHand.BluetoothLE">
+      <HintPath>..\..\..\InTheHand.BluetoothLE\bin\Debug\monoandroid10.0\InTheHand.BluetoothLE.dll</HintPath>
+    </Reference>
     <Reference Include="Mono.Android" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="Plugin.CurrentActivity">
-      <Version>2.1.0.4</Version>
-    </PackageReference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MainActivity.cs" />
@@ -91,10 +89,6 @@
     <Folder Include="Resources\drawable\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\InTheHand.BluetoothLE\InTheHand.BluetoothLE.csproj">
-      <Project>{6479e778-52fe-4b15-ad15-7a1225a652e5}</Project>
-      <Name>InTheHand.BluetoothLE</Name>
-    </ProjectReference>
     <ProjectReference Include="..\BluetoothClientApp\BluetoothClientApp.csproj">
       <Project>{897AB987-17A0-406E-ACB7-74AB82ECC3AC}</Project>
       <Name>BluetoothClientApp</Name>

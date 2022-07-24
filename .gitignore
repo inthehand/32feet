@@ -253,3 +253,5 @@ paket-files/
 /Widcomm
 /InTheHand.Devices.Bluetooth/NuGet/lib
 *.snk
+/InTheHand.BluetoothLE/log.txt
+/docs

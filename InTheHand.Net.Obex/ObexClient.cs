@@ -54,7 +54,7 @@ namespace InTheHand.Net.Obex
             return false;
         }
 
-        public async Task<ObexResponseMessage> GetAsync()
+        public async Task<ObexResponseMessage> GetAsync(string requestUri)
         {
             return null;
         }
