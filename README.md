@@ -54,3 +54,10 @@ Please start by reading it.  It contains general information firstly on the vari
 
 Many thanks to [NDepend](http://www.NDepend.com) for their support.
 Many thanks to [Aton Spa (Italy)](http://www.aton.eu) for commissioning and funding the implementation of StoneStreet One Bluetopia support.
+
+## Contributors
+<a href="https://github.com/inthehand/32feet/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=inthehand/32feet" />
+</a>
+
+Made with [contrib.rocks](https://contrib.rocks).
