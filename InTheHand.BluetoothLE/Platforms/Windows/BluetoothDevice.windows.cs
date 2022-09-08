@@ -8,6 +8,7 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Threading.Tasks;
 using Windows.Devices.Bluetooth;
 
@@ -16,7 +17,7 @@ namespace InTheHand.Bluetooth
     partial class BluetoothDevice
     {
         internal BluetoothLEDevice NativeDevice;
-        internal readonly ConcurrentDictionary<int,IDisposable> NativeDisposeList = new ConcurrentDictionary<int, IDisposable>();
+        internal readonly ConcurrentDictionary<int, IDisposable> NativeDisposeList = new ConcurrentDictionary<int, IDisposable>();
         private string _cachedId;
         private string _cachedName;
         internal ulong LastKnownAddress;
@@ -62,13 +63,19 @@ namespace InTheHand.Bluetooth
             Dictionary<int, IDisposable> itemsDisposed = new Dictionary<int, IDisposable>();
             foreach (var kv in NativeDisposeList)
             {
-                kv.Value?.Dispose();
+                try
+                {
+                    kv.Value?.Dispose();
+                }
+                catch (TargetInvocationException e) when (e.InnerException is ObjectDisposedException) { }
+                catch (ObjectDisposedException) { }
                 itemsDisposed.Add(kv.Key, kv.Value);
             }
 
             foreach (var kv in itemsDisposed)
             {
-                NativeDisposeList.TryUpdate(kv.Key, null, kv.Value);
+                IDisposable val;
+                NativeDisposeList.TryRemove(kv.Key, out val);
             }
         }
 
@@ -129,7 +136,7 @@ namespace InTheHand.Bluetooth
 
             if (ulong.TryParse(id, System.Globalization.NumberStyles.HexNumber, null, out var parsedId))
             {
-                if(Bluetooth.KnownDevices.ContainsKey(parsedId))
+                if (Bluetooth.KnownDevices.ContainsKey(parsedId))
                 {
                     BluetoothDevice knownDevice = (BluetoothDevice)Bluetooth.KnownDevices[parsedId].Target;
                     if (knownDevice != null)
