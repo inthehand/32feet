@@ -13,7 +13,6 @@
 		<RepositoryUrl>https://github.com/inthehand/32feet</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
 		<PublishRepositoryUrl>true</PublishRepositoryUrl>
-		<IncludeSymbols>true</IncludeSymbols>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 		<PackageProjectUrl>https://github.com/inthehand/32feet</PackageProjectUrl>
 		<PackageLicenseUrl></PackageLicenseUrl>
@@ -32,6 +31,7 @@
 		<PackageReleaseNotes>Added .NET6.0 Windows release. Fixes Android device discovery to enforce a timeout.</PackageReleaseNotes>
 		<SignAssembly Condition=" '$(Configuration)' == 'Release' ">true</SignAssembly>
 		<AssemblyOriginatorKeyFile Condition=" '$(Configuration)' == 'Release' ">..\\InTheHand.snk</AssemblyOriginatorKeyFile>
+		<GenerateDocumentationFile Condition=" '$(Configuration)' == 'Release' ">True</GenerateDocumentationFile>
 	</PropertyGroup>
 
 	<ItemGroup>

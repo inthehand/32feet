@@ -253,3 +253,6 @@ paket-files/
 /Widcomm
 /InTheHand.Devices.Bluetooth/NuGet/lib
 *.snk
+/Help
+/icons
+/docs

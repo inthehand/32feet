@@ -66,11 +66,11 @@ namespace InTheHand.Net.Bluetooth
         /// </summary>
         public static readonly Guid IrMCSync = new Guid(0x00001104, 0x0000, 0x1000, 0x80, 0x00, 0x00, 0x80, 0x5F, 0x9B, 0x34, 0xFB);
         /// <summary>
-        /// Used for sending binary objects between devices.[0x1105]
+        /// Used for sending binary objects between devices. [0x1105]
         /// </summary>
         public static readonly Guid ObexObjectPush = new Guid(0x00001105, 0x0000, 0x1000, 0x80, 0x00, 0x00, 0x80, 0x5F, 0x9B, 0x34, 0xFB);
         /// <summary>
-        /// OBEX version of an FTP server [0x1106]
+        /// OBEX version of an FTP server. [0x1106]
         /// </summary>
         public static readonly Guid ObexFileTransfer = new Guid(0x00001106, 0x0000, 0x1000, 0x80, 0x00, 0x00, 0x80, 0x5F, 0x9B, 0x34, 0xFB);
         /// <summary>
@@ -79,11 +79,11 @@ namespace InTheHand.Net.Bluetooth
         public static readonly Guid IrMCSyncCommand = new Guid(0x00001107, 0x0000, 0x1000, 0x80, 0x00, 0x00, 0x80, 0x5F, 0x9B, 0x34, 0xFB);
 
         /// <summary>
-        /// HSP (Headset Profile) &#x2014; Supports Bluetooth headset devices.[0x1108]
-        /// See also 
+        /// HSP (Headset Profile) &#x2014; Supports Bluetooth headset devices. [0x1108]
+        /// <para>See also 
         /// <see cref="HeadsetHeadset"/>
         /// <see cref="HeadsetAudioGateway"/>
-        /// </summary>
+        /// </para></summary>
         /// <seealso cref="HeadsetHeadset"/>
         /// <seealso cref="HeadsetAudioGateway"/>
         public static readonly Guid Headset = new Guid(0x00001108, 0x0000, 0x1000, 0x80, 0x00, 0x00, 0x80, 0x5F, 0x9B, 0x34, 0xFB);

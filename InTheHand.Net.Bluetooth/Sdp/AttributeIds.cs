@@ -3,7 +3,7 @@
 // InTheHand.Net.Bluetooth.AttributeIds.ServiceAttributeId
 // 
 // Copyright (c) 2007 Andy Hume
-// Copyright (c) 2003-2020 In The Hand Ltd, All rights reserved.
+// Copyright (c) 2003-2022 In The Hand Ltd, All rights reserved.
 // This source code is licensed under the MIT License
 
 using System;
@@ -46,6 +46,7 @@ namespace InTheHand.Net.Bluetooth.AttributeIds
     {
         // Playing
         // warning: "ServiceAttributeId': base type 'ushort' is not CLS-compliant"
+        None = 0,
     }
 
 

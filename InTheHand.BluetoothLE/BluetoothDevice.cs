@@ -1,6 +1,6 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="BluetoothDevice.cs" company="In The Hand Ltd">
-//   Copyright (c) 2018-20 In The Hand Ltd, All rights reserved.
+//   Copyright (c) 2018-22 In The Hand Ltd, All rights reserved.
 //   This source code is licensed under the MIT License - see License.txt
 // </copyright>
 //-----------------------------------------------------------------------
@@ -11,11 +11,24 @@ using System.Threading.Tasks;
 
 namespace InTheHand.Bluetooth
 {
+    /// <summary>
+    /// A BluetoothDevice instance represents a remote Bluetooth device
+    /// </summary>
     [DebuggerDisplay("{Id} ({Name})")]
     public sealed partial class BluetoothDevice
     {
+        /// <summary>
+        /// The unique identifier for the device.
+        /// </summary>
+        /// <remarks>On most platforms this will be the Bluetooth address, but some, such as iOS, will use a locally assigned unique id.</remarks>
         public string Id { get { return GetId(); } }
+        /// <summary>
+        /// The human-readable name of the device.
+        /// </summary>
         public string Name { get { return GetName(); } }
+        /// <summary>
+        /// Provides a way to interact with this device’s GATT server.
+        /// </summary>
         public RemoteGattServer Gatt { get { return GetGatt(); } }
 
         public static Task<BluetoothDevice> FromIdAsync(string id)
