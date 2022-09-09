@@ -27,7 +27,7 @@ namespace InTheHand.Bluetooth
         static async Task<bool> PlatformGetAvailability()
         {
             var adaptor = await BluetoothAdapter.GetDefaultAsync();
-            return adaptor.IsLowEnergySupported;
+            return adaptor != null && adaptor.IsLowEnergySupported;
         }
 
         static async Task<BluetoothDevice> PlatformRequestDevice(RequestDeviceOptions options)
@@ -61,7 +61,7 @@ namespace InTheHand.Bluetooth
 
             if (hasPackage == 0x3d54)
             {
-                foreach(var attr in System.Reflection.Assembly.GetEntryAssembly().GetCustomAttributes(typeof(AssemblyProductAttribute)))
+                foreach (var attr in System.Reflection.Assembly.GetEntryAssembly().GetCustomAttributes(typeof(AssemblyProductAttribute)))
                 {
                     picker.Appearance.Title = ((AssemblyProductAttribute)attr).Product + " wants to pair";
                     break;
@@ -81,7 +81,7 @@ namespace InTheHand.Bluetooth
             {
                 foreach (var filter in options.Filters)
                 {
-                    if(!string.IsNullOrEmpty(filter.NamePrefix))
+                    if (!string.IsNullOrEmpty(filter.NamePrefix))
                     {
                         picker.Filter.SupportedDeviceSelectors.Add($"System.ItemNameDisplay:~<\"{namePrefix}\" AND " + BluetoothLEDevice.GetDeviceSelector());
                     }
@@ -114,7 +114,7 @@ namespace InTheHand.Bluetooth
                 var access = await device.RequestAccessAsync();
                 return new BluetoothDevice(device);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 if (ex.HResult == -2147023496)
                     throw new PlatformNotSupportedException("RequestDevice cannot be called from a Console application.");
@@ -123,7 +123,7 @@ namespace InTheHand.Bluetooth
             }
         }
 
-       static async Task<IReadOnlyCollection<BluetoothDevice>> PlatformScanForDevices(RequestDeviceOptions options)
+        static async Task<IReadOnlyCollection<BluetoothDevice>> PlatformScanForDevices(RequestDeviceOptions options)
         {
             List<BluetoothDevice> devices = new List<BluetoothDevice>();
 
@@ -132,10 +132,11 @@ namespace InTheHand.Bluetooth
             // None of the build in selectors do a scan and return both paired and unpaired devices so here is the raw AQS string
             foreach (var device in await DeviceInformation.FindAllAsync($"{(!string.IsNullOrEmpty(namePrefix) ? $"System.ItemNameDisplay:~<\"{namePrefix}\" AND" : "")} System.Devices.DevObjectType:=5 AND System.Devices.Aep.ProtocolId:=\"{{BB7BB05E-5972-42B5-94FC-76EAA7084D49}}\" AND (System.Devices.Aep.IsPaired:=System.StructuredQueryType.Boolean#False OR System.Devices.Aep.IsPaired:=System.StructuredQueryType.Boolean#True OR System.Devices.Aep.Bluetooth.IssueInquiry:=System.StructuredQueryType.Boolean#True)"))
             {
-                try {
+                try
+                {
                     devices.Add(await BluetoothLEDevice.FromIdAsync(device.Id));
                 }
-                catch(System.ArgumentException)
+                catch (System.ArgumentException)
                 {
                 }
             }
@@ -174,7 +175,7 @@ namespace InTheHand.Bluetooth
         private static async void Radio_StateChanged(Windows.Devices.Radios.Radio sender, object args)
         {
             bool newAvailability = await PlatformGetAvailability();
-            if(newAvailability != _oldAvailability)
+            if (newAvailability != _oldAvailability)
             {
                 _oldAvailability = newAvailability;
                 OnAvailabilityChanged();

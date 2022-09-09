@@ -38,19 +38,26 @@ Downloads are available here on the _Downloads_ tab. Packages are also available
 [![NuGet version](https://badge.fury.io/nu/32feet.NET.svg)](https://badge.fury.io/nu/32feet.NET)
 
 ## Documentation / Tutorial
-The user guide is available in the [Wiki](https://github.com/inthehand/32feet/wiki) section, and the class documentation is at [http://inthehand.github.io/] and in the release package.
+The user guide is available in the [Wiki](https://github.com/inthehand/32feet/wiki) section, and the class documentation is at [https://inthehand.github.io/](http://inthehand.github.io/) and in the release package.
 
 Please start by reading it.  It contains general information firstly on the various features contained in the library, and on what type of Bluetooth connection you want.  It also contains information on using each feature.
 
 ## Blogs
 
-[Alan's 32feet.NET Development Blog](http://32feetnetdev.wordpress.com/)
+[Alan's 32feet.NET Development Blog](https://32feetnetdev.wordpress.com/)
 
-[Peter's Blog](http://inthehand.com/blog)
+[Peter's Blog](https://inthehand.com/blog)
 
-[In The Hand Ltd](http://inthehand.com)
+[In The Hand Ltd](https://inthehand.com)
 
 ## Sponsors
 
 Many thanks to [NDepend](http://www.NDepend.com) for their support.
 Many thanks to [Aton Spa (Italy)](http://www.aton.eu) for commissioning and funding the implementation of StoneStreet One Bluetopia support.
+
+## Contributors
+<a href="https://github.com/inthehand/32feet/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=inthehand/32feet" />
+</a>
+
+Made with [contrib.rocks](https://contrib.rocks).
