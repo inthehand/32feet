@@ -71,7 +71,7 @@ namespace InTheHand.Bluetooth
             });
         }
 
-        static async Task<IReadOnlyCollection<BluetoothDevice>> PlatformScanForDevices(RequestDeviceOptions options)
+        static async Task<IReadOnlyCollection<BluetoothDevice>> PlatformScanForDevices(RequestDeviceOptions options, CancellationToken cancellationToken = default)
         {
             List<ScanFilter> filters = new List<ScanFilter>();
                 

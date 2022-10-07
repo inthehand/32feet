@@ -10,11 +10,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Threading;
 using System.Threading.Tasks;
 using Windows.Devices.Bluetooth;
 using Windows.Devices.Bluetooth.Advertisement;
 using Windows.Devices.Bluetooth.GenericAttributeProfile;
 using Windows.Devices.Enumeration;
+using Windows.Devices.Radios;
 using Windows.Foundation;
 using Windows.UI;
 
@@ -22,12 +24,43 @@ namespace InTheHand.Bluetooth
 {
     partial class Bluetooth
     {
+        private static BluetoothAdapter adapter;
+        private static Radio radio;
+
         internal static Dictionary<ulong, WeakReference> KnownDevices = new Dictionary<ulong, WeakReference>();
 
+        static async Task<BluetoothAdapter> GetAdapter()
+        {
+            if(adapter == null)
+            {
+                adapter = await BluetoothAdapter.GetDefaultAsync();
+            }
+
+            return adapter;
+        }
+        static async Task<Radio> GetRadio()
+        {
+            if(radio == null)
+            {
+                radio = await (await GetAdapter()).GetRadioAsync();
+            }
+
+            return radio;
+        }
         static async Task<bool> PlatformGetAvailability()
         {
-            var adaptor = await BluetoothAdapter.GetDefaultAsync();
-            return adaptor != null && adaptor.IsLowEnergySupported;
+            if(await GetAdapter() != null)
+            {
+                if(adapter.IsLowEnergySupported)
+                {
+                    if(await GetRadio() != null)
+                    {
+                        return radio.State == RadioState.On;
+                    }
+                }
+            }
+
+            return false;
         }
 
         static async Task<BluetoothDevice> PlatformRequestDevice(RequestDeviceOptions options)
@@ -123,7 +156,7 @@ namespace InTheHand.Bluetooth
             }
         }
 
-        static async Task<IReadOnlyCollection<BluetoothDevice>> PlatformScanForDevices(RequestDeviceOptions options)
+        static async Task<IReadOnlyCollection<BluetoothDevice>> PlatformScanForDevices(RequestDeviceOptions options, CancellationToken cancellationToken = default)
         {
             List<BluetoothDevice> devices = new List<BluetoothDevice>();
 
@@ -167,9 +200,16 @@ namespace InTheHand.Bluetooth
         private static async void AddAvailabilityChanged()
         {
             _oldAvailability = await PlatformGetAvailability();
-            var adaptor = await BluetoothAdapter.GetDefaultAsync();
-            var radio = await adaptor.GetRadioAsync();
-            radio.StateChanged += Radio_StateChanged;
+
+            if (radio == null)
+            {
+                radio = await GetRadio();
+            }
+
+            if (radio != null)
+            {
+                radio.StateChanged += Radio_StateChanged;
+            }
         }
 
         private static async void Radio_StateChanged(Windows.Devices.Radios.Radio sender, object args)
@@ -184,9 +224,12 @@ namespace InTheHand.Bluetooth
 
         private static async void RemoveAvailabilityChanged()
         {
-            var adaptor = await BluetoothAdapter.GetDefaultAsync();
-            var radio = await adaptor.GetRadioAsync();
-            radio.StateChanged -= Radio_StateChanged;
+            var r = await GetRadio();
+            
+            if (r != null)
+            {
+                radio.StateChanged -= Radio_StateChanged;
+            }
         }
 
         private static async Task<BluetoothLEScan> PlatformRequestLEScan(BluetoothLEScanOptions options)

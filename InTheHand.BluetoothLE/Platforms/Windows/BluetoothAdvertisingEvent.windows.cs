@@ -1,6 +1,6 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="BluetoothAdvertisingEvent.windows.cs" company="In The Hand Ltd">
-//   Copyright (c) 2018-20 In The Hand Ltd, All rights reserved.
+//   Copyright (c) 2018-22 In The Hand Ltd, All rights reserved.
 //   This source code is licensed under the MIT License - see License.txt
 // </copyright>
 //-----------------------------------------------------------------------
@@ -77,26 +77,31 @@ namespace InTheHand.Bluetooth
             return new BluetoothAdvertisingEvent(args);
         }
 
+        public static implicit operator BluetoothLEAdvertisement(BluetoothAdvertisingEvent advertisingEvent)
+        {
+            return advertisingEvent._advertisement;
+        }
+
         private ushort _appearance;
 
-        ushort GetAppearance()
+        ushort PlatformGetAppearance()
         {
             return _appearance;
         }
 
-        short GetRssi()
+        short PlatformGetRssi()
         {
             return _rssi;
         }
 
         private sbyte _txPower;
 
-        sbyte GetTxPower()
+        sbyte PlatformGetTxPower()
         {
             return _txPower;
         }
 
-        BluetoothUuid[] GetUuids()
+        BluetoothUuid[] PlatformGetUuids()
         {
             List<BluetoothUuid> uuids = new List<BluetoothUuid>();
             foreach(var u in _advertisement.ServiceUuids)
@@ -107,12 +112,12 @@ namespace InTheHand.Bluetooth
             return uuids.ToArray();
         }
 
-        string GetName()
+        string PlatformGetName()
         {
             return _advertisement.LocalName;
         }
 
-        IReadOnlyDictionary<ushort,byte[]> GetManufacturerData()
+        IReadOnlyDictionary<ushort,byte[]> PlatformGetManufacturerData()
         {
             Dictionary<ushort, byte[]> manufacturerData = new Dictionary<ushort, byte[]>();
 
@@ -124,7 +129,7 @@ namespace InTheHand.Bluetooth
             return new ReadOnlyDictionary<ushort,byte[]>(manufacturerData);
         }
 
-        IReadOnlyDictionary<BluetoothUuid, byte[]> GetServiceData()
+        IReadOnlyDictionary<BluetoothUuid, byte[]> PlatformGetServiceData()
         {
             Dictionary<BluetoothUuid, byte[]> serviceData = new Dictionary<BluetoothUuid, byte[]>();
 

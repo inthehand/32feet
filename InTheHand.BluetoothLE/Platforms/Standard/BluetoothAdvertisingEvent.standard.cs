@@ -1,6 +1,6 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="BluetoothAdvertisingEvent.standard.cs" company="In The Hand Ltd">
-//   Copyright (c) 2018-20 In The Hand Ltd, All rights reserved.
+//   Copyright (c) 2018-22 In The Hand Ltd, All rights reserved.
 //   This source code is licensed under the MIT License - see License.txt
 // </copyright>
 //-----------------------------------------------------------------------
@@ -13,37 +13,37 @@ namespace InTheHand.Bluetooth
 {
     partial class BluetoothAdvertisingEvent
     {
-        ushort GetAppearance()
+        ushort PlatformGetAppearance()
         {
             return 0;
         }
 
-        BluetoothUuid[] GetUuids()
+        BluetoothUuid[] PlatformGetUuids()
         {
             return new BluetoothUuid[] { };
         }
 
-        string GetName()
+        string PlatformGetName()
         {
             return string.Empty;
         }
 
-        short GetRssi()
+        short PlatformGetRssi()
         {
             return 0;
         }
 
-        sbyte GetTxPower()
+        sbyte PlatformGetTxPower()
         {
             return 0;
         }
 
-        IReadOnlyDictionary<ushort, byte[]> GetManufacturerData()
+        IReadOnlyDictionary<ushort, byte[]> PlatformGetManufacturerData()
         {
             return new ReadOnlyDictionary<ushort, byte[]>(new Dictionary<ushort,byte[]>());
         }
 
-        IReadOnlyDictionary<BluetoothUuid, byte[]> GetServiceData()
+        IReadOnlyDictionary<BluetoothUuid, byte[]> PlatformGetServiceData()
         {
             return new ReadOnlyDictionary<BluetoothUuid, byte[]>(new Dictionary<BluetoothUuid, byte[]>());
         }

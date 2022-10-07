@@ -1,6 +1,6 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="BluetoothAdvertisingEvent.android.cs" company="In The Hand Ltd">
-//   Copyright (c) 2018-20 In The Hand Ltd, All rights reserved.
+//   Copyright (c) 2018-22 In The Hand Ltd, All rights reserved.
 //   This source code is licensed under the MIT License - see License.txt
 // </copyright>
 //-----------------------------------------------------------------------
@@ -31,12 +31,12 @@ namespace InTheHand.Bluetooth
             return new BluetoothAdvertisingEvent(scanResult);
         }
 
-        ushort GetAppearance()
+        ushort PlatformGetAppearance()
         {
             return 0;
         }
 
-        BluetoothUuid[] GetUuids()
+        BluetoothUuid[] PlatformGetUuids()
         {
             List<BluetoothUuid> uuids = new List<BluetoothUuid>();
 
@@ -51,22 +51,22 @@ namespace InTheHand.Bluetooth
             return uuids.ToArray();
         }
 
-        string GetName()
+        string PlatformGetName()
         {
             return _scanResult.ScanRecord.DeviceName;
         }
 
-        short GetRssi()
+        short PlatformGetRssi()
         {
             return (short)_scanResult.Rssi;
         }
 
-        sbyte GetTxPower()
+        sbyte PlatformGetTxPower()
         {
             return (sbyte)_scanResult.TxPower;
         }
 
-        IReadOnlyDictionary<ushort, byte[]> GetManufacturerData()
+        IReadOnlyDictionary<ushort, byte[]> PlatformGetManufacturerData()
         {
             Dictionary<ushort, byte[]> data = new Dictionary<ushort, byte[]>();
             for (int i = 0; i < _scanResult.ScanRecord.ManufacturerSpecificData.Size(); i++)
@@ -79,7 +79,7 @@ namespace InTheHand.Bluetooth
             return new ReadOnlyDictionary<ushort, byte[]>(data);
         }
 
-        IReadOnlyDictionary<BluetoothUuid, byte[]> GetServiceData()
+        IReadOnlyDictionary<BluetoothUuid, byte[]> PlatformGetServiceData()
         {
             Dictionary<BluetoothUuid, byte[]> data = new Dictionary<BluetoothUuid, byte[]>();
             foreach(var entry in _scanResult.ScanRecord.ServiceData)

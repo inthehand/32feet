@@ -1,6 +1,6 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="BluetoothAdvertisingEvent.cs" company="In The Hand Ltd">
-//   Copyright (c) 2018-20 In The Hand Ltd, All rights reserved.
+//   Copyright (c) 2018-22 In The Hand Ltd, All rights reserved.
 //   This source code is licensed under the MIT License - see License.txt
 // </copyright>
 //-----------------------------------------------------------------------
@@ -20,18 +20,18 @@ namespace InTheHand.Bluetooth
 
         public BluetoothDevice Device { get; private set; }
 
-        public BluetoothUuid[] Uuids { get { return GetUuids(); } }
+        public BluetoothUuid[] Uuids { get { return PlatformGetUuids(); } }
 
-        public string Name { get { return GetName(); } }
+        public string Name { get { return PlatformGetName(); } }
 
-        public ushort Appearance { get { return GetAppearance(); } }
+        public ushort Appearance { get { return PlatformGetAppearance(); } }
 
-        public sbyte TxPower { get { return GetTxPower(); } }
+        public sbyte TxPower { get { return PlatformGetTxPower(); } }
 
-        public short Rssi { get { return GetRssi(); } }
+        public short Rssi { get { return PlatformGetRssi(); } }
 
-        public IReadOnlyDictionary<ushort,byte[]> ManufacturerData { get { return GetManufacturerData(); } }
+        public IReadOnlyDictionary<ushort,byte[]> ManufacturerData { get { return PlatformGetManufacturerData(); } }
 
-        public IReadOnlyDictionary<BluetoothUuid, byte[]> ServiceData { get { return GetServiceData(); } }
+        public IReadOnlyDictionary<BluetoothUuid, byte[]> ServiceData { get { return PlatformGetServiceData(); } }
     }
 }

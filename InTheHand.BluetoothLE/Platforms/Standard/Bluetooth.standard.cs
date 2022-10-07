@@ -7,6 +7,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace InTheHand.Bluetooth
@@ -23,7 +24,7 @@ namespace InTheHand.Bluetooth
             return Task.FromException<BluetoothDevice>(new PlatformNotSupportedException());
         }
 
-        private static Task<IReadOnlyCollection<BluetoothDevice>> PlatformScanForDevices(RequestDeviceOptions options)
+        private static Task<IReadOnlyCollection<BluetoothDevice>> PlatformScanForDevices(RequestDeviceOptions options, CancellationToken cancellationToken = default)
         {
             return Task.FromException<IReadOnlyCollection<BluetoothDevice>>(new PlatformNotSupportedException());
         }

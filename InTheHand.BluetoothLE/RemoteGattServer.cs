@@ -7,6 +7,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Threading.Tasks;
 
@@ -37,6 +38,8 @@ namespace InTheHand.Bluetooth
         public BluetoothDevice Device { get; private set; }
 
         [Obsolete("Use IsConnected instead", true)]
+        [Browsable(false)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool Connected { get { return IsConnected; } }
 
         /// <summary>
