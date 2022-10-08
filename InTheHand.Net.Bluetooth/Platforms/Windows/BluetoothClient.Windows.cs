@@ -20,6 +20,11 @@ namespace InTheHand.Net.Sockets
     {
         private StreamSocket streamSocket;
 
+        internal BluetoothClient(StreamSocket socket)
+        {
+            this.streamSocket = socket;
+        }
+
         private void PlatformInitialize()
         {
         }
