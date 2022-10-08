@@ -34,6 +34,12 @@ namespace InTheHand.Net.Sockets
                 _radio.Mode = RadioMode.Connectable;
         }
 
+        internal BluetoothClient(BluetoothSocket socket)
+        {
+            PlatformInitialize();
+            _socket = socket;
+        }
+
         IEnumerable<BluetoothDeviceInfo> GetPairedDevices()
         {
             foreach(BluetoothDevice device in ((BluetoothAdapter)_radio).BondedDevices)

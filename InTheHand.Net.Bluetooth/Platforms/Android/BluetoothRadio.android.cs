@@ -35,6 +35,8 @@ namespace InTheHand.Net.Bluetooth
 
         private readonly BluetoothAdapter _adapter;
 
+        internal BluetoothAdapter Adapter {get => _adapter;}
+
         private BluetoothRadio(BluetoothAdapter adapter)
         {
             _adapter = adapter;

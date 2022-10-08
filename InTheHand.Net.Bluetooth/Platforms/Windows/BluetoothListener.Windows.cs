@@ -65,7 +65,7 @@ namespace InTheHand.Net.Sockets
 
         BluetoothClient DoAcceptBluetoothClient()
         {
-            if(Active && listener != null)
+            if(listener != null)
             {
                 listenHandle.WaitOne();
                 pending = false;
