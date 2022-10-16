@@ -13,12 +13,14 @@ using Windows.Devices.Bluetooth;
 using Windows.Devices.Bluetooth.Rfcomm;
 using Windows.Devices.Enumeration;
 using Windows.Networking.Sockets;
+using static InTheHand.Net.Bluetooth.BluetoothDevicePicker;
 
 namespace InTheHand.Net.Sockets
 {
     partial class BluetoothClient
     {
         private StreamSocket streamSocket;
+        private bool authenticate = false;
 
         internal BluetoothClient(StreamSocket socket)
         {
@@ -72,24 +74,19 @@ namespace InTheHand.Net.Sockets
             var t = Task.Run(async () =>
             {
                 var device = await BluetoothDevice.FromBluetoothAddressAsync(address);
-                var rfcommServices = await device.GetRfcommServicesForIdAsync(RfcommServiceId.FromUuid(service));
+                var rfcommServices = await device.GetRfcommServicesForIdAsync(RfcommServiceId.FromUuid(service), BluetoothCacheMode.Uncached);
 
                 if(rfcommServices.Error == BluetoothError.Success)
                 {
                     var rfCommService = rfcommServices.Services[0];
                     streamSocket = new StreamSocket();
-                    await streamSocket.ConnectAsync(rfCommService.ConnectionHostName, rfCommService.ConnectionServiceName);
+                    await streamSocket.ConnectAsync(rfCommService.ConnectionHostName, rfCommService.ConnectionServiceName, Authenticate ? SocketProtectionLevel.BluetoothEncryptionWithAuthentication : SocketProtectionLevel.BluetoothEncryptionAllowNullAuthentication);
                 }
             });
 
             t.Wait();
-
-            /*var ep = new BluetoothEndPoint(address, service);
-
-            Connect(ep);*/
         }
 
-        /*
         /// <summary>
         /// Connects the client to a remote Bluetooth host using the specified endpoint.
         /// </summary>
@@ -99,8 +96,8 @@ namespace InTheHand.Net.Sockets
             if (remoteEP == null)
                 throw new ArgumentNullException(nameof(remoteEP));
 
-            _socket.Connect(remoteEP);
-        }*/
+            PlatformConnect(remoteEP.Address, remoteEP.Service);
+        }
 
         void PlatformClose()
         {
@@ -113,16 +110,17 @@ namespace InTheHand.Net.Sockets
 
         bool GetAuthenticate()
         {
-            return false;
+            return authenticate;
         }
 
         void SetAuthenticate(bool value)
         {
+            authenticate = value;
         }
 
         Socket GetClient()
         {
-            return null;
+            throw new PlatformNotSupportedException();
         }
 
         bool GetConnected()
@@ -145,11 +143,12 @@ namespace InTheHand.Net.Sockets
 
         void SetInquiryLength(TimeSpan length)
         {
-
+            throw new PlatformNotSupportedException();
         }
 
         void SetEncrypt(bool value)
         {
+            throw new PlatformNotSupportedException();
         }
 
         string GetRemoteMachineName()
