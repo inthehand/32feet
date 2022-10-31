@@ -1,6 +1,6 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="BluetoothUuid.unified.cs" company="In The Hand Ltd">
-//   Copyright (c) 2018-20 In The Hand Ltd, All rights reserved.
+//   Copyright (c) 2018-22 In The Hand Ltd, All rights reserved.
 //   This source code is licensed under the MIT License - see License.txt
 // </copyright>
 //-----------------------------------------------------------------------
@@ -44,7 +44,7 @@ namespace InTheHand.Bluetooth
                     b[5] = uuid.Data[4];
                     b[6] = uuid.Data[7];
                     b[7] = uuid.Data[6];
-                    Marshal.Copy(uuid.Data.Bytes, b, 8, 8);
+                    Marshal.Copy(uuid.Data.Bytes + 8, b, 8, 8);
                    
                     break;
             }
