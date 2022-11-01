@@ -50,7 +50,11 @@
 <DocumentationSource sourceFile="InTheHand.Nfc\bin\Release\netstandard2.0\InTheHand.Nfc.dll" />
 <DocumentationSource sourceFile="InTheHand.Nfc\bin\Release\netstandard2.0\InTheHand.Nfc.xml" />
 <DocumentationSource sourceFile="InTheHand.BluetoothLE\bin\Release\netstandard2.0\InTheHand.BluetoothLE.dll" />
-<DocumentationSource sourceFile="InTheHand.BluetoothLE\bin\Release\netstandard2.0\InTheHand.BluetoothLE.xml" /></DocumentationSources>
+<DocumentationSource sourceFile="InTheHand.BluetoothLE\bin\Release\netstandard2.0\InTheHand.BluetoothLE.xml" />
+<DocumentationSource sourceFile="InTheHand.IOBluetoothUI\bin\Release\IOBluetooth.dll" />
+<DocumentationSource sourceFile="InTheHand.IOBluetoothUI\bin\Release\IOBluetooth.xml" />
+<DocumentationSource sourceFile="InTheHand.IOBluetoothUI\bin\Release\IOBluetoothUI.dll" />
+<DocumentationSource sourceFile="InTheHand.IOBluetoothUI\bin\Release\IOBluetoothUI.xml" /></DocumentationSources>
     <NamespaceSummaries>
       <NamespaceSummaryItem name="InTheHand.Bluetooth" isDocumented="True">The InTheHand.Bluetooth namespace contains a WebBluetooth compatible API for Bluetooth LE client functionality.</NamespaceSummaryItem>
 <NamespaceSummaryItem name="InTheHand.Net" isDocumented="True">The InTheHand.Net namespace contains classes for working with addressing on personal area networks.</NamespaceSummaryItem>

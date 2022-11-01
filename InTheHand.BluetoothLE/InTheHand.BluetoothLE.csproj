@@ -1,7 +1,7 @@
 ﻿<Project Sdk="MSBuild.Sdk.Extras/3.0.44">
 
 	<PropertyGroup>
-		<TargetFrameworks>netstandard2.0;monoandroid90;monoandroid10.0;xamarinios10;xamarintvos10;xamarin.watchos10;xamarinmac20;uap10.0;netcoreapp3.1;net5.0-windows10.0.19041.0;net6.0-windows10.0.19041.0;net6.0-android;net6.0-ios;net6.0-maccatalyst;net461</TargetFrameworks>
+		<TargetFrameworks>netstandard2.0;monoandroid90;monoandroid10.0;xamarinios10;xamarintvos10;xamarin.watchos10;uap10.0;netcoreapp3.1;net5.0-windows10.0.19041.0;net6.0-windows10.0.19041.0;net6.0-android;net6.0-ios;net6.0-maccatalyst;net461</TargetFrameworks>
 		<RuntimeIdentifiers Condition=" '$(TargetFramework)' == 'netcoreapp3.1' ">win</RuntimeIdentifiers>
 		<Company>In The Hand Ltd</Company>
 		<Authors>Peter Foot</Authors>
@@ -148,6 +148,7 @@
 	</ItemGroup>
 
 	<ItemGroup Condition=" '$(TargetFramework)' == 'xamarinmac20' ">
+		<Reference Include="Xamarin.Mac.dll"/>
 		<Compile Include="Platforms\Apple\*.cs" />
 	</ItemGroup>
 

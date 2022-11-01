@@ -30,8 +30,8 @@ namespace RfcommXamarinForms
 
         private async void Button_Clicked(object sender, System.EventArgs e)
         {
-            var r = BluetoothRadio.Default;
-            r.Mode = RadioMode.PowerOff;
+            //var r = BluetoothRadio.Default;
+            //r.Mode = RadioMode.Connectable;
 
             BluetoothDeviceInfo device = null;
 
@@ -52,8 +52,9 @@ namespace RfcommXamarinForms
                 if (client.Connected)
                 {
                     stream = client.GetStream();
-                    StreamWriter sw = new StreamWriter(stream, System.Text.Encoding.ASCII);
-                    sw.WriteLine("Hello world!\r\n\r\n");
+                    StreamWriter sw = new StreamWriter(stream, System.Text.Encoding.UTF8);
+                    sw.WriteLine("Hello world!");
+                    sw.Flush();
                     sw.Close();
                 }
 
