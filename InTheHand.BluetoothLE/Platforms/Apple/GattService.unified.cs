@@ -40,19 +40,40 @@ namespace InTheHand.Bluetooth
 
         Task<GattCharacteristic> PlatformGetCharacteristic(BluetoothUuid characteristic)
         {
-            ((CBPeripheral)Device).DiscoverCharacteristics(new CBUUID[] { characteristic }, _service);
-            GattCharacteristic matchingCharacteristic = null;
+            TaskCompletionSource<GattCharacteristic> tcs = new TaskCompletionSource<GattCharacteristic>();
+            CBPeripheral peripheral = Device;
 
-            foreach(CBCharacteristic cbcharacteristic in _service.Characteristics)
+            void handler(object sender, CBServiceEventArgs args)
             {
-                if((BluetoothUuid)cbcharacteristic.UUID == characteristic)
+#if NET6_0_OR_GREATER
+                peripheral.DiscoveredCharacteristics -= handler;
+#else
+                peripheral.DiscoveredCharacteristic -= handler;
+#endif
+                if (args.Error != null)
+                    tcs.SetException(new Exception(args.Error.ToString()));
+
+                GattCharacteristic matchingCharacteristic = null;
+                foreach (CBCharacteristic cbcharacteristic in _service.Characteristics)
                 {
-                    matchingCharacteristic = new GattCharacteristic(this, cbcharacteristic);
-                    break;
+                    if ((BluetoothUuid)cbcharacteristic.UUID == characteristic)
+                    {
+                        matchingCharacteristic = new GattCharacteristic(this, cbcharacteristic);
+                        break;
+                    }
                 }
+
+                tcs.SetResult(matchingCharacteristic);
             }
 
-            return Task.FromResult(matchingCharacteristic);
+#if NET6_0_OR_GREATER
+            peripheral.DiscoveredCharacteristics += handler;
+#else
+            peripheral.DiscoveredCharacteristic += handler;
+#endif
+            ((CBPeripheral)Device).DiscoverCharacteristics(new CBUUID[] { characteristic }, _service);
+
+            return tcs.Task;
         }
 
         Task<IReadOnlyList<GattCharacteristic>> PlatformGetCharacteristics()
@@ -81,7 +102,7 @@ namespace InTheHand.Bluetooth
             }
 
 #if NET6_0_OR_GREATER
-            peripheral.DiscoveredCharacteristics+= handler;
+            peripheral.DiscoveredCharacteristics += handler;
 #else
             peripheral.DiscoveredCharacteristic += handler;
 #endif
