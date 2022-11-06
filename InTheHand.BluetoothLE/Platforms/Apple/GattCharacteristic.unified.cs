@@ -122,7 +122,7 @@ namespace InTheHand.Bluetooth
             {
                 if (e.Characteristic == _characteristic)
                 {
-                    peripheral.UpdatedCharacterteristicValue += handler;
+                    peripheral.UpdatedCharacterteristicValue -= handler;
 
                     if (e.Error != null)
                     {
