@@ -62,5 +62,9 @@ namespace InTheHand.Net.Bluetooth
         /// Bluetooth Core Specification 5.2
         /// </summary>
         Version52 = 11,
+        /// <summary>
+        /// Bluetooth Core Specification 5.3
+        /// </summary>
+        Version53 = 12,
     }
 }
