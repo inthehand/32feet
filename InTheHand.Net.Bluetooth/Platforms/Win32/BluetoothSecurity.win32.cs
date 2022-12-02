@@ -42,7 +42,7 @@ namespace InTheHand.Net.Bluetooth
             // Handle response without prompt
             _authenticationHandlers.Add(authHandler);
 
-            bool success = NativeMethods.BluetoothAuthenticateDeviceEx(IntPtr.Zero, IntPtr.Zero, ref info, null, BluetoothAuthenticationRequirements.MITMProtectionNotRequired) == 0;
+            bool success = NativeMethods.BluetoothAuthenticateDeviceEx(IntPtr.Zero, IntPtr.Zero, ref info, null, BluetoothAuthenticationRequirements.MITMProtectionRequired) == 0;
 
             authHandler.WaitOne();
             BluetoothDeviceInfo deviceInfo = new BluetoothDeviceInfo(info);

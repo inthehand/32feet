@@ -18,6 +18,8 @@ namespace InTheHand.Net.Bluetooth
                 nativeDevice.SetPin(System.Text.Encoding.ASCII.GetBytes(pin));
             }
 
+            //nativeDevice.SetPairingConfirmation(true);
+
             return nativeDevice.CreateBond();
         }
 
