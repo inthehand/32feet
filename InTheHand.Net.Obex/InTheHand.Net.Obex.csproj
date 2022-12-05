@@ -43,7 +43,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="InTheHand.Net.Bluetooth" Version="4.0.31" />
+    <PackageReference Include="InTheHand.Net.Bluetooth" Version="4.0.32" />
     <PackageReference Include="InTheHand.Net.IrDA" Version="4.0.2" />
   </ItemGroup>
 
