@@ -14,6 +14,11 @@ namespace InTheHand.Net.Bluetooth
             return false;
         }
 
+        static bool PlatformPairRequest(BluetoothAddress device, string pin, BluetoothAuthenticationType type)
+        {
+            return false;
+        }
+
         static bool PlatformRemoveDevice(BluetoothAddress device)
         {
             return false;

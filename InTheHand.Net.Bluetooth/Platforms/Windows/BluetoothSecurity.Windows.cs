@@ -48,6 +48,37 @@ namespace InTheHand.Net.Bluetooth
             return t.Result;
         }
 
+        static bool PlatformPairRequest(BluetoothAddress device, string pin, BluetoothAuthenticationType type)
+        {
+            BluetoothDevice bluetoothDevice = null;
+            var t = Task<bool>.Run(async () =>
+            {
+                bluetoothDevice = await BluetoothDevice.FromBluetoothAddressAsync(device.ToUInt64());
+                DevicePairingResultStatus status = bluetoothDevice.DeviceInformation.Pairing.IsPaired ? DevicePairingResultStatus.Paired : DevicePairingResultStatus.NotPaired;
+
+                if (status == DevicePairingResultStatus.Paired)
+                    return true;
+
+                if (string.IsNullOrEmpty(pin))
+                {
+                    var result = await bluetoothDevice.DeviceInformation.Pairing.PairAsync();
+                    status = result.Status;
+                }
+                else
+                {
+                    pinMappings.Add(bluetoothDevice.DeviceId, pin);
+                    bluetoothDevice.DeviceInformation.Pairing.Custom.PairingRequested += Custom_PairingRequested;
+                    var result = await bluetoothDevice.DeviceInformation.Pairing.Custom.PairAsync(DevicePairingKinds.ProvidePin);
+                    status = result.Status;
+                }
+
+                return status == DevicePairingResultStatus.Paired;
+            });
+
+            t.Wait();
+            return t.Result;
+        }
+
         private static void Custom_PairingRequested(DeviceInformationCustomPairing sender, DevicePairingRequestedEventArgs args)
         {
             sender.PairingRequested -= Custom_PairingRequested;

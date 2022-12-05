@@ -22,6 +22,19 @@ namespace InTheHand.Net.Bluetooth
 
             return nativeDevice.CreateBond();
         }
+        static bool PlatformPairRequest(BluetoothAddress device, string pin, BluetoothAuthenticationType type)
+        {
+            var nativeDevice = Android.Bluetooth.BluetoothAdapter.DefaultAdapter.GetRemoteDevice(device.ToSixByteArray());
+
+            if (pin != null)
+            {
+                nativeDevice.SetPin(System.Text.Encoding.ASCII.GetBytes(pin));
+            }
+
+            //nativeDevice.SetPairingConfirmation(true);
+
+            return nativeDevice.CreateBond();
+        }
 
         static bool PlatformRemoveDevice(BluetoothAddress device)
         {

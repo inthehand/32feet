@@ -58,6 +58,48 @@ namespace InTheHand.Net.Bluetooth
             return success;
         }
 
+        static bool PlatformPairRequest(BluetoothAddress device, string pin, BluetoothAuthenticationType type)
+        {
+            if (pin != null)
+            {
+                if (pin.Length > BLUETOOTH_PIN_INFO.BTH_MAX_PIN_SIZE)
+                    throw new ArgumentOutOfRangeException(nameof(pin));
+            }
+
+            BLUETOOTH_DEVICE_INFO info = new BLUETOOTH_DEVICE_INFO();
+            info.dwSize = Marshal.SizeOf(info);
+            info.Address = device;
+
+            RemoveRedundantAuthHandler(device);
+
+            NativeMethods.BluetoothGetDeviceInfo(IntPtr.Zero, ref info);
+            // don't wait on this process if already paired
+            if (info.fAuthenticated)
+                return true;
+
+            var authHandler = new Win32BluetoothAuthentication(device, pin);
+
+            // Handle response without prompt
+            _authenticationHandlers.Add(authHandler);
+
+            BluetoothAuthenticationRequirements requirements = (BluetoothAuthenticationRequirements)type;
+
+            bool success = NativeMethods.BluetoothAuthenticateDeviceEx(IntPtr.Zero, IntPtr.Zero, ref info, null, requirements) == 0;
+
+            authHandler.WaitOne();
+            BluetoothDeviceInfo deviceInfo = new BluetoothDeviceInfo(info);
+            deviceInfo.Refresh();
+
+            // On Windows 7 these services are not automatically activated
+            if (deviceInfo.ClassOfDevice.Device == DeviceClass.AudioVideoHeadset || deviceInfo.ClassOfDevice.Device == DeviceClass.AudioVideoHandsFree)
+            {
+                deviceInfo.SetServiceState(BluetoothService.Headset, true);
+                deviceInfo.SetServiceState(BluetoothService.Handsfree, true);
+            }
+
+            return success;
+        }
+
         internal static void RemoveRedundantAuthHandler(ulong address)
         {
             Win32BluetoothAuthentication redundantAuth = null;
