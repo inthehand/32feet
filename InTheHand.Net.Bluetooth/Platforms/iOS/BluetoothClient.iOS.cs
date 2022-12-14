@@ -10,6 +10,7 @@ using Foundation;
 using InTheHand.Net.Sockets.iOS;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Net.Sockets;
 
 namespace InTheHand.Net.Sockets
@@ -26,7 +27,7 @@ namespace InTheHand.Net.Sockets
             EAAccessoryManager.SharedAccessoryManager.RegisterForLocalNotifications(); 
             _connectionObserver = EAAccessoryManager.Notifications.ObserveDidConnect((s, e) =>
             {
-                System.Diagnostics.Debug.WriteLine(e.Notification + " " + e.Accessory + " " + e.Selected);
+                Debug.WriteLine($"{e.Notification} {e.Accessory} {e.Selected}");
             });
         }
 
@@ -50,9 +51,16 @@ namespace InTheHand.Net.Sockets
         void PlatformConnect(BluetoothAddress address, Guid service)
         {
             _accessory = address.Accessory;
+            _accessory.Disconnected += _accessory_Disconnected;
             // TODO: provide mapping support for multiple protocol strings
             _session = new EASession(_accessory, _accessory.ProtocolStrings[0]);
             _stream = new ExternalAccessoryNetworkStream(_session);
+        }
+
+        private void _accessory_Disconnected(object sender, EventArgs e)
+        {
+            Debug.WriteLine($"{_accessory.Name} Disconnected");
+            _accessory.Disconnected -= _accessory_Disconnected;
         }
 
         void PlatformClose()

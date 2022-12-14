@@ -2,14 +2,9 @@
 //
 // InTheHand.Net.BluetoothAddress (iOS)
 // 
-// Copyright (c) 2003-2020 In The Hand Ltd, All rights reserved.
+// Copyright (c) 2003-2022 In The Hand Ltd, All rights reserved.
 // This source code is licensed under the MIT License
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using ExternalAccessory;
 
 namespace InTheHand.Net
@@ -21,7 +16,7 @@ namespace InTheHand.Net
         internal BluetoothAddress(EAAccessory accessory)
         {
             _accessory = accessory;
-            _address = (ulong)accessory.GetHashCode();
+            _address = (ulong)accessory.GetHashCode() & 0xFFFFFFFFFFFFU;
         }
 
         internal EAAccessory Accessory

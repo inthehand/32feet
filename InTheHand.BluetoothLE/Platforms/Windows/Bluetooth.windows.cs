@@ -72,7 +72,7 @@ namespace InTheHand.Bluetooth
 #if !UAP
             uint len = 64;
             byte[] buffer = new byte[len];
-
+            bounds = new Rect(0, 0, 480, 480);
             IntPtr hwnd = IntPtr.Zero;
 
             try
@@ -80,15 +80,17 @@ namespace InTheHand.Bluetooth
                 // a console app will return a non-null string for title
                 if (!string.IsNullOrEmpty(Console.Title))
                 {
-                    bounds = new Rect(0, 0, 480, 480);
+                    
                     hwnd = GetConsoleWindow();
-                    // set console host window as parent for picker
-                    ((IInitializeWithWindow)(object)picker).Initialize(hwnd);
                 }
             }
             catch
             {
+                hwnd = GetActiveWindow();
             }
+
+            // set host window as parent for picker
+            ((IInitializeWithWindow)(object)picker).Initialize(hwnd);
 
             int hasPackage = GetCurrentPackageId(ref len, buffer);
 

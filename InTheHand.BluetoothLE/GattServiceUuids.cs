@@ -1,14 +1,12 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="GattServiceUuids.cs" company="In The Hand Ltd">
-//   Copyright (c) 2015-20 In The Hand Ltd, All rights reserved.
+//   Copyright (c) 2015-22 In The Hand Ltd, All rights reserved.
 //   This source code is licensed under the MIT License - see License.txt
 // </copyright>
 //-----------------------------------------------------------------------
 
 // Based on values from https://www.bluetooth.com/specifications/gatt/services
 
-using System;
-using System.Diagnostics;
 using System.Reflection;
 
 namespace InTheHand.Bluetooth
@@ -73,22 +71,46 @@ namespace InTheHand.Bluetooth
         }
 
         /// <summary>
-        /// Gets the Bluetooth SIG-defined UUID for the Generic Access Service.
+        /// Gets the Bluetooth SIG-defined UUID for the Generic Access service.
         /// </summary>
         [BluetoothUti("generic_access")]
         public static readonly BluetoothUuid GenericAccess = 0x1800;
 
         /// <summary>
-        /// Gets the Bluetooth SIG-defined Alert Notification Service UUID.
+        /// Gets the Bluetooth SIG-defined Alert Notification service UUID.
         /// </summary>
         [BluetoothUti("alert_notification")]
         public static readonly BluetoothUuid AlertNotification = 0x1811;
 
         /// <summary>
+        /// Gets the Bluetooth SIG-defined Audio Input Control service UUID.
+        /// </summary>
+        [BluetoothUti("audio_input_control")]
+        public static readonly BluetoothUuid AudioInputControl = 0x1843;
+
+        /// <summary>
+        /// Gets the Bluetooth SIG-defined Audio Stream Control service UUID.
+        /// </summary>
+        [BluetoothUti("audio_stream_control")]
+        public static readonly BluetoothUuid AudioStreamControl = 0x184E;
+
+        /// <summary>
+        /// Gets the Bluetooth SIG-defined Authorization Control service UUID.
+        /// </summary>
+        [BluetoothUti("authorization_control")]
+        public static readonly BluetoothUuid AuthorizationControl = 0x183D;
+        
+        /// <summary>
         /// The Automation IO service is used to expose the analog inputs/outputs and digital input/outputs of a generic IO module (IOM).
         /// </summary>
         [BluetoothUti("automation_io")]
         public static readonly BluetoothUuid AutomationIO = 0x1815;
+
+        /// <summary>
+        /// Gets the Bluetooth SIG-defined Basic Audio Announcement service UUID.
+        /// </summary>
+        [BluetoothUti("basic_audio_announcement")]
+        public static readonly BluetoothUuid BasicAudioAnnouncement = 0x1851;
 
         /// <summary>
         /// The Battery Service exposes the state of a battery within a device. 
@@ -97,7 +119,7 @@ namespace InTheHand.Bluetooth
         public static readonly BluetoothUuid Battery = 0x180F;
 
         /// <summary>
-        /// 
+        /// Gets the Bluetooth SIG-defined Binary Sensor service UUID.
         /// </summary>
         [BluetoothUti("binary_sensor")]
         public static readonly BluetoothUuid BinarySensor = 0x183B;
@@ -119,6 +141,30 @@ namespace InTheHand.Bluetooth
         /// </summary>
         [BluetoothUti("bond_management")]
         public static readonly BluetoothUuid BondManagement = 0x181E;
+
+        /// <summary>
+        /// Gets the Bluetooth SIG-defined Broadcast Audio Announcement service UUID.
+        /// </summary>
+        [BluetoothUti("broadcast_audio_announcement")]
+        public static readonly BluetoothUuid BroadcastAudioAnnouncement = 0x1852;
+
+        /// <summary>
+        /// Gets the Bluetooth SIG-defined Broadcast Audio Scan service UUID.
+        /// </summary>
+        [BluetoothUti("broadcast_audio_scan")]
+        public static readonly BluetoothUuid BroadcastAudioScan = 0x184F;
+
+        /// <summary>
+        /// Gets the Bluetooth SIG-defined Common Audio service UUID.
+        /// </summary>
+        [BluetoothUti("common_audio")]
+        public static readonly BluetoothUuid CommonAudio = 0x1853;
+
+        /// <summary>
+        /// Gets the Bluetooth SIG-defined Constant Tone Extension service UUID.
+        /// </summary>
+        [BluetoothUti("constant_tone_extension")]
+        public static readonly BluetoothUuid ConstantToneExtension = 0x184A;
 
         /// <summary>
         /// Gets the Bluetooth SIG-defined Continuous Glucose Monitoring service UUID.
@@ -149,6 +195,12 @@ namespace InTheHand.Bluetooth
         /// </summary>
         [BluetoothUti("device_information")]
         public static readonly BluetoothUuid DeviceInformation = 0x180A;
+
+        /// <summary>
+        /// Gets the Bluetooth SIG-defined Device Time service UUID.
+        /// </summary>
+        [BluetoothUti("device_time")]
+        public static readonly BluetoothUuid DeviceTime = 0x1847;
 
         /// <summary>
         /// Gets the Bluetooth SIG-defined Environmental Sensing service UUID.
@@ -311,6 +363,18 @@ namespace InTheHand.Bluetooth
         /// </summary>
         [BluetoothUti("user_data")]
         public static readonly BluetoothUuid UserData = 0x181C;
+
+        /// <summary>
+        /// Gets the Bluetooth SIG-defined Volume Control service UUID.
+        /// </summary>
+        [BluetoothUti("volume_control")]
+        public static readonly BluetoothUuid VolumeControl = 0x1844;
+
+        /// <summary>
+        /// Gets the Bluetooth SIG-defined Volume Offset Control service UUID.
+        /// </summary>
+        [BluetoothUti("volume_offset_control")]
+        public static readonly BluetoothUuid VolumeOffsetControl = 0x1845;
 
         /// <summary>
         /// Gets the Bluetooth SIG-defined Weight Scale service UUID.

@@ -1,6 +1,6 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="GattService.windows.cs" company="In The Hand Ltd">
-//   Copyright (c) 2018-21 In The Hand Ltd, All rights reserved.
+//   Copyright (c) 2018-22 In The Hand Ltd, All rights reserved.
 //   This source code is licensed under the MIT License - see License.txt
 // </copyright>
 //-----------------------------------------------------------------------
@@ -16,11 +16,13 @@ namespace InTheHand.Bluetooth
     partial class GattService
     {
         readonly WBluetooth.GattDeviceService _service;
+        readonly WBluetooth.GattSession _session;
         readonly bool _isPrimary;
 
         internal GattService(BluetoothDevice device, WBluetooth.GattDeviceService service, bool isPrimary) : this(device)
         {
             _service = service;
+            _session = _service.Session;
             _isPrimary = isPrimary;
             device.AddDisposableObject(this,service);
         }
@@ -57,12 +59,15 @@ namespace InTheHand.Bluetooth
 
         async Task<GattCharacteristic> PlatformGetCharacteristic(BluetoothUuid characteristic)
         {
-            if(!await OpenAsync())
+            if (_service.Session.SessionStatus != WBluetooth.GattSessionStatus.Active)
             {
-                return null;
+                if (!await OpenAsync())
+                {
+                    return null;
+                }
             }
 
-            var result = await _service.GetCharacteristicsForUuidAsync(characteristic, Windows.Devices.Bluetooth.BluetoothCacheMode.Cached);
+            var result = await _service.GetCharacteristicsForUuidAsync(characteristic);
 
             if (result.Status == WBluetooth.GattCommunicationStatus.Success && result.Characteristics.Count > 0)
                 return new GattCharacteristic(this, result.Characteristics[0]);
@@ -72,14 +77,17 @@ namespace InTheHand.Bluetooth
 
         async Task<IReadOnlyList<GattCharacteristic>> PlatformGetCharacteristics()
         {
-            if (!await OpenAsync())
+            if (_service.Session.SessionStatus != WBluetooth.GattSessionStatus.Active)
             {
-                return null;
+                if (!await OpenAsync())
+                {
+                    return null;
+                }
             }
 
             List<GattCharacteristic> characteristics = new List<GattCharacteristic>();
 
-            var result = await _service.GetCharacteristicsAsync(BluetoothCacheMode.Cached);
+            var result = await _service.GetCharacteristicsAsync();
             if(result.Status == WBluetooth.GattCommunicationStatus.Success)
             {
                 foreach(var c in result.Characteristics)
@@ -93,12 +101,15 @@ namespace InTheHand.Bluetooth
 
         private async Task<GattService> PlatformGetIncludedServiceAsync(BluetoothUuid service)
         {
-            if (!await OpenAsync())
+            if (_service.Session.SessionStatus != WBluetooth.GattSessionStatus.Active)
             {
-                return null;
+                if (!await OpenAsync())
+                {
+                    return null;
+                }
             }
 
-            var servicesResult = await _service.GetIncludedServicesForUuidAsync(service, BluetoothCacheMode.Cached);
+            var servicesResult = await _service.GetIncludedServicesForUuidAsync(service);
 
             if(servicesResult.Status == WBluetooth.GattCommunicationStatus.Success)
             {

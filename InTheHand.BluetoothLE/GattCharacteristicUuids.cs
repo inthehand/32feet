@@ -1,6 +1,6 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="GattCharacteristicUuids.cs" company="In The Hand Ltd">
-//   Copyright (c) 2015-20 In The Hand Ltd, All rights reserved.
+//   Copyright (c) 2015-22 In The Hand Ltd, All rights reserved.
 //   This source code is licensed under the MIT License - see License.txt
 // </copyright>
 //-----------------------------------------------------------------------
@@ -633,13 +633,16 @@ namespace InTheHand.Bluetooth
         [BluetoothUti("gap.service_changed")]
         public static readonly BluetoothUuid ServiceChanged = 0x2A05;
 
-        [BluetoothUti("tempurature")]
-        public static readonly BluetoothUuid Tempurature = 0x2A6E;
+        [BluetoothUti("system_id")]
+        public static readonly BluetoothUuid SystemId = 0x2A23;
 
-        [BluetoothUti("tempurature_measurement")]
-        public static readonly BluetoothUuid TempuratureMeasurement = 0x2A1C;
+        [BluetoothUti("temperature")]
+        public static readonly BluetoothUuid Temperature = 0x2A6E;
 
-        [BluetoothUti("tempurature_type")]
+        [BluetoothUti("temperature_measurement")]
+        public static readonly BluetoothUuid TemperatureMeasurement = 0x2A1C;
+
+        [BluetoothUti("temperature_type")]
         public static readonly BluetoothUuid TempuratureType = 0x2A1D;
 
         [BluetoothUti("time_accuracy")]
@@ -665,6 +668,9 @@ namespace InTheHand.Bluetooth
 
         [BluetoothUti("true_wind_speed")]
         public static readonly BluetoothUuid TrueWindSpeed = 0x2A70;
+
+        [BluetoothUti("tx_power_level")]
+        public static readonly BluetoothUuid TXPowerLevel = 0x2A07;
 
         [BluetoothUti("uv_index")]
         public static readonly BluetoothUuid UVIndex = 0x2A76;

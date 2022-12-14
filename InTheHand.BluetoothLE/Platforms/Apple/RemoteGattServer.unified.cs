@@ -61,6 +61,7 @@ namespace InTheHand.Bluetooth
 
             Bluetooth.ConnectedPeripheral += connectedHandler;
             Bluetooth.FailedToConnectPeripheral += failedConnectHandler;
+            Bluetooth.DisconnectedPeripheral += Bluetooth_DisconnectedPeripheral;
 #if __IOS__
             if (Device.RequiresAncs)
             {
@@ -98,6 +99,12 @@ namespace InTheHand.Bluetooth
             }
         }
 
+        private void Bluetooth_DisconnectedPeripheral(object sender, CBPeripheralErrorEventArgs e)
+        {
+            if (e.Peripheral.Identifier.Equals(Device.Id))
+                Device.OnGattServerDisconnected();
+        }
+
         void PlatformDisconnect()
         {
             if (Device != null)
@@ -106,6 +113,7 @@ namespace InTheHand.Bluetooth
 
         void PlatformCleanup()
         {
+            Bluetooth.DisconnectedPeripheral -= Bluetooth_DisconnectedPeripheral;
         }
 
         Task<GattService> PlatformGetPrimaryService(BluetoothUuid service)

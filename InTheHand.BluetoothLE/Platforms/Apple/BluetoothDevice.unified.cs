@@ -25,6 +25,11 @@ namespace InTheHand.Bluetooth
             _peripheral = peripheral;
         }
 
+        private void Bluetooth_DisconnectedPeripheral(object sender, CBPeripheralErrorEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
         public static implicit operator BluetoothDevice(CBPeripheral peripheral)
         {
             return peripheral == null ? null : new BluetoothDevice(peripheral);
