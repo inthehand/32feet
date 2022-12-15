@@ -2,7 +2,7 @@
 //
 // InTheHand.Net.ObexWebRequest
 // 
-// Copyright (c) 2003-2021 In The Hand Ltd, All rights reserved.
+// Copyright (c) 2003-2022 In The Hand Ltd, All rights reserved.
 // This source code is licensed under the MIT License
 
 using System;
@@ -16,6 +16,7 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Linq;
+using InTheHand.Net.Obex;
 
 namespace InTheHand.Net
 {
@@ -97,38 +98,25 @@ namespace InTheHand.Net
 
         private readonly MemoryStream requestStream = new MemoryStream();
 
-
         private bool connected = false;
         private Socket s;
         private Stream ns;
         private Stream m_alreadyConnectedObexStream;
 
-
         private ushort remoteMaxPacket = 0x400;
         private int connectionId = INVALID_CONNECTION_ID;
 
-        private static class SchemeNames
-        {
-            internal const string Prefix = "obex";
-            //
-            internal const string Default = "obex";
-            internal const string Push = "obex-push";
-            internal const string Ftp = "obex-ftp";
-            internal const string Sync = "obex-sync";
-            internal const string Pbap = "obex-pbap";
-            internal const string Map = "obex-map";
-        }
 
         static ObexWebRequest()
         {
             //register the obex schemes with the WebRequest base method
             ObexWebRequestCreate owrc = new ObexWebRequestCreate();
-            WebRequest.RegisterPrefix(SchemeNames.Default, owrc);
-            WebRequest.RegisterPrefix(SchemeNames.Push, owrc);
-            WebRequest.RegisterPrefix(SchemeNames.Ftp, owrc);
-            WebRequest.RegisterPrefix(SchemeNames.Sync, owrc);
-            WebRequest.RegisterPrefix(SchemeNames.Pbap, owrc);
-            WebRequest.RegisterPrefix(SchemeNames.Map, owrc);
+            WebRequest.RegisterPrefix(ObexSchemeName.Default, owrc);
+            WebRequest.RegisterPrefix(ObexSchemeName.Push, owrc);
+            WebRequest.RegisterPrefix(ObexSchemeName.Ftp, owrc);
+            WebRequest.RegisterPrefix(ObexSchemeName.Sync, owrc);
+            WebRequest.RegisterPrefix(ObexSchemeName.PhoneBookAccessProfile, owrc);
+            WebRequest.RegisterPrefix(ObexSchemeName.MessagingAccessProfile, owrc);
         }
 
         /// <overloads>
@@ -146,7 +134,7 @@ namespace InTheHand.Net
             if (requestUri == null) {
                 throw new ArgumentNullException("requestUri");
             }
-            if (!requestUri.Scheme.StartsWith(SchemeNames.Prefix, StringComparison.OrdinalIgnoreCase)) {
+            if (!requestUri.Scheme.StartsWith(ObexSchemeName.Prefix, StringComparison.OrdinalIgnoreCase)) {
                 throw new UriFormatException("Scheme type not supported by ObexWebRequest");
             }
             uri = requestUri;
@@ -194,10 +182,13 @@ namespace InTheHand.Net
                 throw new ArgumentNullException("scheme");
             if (path == null)
                 throw new ArgumentNullException("path");
-            // (No UriBuilder in NETCF).
-            var u0 = new Uri(scheme + "://" + target.ToString("N"));
+            
+            var ub = new UriBuilder(scheme, target.ToString("N"), -1, path);
+            return ub.Uri;
+
+            /*var u0 = new Uri(scheme + "://" + target.ToString("N"));
             var u = new Uri(u0, path);
-            return u;
+            return u;*/
         }
 
         /// <summary>
@@ -236,7 +227,7 @@ namespace InTheHand.Net
         /// <param name="path">The path on the OBEX server.
         /// </param>
         public ObexWebRequest(BluetoothAddress target, string path)
-            : this(SchemeNames.Default, target, path)
+            : this(ObexSchemeName.Default, target, path)
         {
         }
 
@@ -325,35 +316,33 @@ namespace InTheHand.Net
                 if (ns == null) {
                     try {
                         if (uri.Host.Length == 0) {
-                            System.Diagnostics.Debug.Assert(m_alreadyConnectedObexStream != null);
-                            System.Diagnostics.Debug.Assert(m_alreadyConnectedObexStream.CanRead
+                            Debug.Assert(m_alreadyConnectedObexStream != null);
+                            Debug.Assert(m_alreadyConnectedObexStream.CanRead
                                 && m_alreadyConnectedObexStream.CanWrite);
                             ns = m_alreadyConnectedObexStream;
                         } 
                         else 
                         {
+                            if (IrDAAddress.TryParse(uri.Host, out var address))
+                            {
+                                IrDAClient client = new IrDAClient();
 
-                                if(IrDAAddress.TryParse(uri.Host, out var address))
+                                string serviceName;
+
+                                switch (uri.Scheme)
                                 {
-                                    IrDAClient client = new IrDAClient();
+                                    //potential for other obex based profiles to be added
+                                    default:
+                                        serviceName = IrDAService.ObjectExchange;
+                                        break;
+                                }
 
-                                    string serviceName;
+                                client.Connect(new IrDAEndPoint(address, serviceName));
 
-                                    switch(uri.Scheme)
-                                    {
-                                        //potential for other obex based profiles to be added
+                                if (!client.Connected)
+                                    return ObexStatusCode.NotFound;
 
-                                        default:
-                                            serviceName = IrDAService.ObjectExchange;
-                                            break;
-                                    }
-
-                                    client.Connect(new IrDAEndPoint(address, serviceName));
-
-                                    if (!client.Connected)
-                                        return ObexStatusCode.NotFound;
-
-                                    ns = client.GetStream();
+                                ns = client.GetStream();
                             }
                             else if (BluetoothAddress.TryParse(uri.Host, out BluetoothAddress ba))
                             {
@@ -362,17 +351,16 @@ namespace InTheHand.Net
 
                                 switch (uri.Scheme)
                                 {
-                                    case SchemeNames.Ftp:
+                                    case ObexSchemeName.Ftp:
                                         serviceGuid = BluetoothService.ObexFileTransfer;
                                         break;
-                                    //potential for other obex based profiles to be added
-                                    case SchemeNames.Sync:
+                                    case ObexSchemeName.Sync:
                                         serviceGuid = BluetoothService.IrMCSyncCommand;
                                         break;
-                                    case SchemeNames.Pbap:
+                                    case ObexSchemeName.PhoneBookAccessProfile:
                                         serviceGuid = BluetoothService.PhonebookAccessPse;
                                         break;
-                                    case SchemeNames.Map:
+                                    case ObexSchemeName.MessagingAccessProfile:
                                         serviceGuid = BluetoothService.MessageAccessProfile;
                                         break;
 
@@ -390,11 +378,11 @@ namespace InTheHand.Net
                             }
                             else
                             {
-                                //assume a tcp host
+                                // Assume a tcp host
                                 s = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
                                 IPAddress ipa = null;
-                                var addresses = System.Net.Dns.GetHostAddresses(uri.Host);
+                                var addresses = Dns.GetHostAddresses(uri.Host);
                                 if (addresses.Length > 0)
                                 {
                                     ipa = addresses[0];
@@ -410,7 +398,7 @@ namespace InTheHand.Net
                             }
 
                             if (ns == null) // BluetoothClient used above
-                                ns = new System.Net.Sockets.NetworkStream(s, true);
+                                ns = new NetworkStream(s, true);
 
                             // Timeout
                             //ns.ReadTimeout = timeout;
@@ -429,32 +417,13 @@ namespace InTheHand.Net
             return (ObexStatusCode)0;
         }
 
-        private static Guid ToBigEndian(Guid netGuid)
-        {
-            byte[] java = new byte[16];
-            byte[] net = netGuid.ToByteArray();
-            for (int i = 8; i < 16; i++)
-            {
-                java[i] = net[i];
-            }
-            java[0] = net[3];
-            java[1] = net[2];
-            java[2] = net[1];
-            java[3] = net[0];
-            java[4] = net[5];
-            java[5] = net[4];
-            java[6] = net[7];
-            java[7] = net[6];
-            return new Guid(java);
-        }
-
         private ObexStatusCode Connect_Obex()
         {
             // do obex negotiation
             byte[] connectPacket = new byte[remoteMaxPacket];
             short connectPacketLength = 7;
 
-            if (uri.Scheme == SchemeNames.Ftp) {
+            if (uri.Scheme == ObexSchemeName.Ftp) {
                 connectPacket = new byte[] { 0x80, 0x00, 26, 0x10, 0x00, 0x20, 0x00, 0x46, 0x00, 19, 0xF9, 0xEC, 0x7B, 0xC4, 0x95, 0x3C, 0x11, 0xD2, 0x98, 0x4E, 0x52, 0x54, 0x00, 0xDC, 0x9E, 0x09 };
                 connectPacketLength = (short)connectPacket.Length;
             } else {
@@ -463,7 +432,7 @@ namespace InTheHand.Net
                 // target
                 if (Guid.TryParse(Headers["TARGET"], out var targetGuid))
                 {
-                    var targetBytes = ToBigEndian(targetGuid).ToByteArray();
+                    var targetBytes = GuidHelper.HostToNetworkOrder(targetGuid).ToByteArray();
                     connectPacket[connectPacketLength] = (byte)ObexHeader.Target;
                     short targetHeaderLen = IPAddress.HostToNetworkOrder((short)(targetBytes.Length + 3));
                     BitConverter.GetBytes(targetHeaderLen).CopyTo(connectPacket, connectPacketLength + 1);
@@ -878,7 +847,7 @@ namespace InTheHand.Net
             const int NullTerminatorLen = 2;
             int filenameLength = path.Length * 2 + NullTerminatorLen;
             buffer[bufferlen] = (byte)ObexHeader.Name;
-            int filenameheaderlen = IPAddress.HostToNetworkOrder((short)(filenameLength + 3));
+            int filenameheaderlen = IPAddress.HostToNetworkOrder(filenameLength + 3);
             BitConverter.GetBytes(filenameheaderlen).CopyTo(buffer, bufferlen + 1);
             System.Text.Encoding.BigEndianUnicode.GetBytes(path).CopyTo(buffer, bufferlen + 3);
 
@@ -1039,7 +1008,7 @@ namespace InTheHand.Net
             requestStream.Close();
 
             // write content length
-            this.ContentLength = len;
+            ContentLength = len;
         }
         #endregion
 

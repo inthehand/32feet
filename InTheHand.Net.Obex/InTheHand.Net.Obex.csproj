@@ -5,15 +5,15 @@
     <Company>In The Hand Ltd</Company>
     <Authors>Peter Foot</Authors>
     <Product>32feet.NET</Product>
-    <Version>4.0.4</Version>
+    <Version>4.0.5</Version>
     <RepositoryUrl>https://github.com/inthehand/32feet</RepositoryUrl>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <PackageProjectUrl>https://github.com/inthehand/32feet</PackageProjectUrl>
-    <Copyright>Copyright (c) 2004-2021 In The Hand Ltd</Copyright>
+    <Copyright>Copyright (c) 2004-2022 In The Hand Ltd</Copyright>
     <Description>32feet.NET is an open-source project to make personal area networking technologies such as Bluetooth easily accessible from .NET code.</Description>
-    <FileVersion>4.0.4.913</FileVersion>
+    <FileVersion>4.0.5.1215</FileVersion>
     <AssemblyVersion>4.0.0.0</AssemblyVersion>
     <AssemblyName>InTheHand.Net.Obex</AssemblyName>
     <DebugType>portable</DebugType>
@@ -43,7 +43,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="InTheHand.Net.Bluetooth" Version="4.0.31" />
+    <PackageReference Include="InTheHand.Net.Bluetooth" Version="4.0.32" />
     <PackageReference Include="InTheHand.Net.IrDA" Version="4.0.2" />
   </ItemGroup>
 

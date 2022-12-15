@@ -36,7 +36,7 @@ namespace InTheHand.Net
             return ObexTransport.Unknown;
         }
 
-            internal static void ParseHeaders(byte[] packet, bool isConnectPacket, ref ushort remoteMaxPacket, Stream bodyStream, WebHeaderCollection headers)
+        internal static void ParseHeaders(byte[] packet, bool isConnectPacket, ref ushort remoteMaxPacket, Stream bodyStream, WebHeaderCollection headers)
         {
             ObexMethod method = (ObexMethod)packet[0];
             int packetLength = IPAddress.NetworkToHostOrder(BitConverter.ToInt16(packet, 1));
@@ -44,15 +44,18 @@ namespace InTheHand.Net
             int pos = 3;
             int lastPos = int.MinValue;
 
-            while (pos < packetLength) {
-                if (pos == lastPos) {
+            while (pos < packetLength)
+            {
+                if (pos == lastPos)
+                {
                     Debug.Fail("Infinite Loop!");
                     throw new InvalidOperationException("Infinite Loop!");
                 }
                 lastPos = pos;
 
                 ObexHeader header = (ObexHeader)packet[pos];
-                switch (header) {
+                switch (header)
+                {
                     case ObexHeader.None:
                         return;
                     case (ObexHeader)0x10:
@@ -74,12 +77,16 @@ namespace InTheHand.Net
                         string key = header.ToString().ToUpper();
                         string value = intValue.ToString();
                         // Duplicate headers causes comma-separated HTTP list!!
-                        if (-1 != Array.IndexOf<string>(headers.AllKeys, key)) {
+                        if (-1 != Array.IndexOf<string>(headers.AllKeys, key))
+                        {
                             string existing = headers.Get(key);
-                            if (value == existing) {
+                            if (value == existing)
+                            {
                                 // Just discard it then.
                                 break;
-                            } else {
+                            }
+                            else
+                            {
                                 Debug.Assert(-1 == Array.IndexOf<string>(headers.AllKeys, header.ToString().ToUpper()),
                                     "Duplicate headers causes comma-separated HTTP list!!: " + header.ToString().ToUpper());
                             }
@@ -128,15 +135,19 @@ namespace InTheHand.Net
                     default:
                         int headerSize = IPAddress.NetworkToHostOrder(BitConverter.ToInt16(packet, pos + 1));
 
-                        if (headerSize > 3) {
+                        if (headerSize > 3)
+                        {
                             string headerString = System.Text.Encoding.BigEndianUnicode.GetString(packet, pos + 3, headerSize - 5);
-                            if (headerString != null) {
+                            if (headerString != null)
+                            {
                                 int nullindex = headerString.IndexOf('\0');
-                                if (nullindex > -1) {
+                                if (nullindex > -1)
+                                {
                                     headerString = headerString.Substring(0, nullindex);
                                 }
 
-                                if (headerString != string.Empty) {
+                                if (headerString != string.Empty)
+                                {
                                     headers.Add(header.ToString().ToUpper(), Uri.EscapeDataString(headerString));
                                 }
                             }
@@ -145,7 +156,6 @@ namespace InTheHand.Net
                         pos += headerSize;
                         break;
                 }
-
             }
         }
     }
