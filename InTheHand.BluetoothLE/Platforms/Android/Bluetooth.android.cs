@@ -25,14 +25,14 @@ namespace InTheHand.Bluetooth
 {
     partial class Bluetooth
     {
-        internal static BluetoothManager _manager = (BluetoothManager) Application.Context.GetSystemService(Android.App.Application.BluetoothService);
+        internal static BluetoothManager _manager = (BluetoothManager) Application.Context.GetSystemService(Application.BluetoothService);
         private static readonly EventWaitHandle s_handle = new EventWaitHandle(false, EventResetMode.AutoReset);
         internal static Android.Bluetooth.BluetoothDevice s_device;
         private static RequestDeviceOptions _currentRequest;
 
         static Task<bool> PlatformGetAvailability()
         {
-            return Task.FromResult(BluetoothAdapter.DefaultAdapter.IsEnabled);
+            return Task.FromResult(_manager != null && _manager.Adapter != null && _manager.Adapter.IsEnabled);
         }
 
         private static bool _oldAvailability;

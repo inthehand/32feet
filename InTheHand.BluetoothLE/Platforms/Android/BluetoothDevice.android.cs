@@ -1,6 +1,6 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="BluetoothDevice.android.cs" company="In The Hand Ltd">
-//   Copyright (c) 2018-21 In The Hand Ltd, All rights reserved.
+//   Copyright (c) 2018-22 In The Hand Ltd, All rights reserved.
 //   This source code is licensed under the MIT License - see License.txt
 // </copyright>
 //-----------------------------------------------------------------------
@@ -34,7 +34,8 @@ namespace InTheHand.Bluetooth
 
         private static async Task<BluetoothDevice> PlatformFromId(string id)
         {
-            return ABluetooth.BluetoothAdapter.DefaultAdapter.GetRemoteDevice(id);
+            var adapter = Bluetooth._manager.Adapter;
+            return adapter.GetRemoteDevice(id);
         }
 
         string GetId()

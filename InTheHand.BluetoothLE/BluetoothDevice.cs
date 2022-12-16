@@ -76,5 +76,10 @@ namespace InTheHand.Bluetooth
 
             return base.Equals(obj);
         }
+
+        public override int GetHashCode()
+        {
+            return Id.GetHashCode();
+        }
     }
 }

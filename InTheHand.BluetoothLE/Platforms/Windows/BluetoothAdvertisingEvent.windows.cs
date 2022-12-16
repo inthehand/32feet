@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 using Windows.Devices.Bluetooth;
 using Windows.Devices.Bluetooth.Advertisement;
 using Windows.Foundation;
+using Windows.Foundation.Metadata;
 
 namespace InTheHand.Bluetooth
 {
@@ -24,9 +25,14 @@ namespace InTheHand.Bluetooth
 
         internal BluetoothAdvertisingEvent(BluetoothLEAdvertisementReceivedEventArgs args)
         {
-            _rssi = args.RawSignalStrengthInDBm;
-            _txPower = args.TransmitPowerLevelInDBm.HasValue ? (sbyte)args.TransmitPowerLevelInDBm.Value : (sbyte)0;
+            bool has19041 = ApiInformation.IsApiContractPresent("Windows.Foundation.UniversalApiContract", 10);
 
+            _rssi = args.RawSignalStrengthInDBm;
+            if (has19041)
+            {
+                _txPower = args.TransmitPowerLevelInDBm.HasValue ? (sbyte)args.TransmitPowerLevelInDBm.Value : (sbyte)0;
+            }
+            
             /*var sections = args.Advertisement.GetSectionsByType(0xA);
             if(sections != null && sections.Count > 0)
             {
@@ -42,13 +48,18 @@ namespace InTheHand.Bluetooth
                 _appearance = BitConverter.ToUInt16(appearanceArray, 0);
             }
 
+            IAsyncOperation<BluetoothLEDevice> deviceAsync = null;
+
             // https://docs.microsoft.com/en-us/uwp/api/windows.devices.bluetooth.bluetoothledevice.frombluetoothaddressasync?view=winrt-20348
             // If there are no other pending request, and the remote device is unreachable,
             // then the system will wait for seven (7) seconds before it times out. If
             // there are other pending requests, then each of the requests in the queue can
             // take seven (7) seconds to process, so the further yours is toward the back
             // of the queue, the longer you'll wait.
-            IAsyncOperation<BluetoothLEDevice> deviceAsync = BluetoothLEDevice.FromBluetoothAddressAsync(args.BluetoothAddress, args.BluetoothAddressType);
+            if (has19041)
+                deviceAsync = BluetoothLEDevice.FromBluetoothAddressAsync(args.BluetoothAddress, args.BluetoothAddressType);
+            else
+                deviceAsync = BluetoothLEDevice.FromBluetoothAddressAsync(args.BluetoothAddress);
 
             // https://github.com/inthehand/32feet/issues/96
             // Wait some time for this task to complete otherwise the event will fire

@@ -108,7 +108,6 @@ namespace InTheHand.Bluetooth
         /// Sets the preferred Physical Layer (PHY) if supported.
         /// </summary>
         /// <remarks>Currently only supported on Android.</remarks>
-        /// <param name="phy"></param>
         /// <returns></returns>
         public BluetoothPhy PreferredPhy
         {

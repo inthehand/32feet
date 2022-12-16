@@ -7,10 +7,7 @@
 
 // Based on values from https://www.bluetooth.com/specifications/gatt/descriptors
 
-using System;
 using System.Reflection;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Documents;
 
 namespace InTheHand.Bluetooth
 {
