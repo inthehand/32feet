@@ -101,9 +101,9 @@ namespace InTheHand.Net.Sockets
         }
 
         private EventWaitHandle servicesHandle = new EventWaitHandle(false, EventResetMode.AutoReset);
-        private IEnumerable<Guid> serviceUuids;
+        private IEnumerable<Guid> serviceUuids = null;
 
-        void FetchedServiceUuids(IEnumerable<Guid> uuids)
+        private void FetchedServiceUuids(IEnumerable<Guid> uuids)
         { 
             serviceUuids = uuids;
             servicesHandle.Set();

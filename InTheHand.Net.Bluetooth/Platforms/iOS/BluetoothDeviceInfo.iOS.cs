@@ -54,7 +54,7 @@ namespace InTheHand.Net.Sockets
 
         IReadOnlyCollection<Guid> GetInstalledServices()
         {
-            throw new PlatformNotSupportedException();
+            return new List<Guid>().AsReadOnly();
         }
 
         void DoSetServiceState(Guid service, bool state)

@@ -16,9 +16,9 @@ namespace InTheHand.Net.Bluetooth
         /// Requests the pairing process for the specified device with the provided pin or numeric code.
         /// </summary>
         /// <param name="device"></param>
-        /// <param name="pin"></param>
+        /// <param name="pin">Optional numeric pin.</param>
         /// <returns></returns>
-        public static bool PairRequest(BluetoothAddress device, string pin)
+        public static bool PairRequest(BluetoothAddress device, string pin = null)
         {
             return PlatformPairRequest(device, pin);
         }
@@ -28,6 +28,7 @@ namespace InTheHand.Net.Bluetooth
         /// </summary>
         /// <param name="device"></param>
         /// <returns></returns>
+        /// <remarks></remarks>
         public static bool RemoveDevice(BluetoothAddress device)
         {
             return PlatformRemoveDevice(device);

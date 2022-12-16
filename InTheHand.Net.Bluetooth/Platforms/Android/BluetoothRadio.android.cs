@@ -2,11 +2,12 @@
 //
 // InTheHand.Net.Bluetooth.BluetoothRadio (Android)
 // 
-// Copyright (c) 2003-2021 In The Hand Ltd, All rights reserved.
+// Copyright (c) 2003-2022 In The Hand Ltd, All rights reserved.
 // This source code is licensed under the MIT License
 
-using Android.App;
 using Android.Bluetooth;
+using Android.Content;
+using System;
 
 namespace InTheHand.Net.Bluetooth
 {
@@ -14,7 +15,14 @@ namespace InTheHand.Net.Bluetooth
     {
         private static BluetoothRadio GetDefault()
         {
-            var manager = (BluetoothManager)Application.Context.GetSystemService(Application.BluetoothService);
+            BluetoothManager manager = null;
+#if NET6_0_OR_GREATER
+            manager = Microsoft.Maui.ApplicationModel.Platform.CurrentActivity.GetSystemService(Context.BluetoothService) as BluetoothManager;
+#else
+            manager = Xamarin.Essentials.Platform.CurrentActivity.GetSystemService(Context.BluetoothService) as BluetoothManager;
+#endif
+            if (manager == null)
+                throw new PlatformNotSupportedException();
 
             if (manager.Adapter == null)
                 return null;

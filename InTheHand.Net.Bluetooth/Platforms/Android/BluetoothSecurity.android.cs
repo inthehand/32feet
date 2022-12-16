@@ -8,6 +8,11 @@
 using Android.Bluetooth;
 using Android.Content;
 using System;
+#if NET6_0_OR_GREATER
+using Microsoft.Maui.ApplicationModel;
+#else
+using Xamarin.Essentials;
+#endif
 
 namespace InTheHand.Net.Bluetooth
 {
@@ -17,19 +22,16 @@ namespace InTheHand.Net.Bluetooth
 
         static BluetoothSecurity()
         {
+            BluetoothManager manager = null;
 #if NET6_0_OR_GREATER
-            var manager = Microsoft.Maui.ApplicationModel.Platform.CurrentActivity.GetSystemService(Context.BluetoothService) as BluetoothManager;
-            if (manager == null)
-                throw new PlatformNotSupportedException();
-
-            _adapter = manager.Adapter;
+            manager = Microsoft.Maui.ApplicationModel.Platform.CurrentActivity.GetSystemService(Context.BluetoothService) as BluetoothManager;
 #else
-            var manager = Xamarin.Essentials.Platform.CurrentActivity.GetSystemService(Context.BluetoothService) as BluetoothManager;
-            if (manager == null)
+            manager = Xamarin.Essentials.Platform.CurrentActivity.GetSystemService(Context.BluetoothService) as BluetoothManager;
+#endif
+            if (manager == null || manager.Adapter == null)
                 throw new PlatformNotSupportedException();
 
             _adapter = manager.Adapter;
-#endif
         }
 
         static bool PlatformPairRequest(BluetoothAddress device, string pin)
@@ -40,8 +42,10 @@ namespace InTheHand.Net.Bluetooth
             {
                 nativeDevice.SetPin(System.Text.Encoding.ASCII.GetBytes(pin));
             }
-
-            //nativeDevice.SetPairingConfirmation(true);
+            if (Permissions.IsDeclaredInManifest("android.permission.BLUETOOTH_PRIVILEGED"))
+            {
+                nativeDevice.SetPairingConfirmation(true);
+            }
 
             return nativeDevice.CreateBond();
         }

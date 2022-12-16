@@ -8,12 +8,15 @@
 using InTheHand.Net.Bluetooth;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Threading.Tasks;
 
 namespace InTheHand.Net.Sockets
 {
     /// <summary>
     /// Provides information about an available device obtained by the client during device discovery.
     /// </summary>
+    [DebuggerDisplay("{DeviceAddress:C} {DisplayName}")]
     public sealed partial class BluetoothDeviceInfo : IEquatable<BluetoothDeviceInfo>
     {
         /// <summary>
@@ -55,6 +58,11 @@ namespace InTheHand.Net.Sockets
             {
                 return GetClassOfDevice();
             }
+        }
+
+        public Task<IEnumerable<Guid>> GetRfcommServicesAsync(bool cached = true)
+        {
+            return PlatformGetRfcommServicesAsync(cached);
         }
 
         /// <summary>
