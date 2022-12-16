@@ -6,16 +6,22 @@
 // This source code is licensed under the MIT License
 
 using Android.Bluetooth;
+using Android.Content;
+using Android.OS;
 using InTheHand.Net.Bluetooth;
 using InTheHand.Net.Bluetooth.Droid;
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace InTheHand.Net.Sockets
 {
     partial class BluetoothDeviceInfo
     {
         private BluetoothDevice _device;
+        private BluetoothReceiver _receiver;
 
         internal BluetoothDeviceInfo(BluetoothDevice device)
         {
@@ -56,6 +62,53 @@ namespace InTheHand.Net.Sockets
             return _cod;
         }
 
+        async Task<IEnumerable<Guid>> PlatformGetRfcommServicesAsync(bool cached)
+        {
+            List<Guid> services = new List<Guid>();
+
+            if (cached)
+            {
+                var uuids = _device.GetUuids();
+                foreach (var uuid in uuids)
+                {
+                    services.Add(new Guid(uuid.Uuid.ToString()));
+                }
+            }
+            else
+            {
+                if (_receiver == null)
+                {
+                    _receiver = new BluetoothReceiver(this);
+#if NET6_0_OR_GREATER
+                    Microsoft.Maui.ApplicationModel.Platform.CurrentActivity.RegisterReceiver(_receiver, new IntentFilter(BluetoothDevice.ActionUuid));
+#else
+                    Xamarin.Essentials.Platform.CurrentActivity.RegisterReceiver(_receiver, new IntentFilter(BluetoothDevice.ActionUuid));
+#endif
+                }
+
+                bool success = _device.FetchUuidsWithSdp();
+                await Task.Run(() =>
+                {
+                    servicesHandle.WaitOne();
+
+                    if (serviceUuids != null)
+                        services.AddRange(serviceUuids);
+                });
+
+            }
+
+            return services;
+        }
+
+        private EventWaitHandle servicesHandle = new EventWaitHandle(false, EventResetMode.AutoReset);
+        private IEnumerable<Guid> serviceUuids;
+
+        void FetchedServiceUuids(IEnumerable<Guid> uuids)
+        { 
+            serviceUuids = uuids;
+            servicesHandle.Set();
+        }
+
         IReadOnlyCollection<Guid> GetInstalledServices()
         {
             return new List<Guid>().AsReadOnly();
@@ -77,6 +130,44 @@ namespace InTheHand.Net.Sockets
 
         void DoRefresh()
         {
+        }
+
+        [BroadcastReceiver(Enabled = true, Exported = false)]
+        private class BluetoothReceiver : BroadcastReceiver
+        {
+            private BluetoothDeviceInfo _owner;
+
+            public BluetoothReceiver() { }
+
+            public BluetoothReceiver(BluetoothDeviceInfo owner)
+            {
+                _owner = owner;
+            }
+
+            public override void OnReceive(Context context, Intent intent)
+            {
+                if(intent.Action == BluetoothDevice.ActionUuid)
+                {
+                    // process uuids;
+                    if(intent.Extras.ContainsKey(BluetoothDevice.ExtraUuid))
+                    {
+                        var list = intent.GetParcelableArrayExtra(BluetoothDevice.ExtraUuid);
+                        if(list == null)
+                            return;
+
+                        List<Guid> uuids = new List<Guid>();
+                        foreach(var item in list)
+                        {
+                            var uuid = item as ParcelUuid;
+                            System.Diagnostics.Debug.WriteLine(uuid.ToString());
+                            uuids.Add(Guid.Parse(uuid.ToString()));
+                        }
+
+                        _owner.FetchedServiceUuids(uuids);
+
+                    }
+                }
+            }
         }
     }
 }

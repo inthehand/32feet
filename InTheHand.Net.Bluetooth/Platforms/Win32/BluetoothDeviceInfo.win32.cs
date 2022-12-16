@@ -9,6 +9,7 @@ using InTheHand.Net.Bluetooth;
 using InTheHand.Net.Bluetooth.Win32;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace InTheHand.Net.Sockets
 {
@@ -47,7 +48,12 @@ namespace InTheHand.Net.Sockets
             return (ClassOfDevice)_info.ulClassofDevice;
         }
 
-        IReadOnlyCollection<Guid> GetInstalledServices()
+        async Task<IEnumerable<Guid>> PlatformGetRfcommServicesAsync(bool cached)
+        {
+            return GetInstalledServices();
+        }
+
+            IReadOnlyCollection<Guid> GetInstalledServices()
         {
             int serviceCount = 0;
             int result = NativeMethods.BluetoothEnumerateInstalledServices(IntPtr.Zero, ref _info, ref serviceCount, null);

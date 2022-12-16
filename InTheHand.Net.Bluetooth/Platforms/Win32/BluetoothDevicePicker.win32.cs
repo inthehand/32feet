@@ -7,6 +7,7 @@
 
 using InTheHand.Net.Bluetooth.Win32;
 using InTheHand.Net.Sockets;
+using System;
 using System.Threading.Tasks;
 
 namespace InTheHand.Net.Bluetooth
@@ -22,6 +23,8 @@ namespace InTheHand.Net.Bluetooth
             p.SetClassOfDevices(ClassOfDevices.ToArray());
             p.fForceAuthentication = RequireAuthentication;
             p.hwndParent = NativeMethods.GetActiveWindow();
+            if (p.hwndParent == IntPtr.Zero)
+                p.hwndParent = NativeMethods.GetConsoleWindow();
 
             bool success = NativeMethods.BluetoothSelectDevices(ref p);
 

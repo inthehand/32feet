@@ -2,8 +2,10 @@
 //
 // InTheHand.Net.Bluetooth.BluetoothSecurity (iOS)
 // 
-// Copyright (c) 2018-2020 In The Hand Ltd, All rights reserved.
+// Copyright (c) 2018-2022 In The Hand Ltd, All rights reserved.
 // This source code is licensed under the MIT License
+
+using System;
 
 namespace InTheHand.Net.Bluetooth
 {
@@ -11,12 +13,12 @@ namespace InTheHand.Net.Bluetooth
     {
         static bool PlatformPairRequest(BluetoothAddress device, string pin)
         {
-            return false;
+            throw new PlatformNotSupportedException();
         }
 
         static bool PlatformRemoveDevice(BluetoothAddress device)
         {
-            return false;
+            throw new PlatformNotSupportedException();
         }  
     }
 }

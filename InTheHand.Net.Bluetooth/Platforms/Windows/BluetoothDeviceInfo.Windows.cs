@@ -8,6 +8,7 @@
 using InTheHand.Net.Bluetooth;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Windows.Devices.Bluetooth;
 
 namespace InTheHand.Net.Sockets
@@ -44,6 +45,23 @@ namespace InTheHand.Net.Sockets
         ClassOfDevice GetClassOfDevice()
         {
             return (ClassOfDevice)NativeDevice.ClassOfDevice.RawValue;
+        }
+
+        async Task<IEnumerable<Guid>> PlatformGetRfcommServicesAsync(bool cached)
+        {
+            List<Guid> services = new List<Guid>();
+
+            var servicesResult = await NativeDevice.GetRfcommServicesAsync(cached ? BluetoothCacheMode.Cached : BluetoothCacheMode.Uncached);
+
+            if(servicesResult != null && servicesResult.Error == BluetoothError.Success)
+            {
+                foreach(var service in servicesResult.Services)
+                {
+                    services.Add(service.ServiceId.Uuid);
+                }
+            }
+
+            return services;
         }
 
         IReadOnlyCollection<Guid> GetInstalledServices()

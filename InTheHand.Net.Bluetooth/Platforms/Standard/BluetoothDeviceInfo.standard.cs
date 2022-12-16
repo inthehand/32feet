@@ -2,12 +2,14 @@
 //
 // InTheHand.Net.Sockets.BluetoothDeviceInfo (.NET Standard)
 // 
-// Copyright (c) 2003-2020 In The Hand Ltd, All rights reserved.
+// Copyright (c) 2003-2022 In The Hand Ltd, All rights reserved.
 // This source code is licensed under the MIT License
 
 using InTheHand.Net.Bluetooth;
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace InTheHand.Net.Sockets
 {
@@ -32,7 +34,12 @@ namespace InTheHand.Net.Sockets
             return (ClassOfDevice)0;
         }
 
-        IReadOnlyCollection<Guid> GetInstalledServices()
+        Task<IEnumerable<Guid>> PlatformGetRfcommServicesAsync(bool cached)
+        {
+            return Task.FromException<IEnumerable<Guid>>(new PlatformNotSupportedException());
+        }
+
+            IReadOnlyCollection<Guid> GetInstalledServices()
         {
             return new List<Guid>().AsReadOnly();
         }

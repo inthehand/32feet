@@ -2,13 +2,14 @@
 //
 // InTheHand.Net.Sockets.BluetoothDeviceInfo (iOS)
 // 
-// Copyright (c) 2003-2020 In The Hand Ltd, All rights reserved.
+// Copyright (c) 2003-2022 In The Hand Ltd, All rights reserved.
 // This source code is licensed under the MIT License
 
 using InTheHand.Net.Bluetooth;
 using System;
 using System.Collections.Generic;
 using ExternalAccessory;
+using System.Threading.Tasks;
 
 namespace InTheHand.Net.Sockets
 {
@@ -46,13 +47,19 @@ namespace InTheHand.Net.Sockets
             return (ClassOfDevice)0;
         }
 
+        async Task<IEnumerable<Guid>> PlatformGetRfcommServicesAsync(bool cached)
+        {
+            throw new PlatformNotSupportedException();
+        }
+
         IReadOnlyCollection<Guid> GetInstalledServices()
         {
-            return new List<Guid>().AsReadOnly();
+            throw new PlatformNotSupportedException();
         }
 
         void DoSetServiceState(Guid service, bool state)
         {
+            throw new PlatformNotSupportedException();
         }
 
         bool GetConnected()

@@ -138,6 +138,9 @@ namespace InTheHand.Net.Bluetooth.Win32
         [DllImport("user32", ExactSpelling = true, SetLastError = true)]
         internal static extern IntPtr GetActiveWindow();
 
+        [DllImport("kernel32")]
+        public static extern IntPtr GetConsoleWindow();
+
         [DllImport(bthpropsDll, ExactSpelling = true, SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
         internal static extern bool BluetoothSelectDevices(ref BLUETOOTH_SELECT_DEVICE_PARAMS pbtsdp);
