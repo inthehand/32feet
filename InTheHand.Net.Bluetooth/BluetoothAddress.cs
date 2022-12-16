@@ -85,10 +85,19 @@ namespace InTheHand.Net
             return BitConverter.GetBytes(_address);
         }
 
-        internal byte[] ToSixByteArray()
+        internal byte[] ToNetworkOrderSixByteArray()
         {
             byte[] bytes = new byte[6];
+            
             Buffer.BlockCopy(ToByteArray(), 0, bytes, 0, 6);
+
+            for (int i = 0; i < 3; i++)
+            {
+                var current = bytes[i];
+                bytes[i] = bytes[5 - i];
+                bytes[5 - i] = current;
+            }
+
             return bytes;
         }
 
