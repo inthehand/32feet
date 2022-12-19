@@ -158,6 +158,11 @@ namespace InTheHand.Bluetooth
             return device;
         }
 
+        public override int GetHashCode()
+        {
+            return NativeDevice.GetHashCode();
+        }
+
         internal string GetId()
         {
             if (IsDisposedItem(this)) return _cachedId;

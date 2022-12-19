@@ -59,6 +59,12 @@ namespace InTheHand.Bluetooth
             return null;
         }
 
+
+        public override int GetHashCode()
+        {
+            return _peripheral.GetHashCode();
+        }
+
         string GetId()
         {
             return _peripheral.Identifier.ToString();

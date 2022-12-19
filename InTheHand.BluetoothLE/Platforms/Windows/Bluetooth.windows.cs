@@ -75,22 +75,30 @@ namespace InTheHand.Bluetooth
             bounds = new Rect(0, 0, 480, 480);
             IntPtr hwnd = IntPtr.Zero;
 
-            try
+            hwnd = GetActiveWindow();
+            if (hwnd == IntPtr.Zero)
             {
-                // a console app will return a non-null string for title
-                if (!string.IsNullOrEmpty(Console.Title))
+                try
                 {
-                    
-                    hwnd = GetConsoleWindow();
+                    // a console app will return a non-null string for title
+                    if (!string.IsNullOrEmpty(Console.Title))
+                    {
+
+                        hwnd = GetConsoleWindow();
+                    }
                 }
-            }
-            catch
-            {
-                hwnd = GetActiveWindow();
+                catch
+                {
+
+                }
             }
 
             // set host window as parent for picker
+#if NET6_0_OR_GREATER
+            WinRT.Interop.InitializeWithWindow.Initialize(picker, hwnd);
+#else
             ((IInitializeWithWindow)(object)picker).Initialize(hwnd);
+#endif
 
             int hasPackage = GetCurrentPackageId(ref len, buffer);
 
@@ -259,6 +267,7 @@ namespace InTheHand.Bluetooth
         [DllImport("User32")]
         static extern IntPtr GetActiveWindow();
 
+#if !NET6_0_OR_GREATER
         [ComImport]
         [Guid("3E68D4BD-7135-4D10-8018-9FB6D9F33FA1")]
         [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
@@ -266,6 +275,8 @@ namespace InTheHand.Bluetooth
         {
             void Initialize(IntPtr hwnd);
         }
+#endif
+
 #endif
     }
 }

@@ -219,7 +219,19 @@ namespace InTheHand.Bluetooth
                 return GattDescriptorUuids.FromBluetoothUti(uuidName);
             }
 
-            return default;
+            // no namespace provided - try all
+            var uuid = GattServiceUuids.FromBluetoothUti(uuidName);
+            if(uuid == BluetoothUuid.Empty)
+            {
+                uuid = GattCharacteristicUuids.FromBluetoothUti(uuidName);
+
+                if(uuid == BluetoothUuid.Empty)
+                {
+                    uuid = GattDescriptorUuids.FromBluetoothUti(uuidName);
+                }
+            }
+
+            return uuid;
         }
 
         public static BluetoothUuid GetService(string name)

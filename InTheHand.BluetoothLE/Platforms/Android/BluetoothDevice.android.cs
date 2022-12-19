@@ -38,6 +38,11 @@ namespace InTheHand.Bluetooth
             return adapter.GetRemoteDevice(id);
         }
 
+        public override int GetHashCode()
+        {
+            return _device.GetHashCode();
+        }
+
         string GetId()
         {
             return _device.Address;
