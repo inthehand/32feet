@@ -2,18 +2,16 @@
 //
 // InTheHand.Net.Sockets.IrDASocketOptionName
 // 
-// Copyright (c) 2003-2020 In The Hand Ltd, All rights reserved.
+// Copyright (c) 2003-2022 In The Hand Ltd, All rights reserved.
 // This source code is licensed under the MIT License
 
-using System;
 using System.Net.Sockets;
 
 namespace InTheHand.Net.Sockets
 {
     // AJMcF
     /// <summary>
-    /// Socket option constants to set IrDA specific connection modes, and 
-    /// get/set IrDA specific features.
+    /// Socket option constants to set IrDA specific connection modes, and get/set IrDA specific features.
     /// </summary>
     /// <remarks>
     /// Socket option constants to set IrDA specific connection modes, and 
@@ -26,12 +24,12 @@ namespace InTheHand.Net.Sockets
     /// see the examples below.
     /// </remarks>
     /// <example><para>For instance, where <c>cli</c> is an instance of 
-    /// <see cref="T:InTheHand.Net.Sockets.IrDAClient"/>.</para>
+    /// <see cref="IrDAClient"/>.</para>
     /// In VB.NET, to set IrLMP mode (<c>IrLptMode</c>).
     /// <code lang="VB.NET">
     /// cli.Client.SetSocketOption(IrDASocketOptionLevel.Irlmp,  _
     ///    IrDASocketOptionName.IrLptMode, _
-    ///    1) 'representing true; can use True itself in FXv2.
+    ///    True)
     /// </code>
     /// In C#, to retrieve the maximum send size.
     /// <code lang="C#">
@@ -40,6 +38,7 @@ namespace InTheHand.Net.Sockets
     ///    IrDASocketOptionName.SendPduLength);
     /// </code>
     /// </example>
+    /// <seealso cref="IrDASocketOptionLevel"/>
 	public static class IrDASocketOptionName
 	{
         /// <summary>
@@ -83,13 +82,13 @@ namespace InTheHand.Net.Sockets
         /// Returns an error on all tested platforms.
         /// </summary>
         /// <remarks>
-        /// Returns an error on all tested platforms.  <c>Boolean</c>
+        /// Returns an error on all tested platforms. <c>Boolean</c>
         /// </remarks>
         public const SocketOptionName ExclusiveMode = (SocketOptionName)0x00000014;
 
         /// <summary>
-        /// Sets IrLMP mode, disabling TinyTP.  Used for instance when 
-        /// printing with IrLPT.
+        /// Sets IrLMP mode, disabling TinyTP.
+        /// Used for instance when printing with IrLPT.
         /// </summary>
         /// <remarks>
         /// On Windows platforms at least, is ignored on server-side sockets.

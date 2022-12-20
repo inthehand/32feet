@@ -2,10 +2,9 @@
 //
 // InTheHand.Net.Sockets.IrDASocketOptionLevel
 // 
-// Copyright (c) 2003-2020 In The Hand Ltd, All rights reserved.
+// Copyright (c) 2003-2022 In The Hand Ltd, All rights reserved.
 // This source code is licensed under the MIT License
 
-using System;
 using System.Net.Sockets;
 
 namespace InTheHand.Net.Sockets
@@ -15,19 +14,17 @@ namespace InTheHand.Net.Sockets
     /// </summary>
     /// <remarks>
     /// Use along with the socket options defined by 
-    /// <see cref="T:InTheHand.Net.Sockets.IrDASocketOptionName"/>.
+    /// <see cref="IrDASocketOptionName"/>.
     /// </remarks>
-    /// <seealso cref="T:InTheHand.Net.Sockets.IrDASocketOptionName"/>
+    /// <seealso cref="IrDASocketOptionName"/>
     public static class IrDASocketOptionLevel
     {
         /// <summary>
-        /// The socket option level for use with IrDA sockets 
-        /// along with the options defined in <see 
-        /// cref="IrDASocketOptionName"/>.
+        /// The socket option level for use with IrDA sockets along with the options defined in 
+        /// <see cref="IrDASocketOptionName"/>.
         /// </summary>
         /// <remarks>
-        /// Use along with the socket options defined by 
-        /// <see cref="IrDASocketOptionName"/>.
+        /// Use along with the socket options defined by <see cref="IrDASocketOptionName"/>.
         /// </remarks>
         /// <seealso cref="IrDASocketOptionName"/>
         public const SocketOptionLevel IrLmp = (SocketOptionLevel)0xff;
