@@ -4,6 +4,7 @@ using System.Text;
 
 namespace InTheHand.Nfc
 {
+    /// <preliminary/>
     public static class NdefRecordType
     {
         public const string Empty = "empty";

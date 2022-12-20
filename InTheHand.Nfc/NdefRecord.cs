@@ -7,6 +7,7 @@
 
 namespace InTheHand.Nfc
 {
+    /// <preliminary/>
     public sealed class NdefRecord
     {
         /// <summary>

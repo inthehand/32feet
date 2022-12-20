@@ -9,6 +9,7 @@ using System.Collections.Generic;
 
 namespace InTheHand.Nfc
 {
+    /// <preliminary/>
     public class NdefMessage
     {
         private readonly List<NdefRecord> _records = new List<NdefRecord>();

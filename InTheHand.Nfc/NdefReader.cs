@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 
 namespace InTheHand.Nfc
 {
+    /// <preliminary/>
     /// <summary>
     /// Class to read NDEF formatted NFC tags.
     /// </summary>

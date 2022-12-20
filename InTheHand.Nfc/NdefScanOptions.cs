@@ -9,6 +9,7 @@ using System.Threading;
 
 namespace InTheHand.Nfc
 {
+    /// <preliminary/>
     public class NdefScanOptions
     {
         public string Id { get; set; }
