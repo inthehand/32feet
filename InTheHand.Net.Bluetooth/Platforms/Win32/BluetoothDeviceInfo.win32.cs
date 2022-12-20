@@ -6,9 +6,13 @@
 // This source code is licensed under the MIT License
 
 using InTheHand.Net.Bluetooth;
+using InTheHand.Net.Bluetooth.AttributeIds;
+using InTheHand.Net.Bluetooth.Sdp;
 using InTheHand.Net.Bluetooth.Win32;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 
 namespace InTheHand.Net.Sockets
@@ -50,7 +54,63 @@ namespace InTheHand.Net.Sockets
 
         async Task<IEnumerable<Guid>> PlatformGetRfcommServicesAsync(bool cached)
         {
-            return GetInstalledServices();
+            List<Guid> services = new List<Guid>();
+            WSAQUERYSET qs = new WSAQUERYSET();
+            IntPtr buffer = Marshal.AllocHGlobal(2048);
+
+            try
+            {
+                qs.dwSize = Marshal.SizeOf(qs);
+                qs.lpServiceClassId = Marshal.AllocHGlobal(16);
+                // setting the service class scope to RFComm to exclude other L2CAP services
+                Marshal.Copy(BluetoothProtocol.RFCommProtocol.ToByteArray(), 0, qs.lpServiceClassId, 16);
+                qs.dwNameSpace = NativeMethods.NS_BTH;
+                qs.dwNumberOfCsAddrs = 0;
+                qs.lpszContext = $"({DeviceAddress:C})";
+
+                IntPtr lookupHandle = IntPtr.Zero;
+                int hresult = NativeMethods.WSALookupServiceBegin(ref qs, NativeMethods.LookupFlags.ReturnBlob | NativeMethods.LookupFlags.ReturnName | (cached ? 0 : NativeMethods.LookupFlags.FlushCache), out lookupHandle);
+                int bufferLength = 2048;
+                while (hresult == 0)
+                {
+                    bufferLength = 2048;
+                    hresult = NativeMethods.WSALookupServiceNext(lookupHandle, NativeMethods.LookupFlags.ReturnBlob | NativeMethods.LookupFlags.ReturnName | (cached ? 0 : NativeMethods.LookupFlags.FlushCache), ref bufferLength, buffer);
+                    if (hresult == 0)
+                    {
+                        var qsResult = Marshal.PtrToStructure<WSAQUERYSET>(buffer);
+                        System.Diagnostics.Debug.WriteLine(qsResult.lpszServiceInstanceName);
+                        var blobLength = Marshal.ReadInt32(qsResult.lpBlob);
+                        byte[] blob = new byte[blobLength];
+                        Marshal.Copy(Marshal.ReadIntPtr(qsResult.lpBlob, 4), blob, 0, blobLength);
+
+                        // WSALookupServiceNext only returns empty service uuids even with the right flags set
+                        // So we request the raw SDP record in the blob and parse it
+                        ServiceRecordParser parser = new ServiceRecordParser();
+                        var record = parser.Parse(blob);
+
+                        // well known id which specifies the uuid for the service
+                        var attribute = record.GetAttributeById(UniversalAttributeId.ServiceClassIdList);
+                        if (attribute != null)
+                        {
+                            var vals = attribute.Value.GetValueAsElementList();
+                            // values in a list from most to least specific so read the first entry
+                            var mostSpecific = vals.FirstOrDefault();
+                            // short ids are automatically converted to a long Guid
+                            var guid = mostSpecific.GetValueAsUuid();
+                            services.Add(guid);
+                        }
+                    }
+                }
+
+                NativeMethods.WSALookupServiceEnd(lookupHandle);
+
+            }
+            finally
+            {
+                Marshal.FreeHGlobal(qs.lpServiceClassId);
+                Marshal.FreeHGlobal(buffer);
+            }
+            return services;
         }
 
             IReadOnlyCollection<Guid> GetInstalledServices()

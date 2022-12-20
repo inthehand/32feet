@@ -60,6 +60,12 @@ namespace InTheHand.Net.Sockets
             }
         }
 
+        /// <premliminary/>
+        /// <summary>
+        /// Gets a list of all available RFComm service UUIDs on the remote device.
+        /// </summary>
+        /// <param name="cached">If true and supported on the runtime platform return locally cached devices without doing an SDP request.</param>
+        /// <returns>All available RFComm service UUIDs on the remote device.</returns>
         public Task<IEnumerable<Guid>> GetRfcommServicesAsync(bool cached = true)
         {
             return PlatformGetRfcommServicesAsync(cached);

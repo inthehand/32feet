@@ -2,7 +2,7 @@
 //
 // InTheHand.Net.Bluetooth.Win32.WSAQuerySet
 // 
-// Copyright (c) 2003-2020 In The Hand Ltd, All rights reserved.
+// Copyright (c) 2003-2022 In The Hand Ltd, All rights reserved.
 // This source code is licensed under the MIT License
 
 using System;
@@ -24,7 +24,7 @@ namespace InTheHand.Net.Bluetooth.Win32
         public uint dwNameSpace; // NS_BTH
         IntPtr lpNSProviderId;
         [MarshalAs(UnmanagedType.LPWStr)]
-        string lpszContext;
+        public string lpszContext;
         uint dwNumberOfProtocols;
         IntPtr lpafpProtocols;
         [MarshalAs(UnmanagedType.LPWStr)]

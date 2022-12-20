@@ -6,6 +6,7 @@
 // This source code is licensed under the MIT License
 
 using System;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 namespace InTheHand.Net.Bluetooth.Win32
@@ -128,7 +129,29 @@ namespace InTheHand.Net.Bluetooth.Win32
         // SetService
         [DllImport(wsDll, ExactSpelling = true, EntryPoint = "WSASetServiceW", SetLastError = true)]
         internal static extern int WSASetService(ref WSAQUERYSET lpqsRegInfo, WSAESETSERVICEOP essoperation, int dwControlFlags);
-        
+
+        // Enumerate Services
+        [DllImport(wsDll, EntryPoint = "WSALookupServiceBeginW", SetLastError = true)]
+        internal static extern int WSALookupServiceBegin(ref WSAQUERYSET pQuerySet, LookupFlags dwFlags, out IntPtr lphLookup);
+
+        [DllImport(wsDll, EntryPoint = "WSALookupServiceNextW", SetLastError = true)]
+        internal static extern int WSALookupServiceNext(IntPtr hLookup, LookupFlags dwFlags, ref int lpdwBufferLength, IntPtr pResults);
+
+        [DllImport(wsDll, EntryPoint = "WSALookupServiceEnd", SetLastError = true)]
+        internal static extern int WSALookupServiceEnd(IntPtr hLookup);
+
+        [Flags()]
+        internal enum LookupFlags : uint
+        {
+            Containers = 0x0002,
+            ReturnName = 0x0010,
+            ReturnType = 0x0020,
+            ReturnAddr = 0x0100,
+            ReturnBlob = 0x0200,
+            FlushCache = 0x1000,
+            ResService = 0x8000,
+        }
+
         // Last Error
         [DllImport(wsDll, ExactSpelling = true, EntryPoint = "WSAGetLastError", SetLastError = true)]
         internal static extern int WSAGetLastError();
@@ -151,6 +174,7 @@ namespace InTheHand.Net.Bluetooth.Win32
 
         internal delegate bool PFN_DEVICE_CALLBACK(IntPtr pvParam, ref BLUETOOTH_DEVICE_INFO pDevice);
 
+        internal delegate bool PFN_BLUETOOTH_ENUM_ATTRIBUTES_CALLBACK(ulong uAttribId, IntPtr pValueStream, ulong cbStreamSize, IntPtr pvParam);
 
         [DllImport(bthpropsDll, ExactSpelling = true, SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
