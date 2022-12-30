@@ -47,6 +47,8 @@ namespace InTheHand.Net.Bluetooth
         /// [0x1002]
         /// </summary>
         public static readonly Guid PublicBrowseGroup = new Guid(0x00001002, 0x0000, 0x1000, 0x80, 0x00, 0x00, 0x80, 0x5F, 0x9B, 0x34, 0xFB);
+
+
         /// <summary>
         /// Provides a basic Serial emulation connect over Bluetooth. [0x1101]
         /// </summary>
@@ -361,7 +363,7 @@ namespace InTheHand.Net.Bluetooth
         /// A string containing the name of the service class whose UUID value is <paramref name="uuid"/>,
         /// or a null reference (<c>Nothing</c> in Visual Basic) if no such constant is found.
         /// </returns>
-        public static String GetName(Guid uuid)
+        public static string GetName(Guid uuid)
         {
             System.Reflection.FieldInfo[] fields
                 = typeof(BluetoothService).GetFields(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static);
@@ -388,7 +390,7 @@ namespace InTheHand.Net.Bluetooth
         /// A string containing the name of the service class whose UUID value is <paramref name="uuid16"/>,
         /// or a null reference (<c>Nothing</c> in Visual Basic) if no such constant is found.
         /// </returns>
-        public static String GetName(short uuid16)
+        public static string GetName(short uuid16)
         {
             return GetName(CreateBluetoothUuid(uuid16));
         }

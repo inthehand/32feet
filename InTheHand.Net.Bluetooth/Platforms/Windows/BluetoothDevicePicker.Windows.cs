@@ -33,10 +33,14 @@ namespace InTheHand.Net.Bluetooth
             else
             {
 #if WinRT
-                var hwnd = NativeMethods.GetConsoleWindow();
+                var hwnd = NativeMethods.GetActiveWindow();
+                if(hwnd == IntPtr.Zero)
+                    hwnd = NativeMethods.GetConsoleWindow();
+
                 WinRT.Interop.InitializeWithWindow.Initialize(picker, hwnd);
 #endif
             }
+
             picker.Filter.SupportedDeviceSelectors.Add(BluetoothDevice.GetDeviceSelector());
             var deviceInfo = await picker.PickSingleDeviceAsync(bounds);
 
@@ -52,6 +56,9 @@ namespace InTheHand.Net.Bluetooth
 #if WinRT
         internal static class NativeMethods
         {
+            [DllImport("user32", ExactSpelling = true, SetLastError = true)]
+            internal static extern IntPtr GetActiveWindow();
+
             [DllImport("kernel32")]
             public static extern IntPtr GetConsoleWindow();
         }
