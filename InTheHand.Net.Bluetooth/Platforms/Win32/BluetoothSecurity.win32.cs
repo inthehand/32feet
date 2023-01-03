@@ -44,6 +44,12 @@ namespace InTheHand.Net.Bluetooth
 
             bool success = NativeMethods.BluetoothAuthenticateDeviceEx(IntPtr.Zero, IntPtr.Zero, ref info, null, BluetoothAuthenticationRequirements.MITMProtectionRequired) == 0;
 
+            if (!success)
+            {
+                _authenticationHandlers.Remove(authHandler);
+                return false;
+            }
+
             authHandler.WaitOne();
             BluetoothDeviceInfo deviceInfo = new BluetoothDeviceInfo(info);
             deviceInfo.Refresh();
