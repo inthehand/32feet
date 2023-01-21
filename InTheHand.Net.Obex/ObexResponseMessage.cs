@@ -7,6 +7,7 @@
 
 namespace InTheHand.Net.Obex
 {
+    /// <preliminary/>
     public class ObexResponseMessage
     {
         public Headers.ObexResponseHeaders Headers { get; }

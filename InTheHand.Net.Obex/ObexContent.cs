@@ -7,20 +7,24 @@
 
 namespace InTheHand.Net.Obex
 {
+    /// <preliminary/>
     public abstract class ObexContent
     {
         public Headers.ObexRequestHeaders Headers { get; }
     }
 
+    /// <preliminary/>
     public class ByteArrayContent : ObexContent
     {
     }
 
+    /// <preliminary/>
     public class StreamContent : ObexContent
     {
 
     }
 
+    /// <preliminary/>
     public class StringContent : ObexContent
     {
 

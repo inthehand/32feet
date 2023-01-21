@@ -2,7 +2,7 @@
 //
 // InTheHand.Net.ObexWebRequest
 // 
-// Copyright (c) 2003-2022 In The Hand Ltd, All rights reserved.
+// Copyright (c) 2003-2023 In The Hand Ltd, All rights reserved.
 // This source code is licensed under the MIT License
 
 using System;
@@ -13,9 +13,7 @@ using InTheHand.Net.IrDA;
 using InTheHand.Net.Sockets;
 using InTheHand.Net.Bluetooth;
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 using System.Threading;
-using System.Linq;
 using InTheHand.Net.Obex;
 
 namespace InTheHand.Net
@@ -441,16 +439,24 @@ namespace InTheHand.Net
                     connectPacketLength += 19;
                 }
 
-                if(!string.IsNullOrEmpty(Headers["MapSupportedFeatures"]))
+                if(uri.Scheme == ObexSchemeName.MessagingAccessProfile)
+                {
+                    connectPacket[connectPacketLength] = (byte)ObexHeader.AppParameters;
+                    connectPacket[connectPacketLength + 1] = 0x29;
+                    BitConverter.GetBytes(IPAddress.HostToNetworkOrder(0x1F)).CopyTo(connectPacket, connectPacketLength + 2);
+                    connectPacketLength += 6;
+                }
+
+                /*if(!string.IsNullOrEmpty(Headers["MapSupportedFeatures"]))
                 {
                     connectPacket[connectPacketLength] = 0x27;
-                    short targetHeaderLen = IPAddress.HostToNetworkOrder((short)7);
-                    BitConverter.GetBytes(targetHeaderLen).CopyTo(connectPacket, connectPacketLength + 1);
+                    short supportedFeaturesHeaderLen = IPAddress.HostToNetworkOrder((short)7);
+                    BitConverter.GetBytes(supportedFeaturesHeaderLen).CopyTo(connectPacket, connectPacketLength + 1);
                     int featureMap = IPAddress.HostToNetworkOrder(0x1c);
                     BitConverter.GetBytes(featureMap).CopyTo(connectPacket, connectPacketLength + 3);
 
                     connectPacketLength += 7;
-                }
+                }*/
             }
 
             BitConverter.GetBytes(IPAddress.HostToNetworkOrder(connectPacketLength)).CopyTo(connectPacket, 1);

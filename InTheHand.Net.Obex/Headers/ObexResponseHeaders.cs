@@ -2,7 +2,7 @@
 //
 // InTheHand.Net.Obex.Headers.ObexResponseHeaders
 // 
-// Copyright (c) 2020 In The Hand Ltd, All rights reserved.
+// Copyright (c) 2020-2022 In The Hand Ltd, All rights reserved.
 // This source code is licensed under the MIT License
 
 using System;
@@ -63,7 +63,7 @@ namespace InTheHand.Net.Obex.Headers
         {
             get
             {
-                string isoDate = base.GetValue(ObexHeader.TimeIso8601).ToString();
+                string isoDate = base.GetValue(ObexHeader.Time).ToString();
                 if (DateTimeOffset.TryParseExact(isoDate, "yyyyMMdd'T'HHmmss'Z'", null, System.Globalization.DateTimeStyles.AssumeUniversal, out var dt))
                     return dt;
 
@@ -74,7 +74,7 @@ namespace InTheHand.Net.Obex.Headers
                 if(value.HasValue)
                 {
                     var str = value.Value.UtcDateTime.ToString("yyyyMMdd'T'HHmmss'Z'");
-                    base.Add(ObexHeader.TimeIso8601, str);
+                    base.Add(ObexHeader.Time, str);
                 }
             }
         }

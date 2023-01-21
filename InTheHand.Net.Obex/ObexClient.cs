@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 
 namespace InTheHand.Net.Obex
 {
+    /// <preliminary/>
     public sealed class ObexClient : IDisposable
     {
         private Stream _stream;

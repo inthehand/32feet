@@ -28,6 +28,7 @@ namespace InTheHand.Net
         /// Continue indicates that the client can continue with its request.
         /// </summary>
         Continue = 0x10,
+
         /// <summary>
         /// Equivalent to HTTP status 200.
         /// OK indicates that the request succeeded and that the requested information is in the response.
@@ -223,11 +224,11 @@ namespace InTheHand.Net
         HttpVersionNotSupported = 0x55,
 
         /// <summary>
-        /// 
+        /// Database Full.
         /// </summary>
         DatabaseFull = 0x60,
         /// <summary>
-        /// 
+        /// Database Locked.
         /// </summary>
         DatabaseLocked = 0x61,
     }

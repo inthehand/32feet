@@ -2,7 +2,7 @@
 //
 // InTheHand.Net.Obex.Headers.ObexHeaders
 // 
-// Copyright (c) 2020 In The Hand Ltd, All rights reserved.
+// Copyright (c) 2020-2022 In The Hand Ltd, All rights reserved.
 // This source code is licensed under the MIT License
 
 using System.Collections;

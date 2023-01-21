@@ -45,5 +45,15 @@ namespace InTheHand.Net
         /// Change remote path on an Object Exchange server.
         /// </summary>
         SetPath = 0x85,
+
+        /// <summary>
+        /// Used for reliable session support.
+        /// </summary>
+        Session = 0x87,
+
+        /// <summary>
+        /// Abort the current operation.
+        /// </summary>
+        Abort = 0xFF,
     }
 }

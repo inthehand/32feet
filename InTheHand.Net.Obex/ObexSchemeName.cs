@@ -7,15 +7,15 @@
 
 namespace InTheHand.Net.Obex
 {
-    internal static class ObexSchemeName
+    public static class ObexSchemeName
     {
         internal const string Prefix = "obex";
-        
-        internal const string Default = "obex";
-        internal const string Push = "obex-push";
-        internal const string Ftp = "obex-ftp";
-        internal const string Sync = "obex-sync";
-        internal const string PhoneBookAccessProfile = "obex-pbap";
-        internal const string MessagingAccessProfile = "obex-map";
+
+        public const string Default = "obex";
+        public const string Push = "obex-push";
+        public const string Ftp = "obex-ftp";
+        public const string Sync = "obex-sync";
+        public const string PhoneBookAccessProfile = "obex-pbap";
+        public const string MessagingAccessProfile = "obex-map";
     }
 }

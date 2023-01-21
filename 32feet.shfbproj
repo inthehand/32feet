@@ -34,7 +34,7 @@
     <RootNamespaceContainer>True</RootNamespaceContainer>
     <NamespaceGrouping>False</NamespaceGrouping>
     <MaximumGroupParts>2</MaximumGroupParts>
-    <Preliminary>True</Preliminary>
+    <Preliminary>False</Preliminary>
     <CopyrightHref>https://inthehand.com</CopyrightHref>
     <CopyrightText>Copyright &amp;#169%3b 2003-2022 In The Hand Ltd. All Rights Reserved.</CopyrightText>
     <FeedbackEMailAddress>
@@ -42,21 +42,18 @@
     <SdkLinkTarget>Blank</SdkLinkTarget>
     <DocumentationSources>
       <DocumentationSource sourceFile="InTheHand.Net.Bluetooth\bin\Release\netstandard2.0\InTheHand.Net.Bluetooth.dll" />
-<DocumentationSource sourceFile="InTheHand.Net.Bluetooth\bin\Release\netstandard2.0\InTheHand.Net.Bluetooth.xml" />
-<DocumentationSource sourceFile="InTheHand.Net.IrDA\bin\Release\netstandard2.0\InTheHand.Net.IrDA.dll" />
-<DocumentationSource sourceFile="InTheHand.Net.IrDA\bin\Release\netstandard2.0\InTheHand.Net.IrDA.xml" />
-<DocumentationSource sourceFile="InTheHand.Net.Obex\bin\Release\netstandard2.0\InTheHand.Net.Obex.dll" />
-<DocumentationSource sourceFile="InTheHand.Net.Obex\bin\Release\netstandard2.0\InTheHand.Net.Obex.xml" />
-<DocumentationSource sourceFile="InTheHand.Nfc\bin\Release\netstandard2.0\InTheHand.Nfc.dll" />
-<DocumentationSource sourceFile="InTheHand.Nfc\bin\Release\netstandard2.0\InTheHand.Nfc.xml" />
-<DocumentationSource sourceFile="InTheHand.BluetoothLE\bin\Release\netstandard2.0\InTheHand.BluetoothLE.dll" />
-<DocumentationSource sourceFile="InTheHand.BluetoothLE\bin\Release\netstandard2.0\InTheHand.BluetoothLE.xml" />
-<DocumentationSource sourceFile="InTheHand.IOBluetoothUI\bin\Release\IOBluetooth.dll" />
-<DocumentationSource sourceFile="InTheHand.IOBluetoothUI\bin\Release\IOBluetooth.xml" />
-<DocumentationSource sourceFile="InTheHand.IOBluetoothUI\bin\Release\IOBluetoothUI.dll" />
-<DocumentationSource sourceFile="InTheHand.IOBluetoothUI\bin\Release\IOBluetoothUI.xml" /></DocumentationSources>
+      <DocumentationSource sourceFile="InTheHand.Net.Bluetooth\bin\Release\netstandard2.0\InTheHand.Net.Bluetooth.xml" />
+      <DocumentationSource sourceFile="InTheHand.Net.IrDA\bin\Release\netstandard2.0\InTheHand.Net.IrDA.dll" />
+      <DocumentationSource sourceFile="InTheHand.Net.IrDA\bin\Release\netstandard2.0\InTheHand.Net.IrDA.xml" />
+      <DocumentationSource sourceFile="InTheHand.Net.Obex\bin\Release\netstandard2.0\InTheHand.Net.Obex.dll" />
+      <DocumentationSource sourceFile="InTheHand.Net.Obex\bin\Release\netstandard2.0\InTheHand.Net.Obex.xml" />
+      <DocumentationSource sourceFile="InTheHand.Nfc\bin\Release\netstandard2.0\InTheHand.Nfc.dll" />
+      <DocumentationSource sourceFile="InTheHand.Nfc\bin\Release\netstandard2.0\InTheHand.Nfc.xml" />
+      <DocumentationSource sourceFile="InTheHand.BluetoothLE\bin\Release\netstandard2.0\InTheHand.BluetoothLE.dll" />
+      <DocumentationSource sourceFile="InTheHand.BluetoothLE\bin\Release\netstandard2.0\InTheHand.BluetoothLE.xml" />
+    </DocumentationSources>
     <NamespaceSummaries>
-      <NamespaceSummaryItem name="InTheHand.Bluetooth" isDocumented="True">The InTheHand.Bluetooth namespace contains a WebBluetooth compatible API for Bluetooth LE client functionality.</NamespaceSummaryItem>
+      <NamespaceSummaryItem name="InTheHand.Bluetooth" isDocumented="True">The InTheHand.Bluetooth namespace contains a WebBluetooth compatible API for Bluetooth LE client functionality. See https://webbluetoothcg.github.io/web-bluetooth/ for more details.</NamespaceSummaryItem>
 <NamespaceSummaryItem name="InTheHand.Net" isDocumented="True">The InTheHand.Net namespace contains classes for working with addressing on personal area networks.</NamespaceSummaryItem>
 <NamespaceSummaryItem name="InTheHand.Net.Bluetooth" isDocumented="True">The InTheHand.Net.Bluetooth namespace contains classes for working with Bluetooth functionality such as Radio hardware.</NamespaceSummaryItem>
 <NamespaceSummaryItem name="InTheHand.Net.Bluetooth.AttributeIds" isDocumented="True">The InTheHand.Net.Bluetooth.AttributeIds namespace contains attribute identifiers for the Bluetooth Service Discovery Profile (SDP).</NamespaceSummaryItem>
@@ -65,7 +62,7 @@
 <NamespaceSummaryItem name="InTheHand.Net.Obex" isDocumented="True">The InTheHand.Net.Obex namespace holds types that are used for Object Exchange (OBEX).</NamespaceSummaryItem>
 <NamespaceSummaryItem name="InTheHand.Net.Obex.Headers" isDocumented="True">The InTheHand.Net.Obex.Headers namespace holds types that are used for Object Exchange (OBEX).</NamespaceSummaryItem>
 <NamespaceSummaryItem name="InTheHand.Net.Sockets" isDocumented="True">The InTheHand.Net.Sockets namespace provides added functionality for working with IrDA and Bluetooth Sockets.</NamespaceSummaryItem>
-<NamespaceSummaryItem name="InTheHand.Nfc" isDocumented="True">The InTheHand.Nfc namespace contains a WebNfc compatible API for interactive with NDEF tags and similar.</NamespaceSummaryItem>
+<NamespaceSummaryItem name="InTheHand.Nfc" isDocumented="True">The InTheHand.Nfc namespace contains a WebNfc compatible API for interactive with NDEF tags and similar. See https://w3c.github.io/web-nfc/ for more details.</NamespaceSummaryItem>
 <NamespaceSummaryItem name="System.Net.Sockets" isDocumented="True">The System.Net.Sockets namespace provides extensions for working with Sockets.</NamespaceSummaryItem>
 <NamespaceSummaryItem name="InTheHand.Net.IrDA" isDocumented="True">The InTheHand.Net.IrDA namespace provides added functionality for working with IrDA Sockets.</NamespaceSummaryItem></NamespaceSummaries>
     <FooterText>&amp;lt%3bp&amp;gt%3bHave feedback on the documentation%3f Open an issue &amp;lt%3ba href=&amp;quot%3bhttps://github.com/inthehand/32feet/issues&amp;quot%3b&amp;gt%3bon GitHub&amp;lt%3b/a&amp;gt%3b.&amp;lt%3b/p&amp;gt%3b</FooterText>
