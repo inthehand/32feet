@@ -5,6 +5,7 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
+using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using ABluetooth = Android.Bluetooth;
@@ -61,6 +62,17 @@ namespace InTheHand.Bluetooth
             }
 
             return _gattServer;
+        }
+
+        bool GetIsPaired()
+        {
+            return _device.BondState == ABluetooth.Bond.Bonded;
+        }
+
+        Task PlatformPairAsync()
+        {
+            _device.CreateBond();
+            return Task.CompletedTask;
         }
 
         /*

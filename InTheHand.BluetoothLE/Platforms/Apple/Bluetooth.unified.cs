@@ -37,7 +37,8 @@ namespace InTheHand.Bluetooth
 #endif
             };
 
-            _manager = new CBCentralManager(_delegate, new DispatchQueue("com.inthehand.Bluetooth"), options);
+            _manager = new CBCentralManager(_delegate, null);//, options);
+            Debug.WriteLine($"Manager: {_manager.State}");
         }
 
         internal static event EventHandler UpdatedState;
@@ -53,6 +54,16 @@ namespace InTheHand.Bluetooth
             {
             }
 
+            public override void ConnectionEventDidOccur(CBCentralManager central, CBConnectionEvent connectionEvent, CBPeripheral peripheral)
+            {
+                base.ConnectionEventDidOccur(central, connectionEvent, peripheral);
+            }
+
+            public override void DidUpdateAncsAuthorization(CBCentralManager central, CBPeripheral peripheral)
+            {
+                base.DidUpdateAncsAuthorization(central, peripheral);
+            }
+
             public override void UpdatedState(CBCentralManager central)
             {
                 Debug.WriteLine(central.State);
@@ -60,10 +71,9 @@ namespace InTheHand.Bluetooth
 
                 bool newAvailability = false;
 
-#if !__WATCHOS__
                 switch(central.State)
                 {
-#if NET6_0_OR_GREATER
+#if NET6_0_OR_GREATER  || __WATCHOS__
                     case CBManagerState.PoweredOn:
                     case CBManagerState.Resetting:
 #else
@@ -77,7 +87,6 @@ namespace InTheHand.Bluetooth
                         newAvailability = false;
                         break;
                 }
-#endif
 
                 if(availability != newAvailability)
                 {
@@ -159,8 +168,40 @@ namespace InTheHand.Bluetooth
 #if __IOS__
         private static UIAlertController controller = null;
 #endif
-        static Task<BluetoothDevice> PlatformRequestDevice(RequestDeviceOptions options)
+
+        private static async Task WaitForState()
         {
+#if NET6_0_OR_GREATER || __WATCHOS__
+            if (_manager.State == CBManagerState.PoweredOn)
+#else
+            if (_manager.State == CBCentralManagerState.PoweredOn)
+#endif
+                return;
+
+                TaskCompletionSource<bool> tcsStatus = new TaskCompletionSource<bool>();
+
+            void Handler(object sender, EventArgs e)
+            {
+                System.Diagnostics.Debug.WriteLine(_manager.State);
+#if NET6_0_OR_GREATER  || __WATCHOS__
+                if (_manager.State == CBManagerState.PoweredOn)
+#else
+                if (_manager.State == CBCentralManagerState.PoweredOn)
+#endif
+                {
+                    tcsStatus.SetResult(true);
+                    _manager.UpdatedState -= Handler;
+                }
+            };
+
+            _manager.UpdatedState += Handler;
+
+            await tcsStatus.Task;
+        }
+        static async Task<BluetoothDevice> PlatformRequestDevice(RequestDeviceOptions options)
+        {
+            await WaitForState();
+
 #if __IOS__
             TaskCompletionSource<BluetoothDevice> tcs = new TaskCompletionSource<BluetoothDevice>();
 
@@ -206,7 +247,7 @@ namespace InTheHand.Bluetooth
 
             currentController.PresentViewController(controller, true, null);
 
-            return tcs.Task;
+            return await tcs.Task;
 #else
             return null;
 #endif

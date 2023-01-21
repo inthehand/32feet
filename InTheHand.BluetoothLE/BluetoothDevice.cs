@@ -31,6 +31,22 @@ namespace InTheHand.Bluetooth
         /// </summary>
         public RemoteGattServer Gatt { get { return GetGatt(); } }
 
+        /// <summary>
+        /// Returns true if the device is paired.
+        /// </summary>
+        /// <remarks>Supported on Windows and Android only.</remarks>
+        public bool IsPaired { get { return GetIsPaired(); } }
+
+        /// <summary>
+        /// Initiate pairing. (Work in progress)
+        /// </summary>
+        /// <remarks>Supported on Windows and Android only.</remarks>
+        /// <returns></returns>
+        internal Task PairAsync()
+        {
+            return PlatformPairAsync();
+        }
+
         public static Task<BluetoothDevice> FromIdAsync(string id)
         {
             return PlatformFromId(id);

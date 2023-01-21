@@ -65,7 +65,7 @@ namespace InTheHand.Bluetooth
 
         static async Task<BluetoothDevice> PlatformRequestDevice(RequestDeviceOptions options)
         {
-            string namePrefix = options.Filters.FirstOrDefault(f => !string.IsNullOrEmpty(f.NamePrefix))?.NamePrefix;
+            string namePrefix = options?.Filters.FirstOrDefault(f => !string.IsNullOrEmpty(f.NamePrefix))?.NamePrefix;
 
             DevicePicker picker = new DevicePicker();
             Rect bounds = Rect.Empty;
@@ -94,11 +94,7 @@ namespace InTheHand.Bluetooth
             }
 
             // set host window as parent for picker
-#if NET6_0_OR_GREATER
-            WinRT.Interop.InitializeWithWindow.Initialize(picker, hwnd);
-#else
-            ((IInitializeWithWindow)(object)picker).Initialize(hwnd);
-#endif
+
 
             int hasPackage = GetCurrentPackageId(ref len, buffer);
 
@@ -112,8 +108,18 @@ namespace InTheHand.Bluetooth
             }
             else
             {
+#if NET6_0_OR_GREATER
+                //hwnd = WinRT.Interop.WindowNative.GetWindowHandle(window);
+#endif
                 picker.Appearance.Title = Windows.ApplicationModel.Package.Current.DisplayName + " wants to pair";
             }
+
+#if NET6_0_OR_GREATER
+                WinRT.Interop.InitializeWithWindow.Initialize(picker, hwnd);
+#else
+                ((IInitializeWithWindow)(object)picker).Initialize(hwnd);
+#endif
+
 #else
             picker.Appearance.Title = Windows.ApplicationModel.Package.Current.DisplayName + " wants to pair";
             bounds = Windows.UI.ViewManagement.ApplicationView.GetForCurrentView().VisibleBounds;

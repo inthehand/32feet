@@ -193,6 +193,16 @@ namespace InTheHand.Bluetooth
             return _remoteGattServer;
         }
 
+        bool GetIsPaired()
+        {
+            return NativeDevice.DeviceInformation.Pairing.IsPaired;
+        }
+
+        Task PlatformPairAsync()
+        {
+            return NativeDevice.DeviceInformation.Pairing.PairAsync().AsTask();
+        }
+
         /*bool GetWatchingAdvertisements()
         {
             return _watchingAdvertisements;
