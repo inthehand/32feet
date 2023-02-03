@@ -1,10 +1,11 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="RemoteGattServer.android.cs" company="In The Hand Ltd">
-//   Copyright (c) 2018-22 In The Hand Ltd, All rights reserved.
+//   Copyright (c) 2018-23 In The Hand Ltd, All rights reserved.
 //   This source code is licensed under the MIT License - see License.txt
 // </copyright>
 //-----------------------------------------------------------------------
 
+using Android.Runtime;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -75,12 +76,19 @@ namespace InTheHand.Bluetooth
                     _owner.Device.OnGattServerDisconnected();
                 }
             }
-
+#if NET7_0_OR_GREATER
+            public override void OnCharacteristicRead(ABluetooth.BluetoothGatt gatt, ABluetooth.BluetoothGattCharacteristic characteristic, byte[] value, ABluetooth.GattStatus status)
+            {
+                System.Diagnostics.Debug.WriteLine($"CharacteristicRead {characteristic.Uuid} Status:{status}");
+                _owner.CharacteristicRead?.Invoke(_owner, new CharacteristicEventArgs { Characteristic = characteristic, Status = status, Value = value });
+            }
+#else
             public override void OnCharacteristicRead(ABluetooth.BluetoothGatt gatt, ABluetooth.BluetoothGattCharacteristic characteristic, ABluetooth.GattStatus status)
             {
                 System.Diagnostics.Debug.WriteLine($"CharacteristicRead {characteristic.Uuid} Status:{status}");
                 _owner.CharacteristicRead?.Invoke(_owner, new CharacteristicEventArgs { Characteristic = characteristic, Status = status });
             }
+#endif
 
             public override void OnCharacteristicWrite(ABluetooth.BluetoothGatt gatt, ABluetooth.BluetoothGattCharacteristic characteristic, ABluetooth.GattStatus status)
             {
@@ -94,11 +102,19 @@ namespace InTheHand.Bluetooth
                 _owner.CharacteristicChanged?.Invoke(_owner, new CharacteristicEventArgs { Characteristic = characteristic });
             }
 
+#if NET7_0_OR_GREATER
+            public override void OnDescriptorRead(ABluetooth.BluetoothGatt gatt, ABluetooth.BluetoothGattDescriptor descriptor, ABluetooth.GattStatus status, byte[] value)
+            {
+                System.Diagnostics.Debug.WriteLine($"DescriptorRead {descriptor.Uuid} Status:{status}");
+                _owner.DescriptorRead?.Invoke(_owner, new DescriptorEventArgs { Descriptor = descriptor, Status = status, Value = value });
+            }
+#else
             public override void OnDescriptorRead(ABluetooth.BluetoothGatt gatt, ABluetooth.BluetoothGattDescriptor descriptor, ABluetooth.GattStatus status)
             {
                 System.Diagnostics.Debug.WriteLine($"DescriptorRead {descriptor.Uuid} Status:{status}");
                 _owner.DescriptorRead?.Invoke(_owner, new DescriptorEventArgs { Descriptor = descriptor, Status = status });
             }
+#endif
 
             public override void OnDescriptorWrite(ABluetooth.BluetoothGatt gatt, ABluetooth.BluetoothGattDescriptor descriptor, ABluetooth.GattStatus status)
             {
@@ -312,18 +328,16 @@ namespace InTheHand.Bluetooth
 
     internal class CharacteristicEventArgs : GattEventArgs
     {
-        public ABluetooth.BluetoothGattCharacteristic Characteristic
-        {
-            get; internal set;
-        }
+        public ABluetooth.BluetoothGattCharacteristic Characteristic { get; internal set; }
+
+        public byte[] Value { get; internal set; }
     }
 
     internal class DescriptorEventArgs : GattEventArgs
     {
-        public ABluetooth.BluetoothGattDescriptor Descriptor
-        {
-            get; internal set;
-        }
+        public ABluetooth.BluetoothGattDescriptor Descriptor { get; internal set; }
+
+        public byte[] Value { get; internal set; }
     }
 
         internal class RssiEventArgs : GattEventArgs

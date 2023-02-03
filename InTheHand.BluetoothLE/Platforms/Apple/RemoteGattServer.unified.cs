@@ -1,6 +1,6 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="RemoteGattServer.unified.cs" company="In The Hand Ltd">
-//   Copyright (c) 2018-22 In The Hand Ltd, All rights reserved.
+//   Copyright (c) 2018-23 In The Hand Ltd, All rights reserved.
 //   This source code is licensed under the MIT License - see License.txt
 // </copyright>
 //-----------------------------------------------------------------------
@@ -45,7 +45,8 @@ namespace InTheHand.Bluetooth
                  {
                     Bluetooth.ConnectedPeripheral -= connectedHandler;
                     Bluetooth.FailedToConnectPeripheral -= failedConnectHandler;
-                    tcs.SetResult(true);
+                    bool success = tcs.TrySetResult(true);
+                    System.Diagnostics.Debug.WriteLine($"Connect.TrySetResult:{success}");
                  }
              };
 
@@ -74,7 +75,7 @@ namespace InTheHand.Bluetooth
 #if __IOS__
             }
 #endif
-
+            System.Diagnostics.Debug.WriteLine($"ConnectPeripheral:{((CBPeripheral)Device).State}");
             switch(((CBPeripheral)Device).State)
             {
                 case CBPeripheralState.Connected:

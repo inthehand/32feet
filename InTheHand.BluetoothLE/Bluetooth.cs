@@ -1,6 +1,6 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="Bluetooth.cs" company="In The Hand Ltd">
-//   Copyright (c) 2018-22 In The Hand Ltd, All rights reserved.
+//   Copyright (c) 2018-23 In The Hand Ltd, All rights reserved.
 //   This source code is licensed under the MIT License - see License.txt
 // </copyright>
 //-----------------------------------------------------------------------
@@ -82,6 +82,7 @@ namespace InTheHand.Bluetooth
 
         private static void OnAvailabilityChanged()
         {
+            System.Diagnostics.Debug.WriteLine("Bluetooth.AvailiabilityChanged");
             availabilityChanged?.Invoke(null, EventArgs.Empty); ;
         }
 

@@ -1,11 +1,12 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="GattDescriptor.android.cs" company="In The Hand Ltd">
-//   Copyright (c) 2018-20 In The Hand Ltd, All rights reserved.
+//   Copyright (c) 2018-23 In The Hand Ltd, All rights reserved.
 //   This source code is licensed under the MIT License - see License.txt
 // </copyright>
 //-----------------------------------------------------------------------
 
-using System;
+using Android.Bluetooth;
+using Android.OS;
 using System.Threading.Tasks;
 using ABluetooth = Android.Bluetooth;
 
@@ -47,7 +48,11 @@ namespace InTheHand.Bluetooth
                     {
                         if (e.Status == ABluetooth.GattStatus.Success)
                         {
+#if NET7_0_OR_GREATER
+                            tcs.SetResult(e.Value);
+#else
                             tcs.SetResult(_descriptor.GetValue());
+#endif
                         }
                         else
                         {
@@ -82,12 +87,28 @@ namespace InTheHand.Bluetooth
             };
 
             Characteristic.Service.Device.Gatt.DescriptorWrite += handler;
-            bool written = _descriptor.SetValue(value);
-            written = ((ABluetooth.BluetoothGatt)Characteristic.Service.Device.Gatt).WriteDescriptor(_descriptor);
-            if(written)
-                return tcs.Task;
 
-            return Task.FromException(new OperationCanceledException());
+            bool written = false;
+#if NET7_0_OR_GREATER
+            if (Build.VERSION.SdkInt >= BuildVersionCodes.Tiramisu)
+            {
+                int result = ((ABluetooth.BluetoothGatt)Characteristic.Service.Device.Gatt).WriteDescriptor(_descriptor, value);
+                written = result == (int)CurrentBluetoothStatusCodes.Success;
+            }
+            else
+            {
+#endif
+                written = _descriptor.SetValue(value);
+                if(written)
+                    written = ((ABluetooth.BluetoothGatt)Characteristic.Service.Device.Gatt).WriteDescriptor(_descriptor);
+#if NET7_0_OR_GREATER
+        } 
+#endif
+            
+            if (written)
+                    return tcs.Task;
+
+            return Task.FromException(new System.OperationCanceledException());
         }
     }
 }

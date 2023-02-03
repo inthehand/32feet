@@ -1,21 +1,21 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="Bluetooth.unified.cs" company="In The Hand Ltd">
-//   Copyright (c) 2018-20 In The Hand Ltd, All rights reserved.
+//   Copyright (c) 2018-23 In The Hand Ltd, All rights reserved.
 //   This source code is licensed under the MIT License - see License.txt
 // </copyright>
 //-----------------------------------------------------------------------
 
 using CoreBluetooth;
-using CoreFoundation;
-using CoreGraphics;
 using Foundation;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
+#if __IOS__
+using CoreGraphics;
+#endif
 #if !__MACOS__
 using UIKit;
 #endif
@@ -38,7 +38,7 @@ namespace InTheHand.Bluetooth
             };
 
             _manager = new CBCentralManager(_delegate, null);//, options);
-            Debug.WriteLine($"Manager: {_manager.State}");
+            Debug.WriteLine($"CBCentralManager:{_manager.State}");
         }
 
         internal static event EventHandler UpdatedState;
@@ -66,7 +66,7 @@ namespace InTheHand.Bluetooth
 
             public override void UpdatedState(CBCentralManager central)
             {
-                Debug.WriteLine(central.State);
+                Debug.WriteLine($"CBCentralManager.UpdatedState:{central.State}");
                 Bluetooth.UpdatedState?.Invoke(central, EventArgs.Empty);
 
                 bool newAvailability = false;
@@ -132,22 +132,25 @@ namespace InTheHand.Bluetooth
         private static void OnDiscoveredPeripheral(CBCentralManager central, CBPeripheral peripheral, NSDictionary advertisementData, NSNumber RSSI)
         {
             DiscoveredPeripheral?.Invoke(central, new CBDiscoveredPeripheralEventArgs(peripheral, advertisementData, RSSI));
-            System.Diagnostics.Debug.WriteLine($"{peripheral.Identifier} {RSSI}");
             var e = new BluetoothAdvertisingEvent(peripheral, advertisementData, RSSI);
             AdvertisementReceived?.Invoke(central, e);
-            _foundDevices.Add(peripheral);
+            if(!_foundDevices.Contains(peripheral))
+            {
+                Debug.WriteLine($"Peripheral: {peripheral.Identifier} Name: {peripheral.Name} RSSI: {RSSI}");
+                _foundDevices.Add(peripheral);
+            }
         }
 
 #if __IOS__
         internal static event EventHandler<CBPeripheral[]> OnRetrievedPeripherals;
-
-
 #endif
 
 
         static Task<bool> PlatformGetAvailability()
         {
             bool available = false;
+
+            System.Diagnostics.Debug.WriteLine($"GetAvailability:{_manager.State}");
 
             switch(_manager.State)
             {
@@ -178,7 +181,8 @@ namespace InTheHand.Bluetooth
 #endif
                 return;
 
-                TaskCompletionSource<bool> tcsStatus = new TaskCompletionSource<bool>();
+            System.Diagnostics.Debug.WriteLine("Waiting for CBCentralManager.State");
+            TaskCompletionSource<bool> tcsStatus = new TaskCompletionSource<bool>();
 
             void Handler(object sender, EventArgs e)
             {
@@ -258,8 +262,9 @@ namespace InTheHand.Bluetooth
             return Task.FromResult((IReadOnlyCollection<BluetoothDevice>)new List<BluetoothDevice>().AsReadOnly());
         }
 
-        static Task<IReadOnlyCollection<BluetoothDevice>> PlatformGetPairedDevices()
+        static async Task<IReadOnlyCollection<BluetoothDevice>> PlatformGetPairedDevices()
         {
+            await WaitForState();
 #if __IOS__
             PairedDeviceHandler deviceHandler = new PairedDeviceHandler();
             OnRetrievedPeripherals += deviceHandler.OnRetrievedPeripherals;
@@ -270,12 +275,9 @@ namespace InTheHand.Bluetooth
                 devices.Add(p);
             }
 
-            return Task.Run(() =>
-                        {
-                            return (IReadOnlyCollection<BluetoothDevice>)devices.AsReadOnly();
-                        });
+            return (IReadOnlyCollection<BluetoothDevice>)devices.AsReadOnly();
 #else
-            return Task.FromResult((IReadOnlyCollection<BluetoothDevice>)new List<BluetoothDevice>().AsReadOnly());
+            return (IReadOnlyCollection<BluetoothDevice>)new List<BluetoothDevice>().AsReadOnly();
 #endif
         }
 
@@ -310,7 +312,6 @@ namespace InTheHand.Bluetooth
         }
 #endif
 
-
         private static async Task<BluetoothLEScan> PlatformRequestLEScan(BluetoothLEScanOptions options)
         {
             return new BluetoothLEScan(options);
@@ -320,6 +321,7 @@ namespace InTheHand.Bluetooth
         internal static void StartScanning(CBUUID[] services)
         {
             _scanCount++;
+            System.Diagnostics.Debug.WriteLine($"StartScanning count:{_scanCount}");
 
             if (!_manager.IsScanning)
                 _manager.ScanForPeripherals(services, new PeripheralScanningOptions { AllowDuplicatesKey = true });
@@ -329,6 +331,7 @@ namespace InTheHand.Bluetooth
         {
             _scanCount--;
 
+            System.Diagnostics.Debug.WriteLine($"StopScanning count:{_scanCount}");
             if (_scanCount == 0 && _manager.IsScanning)
                 _manager.StopScan();
         }

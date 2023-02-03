@@ -68,6 +68,14 @@
 		<TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
 	</PropertyGroup>
 
+	<PropertyGroup Condition=" '$(TargetFramework)' == 'net6.0-ios' ">
+		<SupportedOSPlatformVersion>14.2</SupportedOSPlatformVersion>
+	</PropertyGroup>
+
+	<PropertyGroup Condition=" '$(TargetFramework)' == 'net7.0-ios' ">
+		<SupportedOSPlatformVersion>14.2</SupportedOSPlatformVersion>
+	</PropertyGroup>
+	
 	<PropertyGroup Condition=" '$(TargetFramework)' == 'uap10.0' ">
 		<DefineConstants>UAP</DefineConstants>
 		<RuntimeIdentifiers>win10-x64;win10-x86;win10-arm;win10-arm64</RuntimeIdentifiers>
