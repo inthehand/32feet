@@ -25,20 +25,25 @@ namespace InTheHand.Bluetooth
     partial class Bluetooth
     {
         internal static CBCentralManager _manager;
-        private static BluetoothDelegate _delegate = new BluetoothDelegate();
+        private static readonly BluetoothDelegate _delegate = new BluetoothDelegate();
         private static bool availability = false;
 
-        static Bluetooth()
+        private static void Initialize()
         {
-            Debug.WriteLine("Bluetooth_ctor");
-            CBCentralInitOptions options = new CBCentralInitOptions { ShowPowerAlert = true
+            if (_manager == null)
+            {
+                Debug.WriteLine("Initialize");
+                CBCentralInitOptions options = new CBCentralInitOptions
+                {
+                    ShowPowerAlert = true
 #if __IOS__
-//                ,  RestoreIdentifier = NSBundle.MainBundle.ObjectForInfoDictionary("CFBundleName")?.ToString()
+                    //   ,  RestoreIdentifier = NSBundle.MainBundle.ObjectForInfoDictionary("CFBundleName")?.ToString()
 #endif
-            };
+                };
 
-            _manager = new CBCentralManager(_delegate, null);//, options);
-            Debug.WriteLine($"CBCentralManager:{_manager.State}");
+                _manager = new CBCentralManager(_delegate, null, options);
+                Debug.WriteLine($"CBCentralManager:{_manager.State}");
+            }
         }
 
         internal static event EventHandler UpdatedState;
@@ -134,7 +139,7 @@ namespace InTheHand.Bluetooth
             DiscoveredPeripheral?.Invoke(central, new CBDiscoveredPeripheralEventArgs(peripheral, advertisementData, RSSI));
             var e = new BluetoothAdvertisingEvent(peripheral, advertisementData, RSSI);
             AdvertisementReceived?.Invoke(central, e);
-            if(!_foundDevices.Contains(peripheral))
+            if(!string.IsNullOrWhiteSpace(peripheral.Name) && !_foundDevices.Contains(peripheral))
             {
                 Debug.WriteLine($"Peripheral: {peripheral.Identifier} Name: {peripheral.Name} RSSI: {RSSI}");
                 _foundDevices.Add(peripheral);
@@ -148,21 +153,25 @@ namespace InTheHand.Bluetooth
 
         static Task<bool> PlatformGetAvailability()
         {
+            Initialize();
             bool available = false;
-
-            System.Diagnostics.Debug.WriteLine($"GetAvailability:{_manager.State}");
-
-            switch(_manager.State)
+            
+            if (_manager != null)
             {
+                System.Diagnostics.Debug.WriteLine($"GetAvailability:{_manager.State}");
+
+                switch (_manager.State)
+                {
 #if NET6_0_OR_GREATER || __WATCHOS__
                 case CBManagerState.PoweredOn:
                 case CBManagerState.Resetting:
 #else
-                case CBCentralManagerState.PoweredOn:
-                case CBCentralManagerState.Resetting:             
+                    case CBCentralManagerState.PoweredOn:
+                    case CBCentralManagerState.Resetting:
 #endif
-                    available = true;
-                    break;
+                        available = true;
+                        break;
+                }
             }
 
             return Task.FromResult(available);
@@ -174,6 +183,8 @@ namespace InTheHand.Bluetooth
 
         private static async Task WaitForState()
         {
+            Initialize();
+
 #if NET6_0_OR_GREATER || __WATCHOS__
             if (_manager.State == CBManagerState.PoweredOn)
 #else
@@ -194,17 +205,19 @@ namespace InTheHand.Bluetooth
 #endif
                 {
                     tcsStatus.SetResult(true);
-                    _manager.UpdatedState -= Handler;
+                    Bluetooth.UpdatedState -= Handler;
                 }
             };
 
-            _manager.UpdatedState += Handler;
+            Bluetooth.UpdatedState += Handler;
 
             await tcsStatus.Task;
         }
         static async Task<BluetoothDevice> PlatformRequestDevice(RequestDeviceOptions options)
         {
-            await WaitForState();
+            Initialize();
+
+            await Task.Run(WaitForState);
 
 #if __IOS__
             TaskCompletionSource<BluetoothDevice> tcs = new TaskCompletionSource<BluetoothDevice>();
@@ -215,7 +228,7 @@ namespace InTheHand.Bluetooth
             if(_manager.State != CBCentralManagerState.PoweredOn)
 #endif
             {
-                throw new InvalidOperationException();
+                //throw new InvalidOperationException();
             }
 
             controller = UIAlertController.Create("Select a Bluetooth accessory", null, UIAlertControllerStyle.Alert);
@@ -245,6 +258,7 @@ namespace InTheHand.Bluetooth
             tvc.TableView.AllowsSelection = true;
             controller.SetValueForKey(tvc, new Foundation.NSString("contentViewController"));
 
+            //TODO: investigate what this means for multiple windows e.g. iPad
             UIViewController currentController = UIApplication.SharedApplication.KeyWindow.RootViewController;
             while (currentController.PresentedViewController != null)
                 currentController = currentController.PresentedViewController;
@@ -264,6 +278,8 @@ namespace InTheHand.Bluetooth
 
         static async Task<IReadOnlyCollection<BluetoothDevice>> PlatformGetPairedDevices()
         {
+            Initialize();
+
             await WaitForState();
 #if __IOS__
             PairedDeviceHandler deviceHandler = new PairedDeviceHandler();
@@ -314,6 +330,8 @@ namespace InTheHand.Bluetooth
 
         private static async Task<BluetoothLEScan> PlatformRequestLEScan(BluetoothLEScanOptions options)
         {
+            Initialize();
+
             return new BluetoothLEScan(options);
         }
 
@@ -324,7 +342,7 @@ namespace InTheHand.Bluetooth
             System.Diagnostics.Debug.WriteLine($"StartScanning count:{_scanCount}");
 
             if (!_manager.IsScanning)
-                _manager.ScanForPeripherals(services, new PeripheralScanningOptions { AllowDuplicatesKey = true });
+                _manager.ScanForPeripherals(services, new PeripheralScanningOptions { AllowDuplicatesKey = false });
         }
 
         internal static void StopScanning()

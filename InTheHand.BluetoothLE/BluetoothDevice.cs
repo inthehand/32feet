@@ -82,20 +82,6 @@ namespace InTheHand.Bluetooth
         /// </summary>
         public event EventHandler GattServerDisconnected;
 
-        public override bool Equals(object obj)
-        {
-            BluetoothDevice device = obj as BluetoothDevice;
-            if (device != null)
-            {
-                return Id.Equals(device.Id);
-            }
-
-            return base.Equals(obj);
-        }
-
-        /*public override int GetHashCode()
-        {
-            return Id.GetHashCode();
-        }*/
+        
     }
 }

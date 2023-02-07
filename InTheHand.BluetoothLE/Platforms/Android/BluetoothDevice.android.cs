@@ -33,6 +33,17 @@ namespace InTheHand.Bluetooth
             return device == null ? null : new BluetoothDevice(device);
         }
 
+        public override bool Equals(object obj)
+        {
+            BluetoothDevice device = obj as BluetoothDevice;
+            if (device != null)
+            {
+                return _device == device._device;
+            }
+
+            return base.Equals(obj);
+        }
+
         private static async Task<BluetoothDevice> PlatformFromId(string id)
         {
             var adapter = Bluetooth._manager.Adapter;

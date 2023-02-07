@@ -1,6 +1,6 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="BluetoothDevice.unified.cs" company="In The Hand Ltd">
-//   Copyright (c) 2018-21 In The Hand Ltd, All rights reserved.
+//   Copyright (c) 2018-23 In The Hand Ltd, All rights reserved.
 //   This source code is licensed under the MIT License - see License.txt
 // </copyright>
 //-----------------------------------------------------------------------
@@ -38,6 +38,17 @@ namespace InTheHand.Bluetooth
         public static implicit operator CBPeripheral(BluetoothDevice device)
         {
             return device._peripheral;
+        }
+
+        public override bool Equals(object obj)
+        {
+            BluetoothDevice device = obj as BluetoothDevice;
+            if (device != null)
+            {
+                return _peripheral == device._peripheral;
+            }
+
+            return base.Equals(obj);
         }
 
         private static async Task<BluetoothDevice> PlatformFromId(string id)

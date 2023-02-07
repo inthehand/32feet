@@ -40,6 +40,8 @@ namespace InTheHand.Bluetooth
         [Obsolete("Use IsConnected instead", true)]
         [Browsable(false)]
         [EditorBrowsable(EditorBrowsableState.Never)]
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+
         public bool Connected { get { return IsConnected; } }
 
         /// <summary>
