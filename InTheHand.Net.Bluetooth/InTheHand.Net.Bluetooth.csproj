@@ -2,7 +2,6 @@
 
 	<PropertyGroup>
 		<TargetFrameworks>netstandard2.0;net5.0-windows7.0;net5.0-windows10.0.19041.0;net6.0-windows7.0;net6.0-windows10.0.19041.0;net6.0-android;net452;net461;monoandroid90;monoandroid10.0;xamarinios10;uap10.0</TargetFrameworks>
-		<RuntimeIdentifiers Condition=" '$(TargetFramework)' == 'netcoreapp3.1' ">win</RuntimeIdentifiers>
 		<Company>In The Hand Ltd</Company>
 		<Authors>Peter Foot</Authors>
 		<Product>32feet.NET</Product>
