@@ -23,11 +23,11 @@ namespace BluetoothClientApp
 
             bool availability = false;
 
-            while (!availability)
+            /*while (!availability)
             {
                 availability = await Bluetooth.GetAvailabilityAsync();
                 await Task.Delay(500);
-            }
+            }*/
 
             foreach (var d in await Bluetooth.GetPairedDevicesAsync())
             {
