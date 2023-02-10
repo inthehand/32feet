@@ -89,14 +89,6 @@
 		<TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
 	</PropertyGroup>
 
-	<ItemGroup Condition=" '$(TargetFramework)' == 'monoandroid90' ">
-		<PackageReference Include="Xamarin.Essentials" Version="1.6.1" />
-	</ItemGroup>
-
-	<ItemGroup Condition=" '$(TargetFramework)' == 'monoandroid10.0' ">
-		<PackageReference Include="Xamarin.Essentials" Version="1.7.1" />
-	</ItemGroup>
-
 	<ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
 		<Compile Include="Platforms\Standard\*.cs" />
 	</ItemGroup>
@@ -121,14 +113,6 @@
 	<ItemGroup Condition=" '$(TargetFramework)' == 'monoandroid10.0' ">
 		<Compile Include="Platforms\Android\*.cs" />
 	</ItemGroup>
-
-	<PropertyGroup Condition=" '$(TargetFramework)' == 'net6.0-android' ">
-		<UseMaui>True</UseMaui>
-	</PropertyGroup>
-
-	<PropertyGroup Condition=" '$(TargetFramework)' == 'net7.0-android' ">
-		<UseMaui>True</UseMaui>
-	</PropertyGroup>
 	
 	<ItemGroup Condition=" '$(TargetFramework)' == 'net6.0-android' ">
 		<Compile Include="Platforms\Android\*.cs" />

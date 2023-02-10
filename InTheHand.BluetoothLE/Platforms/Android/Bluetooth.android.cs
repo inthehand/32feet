@@ -1,12 +1,13 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="Bluetooth.android.cs" company="In The Hand Ltd">
-//   Copyright (c) 2018-22 In The Hand Ltd, All rights reserved.
+//   Copyright (c) 2018-23 In The Hand Ltd, All rights reserved.
 //   This source code is licensed under the MIT License - see License.txt
 // </copyright>
 //-----------------------------------------------------------------------
 
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using Android.App;
@@ -15,11 +16,6 @@ using Android.Bluetooth.LE;
 using Android.Content;
 using Android.Content.PM;
 using Android.OS;
-#if NET6_0_OR_GREATER
-using Microsoft.Maui.ApplicationModel;
-#else
-using Xamarin.Essentials;
-#endif
 
 namespace InTheHand.Bluetooth
 {
@@ -29,6 +25,43 @@ namespace InTheHand.Bluetooth
         private static readonly EventWaitHandle s_handle = new EventWaitHandle(false, EventResetMode.AutoReset);
         internal static Android.Bluetooth.BluetoothDevice s_device;
         private static RequestDeviceOptions _currentRequest;
+        private static Context currentContext;
+
+        static Bluetooth()
+        {
+            // when used by a cross-platform UI framework like MAUI or Uno we need to get the current Activity in order to launch the picker UI
+            // for a "native" app you can use the Android specific RequestDevice overload which accepts a Context
+
+#if NET6_0_OR_GREATER
+
+            // check for Uno without taking a hard dependency
+            var t = Type.GetType("Uno.UI.ContextHelper, Uno, Version=255.255.255.255, Culture=neutral, PublicKeyToken=null", false, true);
+            if (t != null)
+            {
+                currentContext = (Context)t.GetProperty("Current", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public).GetValue(null);
+            }
+            else
+            {
+                // try Maui Essentials if not
+                t = Type.GetType("Microsoft.Maui.ApplicationModel.Platform, Microsoft.Maui.Essentials, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null", false, true);
+                if (t != null)
+                {
+                    currentContext = (Context)t.GetProperty("CurrentActivity", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public).GetValue(null);
+                }
+            }
+#else
+            // check for Xamarin.Essentials without taking a hard dependency
+            var t = Type.GetType("Xamarin.Essentials.Platform, Xamarin.Essentials, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null", false, true);
+            if (t != null)
+            {
+                currentContext = (Context)t.GetProperty("CurrentActivity", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public).GetValue(null);
+            }
+#endif
+            if (currentContext == null)
+                System.Diagnostics.Debug.WriteLine("Bluetooth.android Context:Unknown");
+            else
+                System.Diagnostics.Debug.WriteLine($"Bluetooth.android Context:{currentContext.GetType().FullName}");
+        }
 
         static Task<bool> PlatformGetAvailability()
         {
@@ -46,15 +79,27 @@ namespace InTheHand.Bluetooth
         {
         }
 
+        /// <summary>
+        /// Performs a device lookup and prompts the user for permission if required.
+        /// </summary>
+        /// <param name="options"></param>
+        /// <param name="context">Current activity.</param>
+        /// <returns>A BluetoothDevice or null if unsuccessful.</returns>
+        public static Task<BluetoothDevice> RequestDevice(RequestDeviceOptions options, Context context)
+        {
+            currentContext = context;
+            return PlatformRequestDevice(options);
+        }
 
         static Task<BluetoothDevice> PlatformRequestDevice(RequestDeviceOptions options)
         {
+            if (currentContext == null)
+                return null;
+
             _currentRequest = options;
 
-            Activity currentActivity = Platform.CurrentActivity;
-
-            Intent i = new Intent(currentActivity, typeof(DevicePickerActivity));
-            currentActivity.StartActivity(i);
+            Intent i = new Intent(currentContext, typeof(DevicePickerActivity));
+            currentContext.StartActivity(i);
 
             return Task.Run(() =>
             {
@@ -179,14 +224,14 @@ namespace InTheHand.Bluetooth
             {
                 base.OnCreate(savedInstanceState);
 
-                Activity currentActivity = Platform.CurrentActivity;
+                //Activity currentActivity = Platform.CurrentActivity;
 
                 Intent i = new Intent("android.bluetooth.devicepicker.action.LAUNCH");
                 i.PutExtra("android.bluetooth.devicepicker.extra.LAUNCH_PACKAGE", Application.Context.PackageName);
                 i.PutExtra("android.bluetooth.devicepicker.extra.DEVICE_PICKER_LAUNCH_CLASS", Java.Lang.Class.FromType(typeof(DevicePickerReceiver)).Name);
                 i.PutExtra("android.bluetooth.devicepicker.extra.NEED_AUTH", false);
 
-                currentActivity.StartActivityForResult(i, 1);
+                this.StartActivityForResult(i, 1);
 
             }
 
