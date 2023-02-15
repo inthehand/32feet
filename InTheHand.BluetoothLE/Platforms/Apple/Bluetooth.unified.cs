@@ -20,6 +20,12 @@ using CoreGraphics;
 using UIKit;
 #endif
 
+#if NET6_0_OR_GREATER || __WATCHOS__
+using CBManagerState = CoreBluetooth.CBManagerState;
+#else
+using CBManagerState = CoreBluetooth.CBCentralManagerState;
+#endif
+
 namespace InTheHand.Bluetooth
 {
     partial class Bluetooth
@@ -54,7 +60,6 @@ namespace InTheHand.Bluetooth
 
         private sealed class BluetoothDelegate : CBCentralManagerDelegate
         {
-
             internal BluetoothDelegate()
             {
             }
@@ -78,13 +83,8 @@ namespace InTheHand.Bluetooth
 
                 switch(central.State)
                 {
-#if NET6_0_OR_GREATER  || __WATCHOS__
                     case CBManagerState.PoweredOn:
                     case CBManagerState.Resetting:
-#else
-                    case CBCentralManagerState.PoweredOn:
-                    case CBCentralManagerState.Resetting:
-#endif
                         newAvailability = true;
                         break;
 
@@ -132,8 +132,7 @@ namespace InTheHand.Bluetooth
         }
 
         private static ObservableCollection<BluetoothDevice> _foundDevices = new ObservableCollection<BluetoothDevice>();
-
-        
+                
         private static void OnDiscoveredPeripheral(CBCentralManager central, CBPeripheral peripheral, NSDictionary advertisementData, NSNumber RSSI)
         {
             DiscoveredPeripheral?.Invoke(central, new CBDiscoveredPeripheralEventArgs(peripheral, advertisementData, RSSI));
@@ -150,7 +149,6 @@ namespace InTheHand.Bluetooth
         internal static event EventHandler<CBPeripheral[]> OnRetrievedPeripherals;
 #endif
 
-
         static Task<bool> PlatformGetAvailability()
         {
             Initialize();
@@ -162,15 +160,25 @@ namespace InTheHand.Bluetooth
 
                 switch (_manager.State)
                 {
-#if NET6_0_OR_GREATER || __WATCHOS__
-                case CBManagerState.PoweredOn:
-                case CBManagerState.Resetting:
-#else
-                    case CBCentralManagerState.PoweredOn:
-                    case CBCentralManagerState.Resetting:
-#endif
+                    case CBManagerState.PoweredOn:
+                    case CBManagerState.Resetting:
                         available = true;
                         break;
+
+                    case CBManagerState.Unknown:
+                        // Unknown is returned on first creation of the manager - need to wait for first UpdatedState callback
+                        TaskCompletionSource<bool> tcs = new TaskCompletionSource<bool>();
+                        void stateHandler(object sender, EventArgs e)
+                        {
+                            if (_manager.State != CBManagerState.Unknown)
+                            {
+                                UpdatedState -= stateHandler;
+                                tcs.SetResult(_manager.State == CBManagerState.PoweredOn || _manager.State == CBManagerState.Resetting);
+                            }
+                        };
+
+                        UpdatedState += stateHandler;
+                        return tcs.Task;
                 }
             }
 
@@ -181,43 +189,12 @@ namespace InTheHand.Bluetooth
         private static UIAlertController controller = null;
 #endif
 
-        private static async Task WaitForState()
-        {
-            Initialize();
-
-#if NET6_0_OR_GREATER || __WATCHOS__
-            if (_manager.State == CBManagerState.PoweredOn)
-#else
-            if (_manager.State == CBCentralManagerState.PoweredOn)
-#endif
-                return;
-
-            System.Diagnostics.Debug.WriteLine("Waiting for CBCentralManager.State");
-            TaskCompletionSource<bool> tcsStatus = new TaskCompletionSource<bool>();
-
-            void Handler(object sender, EventArgs e)
-            {
-                System.Diagnostics.Debug.WriteLine(_manager.State);
-#if NET6_0_OR_GREATER  || __WATCHOS__
-                if (_manager.State == CBManagerState.PoweredOn)
-#else
-                if (_manager.State == CBCentralManagerState.PoweredOn)
-#endif
-                {
-                    tcsStatus.SetResult(true);
-                    Bluetooth.UpdatedState -= Handler;
-                }
-            };
-
-            Bluetooth.UpdatedState += Handler;
-
-            await tcsStatus.Task;
-        }
         static async Task<BluetoothDevice> PlatformRequestDevice(RequestDeviceOptions options)
         {
             Initialize();
 
-            await Task.Run(WaitForState);
+            if (!await PlatformGetAvailability())
+                return null;
 
 #if __IOS__
             TaskCompletionSource<BluetoothDevice> tcs = new TaskCompletionSource<BluetoothDevice>();
@@ -280,7 +257,8 @@ namespace InTheHand.Bluetooth
         {
             Initialize();
 
-            await WaitForState();
+            if (!await PlatformGetAvailability())
+                return null;
 #if __IOS__
             PairedDeviceHandler deviceHandler = new PairedDeviceHandler();
             OnRetrievedPeripherals += deviceHandler.OnRetrievedPeripherals;
@@ -331,6 +309,9 @@ namespace InTheHand.Bluetooth
         private static async Task<BluetoothLEScan> PlatformRequestLEScan(BluetoothLEScanOptions options)
         {
             Initialize();
+
+            if (!await PlatformGetAvailability())
+                return null;
 
             return new BluetoothLEScan(options);
         }

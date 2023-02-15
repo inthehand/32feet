@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading;
 using System.Threading.Tasks;
 using Windows.Devices.Bluetooth;
@@ -93,6 +94,11 @@ namespace InTheHand.Bluetooth
                 }
             }
 
+            if(hwnd == IntPtr.Zero)
+            {
+                hwnd = GetHWNDForCurrentThread();
+            }
+
             // set host window as parent for picker
 
 
@@ -102,7 +108,7 @@ namespace InTheHand.Bluetooth
             {
                 foreach (var attr in System.Reflection.Assembly.GetEntryAssembly().GetCustomAttributes(typeof(AssemblyProductAttribute)))
                 {
-                    picker.Appearance.Title = ((AssemblyProductAttribute)attr).Product + " wants to pair";
+                    picker.Appearance.Title = ((AssemblyProductAttribute)attr).Product + " wants to connect";
                     break;
                 }
             }
@@ -111,7 +117,7 @@ namespace InTheHand.Bluetooth
 #if NET6_0_OR_GREATER
                 //hwnd = WinRT.Interop.WindowNative.GetWindowHandle(window);
 #endif
-                picker.Appearance.Title = Windows.ApplicationModel.Package.Current.DisplayName + " wants to pair";
+                picker.Appearance.Title = Windows.ApplicationModel.Package.Current.DisplayName + " wants to connect";
             }
 
 #if NET6_0_OR_GREATER
@@ -121,7 +127,7 @@ namespace InTheHand.Bluetooth
 #endif
 
 #else
-            picker.Appearance.Title = Windows.ApplicationModel.Package.Current.DisplayName + " wants to pair";
+            picker.Appearance.Title = Windows.ApplicationModel.Package.Current.DisplayName + " wants to connect";
             bounds = Windows.UI.ViewManagement.ApplicationView.GetForCurrentView().VisibleBounds;
             picker.Appearance.SelectedAccentColor = (Color)Windows.UI.Xaml.Application.Current.Resources["SystemAccentColor"];
 #endif
@@ -264,6 +270,29 @@ namespace InTheHand.Bluetooth
 
 
 #if !UAP
+
+        private static IntPtr GetHWNDForCurrentThread()
+        {
+            TaskCompletionSource<IntPtr> handleTask = new TaskCompletionSource<IntPtr>();
+
+            int threadId = AppDomain.GetCurrentThreadId();
+            EnumThreadWndProc handler = new EnumThreadWndProc((handle, lparam) => {
+                if (handle != IntPtr.Zero)
+                {
+                    handleTask.SetResult(handle);
+                    return false;
+                }
+
+                return true;
+            });
+
+            EnumThreadWindows(threadId, handler, IntPtr.Zero);
+
+            handleTask.Task.Wait();
+
+            return handleTask.Task.Result;
+        }
+
         [DllImport("Kernel32", ExactSpelling = true, SetLastError = true)]
         private static extern int GetCurrentPackageId(ref uint bufferLength, byte[] buffer);
 
@@ -272,6 +301,15 @@ namespace InTheHand.Bluetooth
 
         [DllImport("User32")]
         static extern IntPtr GetActiveWindow();
+
+        [DllImport("User32")]
+        static extern IntPtr GetDesktopWindow();
+
+        [DllImport("User32")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        static extern bool EnumThreadWindows(int dwThreadId, EnumThreadWndProc lpfn, IntPtr lParam);
+
+        delegate bool EnumThreadWndProc(IntPtr hwnd, IntPtr lParam);
 
 #if !NET6_0_OR_GREATER
         [ComImport]
