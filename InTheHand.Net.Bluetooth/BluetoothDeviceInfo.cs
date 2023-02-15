@@ -2,7 +2,7 @@
 //
 // InTheHand.Net.Sockets.BluetoothDeviceInfo
 // 
-// Copyright (c) 2003-2022 In The Hand Ltd, All rights reserved.
+// Copyright (c) 2003-2023 In The Hand Ltd, All rights reserved.
 // This source code is licensed under the MIT License
 
 using InTheHand.Net.Bluetooth;
@@ -62,10 +62,10 @@ namespace InTheHand.Net.Sockets
 
         /// <premliminary/>
         /// <summary>
-        /// Gets a list of all available RFComm service UUIDs on the remote device.
+        /// Gets a list of all available Rfcomm service UUIDs on the remote device.
         /// </summary>
         /// <param name="cached">If true and supported on the runtime platform return locally cached devices without doing an SDP request.</param>
-        /// <returns>All available RFComm service UUIDs on the remote device.</returns>
+        /// <returns>All available Rfcomm service UUIDs on the remote device.</returns>
         public Task<IEnumerable<Guid>> GetRfcommServicesAsync(bool cached = true)
         {
             return PlatformGetRfcommServicesAsync(cached);
