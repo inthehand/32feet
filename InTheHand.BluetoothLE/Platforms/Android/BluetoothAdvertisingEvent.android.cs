@@ -1,11 +1,12 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="BluetoothAdvertisingEvent.android.cs" company="In The Hand Ltd">
-//   Copyright (c) 2018-22 In The Hand Ltd, All rights reserved.
+//   Copyright (c) 2018-23 In The Hand Ltd, All rights reserved.
 //   This source code is licensed under the MIT License - see License.txt
 // </copyright>
 //-----------------------------------------------------------------------
 
 using Android.Bluetooth.LE;
+using Android.OS;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -63,7 +64,12 @@ namespace InTheHand.Bluetooth
 
         sbyte PlatformGetTxPower()
         {
-            return (sbyte)_scanResult.TxPower;
+            if (Build.VERSION.SdkInt >= BuildVersionCodes.O)
+            {
+                return (sbyte)_scanResult.TxPower;
+            }
+
+            return 0;
         }
 
         IReadOnlyDictionary<ushort, byte[]> PlatformGetManufacturerData()

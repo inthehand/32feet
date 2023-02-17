@@ -21,7 +21,7 @@ namespace InTheHand.Bluetooth
 {
     partial class Bluetooth
     {
-        internal static BluetoothManager _manager = (BluetoothManager) Application.Context.GetSystemService(Application.BluetoothService);
+        internal static BluetoothManager _manager = (BluetoothManager) Android.App.Application.Context.GetSystemService(Android.App.Application.BluetoothService);
         private static readonly EventWaitHandle s_handle = new EventWaitHandle(false, EventResetMode.AutoReset);
         internal static Android.Bluetooth.BluetoothDevice s_device;
         private static RequestDeviceOptions _currentRequest;
@@ -227,7 +227,7 @@ namespace InTheHand.Bluetooth
                 //Activity currentActivity = Platform.CurrentActivity;
 
                 Intent i = new Intent("android.bluetooth.devicepicker.action.LAUNCH");
-                i.PutExtra("android.bluetooth.devicepicker.extra.LAUNCH_PACKAGE", Application.Context.PackageName);
+                i.PutExtra("android.bluetooth.devicepicker.extra.LAUNCH_PACKAGE", Android.App.Application.Context.PackageName);
                 i.PutExtra("android.bluetooth.devicepicker.extra.DEVICE_PICKER_LAUNCH_CLASS", Java.Lang.Class.FromType(typeof(DevicePickerReceiver)).Name);
                 i.PutExtra("android.bluetooth.devicepicker.extra.NEED_AUTH", false);
 

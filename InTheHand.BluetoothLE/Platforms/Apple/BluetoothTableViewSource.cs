@@ -1,6 +1,6 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="BluetoothTableViewSource.cs" company="In The Hand Ltd">
-//   Copyright (c) 2018-20 In The Hand Ltd, All rights reserved.
+//   Copyright (c) 2018-23 In The Hand Ltd, All rights reserved.
 //   This source code is licensed under the MIT License - see License.txt
 // </copyright>
 //-----------------------------------------------------------------------
@@ -13,8 +13,13 @@ using System.Text;
 using Foundation;
 using UIKit;
 using CoreBluetooth;
-using CoreFoundation;
 using System.Threading.Tasks;
+
+#if NET6_0_OR_GREATER || __WATCHOS__
+using CBManagerState = CoreBluetooth.CBManagerState;
+#else
+using CBManagerState = CoreBluetooth.CBCentralManagerState;
+#endif
 
 namespace InTheHand.Bluetooth.Platforms.Apple
 {
@@ -30,17 +35,13 @@ namespace InTheHand.Bluetooth.Platforms.Apple
 
             Bluetooth.DiscoveredPeripheral += Bluetooth_DiscoveredPeripheral;
 
-#if NET6_0_OR_GREATER
             if (Bluetooth._manager.State == CBManagerState.PoweredOn)
-#else
-            if (Bluetooth._manager.State == CBCentralManagerState.PoweredOn)
-#endif
             {
                 StartScanning();
             }
             else
             {
-                Bluetooth.UpdatedState += _manager_UpdatedState;
+                Bluetooth.AvailabilityChanged += AvailabilityChanged;
             }
         }
 
@@ -58,13 +59,9 @@ namespace InTheHand.Bluetooth.Platforms.Apple
             }
         }
 
-        private async void _manager_UpdatedState(object sender, EventArgs e)
+        private async void AvailabilityChanged(object sender, EventArgs e)
         {
-#if NET6_0_OR_GREATER
-            if (Bluetooth._manager.State == CBManagerState.PoweredOn)
-#else
-            if (Bluetooth._manager.State == CBCentralManagerState.PoweredOn)
-#endif
+            if (Bluetooth.IsAvailable)
             {
                 if(!Bluetooth._manager.IsScanning)
                     await StartScanning();
@@ -139,63 +136,6 @@ namespace InTheHand.Bluetooth.Platforms.Apple
                 _table.ReloadData();
             }
         }
-
-        /*private sealed class BluetoothDelegate : CBCentralManagerDelegate
-        {
-            private BluetoothTableViewSource _owner;
-
-            public BluetoothDelegate(BluetoothTableViewSource owner)
-            {
-                _owner = owner;
-            }
-
-            public override void UpdatedState(CBCentralManager central)
-            {
-                if (central.State == CBCentralManagerState.PoweredOn)
-                {
-                    List<CBUUID> services = new List<CBUUID>();
-                    if (!_owner._options.AcceptAllDevices)
-                    {
-                        foreach (BluetoothLEScanFilter filter in _owner._options.Filters)
-                        {
-                            foreach (BluetoothUuid service in filter.Services)
-                            {
-                                services.Add(service);
-                            }
-                        }
-                    }
-
-                    central.ScanForPeripherals(services.ToArray(), new PeripheralScanningOptions() { AllowDuplicatesKey = false });
-                }
-            }
-
-            public override void DiscoveredPeripheral(CBCentralManager central, CBPeripheral peripheral, NSDictionary advertisementData, NSNumber RSSI)
-            {
-                foreach(var item in advertisementData)
-                {
-                    if (item.Key.ToString() == CBAdvertisement.DataLocalNameKey)
-                    {
-                        System.Diagnostics.Debug.WriteLine($"{item.Key}  {item.Value}");
-                    }
-                }
-
-                //if (!string.IsNullOrEmpty(peripheral.Name))
-                //{
-                    System.Diagnostics.Debug.WriteLine(peripheral.Name + " " + peripheral.Identifier.ToString());
-                if (!_owner._devices.Contains(peripheral))
-                {
-                    _owner._devices.Add(peripheral);
-                }
-
-                
-
-                UIDevice.CurrentDevice.BeginInvokeOnMainThread(() =>
-                    {
-                        _owner.OnReloadData();
-                    });
-                //}
-            }
-        }*/
     }
 }
 #endif

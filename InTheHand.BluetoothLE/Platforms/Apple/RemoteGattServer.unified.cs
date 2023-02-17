@@ -43,8 +43,8 @@ namespace InTheHand.Bluetooth
              {
                  if (e.Peripheral.Identifier.IsEqual(((CBPeripheral)Device).Identifier))
                  {
-                    Bluetooth.ConnectedPeripheral -= connectedHandler;
-                    Bluetooth.FailedToConnectPeripheral -= failedConnectHandler;
+                    Bluetooth._manager.ConnectedPeripheral -= connectedHandler;
+                    Bluetooth._manager.FailedToConnectPeripheral -= failedConnectHandler;
                     bool success = tcs.TrySetResult(true);
                     System.Diagnostics.Debug.WriteLine($"Connect.TrySetResult:{success}");
                  }
@@ -54,15 +54,15 @@ namespace InTheHand.Bluetooth
             {
                 if (e.Peripheral.Identifier.IsEqual(((CBPeripheral)Device).Identifier))
                 {
-                    Bluetooth.ConnectedPeripheral -= connectedHandler;
-                    Bluetooth.FailedToConnectPeripheral -= failedConnectHandler;
+                    Bluetooth._manager.ConnectedPeripheral -= connectedHandler;
+                    Bluetooth._manager.FailedToConnectPeripheral -= failedConnectHandler;
                     tcs.SetResult(false);
                 }
             };
 
-            Bluetooth.ConnectedPeripheral += connectedHandler;
-            Bluetooth.FailedToConnectPeripheral += failedConnectHandler;
-            Bluetooth.DisconnectedPeripheral += Bluetooth_DisconnectedPeripheral;
+            Bluetooth._manager.ConnectedPeripheral += connectedHandler;
+            Bluetooth._manager.FailedToConnectPeripheral += failedConnectHandler;
+            Bluetooth._manager.DisconnectedPeripheral += Bluetooth_DisconnectedPeripheral;
 #if __IOS__
             if (Device.RequiresAncs)
             {
@@ -79,8 +79,8 @@ namespace InTheHand.Bluetooth
             switch(((CBPeripheral)Device).State)
             {
                 case CBPeripheralState.Connected:
-                    Bluetooth.ConnectedPeripheral -= connectedHandler;
-                    Bluetooth.FailedToConnectPeripheral -= failedConnectHandler;
+                    Bluetooth._manager.ConnectedPeripheral -= connectedHandler;
+                    Bluetooth._manager.FailedToConnectPeripheral -= failedConnectHandler;
                     return Task.CompletedTask;
 
                 case CBPeripheralState.Connecting:
@@ -114,7 +114,7 @@ namespace InTheHand.Bluetooth
 
         void PlatformCleanup()
         {
-            Bluetooth.DisconnectedPeripheral -= Bluetooth_DisconnectedPeripheral;
+            Bluetooth._manager.DisconnectedPeripheral -= Bluetooth_DisconnectedPeripheral;
         }
 
         Task<GattService> PlatformGetPrimaryService(BluetoothUuid service)
