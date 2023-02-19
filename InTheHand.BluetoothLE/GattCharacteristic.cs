@@ -44,25 +44,6 @@ namespace InTheHand.Bluetooth
         public GattCharacteristicProperties Properties { get { return GetProperties(); } }
 
         /// <summary>
-        /// Get the user friendly description for this GattCharacteristic, if the User Description <see cref="GattDescriptor">Descriptor</see> is present, otherwise this will be an empty string.
-        /// </summary>
-        public string UserDescription { get { return GetUserDescription(); } }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("CodeQuality", "IDE0051:Remove unused private members", Justification = "Used on multiple platforms")]
-        private string GetManualUserDescription()
-        {
-            var descriptor = GetDescriptorAsync(GattDescriptorUuids.CharacteristicUserDescription).Result;
-
-            if(descriptor != null)
-            {
-                var bytes = descriptor.ReadValueAsync().Result;
-                return System.Text.Encoding.UTF8.GetString(bytes);
-            }
-
-            return string.Empty;
-        }
-
-        /// <summary>
         /// The currently cached characteristic value. 
         /// This value gets updated when the value of the characteristic is read or updated via a notification or indication.
         /// </summary>
@@ -135,7 +116,7 @@ namespace InTheHand.Bluetooth
         }
 
         /// <summary>
-        /// 
+        /// Fired when the value changes, as a result of a value change notification/indication.
         /// </summary>
         public event EventHandler<GattCharacteristicValueChangedEventArgs> CharacteristicValueChanged
         {
@@ -152,11 +133,27 @@ namespace InTheHand.Bluetooth
             }
         }
 
+        /// <summary>
+        /// Registers to start receiving value changed notifications.
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="NotSupportedException">Characteristic must support either Notify or Indicate properties.</exception>
         public Task StartNotificationsAsync()
         {
-            return PlatformStartNotifications();
+            if (Properties.HasFlag(GattCharacteristicProperties.Notify) | Properties.HasFlag(GattCharacteristicProperties.Indicate))
+            {
+                return PlatformStartNotifications();
+            }
+            else
+            {
+                throw new NotSupportedException("Characteristic does not support Notify or Indicate.");
+            }
         }
 
+        /// <summary>
+        /// Unregisters for value changed notifications.
+        /// </summary>
+        /// <returns></returns>
         public Task StopNotificationsAsync()
         {
             return PlatformStopNotifications();

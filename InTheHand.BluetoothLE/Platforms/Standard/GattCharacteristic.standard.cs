@@ -24,11 +24,6 @@ namespace InTheHand.Bluetooth
             return 0;
         }
 
-        string GetUserDescription()
-        {
-            return string.Empty;
-        }
-
         Task<GattDescriptor> PlatformGetDescriptor(BluetoothUuid descriptor)
         {
             return Task.FromResult((GattDescriptor)null);

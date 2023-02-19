@@ -69,11 +69,11 @@ namespace InTheHand.Bluetooth
             string namePrefix = options?.Filters.FirstOrDefault(f => !string.IsNullOrEmpty(f.NamePrefix))?.NamePrefix;
 
             DevicePicker picker = new DevicePicker();
-            Rect bounds = Rect.Empty;
+            Windows.Foundation.Rect bounds = Windows.Foundation.Rect.Empty;
 #if !UAP
             uint len = 64;
             byte[] buffer = new byte[len];
-            bounds = new Rect(0, 0, 480, 480);
+            bounds = new Windows.Foundation.Rect(0, 0, 480, 480);
             IntPtr hwnd = IntPtr.Zero;
 
             hwnd = GetActiveWindow();

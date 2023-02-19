@@ -39,11 +39,6 @@ namespace InTheHand.Bluetooth
             return (GattCharacteristicProperties)((int)_characteristic.Properties & 0xff);
         }
 
-        string GetUserDescription()
-        {
-            return GetManualUserDescription();
-        }
-
         Task<GattDescriptor> PlatformGetDescriptor(BluetoothUuid descriptor)
         {
             TaskCompletionSource<GattDescriptor> tcs = new TaskCompletionSource<GattDescriptor>();

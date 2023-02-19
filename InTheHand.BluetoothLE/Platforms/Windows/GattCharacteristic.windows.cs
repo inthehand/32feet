@@ -32,9 +32,15 @@ namespace InTheHand.Bluetooth
             return _characteristic.Uuid;
         }
 
-        string GetUserDescription()
+        /// <summary>
+        /// Get the user friendly description for this GattCharacteristic, if the User Description <see cref="GattDescriptor">Descriptor</see> is present, otherwise this will be an empty string.
+        /// </summary>
+        public string UserDescription
         {
-            return _characteristic.UserDescription;
+            get
+            {
+                return _characteristic.UserDescription;
+            }
         }
 
         GattCharacteristicProperties GetProperties()
