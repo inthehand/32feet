@@ -31,18 +31,24 @@ namespace InTheHand.Bluetooth
     partial class Bluetooth
     {
         internal static CBCentralManager _manager;
-        private static bool availability = false;
 
         private static void Initialize()
         {
             if (_manager == null)
             {
                 Debug.WriteLine("Initialize");
+                
+                var hasInfoKey = CoreFoundation.CFBundle.GetMain().InfoDictionary.ContainsKey(new NSString("NSBluetoothAlwaysUsageDescription"));
+                if(!hasInfoKey)
+                {
+                    throw new PlatformNotSupportedException("Application info.plist must contain an entry for NSBluetoothAlwaysUsageDescription");
+                }
+
                 CBCentralInitOptions options = new CBCentralInitOptions
                 {
                     ShowPowerAlert = true
 #if __IOS__
-                    //   ,  RestoreIdentifier = NSBundle.MainBundle.ObjectForInfoDictionary("CFBundleName")?.ToString()
+                    //, RestoreIdentifier = NSBundle.MainBundle.ObjectForInfoDictionary("CFBundleName")?.ToString()
 #endif
                 };
 
