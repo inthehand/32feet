@@ -2,17 +2,12 @@
 //
 // InTheHand.Net.Bluetooth.BluetoothSecurity (Android)
 // 
-// Copyright (c) 2003-2022 In The Hand Ltd, All rights reserved.
+// Copyright (c) 2003-2023 In The Hand Ltd, All rights reserved.
 // This source code is licensed under the MIT License
 
 using Android.Bluetooth;
 using Android.Content;
 using System;
-#if NET6_0_OR_GREATER
-using Microsoft.Maui.ApplicationModel;
-#else
-using Xamarin.Essentials;
-#endif
 
 namespace InTheHand.Net.Bluetooth
 {
@@ -23,11 +18,9 @@ namespace InTheHand.Net.Bluetooth
         static BluetoothSecurity()
         {
             BluetoothManager manager = null;
-#if NET6_0_OR_GREATER
-            manager = Microsoft.Maui.ApplicationModel.Platform.CurrentActivity.GetSystemService(Context.BluetoothService) as BluetoothManager;
-#else
-            manager = Xamarin.Essentials.Platform.CurrentActivity.GetSystemService(Context.BluetoothService) as BluetoothManager;
-#endif
+
+            manager = Sockets.BluetoothClient.currentContext.GetSystemService(Context.BluetoothService) as BluetoothManager;
+
             if (manager == null || manager.Adapter == null)
                 throw new PlatformNotSupportedException();
 
@@ -42,10 +35,10 @@ namespace InTheHand.Net.Bluetooth
             {
                 nativeDevice.SetPin(System.Text.Encoding.ASCII.GetBytes(pin));
             }
-            if (Permissions.IsDeclaredInManifest("android.permission.BLUETOOTH_PRIVILEGED"))
+            /*if (Permissions.IsDeclaredInManifest("android.permission.BLUETOOTH_PRIVILEGED"))
             {
                 nativeDevice.SetPairingConfirmation(true);
-            }
+            }*/
 
             return nativeDevice.CreateBond();
         }

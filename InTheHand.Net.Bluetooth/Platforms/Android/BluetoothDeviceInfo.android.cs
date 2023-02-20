@@ -94,11 +94,7 @@ namespace InTheHand.Net.Sockets
                 TaskCompletionSource<IEnumerable<Guid>> servicesReceiver = new TaskCompletionSource<IEnumerable<Guid>>();
                 var receiver = new BluetoothUuidReceiver(servicesReceiver);
 
-#if NET6_0_OR_GREATER
-                    Microsoft.Maui.ApplicationModel.Platform.CurrentActivity.RegisterReceiver(receiver, new IntentFilter(BluetoothDevice.ActionUuid));
-#else
-                    Xamarin.Essentials.Platform.CurrentActivity.RegisterReceiver(receiver, new IntentFilter(BluetoothDevice.ActionUuid));
-#endif
+                BluetoothClient.currentContext.RegisterReceiver(receiver, new IntentFilter(BluetoothDevice.ActionUuid));
 
                 bool success = _device.FetchUuidsWithSdp();
 

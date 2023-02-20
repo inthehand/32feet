@@ -2,7 +2,7 @@
 //
 // InTheHand.Net.Bluetooth.BluetoothDevicePicker (Android)
 // 
-// Copyright (c) 2018-2022 In The Hand Ltd, All rights reserved.
+// Copyright (c) 2018-2023 In The Hand Ltd, All rights reserved.
 // This source code is licensed under the MIT License
 
 using Android.App;
@@ -13,11 +13,6 @@ using InTheHand.Net.Bluetooth.Droid;
 using InTheHand.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
-#if NET6_0_OR_GREATER
-using Microsoft.Maui.ApplicationModel;
-#else
-using Xamarin.Essentials;
-#endif
 
 namespace InTheHand.Net.Bluetooth
 {
@@ -32,8 +27,8 @@ namespace InTheHand.Net.Bluetooth
         {
             s_current = this;
 
-            Intent i = new Intent(Platform.CurrentActivity, typeof(DevicePickerActivity));
-            Platform.CurrentActivity.StartActivity(i);
+            Intent i = new Intent(BluetoothClient.currentContext, typeof(DevicePickerActivity));
+            Sockets.BluetoothClient.currentContext.StartActivity(i);
 
             return Task.Run(() =>
             {
@@ -93,7 +88,7 @@ namespace InTheHand.Net.Bluetooth
                 i.PutExtra("android.bluetooth.devicepicker.extra.NEED_AUTH", paired);
                 i.PutExtra("android.bluetooth.devicepicker.extra.FILTER_TYPE", filterType);
 
-                Platform.CurrentActivity.StartActivityForResult(i, 1);
+                BluetoothClient.currentContext.StartActivityForResult(i, 1);
             }
 
             // set the handle when the picker has completed and return control straight back to the calling activity

@@ -2,9 +2,10 @@
 //
 // InTheHand.Net.Bluetooth.BluetoothClient (Android)
 // 
-// Copyright (c) 2018-2022 In The Hand Ltd, All rights reserved.
+// Copyright (c) 2018-2023 In The Hand Ltd, All rights reserved.
 // This source code is licensed under the MIT License
 
+using Android.App;
 using Android.Bluetooth;
 using Android.Content;
 using Android.OS;
@@ -14,11 +15,6 @@ using System;
 using System.Collections.Generic;
 using System.Net.Sockets;
 using System.Threading;
-#if NET6_0_OR_GREATER
-using Microsoft.Maui.ApplicationModel;
-#else
-using Xamarin.Essentials;
-#endif
 
 namespace InTheHand.Net.Sockets
 {
@@ -26,9 +22,43 @@ namespace InTheHand.Net.Sockets
     {
         private BluetoothSocket _socket;
         private BluetoothRadio _radio;
+        internal static Activity currentContext;
 
         private void PlatformInitialize()
         {
+            // when used by a cross-platform UI framework like MAUI or Uno we need to get the current Activity in order to launch the picker UI
+            // for a "native" app you can use the Android specific RequestDevice overload which accepts a Context
+
+#if NET6_0_OR_GREATER
+
+            // check for Uno without taking a hard dependency
+            var t = Type.GetType("Uno.UI.ContextHelper, Uno, Version=255.255.255.255, Culture=neutral, PublicKeyToken=null", false, true);
+            if (t != null)
+            {
+                currentContext = (Activity)t.GetProperty("Current", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public).GetValue(null);
+            }
+            else
+            {
+                // try Maui Essentials if not
+                t = Type.GetType("Microsoft.Maui.ApplicationModel.Platform, Microsoft.Maui.Essentials, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null", false, true);
+                if (t != null)
+                {
+                    currentContext = (Activity)t.GetProperty("CurrentActivity", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public).GetValue(null);
+                }
+            }
+#else
+            // check for Xamarin.Essentials without taking a hard dependency
+            var t = Type.GetType("Xamarin.Essentials.Platform, Xamarin.Essentials, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null", false, true);
+            if (t != null)
+            {
+                currentContext = (Activity)t.GetProperty("CurrentActivity", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public).GetValue(null);
+            }
+#endif
+            if (currentContext == null)
+                System.Diagnostics.Debug.WriteLine("Bluetooth.android Context:Unknown");
+            else
+                System.Diagnostics.Debug.WriteLine($"Bluetooth.android Context:{currentContext.GetType().FullName}");
+
             _radio = BluetoothRadio.Default;
             if (_radio != null && _radio.Mode == RadioMode.PowerOff)
                 _radio.Mode = RadioMode.Connectable;
@@ -64,7 +94,7 @@ namespace InTheHand.Net.Sockets
             filter.AddAction(BluetoothDevice.ActionFound);
             filter.AddAction(BluetoothAdapter.ActionDiscoveryFinished);
             filter.AddAction(BluetoothAdapter.ActionDiscoveryStarted);
-            Platform.CurrentActivity.RegisterReceiver(receiver, filter, null, handler);
+            currentContext.RegisterReceiver(receiver, filter, null, handler);
 
             EventWaitHandle handle = new EventWaitHandle(false, EventResetMode.AutoReset);
 
@@ -85,7 +115,7 @@ namespace InTheHand.Net.Sockets
 
             receiver.DiscoveryComplete += (s, e) =>
             {
-                Platform.CurrentActivity.UnregisterReceiver(receiver);
+                currentContext.UnregisterReceiver(receiver);
                 handle.Set();
                 handlerThread.QuitSafely();
             };
