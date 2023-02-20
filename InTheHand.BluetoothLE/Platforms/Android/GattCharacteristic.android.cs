@@ -51,7 +51,7 @@ namespace InTheHand.Bluetooth
         {
             List<GattDescriptor> descriptors = new List<GattDescriptor>();
 
-            foreach(var descriptor in _characteristic.Descriptors)
+            foreach (var descriptor in _characteristic.Descriptors)
             {
                 descriptors.Add(new GattDescriptor(this, descriptor));
             }
@@ -73,10 +73,17 @@ namespace InTheHand.Bluetooth
                 if (e.Characteristic == _characteristic)
                 {
                     Service.Device.Gatt.CharacteristicRead -= handler;
-
                     if (!tcs.Task.IsCompleted)
                     {
-                        tcs.SetResult(_characteristic.GetValue());
+                        if (e.Status == ABluetooth.GattStatus.Success)
+                        {
+                            tcs.SetResult(e.Value);
+                        }
+                        else
+                        {
+                            tcs.SetResult(null);
+                        }
+
                     }
                 }
             };

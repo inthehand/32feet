@@ -48,11 +48,7 @@ namespace InTheHand.Bluetooth
                     {
                         if (e.Status == ABluetooth.GattStatus.Success)
                         {
-#if NET7_0_OR_GREATER
                             tcs.SetResult(e.Value);
-#else
-                            tcs.SetResult(_descriptor.GetValue());
-#endif
                         }
                         else
                         {

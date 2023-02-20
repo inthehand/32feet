@@ -81,13 +81,12 @@ namespace InTheHand.Bluetooth
                 System.Diagnostics.Debug.WriteLine($"CharacteristicRead {characteristic.Uuid} Status:{status}");
                 _owner.CharacteristicRead?.Invoke(_owner, new CharacteristicEventArgs { Characteristic = characteristic, Status = status, Value = value });
             }
-#else
+#endif
             public override void OnCharacteristicRead(ABluetooth.BluetoothGatt gatt, ABluetooth.BluetoothGattCharacteristic characteristic, ABluetooth.GattStatus status)
             {
                 System.Diagnostics.Debug.WriteLine($"CharacteristicRead {characteristic.Uuid} Status:{status}");
-                _owner.CharacteristicRead?.Invoke(_owner, new CharacteristicEventArgs { Characteristic = characteristic, Status = status });
+                _owner.CharacteristicRead?.Invoke(_owner, new CharacteristicEventArgs { Characteristic = characteristic, Status = status, Value = characteristic.GetValue() });
             }
-#endif
 
             public override void OnCharacteristicWrite(ABluetooth.BluetoothGatt gatt, ABluetooth.BluetoothGattCharacteristic characteristic, ABluetooth.GattStatus status)
             {
@@ -107,13 +106,12 @@ namespace InTheHand.Bluetooth
                 System.Diagnostics.Debug.WriteLine($"DescriptorRead {descriptor.Uuid} Status:{status}");
                 _owner.DescriptorRead?.Invoke(_owner, new DescriptorEventArgs { Descriptor = descriptor, Status = status, Value = value });
             }
-#else
+#endif
             public override void OnDescriptorRead(ABluetooth.BluetoothGatt gatt, ABluetooth.BluetoothGattDescriptor descriptor, ABluetooth.GattStatus status)
             {
                 System.Diagnostics.Debug.WriteLine($"DescriptorRead {descriptor.Uuid} Status:{status}");
-                _owner.DescriptorRead?.Invoke(_owner, new DescriptorEventArgs { Descriptor = descriptor, Status = status });
+                _owner.DescriptorRead?.Invoke(_owner, new DescriptorEventArgs { Descriptor = descriptor, Status = status, Value = descriptor.GetValue() });
             }
-#endif
 
             public override void OnDescriptorWrite(ABluetooth.BluetoothGatt gatt, ABluetooth.BluetoothGattDescriptor descriptor, ABluetooth.GattStatus status)
             {
