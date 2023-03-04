@@ -54,7 +54,7 @@ namespace InTheHand.Bluetooth
                 _owner.Mtu = mtu;
                 base.OnMtuChanged(gatt, mtu, status);
             }
-            
+
             public override void OnConnectionStateChange(ABluetooth.BluetoothGatt gatt, ABluetooth.GattStatus status, ABluetooth.ProfileState newState)
             {
                 System.Diagnostics.Debug.WriteLine($"ConnectionStateChanged Status:{status} NewState:{newState}");
@@ -66,15 +66,26 @@ namespace InTheHand.Bluetooth
                         gatt.RequestMtu(_owner.requestedMtu);
 
                     if (!_owner._servicesDiscovered)
-                        gatt.DiscoverServices();
+                    {
+                        Task.Run(async () =>
+                        {
+                            System.Diagnostics.Debug.WriteLine(Android.OS.Build.VERSION.SdkInt);
+                            if (Android.OS.Build.VERSION.SdkInt < Android.OS.BuildVersionCodes.N && gatt.Device.BondState == ABluetooth.Bond.Bonded)
+                                await Task.Delay(1000);
+
+                            gatt.DiscoverServices();
+                        });
+                    }
                 }
                 else
                 {
                     // reset requested MTU
                     _owner.requestedMtu = 0;
+                    _owner._servicesDiscovered = false;
                     _owner.Device.OnGattServerDisconnected();
                 }
             }
+
 #if NET7_0_OR_GREATER
             public override void OnCharacteristicRead(ABluetooth.BluetoothGatt gatt, ABluetooth.BluetoothGattCharacteristic characteristic, byte[] value, ABluetooth.GattStatus status)
             {
@@ -126,6 +137,15 @@ namespace InTheHand.Bluetooth
                 _owner.ServicesDiscovered?.Invoke(_owner, new GattEventArgs { Status = status });
             }
 
+#if NET6_0_OR_GREATER
+            public override void OnServiceChanged(ABluetooth.BluetoothGatt gatt)
+            {
+                _owner._servicesDiscovered = false;
+                gatt.DiscoverServices();
+
+                base.OnServiceChanged(gatt);
+            }
+#endif
             public override void OnReadRemoteRssi(ABluetooth.BluetoothGatt gatt, int rssi, ABluetooth.GattStatus status)
             {
                 System.Diagnostics.Debug.WriteLine($"ReadRemoteRssi {rssi}");
@@ -156,11 +176,12 @@ namespace InTheHand.Bluetooth
 
                 if (!tcs.Task.IsCompleted)
                 {
-                    tcs.SetResult(true);
+                    tcs.SetResult(e.Status == ABluetooth.GattStatus.Success);
                 }
             };
 
             ServicesDiscovered += handler;
+
             return await tcs.Task;
         }
 
@@ -196,7 +217,7 @@ namespace InTheHand.Bluetooth
             else
             {
                 ConnectionStateChanged -= handler;
-                return Task.FromException(new OperationCanceledException());
+                return Task.FromException(new System.OperationCanceledException());
             }
         }
 
@@ -287,10 +308,10 @@ namespace InTheHand.Bluetooth
 
             return false;
         }
-        
+
         private static ABluetooth.BluetoothPhy ToAndroidPhy(BluetoothPhy phy)
         {
-            switch(phy)
+            switch (phy)
             {
                 case BluetoothPhy.Le1m:
                     return ABluetooth.BluetoothPhy.Le1m;
@@ -337,11 +358,11 @@ namespace InTheHand.Bluetooth
         public byte[] Value { get; internal set; }
     }
 
-        internal class RssiEventArgs : GattEventArgs
+    internal class RssiEventArgs : GattEventArgs
+    {
+        public short Rssi
         {
-            public short Rssi
-            {
-                get; internal set;
-            }
+            get; internal set;
         }
+    }
 }

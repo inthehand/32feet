@@ -38,25 +38,34 @@ namespace InTheHand.Bluetooth
             if (await Device.CreateNativeInstance()) PlatformInit();
 
             var status = await Device.NativeDevice.RequestAccessAsync();
-            if(status == Windows.Devices.Enumeration.DeviceAccessStatus.Allowed)
+            if (status == Windows.Devices.Enumeration.DeviceAccessStatus.Allowed)
             {
                 Device.LastKnownAddress = Device.NativeDevice.BluetoothAddress;
                 var session = await Windows.Devices.Bluetooth.GenericAttributeProfile.GattSession.FromDeviceIdAsync(Device.NativeDevice.BluetoothDeviceId);
-                if(session != null)
+                if (session != null)
                 {
                     Mtu = session.MaxPduSize;
                     session.MaxPduSizeChanged += Session_MaxPduSizeChanged;
                     // Even though this is a local variable, we still want to add it to our dispose list so
                     // we don't have to rely on the GC to clean it up.
                     Device.AddDisposableObject(this, session);
-                    session.MaintainConnection = true;
+
+                    if (session.CanMaintainConnection)
+                        session.MaintainConnection = true;
                 }
 
                 // need to request something to force a connection
-                var services = await Device.NativeDevice.GetGattServicesAsync(cacheMode: Windows.Devices.Bluetooth.BluetoothCacheMode.Uncached);
-                foreach (var service in services.Services)
+                for (int i = 0; i < 3; i++)
                 {
-                    service.Dispose();
+                    var services = await Device.NativeDevice.GetGattServicesForUuidAsync(GattServiceUuids.GenericAccess, Windows.Devices.Bluetooth.BluetoothCacheMode.Uncached);
+                    if (services.Status == Windows.Devices.Bluetooth.GenericAttributeProfile.GattCommunicationStatus.Success)
+                    {
+                        foreach (var service in services.Services)
+                        {
+                            service.Dispose();
+                        }
+                        break;
+                    }
                 }
             }
             else
