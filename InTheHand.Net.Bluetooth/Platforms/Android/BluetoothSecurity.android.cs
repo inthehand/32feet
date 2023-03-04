@@ -19,7 +19,7 @@ namespace InTheHand.Net.Bluetooth
         {
             BluetoothManager manager = null;
 
-            manager = Sockets.BluetoothClient.currentContext.GetSystemService(Context.BluetoothService) as BluetoothManager;
+            manager = InTheHand.AndroidActivity.CurrentActivity.GetSystemService(Context.BluetoothService) as BluetoothManager;
 
             if (manager == null || manager.Adapter == null)
                 throw new PlatformNotSupportedException();

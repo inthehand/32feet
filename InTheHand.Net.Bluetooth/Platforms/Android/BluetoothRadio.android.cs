@@ -7,7 +7,6 @@
 
 using Android.Bluetooth;
 using Android.Content;
-using InTheHand.Net.Sockets;
 using System;
 
 namespace InTheHand.Net.Bluetooth
@@ -16,8 +15,7 @@ namespace InTheHand.Net.Bluetooth
     {
         private static BluetoothRadio GetDefault()
         {
-            BluetoothManager manager = null;
-            manager = BluetoothClient.currentContext.GetSystemService(Context.BluetoothService) as BluetoothManager;
+            BluetoothManager manager = InTheHand.AndroidActivity.CurrentActivity.GetSystemService(Context.BluetoothService) as BluetoothManager;
 
             if (manager == null)
                 throw new PlatformNotSupportedException();
@@ -37,7 +35,6 @@ namespace InTheHand.Net.Bluetooth
         {
             return new BluetoothRadio(adapter);
         }
-
 
         private readonly BluetoothAdapter _adapter;
 
@@ -100,7 +97,6 @@ namespace InTheHand.Net.Bluetooth
                     break;
             }
         }
-
 
         #region IDisposable Support
         private bool disposedValue = false; // To detect redundant calls

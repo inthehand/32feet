@@ -1,11 +1,11 @@
 ﻿<Project Sdk="MSBuild.Sdk.Extras/3.0.44">
 
 	<PropertyGroup>
-		<TargetFrameworks>netstandard2.0;net5.0-windows7.0;net5.0-windows10.0.19041.0;net6.0-windows7.0;net6.0-windows10.0.19041.0;net6.0-android;net452;net461;monoandroid90;monoandroid10.0;xamarinios10;uap10.0</TargetFrameworks>
+		<TargetFrameworks>netstandard2.0;net6.0-windows7.0;net6.0-windows10.0.22000.0;net6.0-android;net6.0-ios;net461;monoandroid11.0;xamarinios10;uap10.0</TargetFrameworks>
 		<Company>In The Hand Ltd</Company>
 		<Authors>Peter Foot</Authors>
 		<Product>32feet.NET</Product>
-		<Version>4.0.33.1</Version>
+		<Version>4.0.34</Version>
 		<RepositoryUrl>https://github.com/inthehand/32feet</RepositoryUrl>
 		<PublishRepositoryUrl>true</PublishRepositoryUrl>
 		<IncludeSymbols>true</IncludeSymbols>
@@ -14,9 +14,9 @@
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 		<PackageProjectUrl>https://github.com/inthehand/32feet</PackageProjectUrl>
 		<PackageLicenseUrl></PackageLicenseUrl>
-		<Copyright>Copyright (c) 2004-2022 In The Hand Ltd</Copyright>
+		<Copyright>Copyright (c) 2004-2023 In The Hand Ltd</Copyright>
 		<Description>32feet.NET is an open-source project to make personal area networking technologies such as Bluetooth easily accessible from .NET code.</Description>
-		<FileVersion>4.0.33.1230</FileVersion>
+		<FileVersion>4.0.34.0303</FileVersion>
 		<AssemblyVersion>4.0.0.0</AssemblyVersion>
 		<AssemblyName>InTheHand.Net.Bluetooth</AssemblyName>
 		<GenerateDocumentationFile Condition=" '$(Configuration)' == 'Release' ">true</GenerateDocumentationFile>
@@ -25,11 +25,16 @@
 		<PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<PackageId>InTheHand.Net.Bluetooth</PackageId>
-		<PackageReleaseNotes>Improvements to device picker on Windows. Improved debugger display.</PackageReleaseNotes>
+		<PackageReleaseNotes>Moved Android CurrentActivity logic to separate library.</PackageReleaseNotes>
 		<PackageIcon>32feet-package-icon.png</PackageIcon>
 		<RepositoryType>GIT</RepositoryType>
 		<SignAssembly Condition=" '$(Configuration)' == 'Release' ">true</SignAssembly>
 		<AssemblyOriginatorKeyFile Condition=" '$(Configuration)' == 'Release' ">InTheHand.snk</AssemblyOriginatorKeyFile>
+
+		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">12.0</SupportedOSPlatformVersion>
+		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">13.1</SupportedOSPlatformVersion>
+		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">21.0</SupportedOSPlatformVersion>
+		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'tizen'">6.5</SupportedOSPlatformVersion>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -45,16 +50,12 @@
 		<None Include="Platforms\**\*.*" />
 	</ItemGroup>
 
-	<PropertyGroup Condition="'$(TargetFramework)' == 'monoandroid10.0'">
+	<PropertyGroup Condition="'$(TargetFramework)' == 'monoandroid11.0'">
 		<TargetFrameworkIdentifier>MonoAndroid</TargetFrameworkIdentifier>
 		<TargetFrameworkVersion>v11.0</TargetFrameworkVersion>
 		<AndroidUseLatestPlatformSdk>False</AndroidUseLatestPlatformSdk>
 		<DefineConstants>$(DefineConstants);MONOANDROID11_0</DefineConstants>
 		<LanguageTargets>$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets</LanguageTargets>
-	</PropertyGroup>
-
-	<PropertyGroup Condition="'$(TargetFramework)' == 'net6.0-android'">
-		<UseMaui>True</UseMaui>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)'=='Debug'">
@@ -66,44 +67,30 @@
 	<PropertyGroup Condition=" '$(TargetFramework)' == 'uap10.0' ">
 		<DefineConstants>UAP</DefineConstants>
 		<RuntimeIdentifiers>win10-x64;win10-x86;win10-arm;win10-arm64</RuntimeIdentifiers>
-		<TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.19041.0</TargetPlatformVersion>
+		<TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.22000.0</TargetPlatformVersion>
+		<SupportedOSPlatformVersion>10.0.16299.0</SupportedOSPlatformVersion>
+		<TargetPlatformMinVersion>10.0.16299.0</TargetPlatformMinVersion>
+	</PropertyGroup>
+	
+	<PropertyGroup Condition=" '$(TargetFramework)' == 'net6.0-windows10.0.22000.0' ">
+		<DefineConstants>WinRT</DefineConstants>
+		<SupportedOSPlatformVersion>10.0.16299.0</SupportedOSPlatformVersion>
 		<TargetPlatformMinVersion>10.0.16299.0</TargetPlatformMinVersion>
 	</PropertyGroup>
 
-	<PropertyGroup Condition=" '$(TargetFramework)' == 'net5.0-windows7.0' ">
-		<ProduceReferenceAssembly>true</ProduceReferenceAssembly>
-	</PropertyGroup>
-
-	<PropertyGroup Condition=" '$(TargetFramework)' == 'net5.0-windows10.0.19041.0' ">
+	<PropertyGroup Condition=" '$(TargetFramework)' == 'net7.0-windows10.0.22000.0' ">
 		<DefineConstants>WinRT</DefineConstants>
+		<SupportedOSPlatformVersion>10.0.16299.0</SupportedOSPlatformVersion>
+		<TargetPlatformMinVersion>10.0.16299.0</TargetPlatformMinVersion>
 	</PropertyGroup>
 	
-	<PropertyGroup Condition=" '$(TargetFramework)' == 'net6.0-windows10.0.19041.0' ">
-		<DefineConstants>WinRT</DefineConstants>
-	</PropertyGroup>
-	
-	<PropertyGroup Condition=" '$(TargetFramework)' == 'xamarinios10' ">
-	</PropertyGroup>
-
-	<ItemGroup Condition=" '$(TargetFramework)' == 'monoandroid90' ">
-		<PackageReference Include="Xamarin.Essentials" Version="1.6.1" />
-		<Reference Include="System.Xml.Linq" />
-	</ItemGroup>
-	
-	<ItemGroup Condition=" '$(TargetFramework)' == 'monoandroid10.0' ">
-		<PackageReference Include="Xamarin.Essentials" Version="1.7.3" />
-		<Reference Include="System.Xml.Linq" />
-	</ItemGroup>
-
 	<ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
 		<Compile Include="Platforms\Standard\*.cs" />
 	</ItemGroup>
-	
-	<ItemGroup Condition=" '$(TargetFramework)' == 'monoandroid90' ">
-		<Compile Include="Platforms\Android\*.cs" />
-	</ItemGroup>
-	
-	<ItemGroup Condition=" '$(TargetFramework)' == 'monoandroid10.0' ">
+
+	<ItemGroup Condition=" '$(TargetFramework)' == 'monoandroid11.0' ">
+		<PackageReference Include="InTheHand.AndroidActivity" Version="1.0.1"/>
+		<Reference Include="System.Xml.Linq" />
 		<Compile Include="Platforms\Android\*.cs" />
 	</ItemGroup>
 
@@ -113,10 +100,6 @@
 
 	<ItemGroup Condition=" '$(TargetFramework)' == 'xamarinios10' ">
 		<Reference Include="System.Xml.Linq" />
-		<Compile Include="Platforms\iOS\*.cs" />
-	</ItemGroup>
-
-	<ItemGroup Condition=" '$(TargetFramework)' == 'net6.0-ios' ">
 		<Compile Include="Platforms\iOS\*.cs" />
 	</ItemGroup>
 
@@ -132,24 +115,20 @@
 		<Compile Include="Platforms\Win32\*.cs" />
 	</ItemGroup>
 
-	<ItemGroup Condition=" '$(TargetFramework)' == 'net5.0-windows7.0' ">
-		<Compile Include="Platforms\Win32\*.cs" />
-	</ItemGroup>
-
-	<ItemGroup Condition=" '$(TargetFramework)' == 'net5.0-windows10.0.19041.0' ">
-		<Compile Include="Platforms\Windows\*.cs" />
-	</ItemGroup>
-
 	<ItemGroup Condition=" '$(TargetFramework)' == 'net6.0-windows7.0' ">
 		<Compile Include="Platforms\Win32\*.cs" />
 	</ItemGroup>
 
-	<ItemGroup Condition=" '$(TargetFramework)' == 'net6.0-windows10.0.19041.0' ">
+	<ItemGroup Condition=" '$(TargetFramework)' == 'net6.0-windows10.0.22000.0' ">
 		<Compile Include="Platforms\Windows\*.cs" />
 	</ItemGroup>
 
 	<ItemGroup Condition=" '$(TargetFramework)' == 'net6.0-android' ">
+		<PackageReference Include="InTheHand.AndroidActivity" Version="1.0.1"/>
 		<Compile Include="Platforms\Android\*.cs" />
 	</ItemGroup>
-
+	
+	<ItemGroup Condition=" '$(TargetFramework)' == 'net6.0-ios' ">
+		<Compile Include="Platforms\iOS\*.cs" />
+	</ItemGroup>
 </Project>

@@ -62,6 +62,7 @@ namespace InTheHand.Net.Sockets
             return _cod;
         }
 
+        // WIP
         private Guid UUIDToGuid(UUID uuid)
         {
             byte[] bytes = new byte[16];
@@ -94,7 +95,7 @@ namespace InTheHand.Net.Sockets
                 TaskCompletionSource<IEnumerable<Guid>> servicesReceiver = new TaskCompletionSource<IEnumerable<Guid>>();
                 var receiver = new BluetoothUuidReceiver(servicesReceiver);
 
-                BluetoothClient.currentContext.RegisterReceiver(receiver, new IntentFilter(BluetoothDevice.ActionUuid));
+                InTheHand.AndroidActivity.CurrentActivity.RegisterReceiver(receiver, new IntentFilter(BluetoothDevice.ActionUuid));
 
                 bool success = _device.FetchUuidsWithSdp();
 

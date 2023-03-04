@@ -11,6 +11,7 @@ using Android.Content.PM;
 using Android.OS;
 using InTheHand.Net.Bluetooth.Droid;
 using InTheHand.Net.Sockets;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -25,10 +26,13 @@ namespace InTheHand.Net.Bluetooth
 
         private Task<BluetoothDeviceInfo> DoPickSingleDeviceAsync()
         {
+            if (InTheHand.AndroidActivity.CurrentActivity == null)
+                throw new NotSupportedException("CurrentActivity was not detected or specified");
+
             s_current = this;
 
-            Intent i = new Intent(BluetoothClient.currentContext, typeof(DevicePickerActivity));
-            Sockets.BluetoothClient.currentContext.StartActivity(i);
+            Intent i = new Intent(InTheHand.AndroidActivity.CurrentActivity, typeof(DevicePickerActivity));
+            InTheHand.AndroidActivity.CurrentActivity.StartActivity(i);
 
             return Task.Run(() =>
             {
@@ -88,7 +92,7 @@ namespace InTheHand.Net.Bluetooth
                 i.PutExtra("android.bluetooth.devicepicker.extra.NEED_AUTH", paired);
                 i.PutExtra("android.bluetooth.devicepicker.extra.FILTER_TYPE", filterType);
 
-                BluetoothClient.currentContext.StartActivityForResult(i, 1);
+                InTheHand.AndroidActivity.CurrentActivity.StartActivityForResult(i, 1);
             }
 
             // set the handle when the picker has completed and return control straight back to the calling activity
