@@ -4,6 +4,7 @@ using CoreFoundation;
 using Foundation;
 using ObjCRuntime;
 
+[assembly: LinkWith("IOBluetooth.framework", LinkTarget.x86_64, SmartLink = true, ForceLoad = true)]
 
 namespace IOBluetooth
 {
