@@ -10,6 +10,16 @@
 
 Bluetooth support requires .NET Framework v4.6.1 or later for desktop Windows 7, 8, 10 and 11. Android and Apple macOS and iOS are also supported using Xamarin or .NET 6.0 and above.
 
+## Support 32feet
+
+ - [Become a GitHub Sponsor](https://github.com/sponsors/peterfoot) ❤️
+ - [Become a sponsor via Open Collective](https://opencollective.com/32feet) ❤️
+ 
+## Documentation / Tutorial
+The user guide is available in the [Wiki](https://github.com/inthehand/32feet/wiki) section. Please start by reading it.  It contains general information firstly on the various features contained in the library, and on what type of Bluetooth connection you want.  It also contains information on using each feature.
+
+Detailed API documentation is available at [https://inthehand.github.io/](http://inthehand.github.io/).
+
 ## Downloading
 
 Downloads are available here on the _Downloads_ tab. Packages are also available at NuGet:-
@@ -35,18 +45,12 @@ Downloads are available here on the _Downloads_ tab. Packages are also available
 - 32feet.NET - Legacy (v3.x)
 [![NuGet version](https://badge.fury.io/nu/32feet.NET.svg)](https://badge.fury.io/nu/32feet.NET)
 
-## Documentation / Tutorial
-The user guide is available in the [Wiki](https://github.com/inthehand/32feet/wiki) section, and the class documentation is at [https://inthehand.github.io/](http://inthehand.github.io/) and in the release package.
-
-Please start by reading it.  It contains general information firstly on the various features contained in the library, and on what type of Bluetooth connection you want.  It also contains information on using each feature.
 
 ## Blogs
 
 [Alan's 32feet.NET Development Blog](https://32feetnetdev.wordpress.com/)
 
 [Peter's Blog](https://inthehand.com/blog)
-
-[In The Hand Ltd](https://inthehand.com)
 
 ## Sponsors
 
