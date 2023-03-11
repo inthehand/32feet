@@ -39,6 +39,16 @@ namespace InTheHand.Bluetooth
             ArgumentNullException.ThrowIfNull(device, nameof(device));
 
             _device = device;
+            _device.Disconnected += _device_Disconnected;
+        }
+
+        private Task _device_Disconnected(Device sender, BlueZEventArgs eventArgs)
+        {
+            if(eventArgs.IsStateChange)
+            {
+                OnGattServerDisconnected();
+            }
+            return Task.CompletedTask;
         }
 
         string GetId()
