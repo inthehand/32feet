@@ -11,7 +11,6 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using InTheHand.Threading.Tasks;
 using Linux.Bluetooth;
 using Linux.Bluetooth.Extensions;
 
@@ -21,32 +20,59 @@ namespace InTheHand.Bluetooth
     {
         internal static Adapter adapter;
 
-        static Bluetooth()
+        private static async Task Initialize()
         {
-            adapter = AsyncHelpers.RunSync(async () =>
+            if(adapter == null)
             {
-                Adapter adapter = (await BlueZManager.GetAdaptersAsync()).FirstOrDefault();
-                return adapter;
-            });
+                adapter = (await BlueZManager.GetAdaptersAsync()).FirstOrDefault();
+            }
         }
 
         private static async Task<bool> PlatformGetAvailability()
         {
+            await Initialize();
             return adapter != null && await adapter.GetPoweredAsync();
         }
 
-        private static Task<BluetoothDevice> PlatformRequestDevice(RequestDeviceOptions options)
+        private static async Task<BluetoothDevice> PlatformRequestDevice(RequestDeviceOptions options)
         {
-            return Task.FromException<BluetoothDevice>(new PlatformNotSupportedException());
+            await Initialize();
+            throw new PlatformNotSupportedException();
         }
 
-        private static Task<IReadOnlyCollection<BluetoothDevice>> PlatformScanForDevices(RequestDeviceOptions options, CancellationToken cancellationToken = default)
+        private static async Task<IReadOnlyCollection<BluetoothDevice>> PlatformScanForDevices(RequestDeviceOptions options, CancellationToken cancellationToken = default)
         {
-            return Task.FromException<IReadOnlyCollection<BluetoothDevice>>(new PlatformNotSupportedException());
+            await Initialize();
+            List<BluetoothDevice> devices = new List<BluetoothDevice>();
+            TaskCompletionSource<IReadOnlyCollection<BluetoothDevice>> result = new TaskCompletionSource<IReadOnlyCollection<BluetoothDevice>>();
+            async Task handler(Adapter sender, DeviceFoundEventArgs eventArgs)
+            {
+                if(eventArgs.IsStateChange)
+                {
+                    devices.Remove(eventArgs.Device);
+                }
+
+                BluetoothDevice device = (BluetoothDevice)eventArgs.Device;
+                await device.Init();
+                devices.Add(eventArgs.Device);
+            }
+
+            adapter.DeviceFound += handler;
+            
+            Task.Run(async () =>
+            {
+                await adapter.StartDiscoveryAsync();
+                await Task.Delay(5000);
+                await adapter.StopDiscoveryAsync();
+                result.TrySetResult(devices);
+            }, cancellationToken);
+
+            return await result.Task;
         }
 
         private static async Task<IReadOnlyCollection<BluetoothDevice>> PlatformGetPairedDevices()
         {
+            await Initialize();
             List<BluetoothDevice> bluetoothDevices = new List<BluetoothDevice>();
                 
             var devices = await adapter.GetDevicesAsync();
@@ -55,16 +81,19 @@ namespace InTheHand.Bluetooth
             {
                 foreach(var device in devices)
                 {
-                    bluetoothDevices.Add(device);
+                    BluetoothDevice bluetoothDevice = (BluetoothDevice)device;
+                    await bluetoothDevice.Init();
+                    bluetoothDevices.Add(bluetoothDevice);
                 }
             }
 
             return bluetoothDevices.AsReadOnly();
         }
 
-        private static Task<BluetoothLEScan> PlatformRequestLEScan(BluetoothLEScanOptions options)
+        private static async Task<BluetoothLEScan> PlatformRequestLEScan(BluetoothLEScanOptions options)
         {
-            return Task.FromException<BluetoothLEScan>(new PlatformNotSupportedException());
+            await Initialize();
+            throw new PlatformNotSupportedException();
         }
 
         private static void AddAvailabilityChanged()

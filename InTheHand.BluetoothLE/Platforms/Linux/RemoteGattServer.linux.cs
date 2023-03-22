@@ -5,7 +5,6 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-using InTheHand.Threading.Tasks;
 using Linux.Bluetooth;
 using Linux.Bluetooth.Extensions;
 using System;
@@ -18,11 +17,17 @@ namespace InTheHand.Bluetooth
     {
         private void PlatformInit()
         {
+            Task.Run(async () =>
+            {
+                _connected = await Device._device.GetConnectedAsync();
+            });
         }
+
+        bool _connected;
 
         bool GetConnected()
         {
-            return AsyncHelpers.RunSync(() => { return Device._device.GetConnectedAsync(); });
+            return _connected;
         }
 
         async Task PlatformConnect()
@@ -32,11 +37,13 @@ namespace InTheHand.Bluetooth
             await Device._device.ConnectAsync();
             await Device._device.WaitForPropertyValueAsync("Connected", value: true, timeout: timeout);
             await Device._device.WaitForPropertyValueAsync("ServicesResolved", value: true, timeout: timeout);
+            _connected = await Device._device.GetConnectedAsync();
         }
 
         async void PlatformDisconnect()
         {
             await Device._device.DisconnectAsync();
+            _connected = await Device._device.GetConnectedAsync();
         }
 
         void PlatformCleanup()
@@ -45,8 +52,16 @@ namespace InTheHand.Bluetooth
 
         async Task<GattService> PlatformGetPrimaryService(BluetoothUuid service)
         {
-            var gattService = await Device._device.GetServiceAsync(service.Value.ToString());
-            return gattService == null ? null : new GattService(Device, gattService);
+            string uuid = service.Value.ToString();
+            var gattService = await Device._device.GetServiceAsync(uuid);
+            if(gattService != null)
+            {
+                GattService returnedService = new GattService(Device, gattService, service);
+                await returnedService.Init();
+                return returnedService;
+            }
+            
+            return null;
         }
 
         async Task<List<GattService>> PlatformGetPrimaryServices(BluetoothUuid? service)
@@ -57,8 +72,13 @@ namespace InTheHand.Bluetooth
             {
                 foreach (var linuxService in servs)
                 {
-                    if(service == null || service.Value.Value.ToString() == await linuxService.GetUUIDAsync())
-                    services.Add(new GattService(Device, linuxService));
+                    string uuid = await linuxService.GetUUIDAsync();
+                    if(service == null || service.Value.Value.ToString() == uuid)
+                    {
+                        GattService returnedService = new GattService(Device, linuxService, Guid.Parse(uuid));
+                        await returnedService.Init();
+                        services.Add(returnedService);
+                    }
                 }
             }
 

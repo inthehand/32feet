@@ -5,7 +5,6 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-using InTheHand.Threading.Tasks;
 using Linux.Bluetooth;
 using Linux.Bluetooth.Extensions;
 using System;
@@ -19,25 +18,44 @@ namespace InTheHand.Bluetooth
     {
         private IGattService1 _service;
 
-        internal GattService(BluetoothDevice device, IGattService1 service) : this(device)
+        internal GattService(BluetoothDevice device, IGattService1 service, BluetoothUuid uuid = default) : this(device)
         {
             _service = service;
+
+            if(uuid != BluetoothUuid.Empty)
+            {
+                _uuid = uuid;
+            }
         }
+
+        internal async Task Init()
+        {
+            if (_uuid == BluetoothUuid.Empty)
+            {
+                _uuid = Guid.Parse(await _service.GetUUIDAsync());
+            }
+
+            _isPrimary = await _service.GetPrimaryAsync();
+        }
+
+        private BluetoothUuid _uuid;
 
         BluetoothUuid GetUuid()
         {
-            return BluetoothUuid.FromGuid(Guid.Parse(AsyncHelpers.RunSync(() => { return _service.GetUUIDAsync(); })));
+            return _uuid;
         }
+
+        private bool _isPrimary;
 
         bool GetIsPrimary()
         {
-            return AsyncHelpers.RunSync(() => { return _service.GetPrimaryAsync(); });
+            return _isPrimary;
         }
 
         async Task<GattCharacteristic> PlatformGetCharacteristic(BluetoothUuid characteristic)
         {
             var linuxCharacteristic = await _service.GetCharacteristicAsync(characteristic.Value.ToString());
-            return linuxCharacteristic == null ? null : new GattCharacteristic(linuxCharacteristic);
+            return linuxCharacteristic == null ? null : new GattCharacteristic(linuxCharacteristic, characteristic);
         }
 
         async Task<IReadOnlyList<GattCharacteristic>> PlatformGetCharacteristics()
@@ -48,7 +66,7 @@ namespace InTheHand.Bluetooth
             {
                 foreach(var linuxCharacteristic in chars)
                 {
-                    characteristics.Add(new GattCharacteristic(linuxCharacteristic));
+                    characteristics.Add(new GattCharacteristic(linuxCharacteristic, Guid.Parse(await linuxCharacteristic.GetUUIDAsync())));
                 }
             }
 
@@ -57,12 +75,32 @@ namespace InTheHand.Bluetooth
 
         private async Task<GattService> PlatformGetIncludedServiceAsync(BluetoothUuid service)
         {
+            var paths = await _service.GetIncludesAsync();
+            foreach(var path in paths)
+            {
+                var serv = Tmds.DBus.Connection.System.CreateProxy<IGattService1>(Linux.Bluetooth.BluezConstants.DbusService, path);
+                var uuid = await serv.GetUUIDAsync();
+                if(uuid == service.Value.ToString())
+                {
+                    return new GattService(Device, serv, service);
+                }
+            }
+
             return null;
         }
 
         private async Task<IReadOnlyList<GattService>> PlatformGetIncludedServicesAsync()
         {
-            return null;
+            List<GattService> includedServices = new List<GattService>();
+
+            var paths = await _service.GetIncludesAsync();
+            foreach (var path in paths)
+            {
+                var serv = Tmds.DBus.Connection.System.CreateProxy<IGattService1>(Linux.Bluetooth.BluezConstants.DbusService, path);
+                includedServices.Add(new GattService(Device, serv, Guid.Parse(await serv.GetUUIDAsync())));
+            }
+
+            return includedServices.AsReadOnly();
         }
     }
 }

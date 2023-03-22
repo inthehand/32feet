@@ -5,7 +5,6 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-using InTheHand.Threading.Tasks;
 using Linux.Bluetooth;
 using System;
 using System.Collections.Generic;
@@ -18,14 +17,16 @@ namespace InTheHand.Bluetooth
     {
         private IGattCharacteristic1 _characteristic;
 
-        internal GattCharacteristic(IGattCharacteristic1 characteristic)
+        internal GattCharacteristic(IGattCharacteristic1 characteristic, BluetoothUuid uuid)
         {
             _characteristic = characteristic;
+            _uuid = uuid;
         }
 
+        private BluetoothUuid _uuid;
         BluetoothUuid GetUuid()
         {
-            return BluetoothUuid.FromGuid(Guid.Parse(AsyncHelpers.RunSync(() => { return _characteristic.GetUUIDAsync(); })));
+            return _uuid;
         }
 
         GattCharacteristicProperties GetProperties()
@@ -45,13 +46,13 @@ namespace InTheHand.Bluetooth
 
         byte[] PlatformGetValue()
         {
-            return AsyncHelpers.RunSync(() => { return _characteristic.GetValueAsync(); });
+            return default;
         }
 
         Task<byte[]> PlatformReadValue()
         {
             //TODO understand options
-            return _characteristic.ReadValueAsync(null);
+            return _characteristic.ReadValueAsync(null);// new Dictionary<string, object> { });
         }
 
         async Task PlatformWriteValue(byte[] value, bool requireResponse)
