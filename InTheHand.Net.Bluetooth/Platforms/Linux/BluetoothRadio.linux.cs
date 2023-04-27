@@ -15,17 +15,25 @@ namespace InTheHand.Net.Bluetooth
 {
     partial class BluetoothRadio
     {
+
         private static BluetoothRadio GetDefault()
         {
-            Adapter adapter = AsyncHelpers.RunSync(async () =>
+            BluetoothRadio radio = AsyncHelpers.RunSync(async () =>
             {
                 Adapter adapter = (await BlueZManager.GetAdaptersAsync()).FirstOrDefault();
-                return adapter;
+                if (adapter != null)
+                {
+                    var radio = (BluetoothRadio)adapter;
+                    await radio.Init();
+                    return radio;
+                }
+
+                return null;
             });
             
-            return adapter == null ? null : adapter;
+            return radio;
         }
-
+ 
         public static implicit operator BluetoothRadio(Adapter adapter)
         {
             return new BluetoothRadio(adapter);
@@ -37,6 +45,13 @@ namespace InTheHand.Net.Bluetooth
         }
 
         private Adapter _adapter;
+        internal Adapter Adapter
+        {
+            get
+            {
+                return _adapter;
+            }
+        }
 
         private BluetoothRadio(Adapter adapter)
         {
@@ -44,18 +59,27 @@ namespace InTheHand.Net.Bluetooth
 
             _adapter = adapter;
         }
-        
-        private string GetName()
+
+        private async Task Init()
         {
-            return AsyncHelpers.RunSync(() => { return _adapter.GetNameAsync(); });
+            var props = await _adapter.GetAllAsync();
+            _name = props.Name;
+            _address = BluetoothAddress.Parse(props.Address);
         }
 
-        private BluetoothAddress GetLocalAddress()
+        private string _name;
+        string GetName()
         {
-            return BluetoothAddress.Parse(AsyncHelpers.RunSync(() => { return _adapter.GetAddressAsync(); }));
+            return _name;
         }
 
-        private RadioMode GetMode()
+        private BluetoothAddress _address;
+        BluetoothAddress GetLocalAddress()
+        {
+            return _address;
+        }
+
+        RadioMode GetMode()
         {
             if(AsyncHelpers.RunSync(() => { return _adapter.GetPoweredAsync(); }))
             {
@@ -69,7 +93,7 @@ namespace InTheHand.Net.Bluetooth
             return RadioMode.PowerOff;
         }
 
-        private void SetMode(RadioMode value)
+        void SetMode(RadioMode value)
         {
             switch (value)
             {

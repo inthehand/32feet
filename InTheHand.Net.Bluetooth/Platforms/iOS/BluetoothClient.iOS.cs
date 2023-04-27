@@ -2,7 +2,7 @@
 //
 // InTheHand.Net.Bluetooth.BluetoothClient (iOS)
 // 
-// Copyright (c) 2018-2022 In The Hand Ltd, All rights reserved.
+// Copyright (c) 2018-2023 In The Hand Ltd, All rights reserved.
 // This source code is licensed under the MIT License
 
 using ExternalAccessory;
@@ -12,6 +12,9 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Net.Sockets;
+using System.Runtime.CompilerServices;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace InTheHand.Net.Sockets
 {
@@ -48,6 +51,13 @@ namespace InTheHand.Net.Sockets
             return devices.AsReadOnly();
         }
 
+#if NET6_0_OR_GREATER
+        async IAsyncEnumerable<BluetoothDeviceInfo> PlatformDiscoverDevicesAsync([EnumeratorCancellation] CancellationToken cancellationToken)
+        {
+            yield break;
+        }
+#endif
+
         void PlatformConnect(BluetoothAddress address, Guid service)
         {
             _accessory = address.Accessory;
@@ -55,6 +65,10 @@ namespace InTheHand.Net.Sockets
             // TODO: provide mapping support for multiple protocol strings
             _session = new EASession(_accessory, _accessory.ProtocolStrings[0]);
             _stream = new ExternalAccessoryNetworkStream(_session);
+        }
+        async Task PlatformConnectAsync(BluetoothAddress address, Guid service)
+        {
+            PlatformConnect(address, service);
         }
 
         private void _accessory_Disconnected(object sender, EventArgs e)

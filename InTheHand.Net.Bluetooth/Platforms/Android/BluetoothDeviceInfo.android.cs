@@ -123,7 +123,7 @@ namespace InTheHand.Net.Sockets
             return _device.BondState == Bond.Bonded;
         }
 
-        void DoRefresh()
+        void PlatformRefresh()
         {
         }
     }

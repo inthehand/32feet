@@ -2,7 +2,7 @@
 //
 // InTheHand.Net.Bluetooth.BluetoothRadio (WinRT)
 // 
-// Copyright (c) 2019-2022 In The Hand Ltd, All rights reserved.
+// Copyright (c) 2019-2023 In The Hand Ltd, All rights reserved.
 // This source code is licensed under the MIT License
 
 using System;
@@ -13,7 +13,11 @@ using Windows.Devices.Radios;
 
 namespace InTheHand.Net.Bluetooth
 {
+#if MULTIPLATFORM
+    internal class WindowsBluetoothRadio : IBluetoothRadio
+#else
     partial class BluetoothRadio
+#endif
     {
         static BluetoothRadio _default;
 
@@ -49,22 +53,22 @@ namespace InTheHand.Net.Bluetooth
             _radio = radio;
         }
         
-        private string GetName()
+        string GetName()
         {
             return _name;
         }
 
-        private BluetoothAddress GetLocalAddress()
+        BluetoothAddress GetLocalAddress()
         {
             return new BluetoothAddress(_adapter.BluetoothAddress);
         }
 
-        private RadioMode GetMode()
+        RadioMode GetMode()
         {
             return _radio.State == RadioState.On ? RadioMode.Connectable : RadioMode.PowerOff;
         }
 
-        private void SetMode(RadioMode value)
+        void SetMode(RadioMode value)
         {
             Windows.UI.Core.CoreWindow.GetForCurrentThread().DispatcherQueue.TryEnqueue(async () =>
                 {

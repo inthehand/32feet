@@ -83,7 +83,7 @@ namespace InTheHand.Net.Sockets
             return NativeDevice.DeviceInformation.Pairing.IsPaired;
         }
 
-        void DoRefresh()
+        void PlatformRefresh()
         {
         }
     }

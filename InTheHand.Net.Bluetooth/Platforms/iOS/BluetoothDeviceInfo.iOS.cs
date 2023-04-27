@@ -87,7 +87,7 @@ namespace InTheHand.Net.Sockets
             return true;
         }
 
-        void DoRefresh()
+        void PlatformRefresh()
         {
         }
     }
