@@ -47,6 +47,17 @@ namespace InTheHand.Net.Sockets
                 _address = BluetoothAddress.Parse(props.Address);
                 _connected = props.Connected;
                 _authenticated = props.Paired;
+
+                await _device.WatchPropertiesAsync(OnPropertyChanges);
+            }
+        }
+
+        private void OnPropertyChanges(Tmds.DBus.PropertyChanges propertyChanges)
+        {
+            foreach(var change in propertyChanges.Changed)
+            {
+                Console.WriteLine($"{change.Key} {change.Value}");
+                //TODO - for properties we use update the cached values
             }
         }
 
@@ -69,7 +80,14 @@ namespace InTheHand.Net.Sockets
 
         async Task<IEnumerable<Guid>> PlatformGetRfcommServicesAsync(bool cached)
         {
-            throw new PlatformNotSupportedException();
+            List<Guid> services = new List<Guid>();
+            var uuids = await _device.GetUUIDsAsync();
+            foreach(var uuid in uuids )
+            {
+                services.Add(new Guid(uuid));
+            }
+
+            return services;
         }
 
             IReadOnlyCollection<Guid> GetInstalledServices()

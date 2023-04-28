@@ -20,12 +20,19 @@ namespace InTheHand.Net.Sockets
 {
     partial class BluetoothClient
     {
-        internal const AddressFamily Bluetooth = (AddressFamily)31;
+        internal const AddressFamily AddressFamilyBluetooth = (AddressFamily)31;
         private Socket _socket;
 
         private void PlatformInitialize()
         {
-            _socket = new Socket((AddressFamily)BluetoothEndPoint.AddressFamilyBlueZ, SocketType.Stream, BluetoothProtocolType.RFComm);
+            try
+            {
+                _socket = new Socket(AddressFamilyBluetooth, SocketType.Stream, BluetoothProtocolType.L2Cap);
+            }
+            catch(Exception ex) 
+            {
+                System.Diagnostics.Debug.WriteLine(ex.Message);
+            }
         }
 
         IEnumerable<BluetoothDeviceInfo> GetPairedDevices()
