@@ -9,11 +9,13 @@ namespace InTheHand.Bluetooth
 {
     partial class BluetoothLEScan
     {
+        private readonly BluetoothLEScanOptions _options;
+
         private bool PlatformAcceptAllAdvertisements
         {
             get
             {
-                return true;
+                return _options.AcceptAllAdvertisements;
             }
         }
 
@@ -21,12 +23,13 @@ namespace InTheHand.Bluetooth
         {
             get
             {
-                return true;
+                return _options.KeepRepeatedDevices;
             }
         }
 
         private void PlatformStop()
         {
+            Bluetooth.adapter.StopDiscoveryAsync();
         }
     }
 }

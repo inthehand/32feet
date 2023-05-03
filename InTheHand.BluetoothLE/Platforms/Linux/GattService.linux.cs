@@ -66,7 +66,7 @@ namespace InTheHand.Bluetooth
             {
                 foreach(var linuxCharacteristic in chars)
                 {
-                    characteristics.Add(new GattCharacteristic(linuxCharacteristic, Guid.Parse(await linuxCharacteristic.GetUUIDAsync())));
+                    characteristics.Add(new GattCharacteristic((Linux.Bluetooth.GattCharacteristic)linuxCharacteristic, Guid.Parse(await linuxCharacteristic.GetUUIDAsync())));
                 }
             }
 

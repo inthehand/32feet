@@ -15,9 +15,9 @@ namespace InTheHand.Bluetooth
 {
     partial class GattCharacteristic
     {
-        private IGattCharacteristic1 _characteristic;
+        private Linux.Bluetooth.GattCharacteristic _characteristic;
 
-        internal GattCharacteristic(IGattCharacteristic1 characteristic, BluetoothUuid uuid)
+        internal GattCharacteristic(Linux.Bluetooth.GattCharacteristic characteristic, BluetoothUuid uuid)
         {
             _characteristic = characteristic;
             _uuid = uuid;
@@ -44,29 +44,45 @@ namespace InTheHand.Bluetooth
             return Task.FromResult((IReadOnlyList<GattDescriptor>)null);
         }
 
+        private byte[] _value;
         byte[] PlatformGetValue()
         {
-            return default;
+            return _value;
         }
 
-        Task<byte[]> PlatformReadValue()
+        async Task<byte[]> PlatformReadValue()
         {
-            //TODO understand options
-            return _characteristic.ReadValueAsync(null);// new Dictionary<string, object> { });
+            var newValue = await _characteristic.ReadValueAsync(null);
+            if(newValue != null)
+            {
+                _value = newValue;
+            }
+
+            return newValue;
         }
 
         async Task PlatformWriteValue(byte[] value, bool requireResponse)
         {
-            //TODO understand options
-            await _characteristic.WriteValueAsync(value, null);
+            Dictionary<string,object> options = new Dictionary<string,object>();
+            options.Add("type", requireResponse == true ? "request" : "command");
+            await _characteristic.WriteValueAsync(value, options);
+            _value = value;
         }
 
         void AddCharacteristicValueChanged()
         {
+            _characteristic.Value += _characteristic_Value;
+        }
+
+        private Task _characteristic_Value(Linux.Bluetooth.GattCharacteristic sender, GattCharacteristicValueEventArgs eventArgs)
+        {
+            OnCharacteristicValueChanged(new GattCharacteristicValueChangedEventArgs(eventArgs.Value));
+            return Task.CompletedTask;
         }
 
         void RemoveCharacteristicValueChanged()
         {
+            _characteristic.Value -= _characteristic_Value;
         }
 
         private Task PlatformStartNotifications()

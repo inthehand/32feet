@@ -5,6 +5,7 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
+using Linux.Bluetooth;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -13,9 +14,16 @@ namespace InTheHand.Bluetooth
 {
     partial class BluetoothAdvertisingEvent
     {
+        internal BluetoothAdvertisingEvent(BluetoothDevice device, ushort appearance)
+        {
+            Device = device;
+            _appearance = appearance;
+        }
+
+        private ushort _appearance;
         ushort PlatformGetAppearance()
         {
-            return 0;
+            return _appearance;
         }
 
         BluetoothUuid[] PlatformGetUuids()

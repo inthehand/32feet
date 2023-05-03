@@ -17,10 +17,11 @@ namespace InTheHand.Bluetooth
     {
         private void PlatformInit()
         {
-            Task.Run(async () =>
-            {
-                _connected = await Device._device.GetConnectedAsync();
-            });
+        }
+
+        internal async Task InitAsync()
+        {
+            _connected = await Device._device.GetConnectedAsync();
         }
 
         bool _connected;
@@ -32,7 +33,12 @@ namespace InTheHand.Bluetooth
 
         async Task PlatformConnect()
         {
-            TimeSpan timeout = TimeSpan.FromSeconds(10);
+            TimeSpan timeout = TimeSpan.FromSeconds(8);
+
+            if(await Device._device.GetPairedAsync() == false)
+            {
+                await Device._device.PairAsync();
+            }
 
             await Device._device.ConnectAsync();
             await Device._device.WaitForPropertyValueAsync("Connected", value: true, timeout: timeout);

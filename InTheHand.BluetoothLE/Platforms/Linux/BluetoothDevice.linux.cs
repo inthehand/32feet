@@ -20,9 +20,11 @@ namespace InTheHand.Bluetooth
         private static async Task<BluetoothDevice> PlatformFromId(string id)
         {
             var linuxDevice = await Bluetooth.adapter.GetDeviceAsync(id);
-
+            
             if(linuxDevice != null)
             {
+                System.Diagnostics.Debug.WriteLine($"BluetoothDevice.FromIdAsync:{linuxDevice.ObjectPath}");
+
                 var bluetoothDevice = (BluetoothDevice)linuxDevice;
                 await bluetoothDevice.Init();
                 return bluetoothDevice;
@@ -54,6 +56,9 @@ namespace InTheHand.Bluetooth
             _id = await _device.GetAddressAsync();
             _name = await _device.GetNameAsync();
             _isPaired = await _device.GetPairedAsync();
+            await Gatt.InitAsync();
+
+            System.Diagnostics.Debug.WriteLine($"BluetoothDevice.Init:{_id} {_name} {_isPaired}");
         }
 
         private Task _device_Disconnected(Device sender, BlueZEventArgs eventArgs)

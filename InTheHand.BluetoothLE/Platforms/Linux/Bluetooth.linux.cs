@@ -25,7 +25,17 @@ namespace InTheHand.Bluetooth
             if(adapter == null)
             {
                 adapter = (await BlueZManager.GetAdaptersAsync()).FirstOrDefault();
+                adapter.DeviceFound += Adapter_DeviceFound;
             }
+        }
+
+        private static async Task Adapter_DeviceFound(Adapter sender, DeviceFoundEventArgs eventArgs)
+        {
+            BluetoothDevice device = eventArgs.Device;
+            await device.Init();
+            var appearance = await eventArgs.Device.GetAppearanceAsync();
+            BluetoothAdvertisingEvent eventInfo = new BluetoothAdvertisingEvent(device, appearance);
+            OnAdvertisementReceived(eventInfo);
         }
 
         private static async Task<bool> PlatformGetAvailability()
@@ -40,6 +50,18 @@ namespace InTheHand.Bluetooth
             throw new PlatformNotSupportedException();
         }
 
+        private static void RemoveWithAddress(List<BluetoothDevice> devices, string address)
+        {
+            for(int i = devices.Count-1; i >=0; i--)
+            {
+                if (devices[i].Id == address)
+                {
+                    devices.RemoveAt(i);
+                    return;
+                }
+            }
+        }
+
         private static async Task<IReadOnlyCollection<BluetoothDevice>> PlatformScanForDevices(RequestDeviceOptions options, CancellationToken cancellationToken = default)
         {
             await Initialize();
@@ -47,14 +69,17 @@ namespace InTheHand.Bluetooth
             TaskCompletionSource<IReadOnlyCollection<BluetoothDevice>> result = new TaskCompletionSource<IReadOnlyCollection<BluetoothDevice>>();
             async Task handler(Adapter sender, DeviceFoundEventArgs eventArgs)
             {
-                if(eventArgs.IsStateChange)
+                if (eventArgs.IsStateChange)
                 {
-                    devices.Remove(eventArgs.Device);
+                    RemoveWithAddress(devices, await eventArgs.Device.GetAddressAsync());
                 }
 
                 BluetoothDevice device = (BluetoothDevice)eventArgs.Device;
-                await device.Init();
-                devices.Add(eventArgs.Device);
+                if (!devices.Contains(device))
+                {
+                    await device.Init();
+                    devices.Add(device);
+                }
             }
 
             adapter.DeviceFound += handler;
