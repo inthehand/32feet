@@ -17,7 +17,7 @@ namespace InTheHand.Net.Bluetooth
     {
         private static Dictionary<string, string> pinMappings = new Dictionary<string, string>();
 
-        static bool PlatformPairRequest(BluetoothAddress device, string pin)
+        static bool PlatformPairRequest(BluetoothAddress device, bool? requireMitmProtection, string pin)
         {
             BluetoothDevice bluetoothDevice = null;
             var t = Task<bool>.Run(async () =>

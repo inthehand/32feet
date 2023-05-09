@@ -11,7 +11,7 @@ namespace InTheHand.Net.Bluetooth
 {
     partial class BluetoothSecurity
     {
-        static bool PlatformPairRequest(BluetoothAddress device, string pin)
+        static bool PlatformPairRequest(BluetoothAddress device, bool? requireMitmProtection, string pin)
         {
             throw new PlatformNotSupportedException();
         }
