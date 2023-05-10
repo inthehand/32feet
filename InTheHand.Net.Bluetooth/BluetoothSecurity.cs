@@ -16,10 +16,22 @@ namespace InTheHand.Net.Bluetooth
         /// Requests the pairing process for the specified device with the provided pin or numeric code.
         /// </summary>
         /// <param name="device"></param>
-        /// <param name="requireMitmProtection">MITM not required only if set to false.</param>
         /// <param name="pin">Optional numeric pin.</param>
         /// <returns></returns>
-        public static bool PairRequest(BluetoothAddress device, bool? requireMitmProtection, string pin = null)
+        public static bool PairRequest(BluetoothAddress device, string pin = null)
+        {
+            return PairRequest(device, pin, null);
+        }
+
+        /// <summary>
+        /// Requests the pairing process for the specified device with the provided pin or numeric code.
+        /// Includes the ability to require or not require MITM protection. Required by default.
+        /// </summary>
+        /// <param name="device"></param>
+        /// <param name="pin">Optional numeric pin.</param>
+        /// <param name="requireMitmProtection">MITM not required only if set to false.</param>
+        /// <returns></returns>
+        public static bool PairRequest(BluetoothAddress device, string pin, bool? requireMitmProtection)
         {
             return PlatformPairRequest(device, requireMitmProtection, pin);
         }
