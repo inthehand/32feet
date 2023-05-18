@@ -27,7 +27,7 @@ namespace InTheHand.Net.Bluetooth
             _adapter = manager.Adapter;
         }
 
-        static bool PlatformPairRequest(BluetoothAddress device, bool? requireMitmProtection, string pin)
+        static bool PlatformPairRequest(BluetoothAddress device, string pin, bool? requireMitmProtection)
         {
             var nativeDevice = _adapter.GetRemoteDevice(device.ToNetworkOrderSixByteArray());
             

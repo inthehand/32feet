@@ -18,7 +18,7 @@ namespace InTheHand.Net.Bluetooth
     {
         private static readonly List<Win32BluetoothAuthentication> _authenticationHandlers = new List<Win32BluetoothAuthentication>();
                 
-        static bool PlatformPairRequest(BluetoothAddress device, bool? requireMitmProtection, string pin)
+        static bool PlatformPairRequest(BluetoothAddress device, string pin, bool? requireMitmProtection)
         {
             if (pin != null)
             {

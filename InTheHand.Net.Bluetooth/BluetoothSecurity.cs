@@ -19,10 +19,15 @@ namespace InTheHand.Net.Bluetooth
         /// <param name="requireMitmProtection">MITM not required only if set to false.</param>
         /// <param name="pin">Optional numeric pin.</param>
         /// <returns></returns>
-        public static bool PairRequest(BluetoothAddress device, bool? requireMitmProtection, string pin = null)
+        public static bool PairRequest(BluetoothAddress device, string pin, bool? requireMitmProtection)
         {
-            return PlatformPairRequest(device, requireMitmProtection, pin);
+            return PlatformPairRequest(device, pin, requireMitmProtection);
         }
+
+        public static bool PairRequest(BluetoothAddress device, string pin = null)
+        {
+            return PairRequest(device, pin, null);
+        }        
 
         /// <summary>
         /// Requests that the specified device is un-paired.
