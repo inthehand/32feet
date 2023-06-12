@@ -1,6 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿// 32feet.NET - Personal Area Networking for .NET
+//
+// System.Net.Sockets.SocketAddressExtensions
+// 
+// Copyright (c) 2003-23 In The Hand Ltd, All rights reserved.
+// This source code is licensed under the MIT License
 
 namespace System.Net.Sockets
 {

@@ -18,7 +18,7 @@ namespace InTheHand.Net.Bluetooth
     {
         NSObject connectionObserver;
 
-        private async Task<BluetoothDeviceInfo> DoPickSingleDeviceAsync()
+        private async Task<BluetoothDeviceInfo> PlatformPickSingleDeviceAsync()
         {
             EAAccessoryManager.SharedAccessoryManager.RegisterForLocalNotifications();
 

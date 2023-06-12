@@ -1,12 +1,13 @@
 ﻿<Project Sdk="MSBuild.Sdk.Extras/3.0.44">
-
+	<Sdk Name="DotNet.ReproducibleBuilds.Isolated" Version="1.1.1" />
 	<PropertyGroup>
-		<TargetFrameworks>netstandard2.0;net6.0-windows7.0;net6.0-windows10.0.22000.0;net6.0-android;net6.0-ios;net461;monoandroid10.0;xamarinios10;uap10.0</TargetFrameworks>
+		<TargetFrameworks>netstandard2.0;netstandard2.1;net6.0-windows7.0;net6.0-windows10.0.22000.0;net6.0-android;net6.0-ios;net461;monoandroid10.0;xamarinios10;uap10.0;net6.0;net7.0</TargetFrameworks>
 		<Company>In The Hand Ltd</Company>
 		<Authors>Peter Foot</Authors>
 		<Product>32feet.NET</Product>
-		<Version>4.0.34.1</Version>
+		<Version>4.0.35</Version>
 		<RepositoryUrl>https://github.com/inthehand/32feet</RepositoryUrl>
+		<RepositoryType>git</RepositoryType>
 		<PublishRepositoryUrl>true</PublishRepositoryUrl>
 		<IncludeSymbols>true</IncludeSymbols>
 		<DebugSymbols>true</DebugSymbols>
@@ -16,18 +17,19 @@
 		<PackageLicenseUrl></PackageLicenseUrl>
 		<Copyright>Copyright (c) 2004-2023 In The Hand Ltd</Copyright>
 		<Description>32feet.NET is an open-source project to make personal area networking technologies such as Bluetooth easily accessible from .NET code.</Description>
-		<FileVersion>4.0.34.0304</FileVersion>
+		<FileVersion>4.0.35</FileVersion>
 		<AssemblyVersion>4.0.0.0</AssemblyVersion>
 		<AssemblyName>InTheHand.Net.Bluetooth</AssemblyName>
+		<AssemblyTitle>InTheHand.Net.Bluetooth-$(TargetFramework)</AssemblyTitle>
 		<GenerateDocumentationFile Condition=" '$(Configuration)' == 'Release' ">true</GenerateDocumentationFile>
 		<PackageTags>bluetooth windows win32 android iOS</PackageTags>
+		<GenerateLibraryLayout>true</GenerateLibraryLayout>
 		<GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
 		<PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<PackageId>InTheHand.Net.Bluetooth</PackageId>
 		<PackageReleaseNotes>Moved Android CurrentActivity logic to separate library.</PackageReleaseNotes>
 		<PackageIcon>32feet-package-icon.png</PackageIcon>
-		<RepositoryType>GIT</RepositoryType>
 		<SignAssembly Condition=" '$(Configuration)' == 'Release' ">true</SignAssembly>
 		<AssemblyOriginatorKeyFile Condition=" '$(Configuration)' == 'Release' ">InTheHand.snk</AssemblyOriginatorKeyFile>
 
@@ -38,6 +40,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<PackageReference Include="DotNet.ReproducibleBuilds" Version="1.1.1" PrivateAssets="All" />
 		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
 		<PackageReference Include="MSBuild.Sdk.Extras" Version="3.0.44" PrivateAssets="All" />
 	</ItemGroup>
@@ -58,8 +61,6 @@
 
 	<PropertyGroup Condition="'$(Configuration)'=='Debug'">
 		<DefineConstants>DEBUG;TRACE</DefineConstants>
-		<DebugSymbols>true</DebugSymbols>
-		<DebugType>full</DebugType>
 	</PropertyGroup>
 
 	<PropertyGroup Condition=" '$(TargetFramework)' == 'uap10.0' ">
@@ -68,6 +69,16 @@
 		<TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.22000.0</TargetPlatformVersion>
 		<SupportedOSPlatformVersion>10.0.16299.0</SupportedOSPlatformVersion>
 		<TargetPlatformMinVersion>10.0.16299.0</TargetPlatformMinVersion>
+	</PropertyGroup>
+
+	<PropertyGroup Condition=" '$(TargetFramework)' == 'net6.0' ">
+		<DefineConstants>BLUEZ</DefineConstants>
+		<RuntimeIdentifiers>linux-arm64;linux-x64;linux-x86</RuntimeIdentifiers>
+	</PropertyGroup>
+
+	<PropertyGroup Condition=" '$(TargetFramework)' == 'net7.0' ">
+		<DefineConstants>BLUEZ</DefineConstants>
+		<RuntimeIdentifiers>linux-arm64;linux-x64;linux-x86</RuntimeIdentifiers>
 	</PropertyGroup>
 	
 	<PropertyGroup Condition=" '$(TargetFramework)' == 'net6.0-windows10.0.22000.0' ">
@@ -81,13 +92,113 @@
 		<SupportedOSPlatformVersion>10.0.16299.0</SupportedOSPlatformVersion>
 		<TargetPlatformMinVersion>10.0.16299.0</TargetPlatformMinVersion>
 	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netstandard2.0|AnyCPU'">
+	  <Optimize>False</Optimize>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netstandard2.1|AnyCPU'">
+	  <Optimize>True</Optimize>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net6.0-windows7.0|AnyCPU'">
+	  <Optimize>True</Optimize>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net6.0-windows10.0.22000.0|AnyCPU'">
+	  <Optimize>True</Optimize>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net6.0-android|AnyCPU'">
+	  <Optimize>True</Optimize>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net6.0-ios|AnyCPU'">
+	  <Optimize>True</Optimize>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net461|AnyCPU'">
+	  <Optimize>True</Optimize>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|monoandroid10.0|AnyCPU'">
+	  <Optimize>True</Optimize>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|xamarinios10|AnyCPU'">
+	  <Optimize>True</Optimize>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|uap10.0|AnyCPU'">
+	  <Optimize>True</Optimize>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net6.0|AnyCPU'">
+	  <Optimize>True</Optimize>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net7.0|AnyCPU'">
+	  <Optimize>True</Optimize>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|netstandard2.0|AnyCPU'">
+	  <Optimize>True</Optimize>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|netstandard2.1|AnyCPU'">
+	  <Optimize>False</Optimize>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net6.0-windows7.0|AnyCPU'">
+	  <Optimize>False</Optimize>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net6.0-windows10.0.22000.0|AnyCPU'">
+	  <Optimize>False</Optimize>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net6.0-android|AnyCPU'">
+	  <Optimize>False</Optimize>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net6.0-ios|AnyCPU'">
+	  <Optimize>False</Optimize>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net461|AnyCPU'">
+	  <Optimize>False</Optimize>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|monoandroid10.0|AnyCPU'">
+	  <Optimize>False</Optimize>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|xamarinios10|AnyCPU'">
+	  <Optimize>False</Optimize>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|uap10.0|AnyCPU'">
+	  <Optimize>False</Optimize>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net6.0|AnyCPU'">
+	  <Optimize>False</Optimize>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net7.0|AnyCPU'">
+	  <Optimize>False</Optimize>
+	</PropertyGroup>
 	
 	<ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
 		<Compile Include="Platforms\Standard\*.cs" />
 	</ItemGroup>
 
+	<ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.1' ">
+		<Compile Include="Platforms\Standard\*.cs" />
+	</ItemGroup>
+
 	<ItemGroup Condition=" '$(TargetFramework)' == 'monoandroid10.0' ">
-		<PackageReference Include="InTheHand.AndroidActivity" Version="1.0.1"/>
+		<PackageReference Include="InTheHand.AndroidActivity" Version="1.0.1" />
 		<Reference Include="System.Xml.Linq" />
 		<Compile Include="Platforms\Android\*.cs" />
 	</ItemGroup>
@@ -113,6 +224,16 @@
 		<Compile Include="Platforms\Win32\*.cs" />
 	</ItemGroup>
 
+	<ItemGroup Condition=" '$(TargetFramework)' == 'net6.0' ">
+		<PackageReference Include="Linux.Bluetooth" Version="5.64.0" />
+		<Compile Include="Platforms\Linux\*.cs" />
+	</ItemGroup>
+
+	<ItemGroup Condition=" '$(TargetFramework)' == 'net7.0' ">
+		<PackageReference Include="Linux.Bluetooth" Version="5.64.0" />
+		<Compile Include="Platforms\Linux\*.cs" />
+	</ItemGroup>
+	
 	<ItemGroup Condition=" '$(TargetFramework)' == 'net6.0-windows7.0' ">
 		<Compile Include="Platforms\Win32\*.cs" />
 	</ItemGroup>
@@ -122,7 +243,7 @@
 	</ItemGroup>
 
 	<ItemGroup Condition=" '$(TargetFramework)' == 'net6.0-android' ">
-		<PackageReference Include="InTheHand.AndroidActivity" Version="1.0.1"/>
+		<PackageReference Include="InTheHand.AndroidActivity" Version="1.0.1" />
 		<Compile Include="Platforms\Android\*.cs" />
 	</ItemGroup>
 	

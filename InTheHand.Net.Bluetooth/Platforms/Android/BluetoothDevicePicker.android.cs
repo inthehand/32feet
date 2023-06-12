@@ -24,7 +24,7 @@ namespace InTheHand.Net.Bluetooth
 
         internal Android.Bluetooth.BluetoothDevice _device;
 
-        private Task<BluetoothDeviceInfo> DoPickSingleDeviceAsync()
+        private Task<BluetoothDeviceInfo> PlatformPickSingleDeviceAsync()
         {
             if (InTheHand.AndroidActivity.CurrentActivity == null)
                 throw new NotSupportedException("CurrentActivity was not detected or specified");

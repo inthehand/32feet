@@ -1,8 +1,8 @@
 ﻿// 32feet.NET - Personal Area Networking for .NET
 //
-// InTheHand.Net.Sockets.BluetoothDeviceInfo (.NET Standard)
+// InTheHand.Net.Sockets.BluetoothDeviceInfo (Multiplatform)
 // 
-// Copyright (c) 2003-2022 In The Hand Ltd, All rights reserved.
+// Copyright (c) 2003-2023 In The Hand Ltd, All rights reserved.
 // This source code is licensed under the MIT License
 
 using InTheHand.Net.Bluetooth;

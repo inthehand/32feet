@@ -24,7 +24,7 @@ namespace InTheHand.Net.Sockets
         /// </summary>
         public void Refresh()
         {
-            DoRefresh();
+            PlatformRefresh();
         }
 
         /// <summary>

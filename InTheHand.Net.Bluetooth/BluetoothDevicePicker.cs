@@ -22,7 +22,7 @@ namespace InTheHand.Net.Bluetooth
         /// <returns></returns>
         public Task<BluetoothDeviceInfo> PickSingleDeviceAsync()
         {
-            return DoPickSingleDeviceAsync();
+            return PlatformPickSingleDeviceAsync();
         }
 
         /// <summary>
