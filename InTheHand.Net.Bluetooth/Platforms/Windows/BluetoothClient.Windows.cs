@@ -79,6 +79,13 @@ namespace InTheHand.Net.Sockets
 #if NET6_0_OR_GREATER
         async IAsyncEnumerable<BluetoothDeviceInfo> PlatformDiscoverDevicesAsync(CancellationToken cancellationToken)
         {
+            var devices = await DeviceInformation.FindAllAsync(BluetoothDevice.GetDeviceSelectorFromPairingState(false)).AsTask(cancellationToken);
+            
+            foreach(var device in devices)
+            {
+                yield return new BluetoothDeviceInfo(await BluetoothDevice.FromIdAsync(device.Id));
+            }
+
             yield break;
         }
 #endif

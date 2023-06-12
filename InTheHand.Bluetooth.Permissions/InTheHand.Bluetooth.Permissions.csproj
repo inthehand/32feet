@@ -1,5 +1,5 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
+	<Sdk Name="DotNet.ReproducibleBuilds.Isolated" Version="1.1.1" />
 	<PropertyGroup>
 		<TargetFrameworks>net6.0;net6.0-android;net6.0-ios;net6.0-maccatalyst</TargetFrameworks>
 		<TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net6.0-windows10.0.19041.0</TargetFrameworks>
@@ -11,6 +11,7 @@
 		<Company>In The Hand Ltd</Company>
 		<Product>32feet.NET</Product>
 		<RepositoryUrl>https://github.com/inthehand/32feet</RepositoryUrl>
+		<RepositoryType>git</RepositoryType>
 		<PublishRepositoryUrl>true</PublishRepositoryUrl>
 		<IncludeSymbols>true</IncludeSymbols>
 		<DebugSymbols>true</DebugSymbols>
@@ -19,8 +20,9 @@
 		<PackageProjectUrl>https://github.com/inthehand/32feet</PackageProjectUrl>
 		<PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<PackageTags>bluetooth windows android ios tvos macos uwp win32</PackageTags>
 		<Description>.NET MAUI Permissions for Bluetooth. 32feet.NET is an open-source project to make personal area networking technologies such as Bluetooth easily accessible from .NET code.</Description>
-		<Copyright>Copyright (c) 2022 In The Hand Ltd</Copyright>
+		<Copyright>Copyright (c) 2022-23 In The Hand Ltd</Copyright>
 		<PackageIcon>32feet-package-icon.png</PackageIcon>
 		<UseMaui>true</UseMaui>
 		<SingleProject>true</SingleProject>
@@ -34,7 +36,12 @@
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'tizen'">6.5</SupportedOSPlatformVersion>
 		<RootNamespace>InTheHand.Bluetooth</RootNamespace>
 	</PropertyGroup>
-
+	
+	<ItemGroup>
+		<PackageReference Include="DotNet.ReproducibleBuilds" Version="1.1.1" PrivateAssets="All"/>
+		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
+	</ItemGroup>
+	
 	<ItemGroup>
 		<None Include="..\Misc\32feet-package-icon.png">
 			<Pack>True</Pack>
