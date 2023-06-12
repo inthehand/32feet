@@ -1,4 +1,4 @@
-﻿<Project Sdk="MSBuild.Sdk.Extras/3.0.44">
+<Project Sdk="MSBuild.Sdk.Extras/3.0.44">
 	<Sdk Name="DotNet.ReproducibleBuilds.Isolated" Version="1.1.1" />
 	<PropertyGroup>
 		<TargetFrameworks>netstandard2.0;netstandard2.1;net6.0-windows7.0;net6.0-windows10.0.22000.0;net6.0-android;net6.0-ios;net461;monoandroid10.0;xamarinios10;uap10.0;net6.0;net7.0</TargetFrameworks>
@@ -198,7 +198,7 @@
 	</ItemGroup>
 
 	<ItemGroup Condition=" '$(TargetFramework)' == 'monoandroid10.0' ">
-		<PackageReference Include="InTheHand.AndroidActivity" Version="1.0.1" />
+		<PackageReference Include="InTheHand.AndroidActivity" Version="1.0.3" />
 		<Reference Include="System.Xml.Linq" />
 		<Compile Include="Platforms\Android\*.cs" />
 	</ItemGroup>
@@ -243,7 +243,7 @@
 	</ItemGroup>
 
 	<ItemGroup Condition=" '$(TargetFramework)' == 'net6.0-android' ">
-		<PackageReference Include="InTheHand.AndroidActivity" Version="1.0.1" />
+		<PackageReference Include="InTheHand.AndroidActivity" Version="1.0.3" />
 		<Compile Include="Platforms\Android\*.cs" />
 	</ItemGroup>
 	
