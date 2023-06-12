@@ -1,4 +1,4 @@
-﻿<Project Sdk="MSBuild.Sdk.Extras/3.0.44">
+<Project Sdk="MSBuild.Sdk.Extras/3.0.44">
 	<Sdk Name="DotNet.ReproducibleBuilds.Isolated" Version="1.1.1" />
 	<PropertyGroup>
 		<TargetFrameworks>netstandard2.0;monoandroid10.0;xamarinios10;xamarintvos10;xamarin.watchos10;uap10.0;net6.0-windows10.0.19041.0;net6.0;net6.0-android;net6.0-ios;net6.0-maccatalyst;net7.0-windows10.0.19041.0;net7.0-android;net7.0-ios;net7.0-maccatalyst;net461</TargetFrameworks>
@@ -110,7 +110,7 @@
 	</ItemGroup>
 	
 	<ItemGroup Condition=" '$(TargetFramework)' == 'monoandroid10.0' ">
-		<PackageReference Include="InTheHand.AndroidActivity" Version="1.0.1"/>
+		<PackageReference Include="InTheHand.AndroidActivity" Version="1.0.3"/>
 		<Compile Include="Platforms\Android\*.cs" />
 	</ItemGroup>
 	
@@ -120,12 +120,12 @@
 	</ItemGroup>
 	
 	<ItemGroup Condition=" '$(TargetFramework)' == 'net6.0-android' ">
-		<PackageReference Include="InTheHand.AndroidActivity" Version="1.0.1"/>
+		<PackageReference Include="InTheHand.AndroidActivity" Version="1.0.3"/>
 		<Compile Include="Platforms\Android\*.cs" />
 	</ItemGroup>
 
 	<ItemGroup Condition=" '$(TargetFramework)' == 'net7.0-android' ">
-		<PackageReference Include="InTheHand.AndroidActivity" Version="1.0.1"/>
+		<PackageReference Include="InTheHand.AndroidActivity" Version="1.0.3"/>
 		<Compile Include="Platforms\Android\*.cs" />
 	</ItemGroup>
 
