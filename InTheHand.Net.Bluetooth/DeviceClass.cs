@@ -2,7 +2,7 @@
 //
 // InTheHand.Net.Bluetooth.DeviceClass
 // 
-// Copyright (c) 2003-2020 In The Hand Ltd, All rights reserved.
+// Copyright (c) 2003-2023 In The Hand Ltd, All rights reserved.
 // This source code is licensed under the MIT License
 
 namespace InTheHand.Net.Bluetooth
@@ -14,9 +14,10 @@ namespace InTheHand.Net.Bluetooth
     /// <para>Is returned by the property <see
     /// cref="P:InTheHand.Net.Bluetooth.ClassOfDevice.Device">ClassOfDevice.Device</see>.
     /// </para>
-    /// <para>Defined in Bluetooth Specifications <see href="https://www.bluetooth.org/Technical/AssignedNumbers/baseband.htm"/>.
+    /// <para>Defined in Bluetooth Specifications <see href="https://www.bluetooth.com/specifications/assigned-numbers/"/>.
     /// </para>
     /// </remarks>
+    /// <seealso cref="ServiceClass"/>
     public enum DeviceClass
     {
         /// <summary>
@@ -57,7 +58,7 @@ namespace InTheHand.Net.Bluetooth
         /// Major class: Computer
         /// &#x2022; Minor class: Palm sized PC/PDA.
         /// </summary>
-        PdaComputer = 0x000114,
+        PalmComputer = 0x000114,
         /// <summary>
         /// Major class: Computer
         /// &#x2022; Minor class: Wearable computer (Watch sized).
@@ -80,24 +81,24 @@ namespace InTheHand.Net.Bluetooth
         CellPhone = 0x000204,
         /// <summary>
         /// Major class: Phone
-        /// &#x2022; Minor class: Cordlss.
+        /// &#x2022; Minor class: Cordless.
         /// </summary>
         CordlessPhone = 0x000208,
         /// <summary>
         /// Major class: Phone
-        /// &#x2022; Minor class: Smart phone.
+        /// &#x2022; Minor class: Smartphone.
         /// </summary>
-        SmartPhone = 0x00020c,
+        Smartphone = 0x00020c,
         /// <summary>
         /// Major class: Phone
         /// &#x2022; Minor class: Wired modem or voice gateway.
         /// </summary>
-        WiredPhone = 0x000210,
+        WiredModem = 0x000210,
         /// <summary>
         /// Major class: Phone
         /// &#x2022; Minor class: Common ISDN Access.
         /// </summary>
-        IsdnAccess = 0x000214,
+        CommonIsdnAccess = 0x000214,
 
 #pragma warning disable 1591
         /// <summary>
@@ -129,7 +130,7 @@ namespace InTheHand.Net.Bluetooth
         AudioVideoVideoCamera = 0x000430,
         AudioVideoCamcorder = 0x000434,
         AudioVideoMonitor = 0x000438,
-        AudioVideoDisplayLoudSpeaker = 0x00043c,
+        AudioVideoDisplayLoudspeaker = 0x00043c,
         AudioVideoVideoConferencing = 0x000440,
         AudioVideoGaming = 0x000448,
 
@@ -164,7 +165,7 @@ namespace InTheHand.Net.Bluetooth
         /// Major class: Wearable.
         /// </summary>
         Wearable = 0x000700,
-        WearableWristWatch = 0x000704,
+        WearableWristwatch = 0x000704,
         WearablePager = 0x000708,
         WearableJacket = 0x00070c,
         WearableHelmet = 0x000710,

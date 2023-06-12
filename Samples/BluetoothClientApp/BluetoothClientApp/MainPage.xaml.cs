@@ -56,7 +56,7 @@ namespace BluetoothClientApp
 
                     foreach (var chars in await serv.GetCharacteristicsAsync())
                     {
-                        Debug.WriteLine($"{chars.Uuid} UserDescription:{chars.UserDescription} Properties:{chars.Properties}");
+                        Debug.WriteLine($"{chars.Uuid} Properties:{chars.Properties}");
 
                         Debug.Indent();
 

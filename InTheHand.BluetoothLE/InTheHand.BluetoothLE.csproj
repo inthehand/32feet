@@ -1,7 +1,7 @@
 <Project Sdk="MSBuild.Sdk.Extras/3.0.44">
-
+	<Sdk Name="DotNet.ReproducibleBuilds.Isolated" Version="1.1.1" />
 	<PropertyGroup>
-		<TargetFrameworks>netstandard2.0;monoandroid10.0;xamarinios10;xamarintvos10;xamarin.watchos10;uap10.0;net6.0-windows10.0.19041.0;net6.0-android;net6.0-ios;net6.0-maccatalyst;net7.0-windows10.0.19041.0;net7.0-android;net7.0-ios;net7.0-maccatalyst;net461</TargetFrameworks>
+		<TargetFrameworks>netstandard2.0;monoandroid10.0;xamarinios10;xamarintvos10;xamarin.watchos10;uap10.0;net6.0-windows10.0.19041.0;net6.0;net6.0-android;net6.0-ios;net6.0-maccatalyst;net7.0-windows10.0.19041.0;net7.0-android;net7.0-ios;net7.0-maccatalyst;net461</TargetFrameworks>
 		<Company>In The Hand Ltd</Company>
 		<Authors>Peter Foot</Authors>
 		<Product>32feet.NET</Product>
@@ -9,6 +9,7 @@
 		<IncludeSymbols>true</IncludeSymbols>
 		<DebugSymbols>true</DebugSymbols>
 		<DebugType>portable</DebugType>
+		<AssemblyTitle>InTheHand.BluetoothLE-$(TargetFramework)</AssemblyTitle>
 		<RepositoryUrl>https://github.com/inthehand/32feet</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
 		<PublishRepositoryUrl>true</PublishRepositoryUrl>
@@ -28,13 +29,14 @@
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<RootNamespace>InTheHand.Bluetooth</RootNamespace>
 		<PackageIcon>32feet-package-icon.png</PackageIcon>
-		<PackageReleaseNotes>Moved Android CurrentActivity logic to external library for re-use.</PackageReleaseNotes>
+		<PackageReleaseNotes>Added Linux support.</PackageReleaseNotes>
 		<SignAssembly Condition=" '$(Configuration)' == 'Release' ">true</SignAssembly>
 		<AssemblyOriginatorKeyFile Condition=" '$(Configuration)' == 'Release' ">..\\InTheHand.snk</AssemblyOriginatorKeyFile>
 		<GenerateDocumentationFile Condition=" '$(Configuration)' == 'Release' ">True</GenerateDocumentationFile>
 	</PropertyGroup>
 
 	<ItemGroup>
+		<PackageReference Include="DotNet.ReproducibleBuilds" Version="1.1.1" PrivateAssets="All"/>
 		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
 		<PackageReference Include="MSBuild.Sdk.Extras" Version="3.0.44" PrivateAssets="All" />
 	</ItemGroup>
@@ -51,9 +53,14 @@
 	<PropertyGroup Condition="'$(Configuration)'=='Debug'">
 		<DefineConstants>DEBUG;TRACE</DefineConstants>
 		<DebugSymbols>true</DebugSymbols>
-		<DebugType>full</DebugType>
+		<DebugType>portable</DebugType>
 	</PropertyGroup>
-
+	
+	<PropertyGroup Condition=" '$(TargetFramework)' == 'net6.0' ">
+		<DefineConstants>BLUEZ</DefineConstants>
+		<RuntimeIdentifiers>linux-arm64;linux-x64;linux-x86</RuntimeIdentifiers>
+	</PropertyGroup>
+	
 	<PropertyGroup Condition=" '$(TargetFramework)' == 'net6.0-windows10.0.19041.0' ">
 		<ProduceReferenceAssembly>true</ProduceReferenceAssembly>
 		<TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
@@ -103,17 +110,22 @@
 	</ItemGroup>
 	
 	<ItemGroup Condition=" '$(TargetFramework)' == 'monoandroid10.0' ">
-		<PackageReference Include="InTheHand.AndroidActivity" Version="1.0.1"/>
+		<PackageReference Include="InTheHand.AndroidActivity" Version="1.0.3"/>
 		<Compile Include="Platforms\Android\*.cs" />
 	</ItemGroup>
 	
+	<ItemGroup Condition=" '$(TargetFramework)' == 'net6.0' ">
+		<PackageReference Include="Linux.Bluetooth" Version="5.64.0" />
+		<Compile Include="Platforms\Linux\*.cs" />
+	</ItemGroup>
+	
 	<ItemGroup Condition=" '$(TargetFramework)' == 'net6.0-android' ">
-		<PackageReference Include="InTheHand.AndroidActivity" Version="1.0.1"/>
+		<PackageReference Include="InTheHand.AndroidActivity" Version="1.0.3"/>
 		<Compile Include="Platforms\Android\*.cs" />
 	</ItemGroup>
 
 	<ItemGroup Condition=" '$(TargetFramework)' == 'net7.0-android' ">
-		<PackageReference Include="InTheHand.AndroidActivity" Version="1.0.1"/>
+		<PackageReference Include="InTheHand.AndroidActivity" Version="1.0.3"/>
 		<Compile Include="Platforms\Android\*.cs" />
 	</ItemGroup>
 

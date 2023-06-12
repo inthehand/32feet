@@ -34,7 +34,7 @@ namespace InTheHand.Net.Sockets
         {
             _info = BLUETOOTH_DEVICE_INFO.Create();
             _info.Address = address;
-            DoRefresh();
+            PlatformRefresh();
         }
 
         BluetoothAddress GetDeviceAddress()
@@ -162,7 +162,7 @@ namespace InTheHand.Net.Sockets
             } 
         }
 
-        void DoRefresh()
+        void PlatformRefresh()
         {
             NativeMethods.BluetoothGetDeviceInfo(IntPtr.Zero, ref _info);
         }

@@ -2,7 +2,7 @@
 //
 // InTheHand.Net.BluetoothEndPoint (Win32)
 // 
-// Copyright (c) 2003-2021 In The Hand Ltd, All rights reserved.
+// Copyright (c) 2003-2023 In The Hand Ltd, All rights reserved.
 // This source code is licensed under the MIT License
 
 using System;
@@ -16,6 +16,9 @@ namespace InTheHand.Net
     /// </summary>
     public sealed class BluetoothEndPoint : EndPoint
     {
+        internal const byte AddressFamilyBluetooth = 32;
+        internal const byte AddressFamilyBlueZ = 31;
+
         private ulong _bluetoothAddress;
         private Guid _serviceId;
         private int _port;
@@ -37,8 +40,16 @@ namespace InTheHand.Net
 
         internal BluetoothEndPoint(byte[] sockaddr_bt)
         {
-            if (sockaddr_bt[0] != 32)
-                throw new ArgumentException(nameof(sockaddr_bt));
+            if (Environment.OSVersion.Platform == PlatformID.Unix)
+            {
+                if (sockaddr_bt[0] != AddressFamilyBlueZ)
+                    throw new ArgumentException(nameof(sockaddr_bt));
+            }
+            else
+            {
+                if (sockaddr_bt[0] != AddressFamilyBluetooth)
+                    throw new ArgumentException(nameof(sockaddr_bt));
+            }
 
             _bluetoothAddress = BitConverter.ToUInt64(sockaddr_bt, 2);
 
@@ -61,7 +72,14 @@ namespace InTheHand.Net
         {
             get
             {
-                return (AddressFamily)32;
+                if (Environment.OSVersion.Platform == PlatformID.Unix)
+                {
+                    return (AddressFamily)AddressFamilyBlueZ;
+                }
+                else
+                {
+                    return (AddressFamily)AddressFamilyBluetooth;
+                }
             }
         }
 
@@ -121,13 +139,21 @@ namespace InTheHand.Net
                 ulong address = BitConverter.ToUInt64(socketAddressBytes, 2);
 
                 byte[] servicebytes = new byte[16];
+                int port = 0;
 
-                for (ibyte = 0; ibyte < 16; ibyte++)
+                if (Environment.OSVersion.Platform == PlatformID.Unix)
                 {
-                    servicebytes[ibyte] = socketAddress[10 + ibyte];
+                    port = BitConverter.ToInt32(socketAddressBytes, 8);
                 }
+                else
+                {
+                    for (ibyte = 0; ibyte < 16; ibyte++)
+                    {
+                        servicebytes[ibyte] = socketAddress[10 + ibyte];
+                    }
 
-                int port = BitConverter.ToInt32(socketAddressBytes, 26);
+                    port = BitConverter.ToInt32(socketAddressBytes, 26);
+                }
 
                 return new BluetoothEndPoint(address, new Guid(servicebytes), port);
             }
@@ -141,7 +167,16 @@ namespace InTheHand.Net
         /// <returns></returns>
         public override SocketAddress Serialize()
         {
-            SocketAddress btsa = new SocketAddress(AddressFamily, 30);
+            SocketAddress btsa = null;
+
+            if (Environment.OSVersion.Platform == PlatformID.Unix)
+            {
+                btsa = new SocketAddress(AddressFamily, 10);
+            }
+            else
+            {
+                btsa = new SocketAddress(AddressFamily, 30);
+            }
 
             // copy address type
             btsa[0] = checked((byte)AddressFamily);
@@ -154,21 +189,31 @@ namespace InTheHand.Net
                 btsa[idbyte + 2] = deviceidbytes[idbyte];
             }
 
-            // copy service clsid
-            if (_serviceId != Guid.Empty)
+            if (Environment.OSVersion.Platform == PlatformID.Unix)
             {
-                byte[] servicebytes = _serviceId.ToByteArray();
-
-                for (int servicebyte = 0; servicebyte < 16; servicebyte++)
-                {
-                    btsa[servicebyte + 10] = servicebytes[servicebyte];
-                }
+                if (_port == -1)
+                    btsa[8] = 0;
+                else
+                    btsa[8] = (byte)_port;
             }
-
-            var portBytes = BitConverter.GetBytes(_port);
-            for(int i = 0; i < portBytes.Length; i++)
+            else
             {
-                btsa[26 + i] = portBytes[i];
+                // copy service clsid
+                if (_serviceId != Guid.Empty)
+                {
+                    byte[] servicebytes = _serviceId.ToByteArray();
+
+                    for (int servicebyte = 0; servicebyte < 16; servicebyte++)
+                    {
+                        btsa[servicebyte + 10] = servicebytes[servicebyte];
+                    }
+                }
+
+                var portBytes = BitConverter.GetBytes(_port);
+                for (int i = 0; i < portBytes.Length; i++)
+                {
+                    btsa[26 + i] = portBytes[i];
+                }
             }
 
             return btsa;

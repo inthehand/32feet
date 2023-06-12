@@ -8,6 +8,7 @@
 using System;
 using System.Collections.Generic;
 using System.Net.Sockets;
+using System.Threading;
 using System.Threading.Tasks;
 using Windows.Devices.Bluetooth;
 using Windows.Devices.Bluetooth.Rfcomm;
@@ -75,19 +76,31 @@ namespace InTheHand.Net.Sockets
             return results.AsReadOnly();
         }
 
+#if NET6_0_OR_GREATER
+        async IAsyncEnumerable<BluetoothDeviceInfo> PlatformDiscoverDevicesAsync(CancellationToken cancellationToken)
+        {
+            yield break;
+        }
+#endif
+
+        async Task PlatformConnectAsync(BluetoothAddress address, Guid service)
+        {
+            var device = await BluetoothDevice.FromBluetoothAddressAsync(address);
+            var rfcommServices = await device.GetRfcommServicesForIdAsync(RfcommServiceId.FromUuid(service), BluetoothCacheMode.Uncached);
+
+            if (rfcommServices.Error == BluetoothError.Success)
+            {
+                var rfCommService = rfcommServices.Services[0];
+                streamSocket = new StreamSocket();
+                await streamSocket.ConnectAsync(rfCommService.ConnectionHostName, rfCommService.ConnectionServiceName, Authenticate ? SocketProtectionLevel.BluetoothEncryptionWithAuthentication : SocketProtectionLevel.BluetoothEncryptionAllowNullAuthentication);
+            }
+        }
+
         void PlatformConnect(BluetoothAddress address, Guid service)
         {
             var t = Task.Run(async () =>
             {
-                var device = await BluetoothDevice.FromBluetoothAddressAsync(address);
-                var rfcommServices = await device.GetRfcommServicesForIdAsync(RfcommServiceId.FromUuid(service), BluetoothCacheMode.Uncached);
-
-                if(rfcommServices.Error == BluetoothError.Success)
-                {
-                    var rfCommService = rfcommServices.Services[0];
-                    streamSocket = new StreamSocket();
-                    await streamSocket.ConnectAsync(rfCommService.ConnectionHostName, rfCommService.ConnectionServiceName, Authenticate ? SocketProtectionLevel.BluetoothEncryptionWithAuthentication : SocketProtectionLevel.BluetoothEncryptionAllowNullAuthentication);
-                }
+                await PlatformConnectAsync(address, service);
             });
 
             t.Wait();

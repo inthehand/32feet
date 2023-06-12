@@ -14,7 +14,9 @@ using InTheHand.Net.Bluetooth.Droid;
 using System;
 using System.Collections.Generic;
 using System.Net.Sockets;
+using System.Runtime.CompilerServices;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace InTheHand.Net.Sockets
 {
@@ -95,7 +97,71 @@ namespace InTheHand.Net.Sockets
             return devices.AsReadOnly();
         }
 
-        async void PlatformConnect(BluetoothAddress address, Guid service)
+#if NET6_0_OR_GREATER
+        async IAsyncEnumerable<BluetoothDeviceInfo> PlatformDiscoverDevicesAsync([EnumeratorCancellation] CancellationToken cancellationToken)
+        {
+            if (InTheHand.AndroidActivity.CurrentActivity == null)
+                throw new NotSupportedException("CurrentActivity was not detected or specified");
+            
+            List<BluetoothDeviceInfo> devices = new List<BluetoothDeviceInfo>();
+            var waitable = new AutoResetEvent(false);
+
+            HandlerThread handlerThread = new HandlerThread("ht");
+            handlerThread.Start();
+            Looper looper = handlerThread.Looper;
+            Handler handler = new Handler(looper);
+
+            BluetoothDiscoveryReceiver receiver = new BluetoothDiscoveryReceiver();
+            IntentFilter filter = new IntentFilter();
+            filter.AddAction(BluetoothDevice.ActionFound);
+            filter.AddAction(BluetoothAdapter.ActionDiscoveryFinished);
+            filter.AddAction(BluetoothAdapter.ActionDiscoveryStarted);
+            InTheHand.AndroidActivity.CurrentActivity.RegisterReceiver(receiver, filter, null, handler);
+
+            EventWaitHandle handle = new EventWaitHandle(false, EventResetMode.AutoReset);
+
+            receiver.DeviceFound += (s, e) =>
+            {
+                if (cancellationToken.IsCancellationRequested)
+                {
+                    ((BluetoothAdapter)_radio).CancelDiscovery();
+                }
+                else
+                {
+                    if (!devices.Contains(e))
+                    {
+                        devices.Add(e);
+                        waitable.Set();
+                    }
+                }
+            };
+
+            ((BluetoothAdapter)_radio).StartDiscovery();
+
+            receiver.DiscoveryComplete += (s, e) =>
+            {
+                InTheHand.AndroidActivity.CurrentActivity.UnregisterReceiver(receiver);
+                handle.Set();
+                handlerThread.QuitSafely();
+                waitable.Set();
+            };
+
+            handle.WaitOne();
+
+            while(((BluetoothAdapter)_radio).IsDiscovering && !cancellationToken.IsCancellationRequested)
+            {
+                waitable.WaitOne();
+                if(devices.Count > 0)
+                {
+                    yield return devices[devices.Count - 1];
+                }
+            }
+
+            yield break;
+        }
+#endif
+
+        void PlatformConnect(BluetoothAddress address, Guid service)
         {
             var nativeDevice = ((BluetoothAdapter)_radio).GetRemoteDevice(address.ToString("C"));
 
@@ -133,7 +199,12 @@ namespace InTheHand.Net.Sockets
             }
         }
 
-        void PlatformClose()
+        async Task PlatformConnectAsync(BluetoothAddress address, Guid service)
+        {
+            PlatformConnect(address, service);
+        }
+
+            void PlatformClose()
         {
             if (_socket is object)
             {
