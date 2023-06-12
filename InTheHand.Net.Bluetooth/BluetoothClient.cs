@@ -2,7 +2,7 @@
 //
 // InTheHand.Net.Bluetooth.BluetoothClient
 // 
-// Copyright (c) 2003-2022 In The Hand Ltd, All rights reserved.
+// Copyright (c) 2003-2023 In The Hand Ltd, All rights reserved.
 // This source code is licensed under the MIT License
 
 using InTheHand.Net.Bluetooth;
@@ -10,6 +10,9 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Net.Sockets;
+using System.Runtime.CompilerServices;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace InTheHand.Net.Sockets
 {
@@ -52,6 +55,12 @@ namespace InTheHand.Net.Sockets
             return PlatformDiscoverDevices(maxDevices);
         }
 
+#if NET6_0_OR_GREATER || NETSTANDARD2_1_OR_GREATER
+        public IAsyncEnumerable<BluetoothDeviceInfo> DiscoverDevicesAsync([EnumeratorCancellation] CancellationToken cancellationToken = default)
+        {
+            return PlatformDiscoverDevicesAsync(cancellationToken);
+        }
+#endif
         /// <summary>
         /// Connects the client to a remote Bluetooth host using the specified Bluetooth address and service identifier.
         /// </summary>
@@ -61,6 +70,18 @@ namespace InTheHand.Net.Sockets
         public void Connect(BluetoothAddress address, Guid service)
         {
             PlatformConnect(address, service);
+        }
+
+        /// <summary>
+        /// Connects the client to a remote Bluetooth host using the specified address and service UUID as an asynchronous operation.
+        /// </summary>
+        /// <param name="address">The BluetoothAddress of the remote host.</param>
+        /// <param name="service">The service UUID of the remote host.</param>
+        /// <returns></returns>
+        /// <exception cref="PlatformNotSupportedException"></exception>
+        public Task ConnectAsync(BluetoothAddress address, Guid service)
+        {
+            return PlatformConnectAsync(address, service);
         }
 
         /// <summary>

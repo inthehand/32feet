@@ -67,12 +67,7 @@ namespace InTheHand.Bluetooth
 
         RemoteGattServer GetGatt()
         {
-            if (_gattServer is null)
-            {
-                _gattServer = new RemoteGattServer(this);
-            }
-
-            return _gattServer;
+            return new RemoteGattServer(this);
         }
 
         bool GetIsPaired()

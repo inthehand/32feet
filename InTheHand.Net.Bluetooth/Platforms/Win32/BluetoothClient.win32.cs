@@ -10,6 +10,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net.Sockets;
+using System.Runtime.CompilerServices;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace InTheHand.Net.Sockets
@@ -119,6 +121,13 @@ namespace InTheHand.Net.Sockets
             return devices.AsReadOnly();
         }
 
+#if NET6_0_OR_GREATER
+        async IAsyncEnumerable<BluetoothDeviceInfo> PlatformDiscoverDevicesAsync([EnumeratorCancellation]  CancellationToken cancellationToken)
+        {
+            yield break;
+        }
+#endif
+
         void PlatformConnect(BluetoothAddress address, Guid service)
         {
             var ep = new BluetoothEndPoint(address, service);
@@ -225,14 +234,7 @@ namespace InTheHand.Net.Sockets
             return Task.Factory.FromAsync(BeginConnect, EndConnect, remoteEP, null);
         }
 
-        /// <summary>
-        /// Connects the client to a remote Bluetooth host using the specified address and service UUID as an asynchronous operation.
-        /// </summary>
-        /// <param name="address">The BluetoothAddress of the remote host.</param>
-        /// <param name="service">The service UUID of the remote host.</param>
-        /// <returns></returns>
-        /// <exception cref="PlatformNotSupportedException"></exception>
-        public Task ConnectAsync(BluetoothAddress address, Guid service)
+        Task PlatformConnectAsync(BluetoothAddress address, Guid service)
         {
             if (NativeMethods.IsRunningOnMono())
                 throw new PlatformNotSupportedException("Async Socket operations not currently supported on Mono");

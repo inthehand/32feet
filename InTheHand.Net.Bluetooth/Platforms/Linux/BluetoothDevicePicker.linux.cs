@@ -1,8 +1,8 @@
 ﻿// 32feet.NET - Personal Area Networking for .NET
 //
-// InTheHand.Net.Bluetooth.BluetoothDevicePicker (.NET Standard)
+// InTheHand.Net.Bluetooth.BluetoothDevicePicker (Linux)
 // 
-// Copyright (c) 2018-2020 In The Hand Ltd, All rights reserved.
+// Copyright (c) 2018-2023 In The Hand Ltd, All rights reserved.
 // This source code is licensed under the MIT License
 
 using InTheHand.Net.Sockets;

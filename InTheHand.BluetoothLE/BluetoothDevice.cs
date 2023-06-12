@@ -26,10 +26,24 @@ namespace InTheHand.Bluetooth
         /// The human-readable name of the device.
         /// </summary>
         public string Name { get { return GetName(); } }
+
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private RemoteGattServer _remoteGattServer;
         /// <summary>
         /// Provides a way to interact with this device’s GATT server.
         /// </summary>
-        public RemoteGattServer Gatt { get { return GetGatt(); } }
+        public RemoteGattServer Gatt 
+        {
+            get
+            {
+                if (_remoteGattServer == null)
+                {
+                    _remoteGattServer = GetGatt();
+                }
+
+                return _remoteGattServer;
+            } 
+        }
 
         /// <summary>
         /// Returns true if the device is paired.
@@ -81,7 +95,5 @@ namespace InTheHand.Bluetooth
         /// Fired when an active GATT connection is lost.
         /// </summary>
         public event EventHandler GattServerDisconnected;
-
-        
     }
 }

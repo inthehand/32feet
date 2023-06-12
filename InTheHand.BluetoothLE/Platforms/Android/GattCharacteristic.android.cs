@@ -1,6 +1,6 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="GattCharacteristic.android.cs" company="In The Hand Ltd">
-//   Copyright (c) 2018-20 In The Hand Ltd, All rights reserved.
+//   Copyright (c) 2018-23 In The Hand Ltd, All rights reserved.
 //   This source code is licensed under the MIT License - see License.txt
 // </copyright>
 //-----------------------------------------------------------------------
@@ -11,6 +11,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Android.OS;
+using Android.Bluetooth;
 
 namespace InTheHand.Bluetooth
 {
@@ -117,11 +119,23 @@ namespace InTheHand.Bluetooth
                 Service.Device.Gatt.CharacteristicWrite += handler;
             }
 
-            bool written = _characteristic.SetValue(value);
-            _characteristic.WriteType = requireResponse ? ABluetooth.GattWriteType.Default : ABluetooth.GattWriteType.NoResponse;
-            written = ((ABluetooth.BluetoothGatt)Service.Device.Gatt).WriteCharacteristic(_characteristic);
-
-            if(written && requireResponse)
+            bool written = false;
+#if NET7_0_OR_GREATER
+            if (Build.VERSION.SdkInt >= BuildVersionCodes.Tiramisu)
+            {
+                int result = ((ABluetooth.BluetoothGatt)Service.Device.Gatt).WriteCharacteristic(_characteristic, value, requireResponse ? (int)ABluetooth.GattWriteType.Default : (int)ABluetooth.GattWriteType.NoResponse);
+                written = result == (int)CurrentBluetoothStatusCodes.Success;
+            }
+            else
+            {
+#endif
+                written = _characteristic.SetValue(value);
+                _characteristic.WriteType = requireResponse ? ABluetooth.GattWriteType.Default : ABluetooth.GattWriteType.NoResponse;
+                written = ((ABluetooth.BluetoothGatt)Service.Device.Gatt).WriteCharacteristic(_characteristic);
+#if NET7_0_OR_GREATER
+            } 
+#endif
+            if (written && requireResponse)
                 return tcs.Task;
 
             return Task.CompletedTask;

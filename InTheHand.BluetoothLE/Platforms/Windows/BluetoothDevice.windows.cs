@@ -1,6 +1,6 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="BluetoothDevice.windows.cs" company="In The Hand Ltd">
-//   Copyright (c) 2018-21 In The Hand Ltd, All rights reserved.
+//   Copyright (c) 2018-23 In The Hand Ltd, All rights reserved.
 //   This source code is licensed under the MIT License - see License.txt
 // </copyright>
 //-----------------------------------------------------------------------
@@ -196,12 +196,9 @@ namespace InTheHand.Bluetooth
             return _cachedName;
         }
 
-        private RemoteGattServer _remoteGattServer;
         RemoteGattServer GetGatt()
         {
-            if (_remoteGattServer == null)
-                _remoteGattServer = new RemoteGattServer(this);
-            return _remoteGattServer;
+            return new RemoteGattServer(this);
         }
 
         bool GetIsPaired()

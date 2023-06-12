@@ -1,8 +1,8 @@
 ﻿// 32feet.NET - Personal Area Networking for .NET
 //
-// InTheHand.Net.Sockets.BluetoothClient (.NET Standard)
+// InTheHand.Net.Sockets.BluetoothClient (Multiplatform)
 // 
-// Copyright (c) 2018-2022 In The Hand Ltd, All rights reserved.
+// Copyright (c) 2018-2023 In The Hand Ltd, All rights reserved.
 // This source code is licensed under the MIT License
 
 using System;
@@ -10,10 +10,36 @@ using System.Collections.Generic;
 using System.Net.Sockets;
 using System.Runtime.CompilerServices;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace InTheHand.Net.Sockets
 {
+    internal interface IBluetoothClient
+    {
+        void PlatformConnect(BluetoothAddress address, Guid service);
+
+        void PlatformClose();
+
+        bool GetAuthenticate();
+
+        void SetAuthenticate(bool value);
+
+        Socket GetClient();
+
+        bool GetConnected();
+
+        bool GetEncrypt();
+
+        void SetEncrypt(bool value);
+
+        TimeSpan GetInquiryLength();
+
+        void SetInquiryLength(TimeSpan length);
+
+        string GetRemoteMachineName();
+
+        NetworkStream PlatformGetStream();
+    }
+
     partial class BluetoothClient
     {
         private void PlatformInitialize()
@@ -42,12 +68,6 @@ namespace InTheHand.Net.Sockets
 
         void PlatformConnect(BluetoothAddress address, Guid service)
         {
-            throw new PlatformNotSupportedException();
-        }
-
-        Task PlatformConnectAsync(BluetoothAddress address, Guid service)
-        {
-            throw new PlatformNotSupportedException();
         }
 
         void PlatformClose()

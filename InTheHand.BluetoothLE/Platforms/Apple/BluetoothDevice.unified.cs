@@ -17,9 +17,6 @@ namespace InTheHand.Bluetooth
     {
         private CBPeripheral _peripheral;
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private RemoteGattServer _gatt;
-
         private BluetoothDevice(CBPeripheral peripheral)
         {
             _peripheral = peripheral;
@@ -88,12 +85,7 @@ namespace InTheHand.Bluetooth
 
         RemoteGattServer GetGatt()
         {
-            if (_gatt == null)
-            {
-                _gatt = new RemoteGattServer(this);
-            }
-
-            return _gatt;
+            return new RemoteGattServer(this);
         }
 
         bool GetIsPaired()

@@ -18,7 +18,7 @@ namespace InTheHand.Net.Bluetooth
     {
         private static readonly List<Win32BluetoothAuthentication> _authenticationHandlers = new List<Win32BluetoothAuthentication>();
                 
-        static bool PlatformPairRequest(BluetoothAddress device, string pin)
+        static bool PlatformPairRequest(BluetoothAddress device, string pin, bool? requireMitmProtection)
         {
             if (pin != null)
             {
@@ -42,7 +42,13 @@ namespace InTheHand.Net.Bluetooth
             // Handle response without prompt
             _authenticationHandlers.Add(authHandler);
 
-            bool success = NativeMethods.BluetoothAuthenticateDeviceEx(IntPtr.Zero, IntPtr.Zero, ref info, null, BluetoothAuthenticationRequirements.MITMProtectionRequired) == 0;
+            BluetoothAuthenticationRequirements mitmProtection = BluetoothAuthenticationRequirements.MITMProtectionRequiredBonding;
+            if(requireMitmProtection == false)
+            {
+                mitmProtection = BluetoothAuthenticationRequirements.MITMProtectionNotRequiredBonding;
+            }
+
+            bool success = NativeMethods.BluetoothAuthenticateDeviceEx(IntPtr.Zero, IntPtr.Zero, ref info, null, mitmProtection) == 0;
 
             if (!success)
             {

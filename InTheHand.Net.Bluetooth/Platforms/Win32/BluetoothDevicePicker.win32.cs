@@ -14,7 +14,7 @@ namespace InTheHand.Net.Bluetooth
 {
     partial class BluetoothDevicePicker
     {
-        private Task<BluetoothDeviceInfo> DoPickSingleDeviceAsync()
+        private Task<BluetoothDeviceInfo> PlatformPickSingleDeviceAsync()
         {
             BluetoothDeviceInfo info = null;
 

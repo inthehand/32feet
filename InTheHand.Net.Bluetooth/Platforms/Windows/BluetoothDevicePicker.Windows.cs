@@ -22,7 +22,7 @@ namespace InTheHand.Net.Bluetooth
     {
         private DevicePicker picker = new DevicePicker();
             
-        private async Task<BluetoothDeviceInfo> DoPickSingleDeviceAsync()
+        private async Task<BluetoothDeviceInfo> PlatformPickSingleDeviceAsync()
         {
             Rect bounds = new Rect(0, 0, 0, 0);
             var window = Windows.UI.Core.CoreWindow.GetForCurrentThread();
