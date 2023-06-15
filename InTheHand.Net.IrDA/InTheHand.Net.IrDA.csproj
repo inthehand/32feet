@@ -13,7 +13,7 @@
 		<RepositoryUrl>https://github.com/inthehand/32feet</RepositoryUrl>
 		<PublishRepositoryUrl>true</PublishRepositoryUrl>
 		<IncludeSymbols>true</IncludeSymbols>
-		<DebugType>full</DebugType>
+		<DebugType>portable</DebugType>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 		<PackageTags>irda windows win32</PackageTags>
 		<GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
