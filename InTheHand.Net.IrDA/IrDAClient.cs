@@ -2,7 +2,7 @@
 //
 // InTheHand.Net.Sockets.IrDAClient
 // 
-// Copyright (c) 2003-2020 In The Hand Ltd, All rights reserved.
+// Copyright (c) 2003-2023 In The Hand Ltd, All rights reserved.
 // This source code is licensed under the MIT License
 
 using System;
@@ -11,7 +11,6 @@ using System.Net.Sockets;
 using System.Text;
 using InTheHand.Net.IrDA;
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 
 namespace InTheHand.Net.Sockets
 {
@@ -523,8 +522,6 @@ namespace InTheHand.Net.Sockets
         /// <returns>An <see cref="T:System.IAsyncResult"/> that represents the 
         /// asynchronous connect, which could still be pending.
         /// </returns>
-        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "1#Callback")]
-        [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
         public IAsyncResult BeginConnect(IrDAEndPoint remoteEP, AsyncCallback requestCallback, object state)
         {
             return Client.BeginConnect(remoteEP, requestCallback, state);
@@ -745,6 +742,9 @@ namespace InTheHand.Net.Sockets
             GC.SuppressFinalize(this);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         ~IrDAClient()
         {
             Dispose(false);

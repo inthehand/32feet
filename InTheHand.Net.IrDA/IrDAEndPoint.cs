@@ -196,7 +196,7 @@ namespace InTheHand.Net
 		/// Compares two <see cref="IrDAEndPoint"/> instances for equality.
 		/// </summary>
         /// -
-        /// <param name="obj">The <see cref="BluetoothEndPoint"/>
+        /// <param name="obj">The <see cref="IrDAEndPoint"/>
         /// to compare with the current instance.
         /// </param>
         /// -

@@ -2,14 +2,13 @@
 //
 // InTheHand.Net.IrDAAddress
 // 
-// Copyright (c) 2003-2020 In The Hand Ltd, All rights reserved.
+// Copyright (c) 2003-2023 In The Hand Ltd, All rights reserved.
 // This source code is licensed under the MIT License
 
 using System;
 using System.Globalization;
 using System.Net;
 using System.Net.Sockets;
-using System.Diagnostics.CodeAnalysis;
 
 namespace InTheHand.Net
 {
@@ -91,8 +90,6 @@ namespace InTheHand.Net
         /// <param name="result">When this method returns, contains the <see cref="IrDAAddress"/> equivalent to the address contained in s, if the conversion succeeded, or null (Nothing in Visual Basic) if the conversion failed.
         /// The conversion fails if the s parameter is null or is not of the correct format.</param>
         /// <returns>true if s is a valid IrDA address; otherwise, false.</returns>
-        [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes",
-            Justification = "TrParse pattern.")]
         public static bool TryParse(string s, out IrDAAddress result)
         {
             try
@@ -192,7 +189,7 @@ namespace InTheHand.Net
 		/// Returns a <see cref="string"/> representation of the value of this <see cref="IrDAAddress"/> instance, according to the provided format specifier.
 		/// </summary>
 		/// <param name="format">A single format specifier that indicates how to format the value of this Guid. The format parameter can be "N", "C" or "P". If format is null or the empty string (""), "N" is used.</param>
-		/// <returns>A <see cref="string"/> representation of the value of this <see cref="BluetoothAddress"/>.</returns>
+		/// <returns>A <see cref="string"/> representation of the value of this <see cref="IrDAAddress"/>.</returns>
 		/// <remarks><list type="table">
 		/// <listheader><term>Specifier</term><term>Format of Return Value </term></listheader>
 		/// <item><term>N</term><term>8 digits: <para>XXXXXXXX</para></term></item>

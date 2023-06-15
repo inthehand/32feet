@@ -2,7 +2,7 @@
 //
 // InTheHand.Net.Sockets.IrDADeviceInfo
 // 
-// Copyright (c) 2003-2020 In The Hand Ltd, All rights reserved.
+// Copyright (c) 2003-2023 In The Hand Ltd, All rights reserved.
 // This source code is licensed under the MIT License
 
 using System;
@@ -17,9 +17,19 @@ namespace InTheHand.Net.Sockets
     /// <seealso cref="T:System.Net.Sockets.IrDADeviceInfo"/>
 	public class IrDADeviceInfo
 	{
-		internal IrDADeviceInfo(IrDAAddress id, string name, IrDAHints hints, IrDACharacterSet charset)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="IrDADeviceInfo"/> class with the specified address, name, hints and character set.
+        /// </summary>
+        /// <param name="address">The IrDA Address of the remote device.</param>
+        /// <param name="name">The remote device name.</param>
+        /// <param name="hints">Hint flags describing the type of device.</param>
+        /// <param name="charset">Supported character set used for communication.</param>
+		/// <seealso cref="IrDAAddress"/>
+		/// <seealso cref="IrDAHints"/>
+		/// <seealso cref="IrDACharacterSet"/>
+        public IrDADeviceInfo(IrDAAddress address, string name, IrDAHints hints, IrDACharacterSet charset)
 		{
-			DeviceAddress = id;
+			DeviceAddress = address;
 			DeviceName = name;
             Hints = hints;
             CharacterSet = charset;
