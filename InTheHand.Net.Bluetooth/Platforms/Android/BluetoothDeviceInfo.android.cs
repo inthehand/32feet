@@ -115,7 +115,9 @@ namespace InTheHand.Net.Sockets
 
         bool GetConnected()
         {
-            return false;
+            Method m = _device.Class.GetMethod("isConnected", null);
+            bool connected = (bool)m.Invoke(_device, null);
+            return connected;
         }
 
         bool GetAuthenticated()
