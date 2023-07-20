@@ -13,10 +13,17 @@ namespace InTheHand.Net.Bluetooth
 {
     partial class BluetoothRadio
     {
+        private static BluetoothManager manager;
+
+        static BluetoothRadio()
+        {
+            manager = InTheHand.AndroidActivity.CurrentActivity.GetSystemService(Context.BluetoothService) as BluetoothManager;
+        }
+
+        internal static BluetoothManager Manager { get => manager; }
+
         private static BluetoothRadio GetDefault()
         {
-            BluetoothManager manager = InTheHand.AndroidActivity.CurrentActivity.GetSystemService(Context.BluetoothService) as BluetoothManager;
-
             if (manager == null)
                 throw new PlatformNotSupportedException();
 
@@ -38,7 +45,7 @@ namespace InTheHand.Net.Bluetooth
 
         private readonly BluetoothAdapter _adapter;
 
-        internal BluetoothAdapter Adapter {get => _adapter;}
+        internal BluetoothAdapter Adapter { get => _adapter; }
 
         private BluetoothRadio(BluetoothAdapter adapter)
         {

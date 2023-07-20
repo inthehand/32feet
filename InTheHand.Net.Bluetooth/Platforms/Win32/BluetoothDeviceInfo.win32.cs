@@ -134,7 +134,7 @@ namespace InTheHand.Net.Sockets
             return foundServices.AsReadOnly();
         }
 
-        void DoSetServiceState(Guid service, bool state)
+        void PlatformSetServiceState(Guid service, bool state)
         {
             int result = NativeMethods.BluetoothSetServiceState(IntPtr.Zero, ref _info, ref service, state ? 1u : 0);
         }

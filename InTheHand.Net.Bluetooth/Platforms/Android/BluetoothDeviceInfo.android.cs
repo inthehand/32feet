@@ -10,6 +10,7 @@ using Android.Content;
 using Android.OS;
 using InTheHand.Net.Bluetooth;
 using InTheHand.Net.Bluetooth.Droid;
+using Java.Lang.Reflect;
 using Java.Util;
 using System;
 using System.Collections.Generic;
@@ -108,7 +109,7 @@ namespace InTheHand.Net.Sockets
             return new List<Guid>().AsReadOnly();
         }
 
-        void DoSetServiceState(Guid service, bool state)
+        void PlatformSetServiceState(Guid service, bool state)
         {
             throw new PlatformNotSupportedException();
         }

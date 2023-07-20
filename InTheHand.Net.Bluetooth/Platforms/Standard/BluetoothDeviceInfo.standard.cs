@@ -44,7 +44,7 @@ namespace InTheHand.Net.Sockets
             return new List<Guid>().AsReadOnly();
         }
 
-        void DoSetServiceState(Guid service, bool state)
+        void PlatformSetServiceState(Guid service, bool state)
         {
         }
 

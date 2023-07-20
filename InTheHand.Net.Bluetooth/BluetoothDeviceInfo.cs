@@ -113,7 +113,7 @@ namespace InTheHand.Net.Sockets
         /// <param name="state"></param>
         public void SetServiceState(Guid service, bool state)
         {
-            DoSetServiceState(service, state);
+            PlatformSetServiceState(service, state);
         }
 
         /// <summary>
