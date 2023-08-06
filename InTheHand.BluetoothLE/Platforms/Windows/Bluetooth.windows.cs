@@ -1,6 +1,6 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="Bluetooth.windows.cs" company="In The Hand Ltd">
-//   Copyright (c) 2018-22 In The Hand Ltd, All rights reserved.
+//   Copyright (c) 2018-23 In The Hand Ltd, All rights reserved.
 //   This source code is licensed under the MIT License - see License.txt
 // </copyright>
 //-----------------------------------------------------------------------
@@ -10,7 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
-using System.Runtime.InteropServices.WindowsRuntime;
+using System.Security;
 using System.Threading;
 using System.Threading.Tasks;
 using Windows.Devices.Bluetooth;
@@ -18,7 +18,6 @@ using Windows.Devices.Bluetooth.Advertisement;
 using Windows.Devices.Bluetooth.GenericAttributeProfile;
 using Windows.Devices.Enumeration;
 using Windows.Devices.Radios;
-using Windows.Foundation;
 using Windows.UI;
 
 namespace InTheHand.Bluetooth
@@ -48,6 +47,7 @@ namespace InTheHand.Bluetooth
 
             return radio;
         }
+
         static async Task<bool> PlatformGetAvailability()
         {
             if(await GetAdapter() != null)
@@ -166,6 +166,12 @@ namespace InTheHand.Bluetooth
                     return null;
 
                 var device = await BluetoothLEDevice.FromIdAsync(deviceInfo.Id);
+
+                // it seems odd that the picker functions without the relevant permission
+                // but then this fails so this is as early as we can catch it currently.
+                if (device == null)
+                    ThrowSecurityExceptionOnMissingDeviceCapability();
+
                 var access = await device.RequestAccessAsync();
                 return new BluetoothDevice(device);
             }
@@ -176,6 +182,11 @@ namespace InTheHand.Bluetooth
 
                 return null;
             }
+        }
+
+        private static void ThrowSecurityExceptionOnMissingDeviceCapability()
+        {
+            throw new SecurityException("UWP Applications require the 'bluetooth' device capability to be declared in the Package.appxmanifest.");
         }
 
         static async Task<IReadOnlyCollection<BluetoothDevice>> PlatformScanForDevices(RequestDeviceOptions options, CancellationToken cancellationToken = default)
@@ -189,7 +200,15 @@ namespace InTheHand.Bluetooth
             {
                 try
                 {
-                    devices.Add(await BluetoothLEDevice.FromIdAsync(device.Id));
+                    var bluetoothDevice = await BluetoothLEDevice.FromIdAsync(device.Id);
+                    if (bluetoothDevice != null)
+                    {
+                        devices.Add(bluetoothDevice);
+                    }
+                    else
+                    {
+                        ThrowSecurityExceptionOnMissingDeviceCapability();
+                    }
                 }
                 catch (System.ArgumentException)
                 {
@@ -207,7 +226,15 @@ namespace InTheHand.Bluetooth
             {
                 try
                 {
-                    devices.Add(await BluetoothLEDevice.FromIdAsync(device.Id));
+                    var bluetoothDevice = await BluetoothLEDevice.FromIdAsync(device.Id);
+                    if(bluetoothDevice != null)
+                    {
+                        devices.Add(bluetoothDevice);
+                    }
+                    else
+                    {
+                        ThrowSecurityExceptionOnMissingDeviceCapability();
+                    }
                 }
                 catch (System.ArgumentException)
                 {
