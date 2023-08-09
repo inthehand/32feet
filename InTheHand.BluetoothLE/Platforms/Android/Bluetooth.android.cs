@@ -25,17 +25,30 @@ namespace InTheHand.Bluetooth
         private static readonly EventWaitHandle s_handle = new EventWaitHandle(false, EventResetMode.AutoReset);
         internal static Android.Bluetooth.BluetoothDevice s_device;
         private static RequestDeviceOptions _currentRequest;
+        private static Activity _currentActivity;
+        private static BluetoothReceiver _receiver;
+
+        static Bluetooth()
+        {
+            _currentActivity = InTheHand.AndroidActivity.CurrentActivity;
+        }
 
         static Task<bool> PlatformGetAvailability()
         {
             return Task.FromResult(_manager != null && _manager.Adapter != null && _manager.Adapter.IsEnabled);
         }
 
-        private static bool _oldAvailability;
-
+        
         private static async void AddAvailabilityChanged()
         {
             _oldAvailability = await PlatformGetAvailability();
+
+            if (_receiver == null)
+            {
+                _receiver = new BluetoothReceiver();
+                // Register broadcast receiver to monitor state for AvailabilityChanged event
+                _currentActivity.RegisterReceiver(_receiver, new IntentFilter(BluetoothAdapter.ActionStateChanged));
+            }
         }
 
         private static void RemoveAvailabilityChanged()
@@ -187,7 +200,7 @@ namespace InTheHand.Bluetooth
             {
                 base.OnCreate(savedInstanceState);
 
-                //Activity currentActivity = Platform.CurrentActivity;
+                //Activity currentActivity = InTheHand.AndroidActivity.CurrentActivity;
 
                 Intent i = new Intent("android.bluetooth.devicepicker.action.LAUNCH");
                 i.PutExtra("android.bluetooth.devicepicker.extra.LAUNCH_PACKAGE", Android.App.Application.Context.PackageName);
@@ -210,18 +223,6 @@ namespace InTheHand.Bluetooth
 
                 Finish();
             }
-        }
-    }
-
-    [BroadcastReceiver(Enabled = true)]
-    internal class DevicePickerReceiver : BroadcastReceiver
-    {
-        // receive broadcast if a device is selected and store the device.
-        public override void OnReceive(Context context, Intent intent)
-        {
-            var dev = (Android.Bluetooth.BluetoothDevice)intent.Extras.Get("android.bluetooth.device.extra.DEVICE");
-            Bluetooth.s_device = dev;
-            
         }
     }
 }
