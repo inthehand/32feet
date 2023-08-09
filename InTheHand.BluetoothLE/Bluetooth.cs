@@ -25,6 +25,8 @@ namespace InTheHand.Bluetooth
     /// </remarks>
     public static partial class Bluetooth
     {
+        private static bool _oldAvailability;
+
         /// <summary>
         /// Returns true if Bluetooth is physically available and user has given the app permission.
         /// </summary>
@@ -80,10 +82,15 @@ namespace InTheHand.Bluetooth
             }
         }
 
-        private static void OnAvailabilityChanged()
+        internal static async Task OnAvailabilityChanged()
         {
-            System.Diagnostics.Debug.WriteLine("Bluetooth.AvailiabilityChanged");
-            availabilityChanged?.Invoke(null, EventArgs.Empty); ;
+            bool newAvailability = await PlatformGetAvailability();
+            if (newAvailability != _oldAvailability)
+            {
+                _oldAvailability = newAvailability;
+                System.Diagnostics.Debug.WriteLine("Bluetooth.AvailiabilityChanged");
+                availabilityChanged?.Invoke(null, EventArgs.Empty); ;
+            }
         }
 
         public static Task<IReadOnlyCollection<BluetoothDevice>> GetPairedDevicesAsync()
