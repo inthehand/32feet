@@ -1,6 +1,7 @@
 ﻿using InTheHand.Net.Bluetooth;
 using InTheHand.Net.Sockets;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
 using Xamarin.Forms;
@@ -40,24 +41,29 @@ namespace RfcommXamarinForms
             var picker = new BluetoothDevicePicker();
             
             device = await picker.PickSingleDeviceAsync();
+            Debug.WriteLine(device.Connected);
 
             await Task.Delay(2000);
 
             if (device != null)
             {
-                bool paired = BluetoothSecurity.PairRequest(device.DeviceAddress, "0000");
-                await Task.Delay(2000);
-                //bool unpaired = BluetoothSecurity.RemoveDevice(device.DeviceAddress);
+                if (!device.Authenticated)
+                {
+                    bool paired = BluetoothSecurity.PairRequest(device.DeviceAddress, "0000");
+                    await Task.Delay(2000);
+                    //bool unpaired = BluetoothSecurity.RemoveDevice(device.DeviceAddress);
+                }
                 client.Connect(device.DeviceAddress, BluetoothService.SerialPort);
                 if (client.Connected)
                 {
+                    Debug.WriteLine(device.Connected);
                     stream = client.GetStream();
                     StreamWriter sw = new StreamWriter(stream, System.Text.Encoding.UTF8);
                     sw.WriteLine("Hello world!");
                     sw.Flush();
                     sw.Close();
                 }
-
+                Debug.WriteLine(device.Connected);
                 /*byte[] data = System.Text.Encoding.ASCII.GetBytes("Hello world!\r\n\r\n"); //! 0 200 200 210 1\r\nTEXT 4 0 30 40 Hello World\r\nFORM\r\nPRINT\r\n");
                 stream.Write(data, 0, data.Length);
                 stream.Close();*/

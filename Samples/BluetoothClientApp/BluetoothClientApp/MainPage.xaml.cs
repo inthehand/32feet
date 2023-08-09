@@ -23,6 +23,8 @@ namespace BluetoothClientApp
 
             bool availability = false;
 
+            Bluetooth.AvailabilityChanged += Bluetooth_AvailabilityChanged;
+
             /*while (!availability)
             {
                 availability = await Bluetooth.GetAvailabilityAsync();
@@ -34,8 +36,13 @@ namespace BluetoothClientApp
                 Debug.WriteLine($"{d.Id} {d.Name}");
             }
 
-            Bluetooth.AdvertisementReceived += Bluetooth_AdvertisementReceived;
-            scan = await Bluetooth.RequestLEScanAsync();
+            foreach(var sd in await Bluetooth.ScanForDevicesAsync())
+            {
+                Debug.WriteLine($"{sd.Id} {sd.Name}");
+            }
+
+            //Bluetooth.AdvertisementReceived += Bluetooth_AdvertisementReceived;
+            //scan = await Bluetooth.RequestLEScanAsync();
 
             RequestDeviceOptions options = new RequestDeviceOptions();
             options.AcceptAllDevices = true;
@@ -87,6 +94,12 @@ namespace BluetoothClientApp
                     Debug.Unindent();
                 }
             }
+        }
+
+        private async void Bluetooth_AvailabilityChanged(object sender, EventArgs e)
+        {
+            var current = await Bluetooth.GetAvailabilityAsync();
+            System.Diagnostics.Debug.Write($"Availability: {current}");
         }
 
         private void Bluetooth_AdvertisementReceived(object sender, BluetoothAdvertisingEvent e)
