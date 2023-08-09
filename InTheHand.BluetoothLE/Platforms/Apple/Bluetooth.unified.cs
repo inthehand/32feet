@@ -72,15 +72,9 @@ namespace InTheHand.Bluetooth
             }
         }
 
-        private static bool _oldAvailability;
-
         private static void _manager_UpdatedState(object sender, EventArgs e)
         {
-            if (IsAvailable != _oldAvailability)
-            {
-                _oldAvailability = IsAvailable;
-                OnAvailabilityChanged();
-            }
+            OnAvailabilityChanged();
         }
 
         internal static bool IsAvailable

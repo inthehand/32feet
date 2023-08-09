@@ -175,6 +175,11 @@ namespace InTheHand.Bluetooth
                 var access = await device.RequestAccessAsync();
                 return new BluetoothDevice(device);
             }
+            catch(SecurityException se)
+            {
+                // we want to pass this exception on but catch more generic exceptions below.
+                throw se;
+            }
             catch (Exception ex)
             {
                 if (ex.HResult == -2147023496)
@@ -244,8 +249,6 @@ namespace InTheHand.Bluetooth
             return devices.AsReadOnly();
         }
 
-        static bool _oldAvailability;
-
         private static async void AddAvailabilityChanged()
         {
             _oldAvailability = await PlatformGetAvailability();
@@ -263,12 +266,7 @@ namespace InTheHand.Bluetooth
 
         private static async void Radio_StateChanged(Windows.Devices.Radios.Radio sender, object args)
         {
-            bool newAvailability = await PlatformGetAvailability();
-            if (newAvailability != _oldAvailability)
-            {
-                _oldAvailability = newAvailability;
-                OnAvailabilityChanged();
-            }
+            await OnAvailabilityChanged();
         }
 
         private static async void RemoveAvailabilityChanged()
