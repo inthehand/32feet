@@ -51,11 +51,10 @@ namespace InTheHand.Bluetooth
         void PlatformSetPreferredPhy(BluetoothPhy phy)
         {
         }
-        
-        bool PlatformRequestMtu(int mtu)
-        {
-            return false;
-        }
 
+        Task<bool> PlatformRequestMtuAsync(int mtu)
+        {
+            return Task.FromResult(false);
+        }
     }
 }

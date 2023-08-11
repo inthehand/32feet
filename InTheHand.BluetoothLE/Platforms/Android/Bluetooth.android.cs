@@ -5,17 +5,15 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-using System.Reflection;
-using System.Threading;
-using System.Threading.Tasks;
 using Android.App;
 using Android.Bluetooth;
 using Android.Bluetooth.LE;
 using Android.Content;
 using Android.Content.PM;
 using Android.OS;
+using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace InTheHand.Bluetooth
 {
@@ -25,12 +23,11 @@ namespace InTheHand.Bluetooth
         private static readonly EventWaitHandle s_handle = new EventWaitHandle(false, EventResetMode.AutoReset);
         internal static Android.Bluetooth.BluetoothDevice s_device;
         private static RequestDeviceOptions _currentRequest;
-        private static Activity _currentActivity;
         private static BluetoothReceiver _receiver;
 
         static Bluetooth()
         {
-            _currentActivity = InTheHand.AndroidActivity.CurrentActivity;
+            AndroidActivity.Init();
         }
 
         static Task<bool> PlatformGetAvailability()
@@ -47,7 +44,7 @@ namespace InTheHand.Bluetooth
             {
                 _receiver = new BluetoothReceiver();
                 // Register broadcast receiver to monitor state for AvailabilityChanged event
-                _currentActivity.RegisterReceiver(_receiver, new IntentFilter(BluetoothAdapter.ActionStateChanged));
+                AndroidActivity.CurrentActivity.RegisterReceiver(_receiver, new IntentFilter(BluetoothAdapter.ActionStateChanged));
             }
         }
 
@@ -69,13 +66,13 @@ namespace InTheHand.Bluetooth
 
         static Task<BluetoothDevice> PlatformRequestDevice(RequestDeviceOptions options)
         {
-            if (InTheHand.AndroidActivity.CurrentActivity == null)
+            if (AndroidActivity.CurrentActivity == null)
                 return null;
 
             _currentRequest = options;
 
-            Intent i = new Intent(InTheHand.AndroidActivity.CurrentActivity, typeof(DevicePickerActivity));
-            InTheHand.AndroidActivity.CurrentActivity.StartActivity(i);
+            Intent i = new Intent(AndroidActivity.CurrentActivity, typeof(DevicePickerActivity));
+            AndroidActivity.CurrentActivity.StartActivity(i);
 
             return Task.Run(() =>
             {
@@ -199,8 +196,6 @@ namespace InTheHand.Bluetooth
             protected override void OnCreate(Bundle savedInstanceState)
             {
                 base.OnCreate(savedInstanceState);
-
-                //Activity currentActivity = InTheHand.AndroidActivity.CurrentActivity;
 
                 Intent i = new Intent("android.bluetooth.devicepicker.action.LAUNCH");
                 i.PutExtra("android.bluetooth.devicepicker.extra.LAUNCH_PACKAGE", Android.App.Application.Context.PackageName);

@@ -7,6 +7,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using ABluetooth = Android.Bluetooth;
 
@@ -20,7 +21,7 @@ namespace InTheHand.Bluetooth
         private void PlatformInit()
         {
             _gattCallback = new GattCallback(this);
-            _gatt = ((ABluetooth.BluetoothDevice)Device).ConnectGatt(Android.App.Application.Context, AutoConnect, _gattCallback);
+            _gatt = ((ABluetooth.BluetoothDevice)Device).ConnectGatt(AndroidActivity.CurrentActivity, AutoConnect, _gattCallback, ABluetooth.BluetoothTransports.Auto);
         }
 
         public static implicit operator ABluetooth.BluetoothGatt(RemoteGattServer gatt)
@@ -36,6 +37,7 @@ namespace InTheHand.Bluetooth
         internal event EventHandler<DescriptorEventArgs> DescriptorWrite;
         internal event EventHandler<GattEventArgs> ServicesDiscovered;
         internal event EventHandler<RssiEventArgs> ReadRemoteRssi;
+        internal event EventHandler<MtuEventArgs> MtuChanged;
 
         private bool _servicesDiscovered = false;
 
@@ -50,7 +52,7 @@ namespace InTheHand.Bluetooth
 
             public override void OnMtuChanged(ABluetooth.BluetoothGatt gatt, int mtu, ABluetooth.GattStatus status)
             {
-                System.Diagnostics.Debug.WriteLine($"OnMtuChanged Status:{status} Size:{mtu}");
+                System.Diagnostics.Debug.WriteLine($"OnMtuChanged Status:{status} Mtu:{mtu}");
                 _owner.Mtu = mtu;
                 base.OnMtuChanged(gatt, mtu, status);
             }
@@ -298,15 +300,46 @@ namespace InTheHand.Bluetooth
 
         private int requestedMtu;
 
-        bool PlatformRequestMtu(int mtu)
+        Task<bool> PlatformRequestMtuAsync(int mtu)
         {
             requestedMtu = mtu;
+            
             if (IsConnected)
             {
-                return _gatt.RequestMtu(mtu);
+                TaskCompletionSource<bool> tcs = new TaskCompletionSource<bool>();
+                // we may not get an event (even for failure) so need a timeout
+                var cs = new CancellationTokenSource(1000);
+                cs.Token.Register(() => tcs.TrySetResult(false), useSynchronizationContext: false);
+
+                void handler(object s, MtuEventArgs e)
+                {
+                    MtuChanged -= handler;
+                    switch (e.Status)
+                    {
+                        case ABluetooth.GattStatus.Success:
+                            tcs.SetResult(true);
+                            break;
+
+                        default:
+                            tcs.SetResult(false);
+                            break;
+                    }
+                }
+
+                MtuChanged += handler;
+                bool success = _gatt.RequestMtu(mtu);
+
+                if (success)
+                {
+                    return tcs.Task;
+                }
+                else
+                {
+                    return Task.FromResult(false);
+                }
             }
 
-            return false;
+            return Task.FromResult(false);
         }
 
         private static ABluetooth.BluetoothPhy ToAndroidPhy(BluetoothPhy phy)
@@ -361,6 +394,14 @@ namespace InTheHand.Bluetooth
     internal class RssiEventArgs : GattEventArgs
     {
         public short Rssi
+        {
+            get; internal set;
+        }
+    }
+
+    internal class MtuEventArgs : GattEventArgs
+    {
+        public int Mtu
         {
             get; internal set;
         }

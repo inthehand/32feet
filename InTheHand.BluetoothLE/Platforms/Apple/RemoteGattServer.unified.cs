@@ -6,9 +6,7 @@
 //-----------------------------------------------------------------------
 
 using CoreBluetooth;
-using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 #if !__MACOS__
@@ -204,9 +202,9 @@ namespace InTheHand.Bluetooth
         {
         }
         
-        bool PlatformRequestMtu(int mtu)
+        Task<bool> PlatformRequestMtuAsync(int mtu)
         {
-            return false;
+            return Task.FromResult(false);
         }
     }
 }
