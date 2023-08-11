@@ -52,6 +52,12 @@ namespace BluetoothClientApp
                 device.GattServerDisconnected += Device_GattServerDisconnected;
                 await device.Gatt.ConnectAsync();
 
+                System.Diagnostics.Debug.WriteLine($"Mtu: {device.Gatt.Mtu}");
+                await device.Gatt.RequestMtuAsync(16);
+                System.Diagnostics.Debug.WriteLine($"Mtu: {device.Gatt.Mtu}");
+                await device.Gatt.RequestMtuAsync(517);
+                System.Diagnostics.Debug.WriteLine($"Mtu: {device.Gatt.Mtu}");
+
                 var servs = await device.Gatt.GetPrimaryServicesAsync();
 
                 foreach (var serv in servs)

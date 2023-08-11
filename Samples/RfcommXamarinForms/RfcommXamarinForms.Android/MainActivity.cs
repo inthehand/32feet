@@ -21,6 +21,7 @@ namespace RfcommXamarinForms.Droid
 
             base.OnCreate(savedInstanceState);
 
+            InTheHand.AndroidActivity.CurrentActivity = this;
             Xamarin.Essentials.Platform.Init(this, savedInstanceState);
             global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
 

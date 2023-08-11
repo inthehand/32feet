@@ -19,13 +19,13 @@ namespace BluetoothClientApp.Droid
         {
             TabLayoutResource = Resource.Layout.Tabbar;
             ToolbarResource = Resource.Layout.Toolbar;
-            Plugin.CurrentActivity.CrossCurrentActivity.Current.Activity = this;
+            InTheHand.AndroidActivity.CurrentActivity = this;
 
             base.OnCreate(savedInstanceState);
             Xamarin.Essentials.Platform.Init(this, savedInstanceState); // add this line to your code, it may also be called: bundle
             global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
 
-            RequestPermissions(new string[] { Manifest.Permission.AccessCoarseLocation, Manifest.Permission.BluetoothAdmin }, 1);
+            RequestPermissions(new string[] { Manifest.Permission.AccessCoarseLocation, Manifest.Permission.Bluetooth, Manifest.Permission.BluetoothAdmin, "android.permission.BLUETOOTH_CONNECT" }, 1);
             LoadApplication(new App());
         }
 

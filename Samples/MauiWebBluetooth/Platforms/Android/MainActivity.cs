@@ -11,8 +11,8 @@ namespace MauiWebBluetooth
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
-
-            RequestPermissions(new string[] { Manifest.Permission.AccessCoarseLocation, Manifest.Permission.BluetoothAdmin }, 1);
+            InTheHand.AndroidActivity.CurrentActivity = this;
+            RequestPermissions(new string[] { Manifest.Permission.AccessCoarseLocation, Manifest.Permission.Bluetooth, Manifest.Permission.BluetoothAdmin }, 1);
         }
     }
 }
