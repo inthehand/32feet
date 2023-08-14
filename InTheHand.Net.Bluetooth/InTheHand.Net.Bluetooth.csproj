@@ -198,7 +198,7 @@
 	</ItemGroup>
 
 	<ItemGroup Condition=" '$(TargetFramework)' == 'monoandroid10.0' ">
-		<PackageReference Include="InTheHand.AndroidActivity" Version="1.0.3" />
+		<PackageReference Include="InTheHand.AndroidActivity" Version="1.0.4" />
 		<Reference Include="System.Xml.Linq" />
 		<Compile Include="Platforms\Android\*.cs" />
 	</ItemGroup>
@@ -243,7 +243,7 @@
 	</ItemGroup>
 
 	<ItemGroup Condition=" '$(TargetFramework)' == 'net6.0-android' ">
-		<PackageReference Include="InTheHand.AndroidActivity" Version="1.0.3" />
+		<PackageReference Include="InTheHand.AndroidActivity" Version="1.0.4" />
 		<Compile Include="Platforms\Android\*.cs" />
 	</ItemGroup>
 	
