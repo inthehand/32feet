@@ -1,7 +1,7 @@
 <Project Sdk="MSBuild.Sdk.Extras/3.0.44">
 	<Sdk Name="DotNet.ReproducibleBuilds.Isolated" Version="1.1.1" />
 	<PropertyGroup>
-		<TargetFrameworks>netstandard2.0;netstandard2.1;net6.0-windows7.0;net6.0-windows10.0.22000.0;net6.0-android;net6.0-ios;net461;monoandroid10.0;xamarinios10;uap10.0</TargetFrameworks>
+		<TargetFrameworks>netstandard2.0;netstandard2.1;net6.0;net6.0-windows7.0;net6.0-windows10.0.22000.0;net6.0-android;net6.0-ios;net461;monoandroid10.0;xamarinios10;uap10.0</TargetFrameworks>
 		<Company>In The Hand Ltd</Company>
 		<Authors>Peter Foot</Authors>
 		<Product>32feet.NET</Product>

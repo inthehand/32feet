@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "RadioConsole": {
+      "commandName": "Project",
+      "remoteDebugEnabled": true,
+      "remoteDebugMachine": "raspberrypi",
+      "authenticationMode": "None"
+    }
+  }
+}

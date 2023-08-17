@@ -27,7 +27,7 @@ namespace InTheHand.Net.Sockets
         {
             try
             {
-                _socket = new Socket(AddressFamilyBluetooth, SocketType.Stream, BluetoothProtocolType.L2Cap);
+                _socket = new Socket(AddressFamilyBluetooth, SocketType.Stream, (BluetoothProtocolType)0);
             }
             catch(Exception ex) 
             {

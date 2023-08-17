@@ -27,6 +27,32 @@ namespace RfcommXamarinForms.Droid
 
             RequestPermissions(new string[] { Manifest.Permission.AccessCoarseLocation }, 1);
 
+            try
+            {
+                var ac = InTheHand.AndroidActivity.CurrentActivity;
+            }
+            catch (Exception e)
+            {
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.SetMessage(e.Message + "\r\n" + e.StackTrace);
+                var alert = builder.Create();
+                alert.Show();
+
+                InTheHand.AndroidActivity.CurrentActivity = this;
+            }
+
+            try
+            {
+                var ac = InTheHand.AndroidActivity.CurrentActivity;
+            }
+            catch (Exception e)
+            {
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.SetMessage(e.Message + "\r\n" + e.StackTrace);
+                var alert = builder.Create();
+                alert.Show();
+            }
+
             LoadApplication(new App());
 
             

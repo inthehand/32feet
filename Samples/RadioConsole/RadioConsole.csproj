@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+	  <DebugSymbols>true</DebugSymbols>
+	  <DebugType>portable</DebugType>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\InTheHand.BluetoothLE\InTheHand.BluetoothLE.csproj" />
+    <ProjectReference Include="..\..\InTheHand.Net.Bluetooth\InTheHand.Net.Bluetooth.csproj" />
+  </ItemGroup>
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="echo $(ProjectDir)$(OutDir)*&#xD;&#xA;scp -r $(ProjectDir)$(OutDir)* pi@raspberrypi:~/radio-console/" />
+  </Target>
+
+</Project>

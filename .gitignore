@@ -256,3 +256,6 @@ paket-files/
 /Help
 /icons
 /docs
+
+# macOS
+.DS_Store

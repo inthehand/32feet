@@ -16,7 +16,7 @@
     <MonoAndroidResourcePrefix>Resources</MonoAndroidResourcePrefix>
     <MonoAndroidAssetsPrefix>Assets</MonoAndroidAssetsPrefix>
     <AndroidUseLatestPlatformSdk>false</AndroidUseLatestPlatformSdk>
-    <TargetFrameworkVersion>v11.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v10.0</TargetFrameworkVersion>
     <AndroidEnableSGenConcurrent>true</AndroidEnableSGenConcurrent>
     <AndroidUseAapt2>true</AndroidUseAapt2>
     <AndroidHttpClientHandlerType>Xamarin.Android.Net.AndroidClientHandler</AndroidHttpClientHandlerType>
@@ -44,6 +44,9 @@
     <AndroidUseSharedRuntime>false</AndroidUseSharedRuntime>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="InTheHand.Net.Bluetooth">
+      <HintPath>..\..\..\InTheHand.Net.Bluetooth\bin\Debug\monoandroid10.0\InTheHand.Net.Bluetooth.dll</HintPath>
+    </Reference>
     <Reference Include="Mono.Android" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -87,10 +90,6 @@
     <Folder Include="Resources\drawable\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\InTheHand.Net.Bluetooth\InTheHand.Net.Bluetooth.csproj">
-      <Project>{63b0e457-2909-44ab-b8e6-3737f5aba0e3}</Project>
-      <Name>InTheHand.Net.Bluetooth</Name>
-    </ProjectReference>
     <ProjectReference Include="..\RfcommXamarinForms\RfcommXamarinForms.csproj">
       <Project>{DDE66EBD-4276-45EC-B865-13D034410A78}</Project>
       <Name>RfcommXamarinForms</Name>
