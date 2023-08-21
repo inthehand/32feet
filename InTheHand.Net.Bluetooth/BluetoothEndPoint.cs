@@ -1,11 +1,12 @@
 ﻿// 32feet.NET - Personal Area Networking for .NET
 //
-// InTheHand.Net.BluetoothEndPoint (Win32)
+// InTheHand.Net.BluetoothEndPoint (Sockets)
 // 
 // Copyright (c) 2003-2023 In The Hand Ltd, All rights reserved.
 // This source code is licensed under the MIT License
 
 using System;
+using System.Diagnostics;
 using System.Net;
 using System.Net.Sockets;
 
@@ -44,25 +45,29 @@ namespace InTheHand.Net
             {
                 if (sockaddr_bt[0] != AddressFamilyBlueZ)
                     throw new ArgumentException(nameof(sockaddr_bt));
+
+                _bluetoothAddress = BitConverter.ToUInt64(sockaddr_bt, 2) & 0xFFFFFFFFFFFF;
+                Debug.WriteLine($"Address: {_bluetoothAddress:X12}");
+                _port = BitConverter.ToInt16(sockaddr_bt, 8);
+                Debug.WriteLine($"Port: {_port:X4}");
             }
             else
             {
                 if (sockaddr_bt[0] != AddressFamilyBluetooth)
                     throw new ArgumentException(nameof(sockaddr_bt));
+
+                _bluetoothAddress = BitConverter.ToUInt64(sockaddr_bt, 2);
+
+                byte[] servicebytes = new byte[16];
+
+                for (int ibyte = 0; ibyte < 16; ibyte++)
+                {
+                    servicebytes[ibyte] = sockaddr_bt[10 + ibyte];
+                }
+
+                _serviceId = new Guid(servicebytes);
+                _port = BitConverter.ToInt32(sockaddr_bt, 26);
             }
-
-            _bluetoothAddress = BitConverter.ToUInt64(sockaddr_bt, 2);
-
-            byte[] servicebytes = new byte[16];
-
-            for (int ibyte = 0; ibyte < 16; ibyte++)
-            {
-                servicebytes[ibyte] = sockaddr_bt[10 + ibyte];
-            }
-
-            _serviceId = new Guid(servicebytes);
-            
-            _port = BitConverter.ToInt32(sockaddr_bt, 26);
         }
 
         /// <summary>
@@ -162,7 +167,7 @@ namespace InTheHand.Net
         }
 
         /// <summary>
-        /// Serializes endpoint information into a SocketAddress instance.
+        /// Serializes endpoint information into a <see cref="SocketAddress"/> instance.
         /// </summary>
         /// <returns></returns>
         public override SocketAddress Serialize()
@@ -171,18 +176,27 @@ namespace InTheHand.Net
 
             if (Environment.OSVersion.Platform == PlatformID.Unix)
             {
+                // sockaddr_rc
                 btsa = new SocketAddress(AddressFamily, 10);
+                Debug.WriteLine($"Address Family: {btsa.Family}");
+                Debug.WriteLine($"Address Byte: {btsa[0]}");
+                Debug.WriteLine($"Size: {btsa.Size}");
             }
             else
             {
                 btsa = new SocketAddress(AddressFamily, 30);
             }
 
-            // copy address type
-            btsa[0] = checked((byte)AddressFamily);
+            Debug.WriteLine($"BluetoothAddress: {_bluetoothAddress}");
+            long netOrderAddress = (long)_bluetoothAddress;
+            if (Environment.OSVersion.Platform == PlatformID.Unix)
+            {
+                netOrderAddress = IPAddress.HostToNetworkOrder((long)_bluetoothAddress);
+            }
+            Debug.WriteLine($"BluetoothAddress (NetworkOrder): {_bluetoothAddress}");
 
             // copy device id
-            byte[] deviceidbytes = BitConverter.GetBytes(_bluetoothAddress);
+            byte[] deviceidbytes = BitConverter.GetBytes(netOrderAddress);
 
             for (int idbyte = 0; idbyte < 6; idbyte++)
             {
@@ -192,9 +206,13 @@ namespace InTheHand.Net
             if (Environment.OSVersion.Platform == PlatformID.Unix)
             {
                 if (_port == -1)
+                {
                     btsa[8] = 0;
+                }
                 else
+                {
                     btsa[8] = (byte)_port;
+                }
             }
             else
             {

@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.Net.Sockets;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
@@ -21,18 +22,14 @@ namespace InTheHand.Net.Sockets
     partial class BluetoothClient
     {
         internal const AddressFamily AddressFamilyBluetooth = (AddressFamily)31;
-        private Socket _socket;
+        private LinuxSocket _socket;
 
         private void PlatformInitialize()
         {
-            try
-            {
-                _socket = new Socket(AddressFamilyBluetooth, SocketType.Stream, (BluetoothProtocolType)0);
-            }
-            catch(Exception ex) 
-            {
-                System.Diagnostics.Debug.WriteLine(ex.Message);
-            }
+            if (Environment.OSVersion.Platform != PlatformID.Unix)
+                throw new PlatformNotSupportedException("Linux library used on non-Linux OS.");
+
+            _socket = new LinuxSocket();
         }
 
         IEnumerable<BluetoothDeviceInfo> GetPairedDevices()
@@ -97,6 +94,7 @@ namespace InTheHand.Net.Sockets
                 yield return device;
             }
 
+            BluetoothRadio.Default.Adapter.DeviceFound -= handler;
             yield break;
         }
 
@@ -181,7 +179,7 @@ namespace InTheHand.Net.Sockets
         {
             if (Connected)
             {
-                return new NetworkStream(_socket, true);
+                return new LinuxNetworkStream(_socket, true);
             }
 
             return null;
