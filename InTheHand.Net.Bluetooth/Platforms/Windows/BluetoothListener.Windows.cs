@@ -2,7 +2,7 @@
 //
 // InTheHand.Net.Sockets.BluetoothListener (WinRT)
 // 
-// Copyright (c) 2018-2022 In The Hand Ltd, All rights reserved.
+// Copyright (c) 2018-2023 In The Hand Ltd, All rights reserved.
 // This source code is licensed under the MIT License
 
 using InTheHand.Net.Bluetooth;
@@ -19,7 +19,7 @@ namespace InTheHand.Net.Sockets
         private System.Threading.EventWaitHandle listenHandle = new System.Threading.EventWaitHandle(false, System.Threading.EventResetMode.AutoReset);
         private BluetoothClient currentClient = null;
 
-        void DoStart()
+        void PlatformStart()
         {
             provider = RfcommServiceProvider.CreateAsync(RfcommServiceId.FromUuid(this.serviceUuid)).AsTask().GetAwaiter().GetResult();
             listener = new StreamSocketListener();
@@ -36,7 +36,7 @@ namespace InTheHand.Net.Sockets
             listenHandle.Set();
         }
 
-        void DoStop()
+        void PlatformStop()
         {
             if(Active)
             {
@@ -58,12 +58,12 @@ namespace InTheHand.Net.Sockets
         }
 
         private bool pending = false;
-        bool DoPending()
+        bool PlatformPending()
         {
             return pending;
         }
 
-        BluetoothClient DoAcceptBluetoothClient()
+        BluetoothClient PlatformAcceptBluetoothClient()
         {
             if(listener != null)
             {

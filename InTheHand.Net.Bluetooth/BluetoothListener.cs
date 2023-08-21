@@ -2,7 +2,7 @@
 //
 // InTheHand.Net.Sockets.BluetoothListener
 // 
-// Copyright (c) 2003-2022 In The Hand Ltd, All rights reserved.
+// Copyright (c) 2003-2023 In The Hand Ltd, All rights reserved.
 // This source code is licensed under the MIT License
 
 using InTheHand.Net.Bluetooth;
@@ -177,7 +177,7 @@ namespace InTheHand.Net.Sockets
 		/// <returns>true if there is a connection pending; otherwise, false.</returns>
 		public bool Pending()
         {
-            return DoPending();
+            return PlatformPending();
         }
 
         /// <summary>
@@ -185,7 +185,7 @@ namespace InTheHand.Net.Sockets
         /// </summary>
         public void Start()
         {
-            DoStart();
+            PlatformStart();
             Active = true;
         }
 
@@ -194,14 +194,14 @@ namespace InTheHand.Net.Sockets
 		/// </summary>
 		public void Stop()
         {
-            DoStop();
+            PlatformStop();
             Active = false;
         }
 
         /// <summary>
 		/// Creates a client object for a connection when the specified service or endpoint is detected by the listener component.
 		/// </summary>
-		/// <remarks>AcceptTcpClient is a blocking method that returns a <see cref="BluetoothClient"/> that you can use to send and receive data.
+		/// <remarks>AcceptBluetoothClient is a blocking method that returns a <see cref="BluetoothClient"/> that you can use to send and receive data.
 		/// Use the <see cref="Pending"/> method to determine if connection requests are available in the incoming connection queue if you want to avoid blocking.
 		/// <para>Use the <see cref="BluetoothClient.GetStream"/> method to obtain the underlying <see cref="NetworkStream"/> of the returned <see cref="BluetoothClient"/>.
 		/// The <see cref="NetworkStream"/> will provide you with methods for sending and receiving with the remote host.
@@ -214,7 +214,7 @@ namespace InTheHand.Net.Sockets
             if (!Active)
                 throw new InvalidOperationException("Not listening. You must call the Start() method before calling this method.");
 
-            return DoAcceptBluetoothClient();
+            return PlatformAcceptBluetoothClient();
         }
 
         #region IDisposable Support

@@ -2,7 +2,7 @@
 //
 // InTheHand.Net.Sockets.BluetoothListener (Android)
 // 
-// Copyright (c) 2018-2022 In The Hand Ltd, All rights reserved.
+// Copyright (c) 2018-2023 In The Hand Ltd, All rights reserved.
 // This source code is licensed under the MIT License
 
 using Android.Bluetooth;
@@ -15,14 +15,14 @@ namespace InTheHand.Net.Sockets
     {
         private BluetoothServerSocket socket;
 
-        void DoStart()
+        void PlatformStart()
         {
             socket = BluetoothRadio.Default.Adapter.ListenUsingRfcommWithServiceRecord(this.serviceUuid.ToString(), Java.Util.UUID.FromString(this.serviceUuid.ToString()));
             if (socket != null)
                 Active = true;
         }
 
-        void DoStop()
+        void PlatformStop()
         {
             if (Active)
             {
@@ -32,12 +32,12 @@ namespace InTheHand.Net.Sockets
             }
         }
 
-        bool DoPending()
+        bool PlatformPending()
         {
             return false;
         }
 
-        BluetoothClient DoAcceptBluetoothClient()
+        BluetoothClient PlatformAcceptBluetoothClient()
         {
             var newSocket = socket.Accept();
             if (newSocket != null)

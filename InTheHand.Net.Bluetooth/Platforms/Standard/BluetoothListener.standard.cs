@@ -2,7 +2,7 @@
 //
 // InTheHand.Net.Sockets.BluetoothListener (.NET Standard)
 // 
-// Copyright (c) 2018-2021 In The Hand Ltd, All rights reserved.
+// Copyright (c) 2018-2023 In The Hand Ltd, All rights reserved.
 // This source code is licensed under the MIT License
 
 using InTheHand.Net.Bluetooth;
@@ -12,22 +12,22 @@ namespace InTheHand.Net.Sockets
 {
     partial class BluetoothListener
     {
-        void DoStart()
+        void PlatformStart()
         {
             throw Exceptions.GetNotImplementedException();
         }
 
-        void DoStop()
+        void PlatformStop()
         {
 
         }
 
-        bool DoPending()
+        bool PlatformPending()
         {
             return false;
         }
 
-        BluetoothClient DoAcceptBluetoothClient()
+        BluetoothClient PlatformAcceptBluetoothClient()
         {
             return null;
         }

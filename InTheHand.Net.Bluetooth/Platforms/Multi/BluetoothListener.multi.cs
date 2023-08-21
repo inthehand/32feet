@@ -12,22 +12,22 @@ namespace InTheHand.Net.Sockets
 {
     partial class BluetoothListener
     {
-        void DoStart()
+        void PlatformStart()
         {
             throw Exceptions.GetNotImplementedException();
         }
 
-        void DoStop()
+        void PlatformStop()
         {
 
         }
 
-        bool DoPending()
+        bool PlatformPending()
         {
             return false;
         }
 
-        BluetoothClient DoAcceptBluetoothClient()
+        BluetoothClient PlatformAcceptBluetoothClient()
         {
             return null;
         }

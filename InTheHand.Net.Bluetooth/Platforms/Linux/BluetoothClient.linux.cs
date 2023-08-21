@@ -32,6 +32,11 @@ namespace InTheHand.Net.Sockets
             _socket = new LinuxSocket();
         }
 
+        internal BluetoothClient(LinuxSocket s)
+        {
+            _socket = s;
+        }
+
         IEnumerable<BluetoothDeviceInfo> GetPairedDevices()
         {
             var t = Task.Run<IEnumerable<BluetoothDeviceInfo>>(async () => 

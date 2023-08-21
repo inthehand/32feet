@@ -1,35 +1,50 @@
 ﻿// 32feet.NET - Personal Area Networking for .NET
 //
-// InTheHand.Net.Sockets.BluetoothListener (.NET Standard)
+// InTheHand.Net.Sockets.BluetoothListener (Linux)
 // 
-// Copyright (c) 2018-2021 In The Hand Ltd, All rights reserved.
+// Copyright (c) 2018-2023 In The Hand Ltd, All rights reserved.
 // This source code is licensed under the MIT License
 
 using InTheHand.Net.Bluetooth;
 using System;
+using System.Diagnostics;
+using System.Net.Sockets;
 
 namespace InTheHand.Net.Sockets
 {
     partial class BluetoothListener
     {
-        void DoStart()
+        private BluetoothEndPoint endPoint;
+        private LinuxSocket socket;
+
+        void PlatformStart()
         {
-            throw Exceptions.GetNotImplementedException();
+            endPoint = new BluetoothEndPoint(BluetoothAddress.None, serviceUuid, 0);
+
+            socket = new LinuxSocket();
+            socket.Bind(endPoint);
+            Debug.WriteLine(socket.IsBound);
+            socket.Listen(1);
+            // get endpoint with channel
+            endPoint = socket.LocalEndPoint as BluetoothEndPoint;
         }
 
-        void DoStop()
+        void PlatformStop()
         {
-
+            socket.Close();
+            socket = null;
         }
 
-        bool DoPending()
+        bool PlatformPending()
         {
-            return false;
+            return socket.Poll(0, SelectMode.SelectRead);
         }
 
-        BluetoothClient DoAcceptBluetoothClient()
+        BluetoothClient PlatformAcceptBluetoothClient()
         {
-            return null;
+            LinuxSocket s = socket.Accept();
+
+            return new BluetoothClient(s);
         }
     }
 }

@@ -2,7 +2,7 @@
 //
 // InTheHand.Net.Sockets.BluetoothListener (iOS)
 // 
-// Copyright (c) 2018-2020 In The Hand Ltd, All rights reserved.
+// Copyright (c) 2018-2023 In The Hand Ltd, All rights reserved.
 // This source code is licensed under the MIT License
 
 using System;
@@ -11,22 +11,22 @@ namespace InTheHand.Net.Sockets
 {
     partial class BluetoothListener
     {
-        void DoStart()
+        void PlatformStart()
         {
             throw new PlatformNotSupportedException();
         }
 
-        void DoStop()
+        void PlatformStop()
         {
             throw new PlatformNotSupportedException();
         }
 
-        bool DoPending()
+        bool PlatformPending()
         {
             return false;
         }
 
-        BluetoothClient DoAcceptBluetoothClient()
+        BluetoothClient PlatformAcceptBluetoothClient()
         {
             throw new PlatformNotSupportedException();
         }

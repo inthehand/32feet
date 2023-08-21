@@ -22,7 +22,7 @@ namespace InTheHand.Net.Sockets
         private Socket socket;
         private IntPtr handle = IntPtr.Zero;
 
-        void DoStart()
+        void PlatformStart()
         {
             if (handle != IntPtr.Zero)
                 throw new InvalidOperationException();
@@ -132,7 +132,7 @@ namespace InTheHand.Net.Sockets
             }
         }
 
-        void DoStop()
+        void PlatformStop()
         {
             Debug.WriteLine("BluetoothListener Stop");
 
@@ -194,7 +194,7 @@ namespace InTheHand.Net.Sockets
             socket = null;
         }
 
-        bool DoPending()
+        bool PlatformPending()
         {
             if (NativeMethods.IsRunningOnMono())
             {
@@ -206,7 +206,7 @@ namespace InTheHand.Net.Sockets
             }
         }
 
-        BluetoothClient DoAcceptBluetoothClient()
+        BluetoothClient PlatformAcceptBluetoothClient()
         {
             Socket s;
 
