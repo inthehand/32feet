@@ -95,7 +95,6 @@ namespace InTheHand.Net.Sockets
 
             var sockAddr = localEP.Serialize();
             var raw = SocketAddressToArray(sockAddr);
-            BitConverter.GetBytes(-1).CopyTo(raw, 26);
 
             int result = NativeMethods.bind(_socket, raw, sockAddr.Size);
 

@@ -27,6 +27,8 @@ namespace InTheHand.Net.Sockets
             socket.Listen(1);
             // get endpoint with channel
             endPoint = socket.LocalEndPoint as BluetoothEndPoint;
+
+            Debug.WriteLine($"Listening on Port {endPoint.Port}");
         }
 
         void PlatformStop()
