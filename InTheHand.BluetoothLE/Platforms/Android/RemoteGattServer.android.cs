@@ -53,7 +53,13 @@ namespace InTheHand.Bluetooth
             public override void OnMtuChanged(ABluetooth.BluetoothGatt gatt, int mtu, ABluetooth.GattStatus status)
             {
                 System.Diagnostics.Debug.WriteLine($"OnMtuChanged Status:{status} Mtu:{mtu}");
-                _owner.Mtu = mtu;
+                
+                // only store the new value if successfully changed
+                if(status == ABluetooth.GattStatus.Success)
+                {
+                    _owner.Mtu = mtu;
+                }
+                
                 base.OnMtuChanged(gatt, mtu, status);
             }
 
