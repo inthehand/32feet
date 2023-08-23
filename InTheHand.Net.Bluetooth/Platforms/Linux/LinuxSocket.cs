@@ -24,7 +24,7 @@ namespace InTheHand.Net.Sockets
                 throw new PlatformNotSupportedException("Linux library used on non-Linux OS.");
 
             // AF_BLUETOOTH, Type_Stream, Protocol_Rfcomm
-            _socket = NativeMethods.socket(BluetoothClient.AddressFamilyBluetooth, SocketType.Stream, BluetoothProtocolType.RFComm);
+            _socket = NativeMethods.socket((AddressFamily)BluetoothEndPoint.AddressFamilyBlueZ, SocketType.Stream, BluetoothProtocolType.RFComm);
         }
 
         internal LinuxSocket(int socket) : base(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Unspecified)
@@ -94,7 +94,7 @@ namespace InTheHand.Net.Sockets
                 throw new ArgumentNullException(nameof(localEP));
 
             var sockAddr = localEP.Serialize();
-            var raw = SocketAddressToArray(sockAddr);
+            var raw = sockAddr.ToByteArray();
 
             int result = NativeMethods.bind(_socket, raw, sockAddr.Size);
 
@@ -109,7 +109,8 @@ namespace InTheHand.Net.Sockets
                 var ep = LocalEndPointRaw;
                 if(ep != null)
                 {
-                    if(BitConverter.ToInt32(ep, 26) != 0)
+                    // check if local endpoint port is not zero
+                    if(BitConverter.ToInt32(ep, 8) != 0)
                         return true;
                 }
 
@@ -127,18 +128,6 @@ namespace InTheHand.Net.Sockets
 
                 return RemoteEndPoint != null;
             }
-        }
-
-        private static byte[] SocketAddressToArray(SocketAddress socketAddress)
-        {
-            byte[] buffer = new byte[socketAddress.Size];
-
-            for (int i = 0; i < socketAddress.Size; i++)
-            {
-                buffer[i] = socketAddress[i];
-            }
-
-            return buffer;
         }
 
         /// <inheritdoc/>
@@ -161,11 +150,7 @@ namespace InTheHand.Net.Sockets
             if (remoteEP == null)
                 throw new ArgumentNullException(nameof(remoteEP));
 
-            byte[] sa = new byte[10];
-            sa[0] = (byte)BluetoothClient.AddressFamilyBluetooth;
-            var bep = (BluetoothEndPoint)remoteEP;
-            bep.Address.ToByteArray().CopyTo(sa, 2);
-            sa[8] = (byte)bep.Port;
+            var sa = remoteEP.Serialize().ToByteArray();
 
             for(int i = 0; i < 10; i++)
             {

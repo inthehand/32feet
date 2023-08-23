@@ -90,8 +90,8 @@ namespace InTheHand.Net.Sockets
                 throw new ArgumentNullException(nameof(localEP));
 
             var sockAddr = localEP.Serialize();
-            var raw = SocketAddressToArray(sockAddr);
-            BitConverter.GetBytes(-1).CopyTo(raw, 26);
+            var raw = sockAddr.ToByteArray();
+            BitConverter.GetBytes(-1).CopyTo(raw, 26); // auto port
 
             int result = NativeMethods.bind(_socket, raw, sockAddr.Size);
 
@@ -126,18 +126,6 @@ namespace InTheHand.Net.Sockets
             }
         }
 
-        private static byte[] SocketAddressToArray(SocketAddress socketAddress)
-        {
-            byte[] buffer = new byte[socketAddress.Size];
-
-            for (int i = 0; i < socketAddress.Size; i++)
-            {
-                buffer[i] = socketAddress[i];
-            }
-
-            return buffer;
-        }
-
         /// <inheritdoc/>
         public new void Close()
         {
@@ -160,7 +148,7 @@ namespace InTheHand.Net.Sockets
 
             var sockAddr = remoteEP.Serialize();
 
-            int result = NativeMethods.connect(_socket, SocketAddressToArray(sockAddr), 30);
+            int result = NativeMethods.connect(_socket, sockAddr.ToByteArray(), sockAddr.Size);
 
             ThrowOnSocketError(result, true);
             using (Socket lstnr = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Unspecified))

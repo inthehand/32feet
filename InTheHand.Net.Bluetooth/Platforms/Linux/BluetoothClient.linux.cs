@@ -21,7 +21,6 @@ namespace InTheHand.Net.Sockets
 {
     partial class BluetoothClient
     {
-        internal const AddressFamily AddressFamilyBluetooth = (AddressFamily)31;
         private LinuxSocket _socket;
 
         private void PlatformInitialize()

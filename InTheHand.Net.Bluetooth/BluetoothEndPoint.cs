@@ -177,26 +177,21 @@ namespace InTheHand.Net
             if (Environment.OSVersion.Platform == PlatformID.Unix)
             {
                 // sockaddr_rc
-                btsa = new SocketAddress(AddressFamily, 10);
-                Debug.WriteLine($"Address Family: {btsa.Family}");
-                Debug.WriteLine($"Address Byte: {btsa[0]}");
-                Debug.WriteLine($"Size: {btsa.Size}");
+                // .NET Core on Linux doesn't allow you to create a SocketAddress with AddressFamilyBlueZ so create an IP4 address then change the raw address family value.
+                btsa = new SocketAddress(AddressFamily.InterNetwork, 10);
+                btsa[0] = AddressFamilyBlueZ;
+
+                Console.WriteLine($"Address Family: {btsa.Family}"); // Will display "Unknown" but as long as the raw value is 31 this will work okay.
+                Console.WriteLine($"Address Byte: {btsa[0]}");
+                Console.WriteLine($"Size: {btsa.Size}");
             }
             else
             {
                 btsa = new SocketAddress(AddressFamily, 30);
             }
 
-            Debug.WriteLine($"BluetoothAddress: {_bluetoothAddress}");
-            long netOrderAddress = (long)_bluetoothAddress;
-            if (Environment.OSVersion.Platform == PlatformID.Unix)
-            {
-                netOrderAddress = IPAddress.HostToNetworkOrder((long)_bluetoothAddress);
-            }
-            Debug.WriteLine($"BluetoothAddress (NetworkOrder): {_bluetoothAddress}");
-
             // copy device id
-            byte[] deviceidbytes = BitConverter.GetBytes(netOrderAddress);
+            byte[] deviceidbytes = BitConverter.GetBytes(_bluetoothAddress);
 
             for (int idbyte = 0; idbyte < 6; idbyte++)
             {
@@ -234,6 +229,8 @@ namespace InTheHand.Net
                 }
             }
 
+            DebugWriteSocketAddress(btsa);
+
             return btsa;
         }
 
@@ -244,6 +241,20 @@ namespace InTheHand.Net
         public override string ToString()
         {
             return $"{_bluetoothAddress:X6}:{_serviceId:D} ({_port})";
+        }
+
+        [Conditional("DEBUG")]
+        private static void DebugWriteSocketAddress(SocketAddress sa)
+        {
+            Debug.WriteLine("SocketAddress:");
+            Debug.Indent();
+            for (int i = 0; i < sa.Size; i++)
+            {
+                Debug.Write(sa[i].ToString("X2"));
+            }
+            
+            Debug.WriteLine(string.Empty);
+            Debug.Unindent();
         }
     }
 }
