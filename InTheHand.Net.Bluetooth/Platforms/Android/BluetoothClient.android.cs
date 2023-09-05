@@ -232,7 +232,7 @@ namespace InTheHand.Net.Sockets
 
         Socket GetClient()
         {
-            return null;
+            throw new PlatformNotSupportedException();
         }
 
         bool GetConnected()
