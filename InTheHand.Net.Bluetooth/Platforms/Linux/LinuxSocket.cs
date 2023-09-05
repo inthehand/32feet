@@ -13,6 +13,10 @@ using System.Runtime.InteropServices;
 
 namespace InTheHand.Net.Sockets
 {
+    /// <summary>
+    /// Required because .NET Core on Linux only supports a subset of AddressFamily values so it was neccessary to build a Socket class from the native APIs.
+    /// </summary>
+    /// <remarks>To use the Socket on Linux - e.g. that received from BluetoothClient.Client it is necessary to cast to LinuxSocket as it replaces the Socket properties and methods and the base type is a non-functional IPv4 Socket.</remarks>
     public class LinuxSocket : Socket
     {
         private int _socket = 0;
