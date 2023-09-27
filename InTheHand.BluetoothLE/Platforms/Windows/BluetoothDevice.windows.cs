@@ -9,6 +9,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Windows.Devices.Bluetooth;
 
@@ -69,6 +70,7 @@ namespace InTheHand.Bluetooth
                 }
                 catch (TargetInvocationException e) when (e.InnerException is ObjectDisposedException) { }
                 catch (ObjectDisposedException) { }
+                catch (InvalidComObjectException) { }
                 itemsDisposed.Add(kv.Key, kv.Value);
             }
 
