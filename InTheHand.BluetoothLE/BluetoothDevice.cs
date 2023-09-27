@@ -17,6 +17,8 @@ namespace InTheHand.Bluetooth
     [DebuggerDisplay("{Id} ({Name})")]
     public sealed partial class BluetoothDevice
     {
+        private BluetoothDevice() { }
+
         /// <summary>
         /// The unique identifier for the device.
         /// </summary>

@@ -1,6 +1,6 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="GattCharacteristic.cs" company="In The Hand Ltd">
-//   Copyright (c) 2018-20 In The Hand Ltd, All rights reserved.
+//   Copyright (c) 2018-23 In The Hand Ltd, All rights reserved.
 //   This source code is licensed under the MIT License - see License.txt
 // </copyright>
 //-----------------------------------------------------------------------
@@ -56,9 +56,9 @@ namespace InTheHand.Bluetooth
         }
 
         /// <summary>
-        /// 
+        /// Performs a Characteristic Value read from the Bluetooth LE device.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The object required to manage the asynchronous operation, which, upon completion, returns the data read from the device.</returns>
         public Task<byte[]> ReadValueAsync()
         {
             //if (!Service.Device.Gatt.Connected)
@@ -68,9 +68,9 @@ namespace InTheHand.Bluetooth
         }
 
         /// <summary>
-        /// Performs a Characteristic Value write to a Bluetooth LE device.
+        /// Performs a Characteristic Value write to the Bluetooth LE device.
         /// </summary>
-        /// <param name="value"></param>
+        /// <param name="value">The data to be written to the Bluetooth LE device.</param>
         /// <returns></returns>
         public Task WriteValueWithResponseAsync(byte[] value)
         {
@@ -79,9 +79,9 @@ namespace InTheHand.Bluetooth
         }
 
         /// <summary>
-        /// 
+        /// Performs a Characteristic Value write to the Bluetooth LE device.
         /// </summary>
-        /// <param name="value"></param>
+        /// <param name="value">The data to be written to the Bluetooth LE device.</param>
         /// <returns></returns>
         public Task WriteValueWithoutResponseAsync(byte[] value)
         {

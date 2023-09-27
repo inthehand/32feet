@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace Microsoft.MixedReality.Toolkit.Examples.Demos.EyeTracking.Logging
 {
+    /// <exclude/>
     public static class AsyncHelpers
     {
         /// <summary>
