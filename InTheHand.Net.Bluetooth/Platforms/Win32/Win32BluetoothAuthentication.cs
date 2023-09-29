@@ -75,7 +75,7 @@ namespace InTheHand.Net.Bluetooth.Win32
             {
                 _waitHandle.Set();
                 // after one call remove the registration
-                BluetoothSecurity.RemoveRedundantAuthHandler(Address);
+                Win32BluetoothSecurity.RemoveRedundantAuthHandler(Address);
             }
         }
 

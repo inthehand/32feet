@@ -6,20 +6,30 @@
 // This source code is licensed under the MIT License
 
 using InTheHand.Net.Bluetooth;
+using InTheHand.Net.Bluetooth.Sdp;
 using System;
 using System.Diagnostics;
 using System.Net.Sockets;
 
 namespace InTheHand.Net.Sockets
 {
-    partial class BluetoothListener
+    internal sealed class LinuxBluetoothListener : IBluetoothListener
     {
         private BluetoothEndPoint endPoint;
         private LinuxSocket socket;
 
-        void PlatformStart()
+        public bool Active { get; private set; }
+
+        public ServiceClass ServiceClass { get; set; }
+        public string ServiceName { get; set; }
+        public ServiceRecord ServiceRecord { get; set; }
+        public Guid ServiceUuid { get; set; }
+
+        public void Start()
         {
-            endPoint = new BluetoothEndPoint(BluetoothAddress.None, serviceUuid, 0);
+            //TODO: Implement SDP publishing
+
+            endPoint = new BluetoothEndPoint(BluetoothAddress.None, ServiceUuid, 0);
 
             socket = new LinuxSocket();
             socket.Bind(endPoint);
@@ -31,22 +41,22 @@ namespace InTheHand.Net.Sockets
             Debug.WriteLine($"Listening on Port {endPoint.Port}");
         }
 
-        void PlatformStop()
+        public void Stop()
         {
             socket.Close();
             socket = null;
         }
 
-        bool PlatformPending()
+        public bool Pending()
         {
             return socket.Poll(0, SelectMode.SelectRead);
         }
 
-        BluetoothClient PlatformAcceptBluetoothClient()
+        public BluetoothClient AcceptBluetoothClient()
         {
             LinuxSocket s = socket.Accept();
 
-            return new BluetoothClient(s);
+            return new BluetoothClient(new LinuxBluetoothClient(s));
         }
     }
 }

@@ -6,6 +6,7 @@
 // This source code is licensed under the MIT License
 
 using InTheHand.Net.Sockets;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -16,13 +17,38 @@ namespace InTheHand.Net.Bluetooth
     /// </summary>
     public sealed partial class BluetoothDevicePicker
     {
+        private IBluetoothDevicePicker _bluetoothDevicePicker;
+
+        public BluetoothDevicePicker()
+        {
+#if ANDROID || MONOANDROID
+            _bluetoothDevicePicker = new AndroidBluetoothDevicePicker();
+#elif IOS || __IOS__
+            _bluetoothDevicePicker = new ExternalAccessoryBluetoothDevicePicker();
+#elif WINDOWS_UWP || WINDOWS10_0_17763_0_OR_GREATER
+            _bluetoothDevicePicker = new WindowsBluetoothDevicePicker();
+#elif WINDOWS8_0_OR_GREATER
+            _bluetoothDevicePicker = new Win32BluetoothDevicePicker();
+#elif NETSTANDARD
+#else
+            switch (Environment.OSVersion.Platform)
+            {
+                case PlatformID.Win32NT:
+                    _bluetoothDevicePicker = new Win32BluetoothDevicePicker();
+                    break;
+            }
+#endif
+            if (_bluetoothDevicePicker == null)
+                throw new PlatformNotSupportedException();
+        }
+
         /// <summary>
         /// Display the dialog and allow the user to pick a single device.
         /// </summary>
         /// <returns></returns>
         public Task<BluetoothDeviceInfo> PickSingleDeviceAsync()
         {
-            return PlatformPickSingleDeviceAsync();
+            return _bluetoothDevicePicker.PickSingleDeviceAsync(ClassOfDevices, RequireAuthentication);
         }
 
         /// <summary>

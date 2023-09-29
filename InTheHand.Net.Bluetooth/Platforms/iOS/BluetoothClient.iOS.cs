@@ -18,14 +18,14 @@ using System.Threading.Tasks;
 
 namespace InTheHand.Net.Sockets
 {
-    partial class BluetoothClient
+    internal sealed class ExternalAccessoryBluetoothClient : IBluetoothClient
     {
         private EASession _session;
         private EAAccessory _accessory;
         private ExternalAccessoryNetworkStream _stream;
         private NSObject _connectionObserver;
 
-        private void PlatformInitialize()
+        public ExternalAccessoryBluetoothClient()
         {
             EAAccessoryManager.SharedAccessoryManager.RegisterForLocalNotifications(); 
             _connectionObserver = EAAccessoryManager.Notifications.ObserveDidConnect((s, e) =>
@@ -34,17 +34,20 @@ namespace InTheHand.Net.Sockets
             });
         }
 
-        IEnumerable<BluetoothDeviceInfo> GetPairedDevices()
+        public IEnumerable<BluetoothDeviceInfo> PairedDevices
         {
-            foreach(EAAccessory accessory in EAAccessoryManager.SharedAccessoryManager.ConnectedAccessories)
+            get
             {
-                yield return accessory;
-            }
+                foreach (EAAccessory accessory in EAAccessoryManager.SharedAccessoryManager.ConnectedAccessories)
+                {
+                    yield return new ExternalAccessoryBluetoothDeviceInfo(accessory);
+                }
 
-            yield break;
+                yield break;
+            }
         }
 
-        IReadOnlyCollection<BluetoothDeviceInfo> PlatformDiscoverDevices(int maxDevices)
+        IReadOnlyCollection<BluetoothDeviceInfo> IBluetoothClient.DiscoverDevices(int maxDevices)
         {
             List<BluetoothDeviceInfo> devices = new List<BluetoothDeviceInfo>();
 
@@ -52,13 +55,13 @@ namespace InTheHand.Net.Sockets
         }
 
 #if NET6_0_OR_GREATER
-        async IAsyncEnumerable<BluetoothDeviceInfo> PlatformDiscoverDevicesAsync([EnumeratorCancellation] CancellationToken cancellationToken)
+        async IAsyncEnumerable<BluetoothDeviceInfo> IBluetoothClient.DiscoverDevicesAsync([EnumeratorCancellation] CancellationToken cancellationToken)
         {
             yield break;
         }
 #endif
 
-        void PlatformConnect(BluetoothAddress address, Guid service)
+        public void Connect(BluetoothAddress address, Guid service)
         {
             _accessory = address.Accessory;
             _accessory.Disconnected += _accessory_Disconnected;
@@ -66,9 +69,18 @@ namespace InTheHand.Net.Sockets
             _session = new EASession(_accessory, _accessory.ProtocolStrings[0]);
             _stream = new ExternalAccessoryNetworkStream(_session);
         }
-        async Task PlatformConnectAsync(BluetoothAddress address, Guid service)
+
+        public void Connect(BluetoothEndPoint remoteEP)
         {
-            PlatformConnect(address, service);
+            if (remoteEP == null)
+                throw new ArgumentNullException(nameof(remoteEP));
+
+            Connect(remoteEP.Address, remoteEP.Service);
+        }
+
+        async Task IBluetoothClient.ConnectAsync(BluetoothAddress address, Guid service)
+        {
+            Connect(address, service);
         }
 
         private void _accessory_Disconnected(object sender, EventArgs e)
@@ -77,61 +89,39 @@ namespace InTheHand.Net.Sockets
             _accessory.Disconnected -= _accessory_Disconnected;
         }
 
-        void PlatformClose()
+        public void Close()
         {
             _session?.Dispose();
             _session = null;
         }
+
+        bool IBluetoothClient.Authenticate { get => true; set => throw new PlatformNotSupportedException(); }
+        Socket IBluetoothClient.Client { get => throw new PlatformNotSupportedException(); }
+        bool IBluetoothClient.Encrypt { get => true; set => throw new PlatformNotSupportedException(); }
+        TimeSpan IBluetoothClient.InquiryLength { get => TimeSpan.Zero; set => throw new PlatformNotSupportedException(); }
         
-        bool GetAuthenticate()
+        public bool Connected
         {
-            return true;
-        }
-
-        void SetAuthenticate(bool value)
-        {
-        }
-
-        Socket GetClient()
-        {
-            return null;
-        }
-
-        bool GetConnected()
-        {
-            if (_accessory is object)
+            get
             {
-                return _accessory.Connected;
+                if (_accessory is object)
+                {
+                    return _accessory.Connected;
+                }
+
+                return false;
             }
-
-            return false;
         }
-        
-        bool GetEncrypt()
+
+        public string RemoteMachineName
         {
-            return true;
+            get
+            {
+                return _accessory?.Name;
+            }
         }
 
-        void SetEncrypt(bool value)
-        {
-        }
-
-        TimeSpan GetInquiryLength()
-        {
-            return TimeSpan.Zero;
-        }
-
-        void SetInquiryLength(TimeSpan length)
-        {
-
-        }
-
-        public string GetRemoteMachineName()
-        {
-            return _accessory?.Name;
-        }
-
-        NetworkStream PlatformGetStream()
+        public NetworkStream GetStream()
         {
             if (Connected)
                 return _stream;
@@ -146,6 +136,12 @@ namespace InTheHand.Net.Sockets
                 _connectionObserver.Dispose();
                 _connectionObserver = null;
             }
+        }
+
+        public void Dispose()
+        {
+            // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
+            Dispose(true);
         }
     }
 }

@@ -2,7 +2,7 @@
 //
 // InTheHand.Net.Bluetooth.BluetoothSecurity (Win32)
 // 
-// Copyright (c) 2003-2022 In The Hand Ltd, All rights reserved.
+// Copyright (c) 2003-2023 In The Hand Ltd, All rights reserved.
 // This source code is licensed under the MIT License
 
 using InTheHand.Net.Bluetooth.Win32;
@@ -14,11 +14,11 @@ using System.Threading.Tasks;
 
 namespace InTheHand.Net.Bluetooth
 {
-    partial class BluetoothSecurity
+    internal sealed class Win32BluetoothSecurity : IBluetoothSecurity
     {
         private static readonly List<Win32BluetoothAuthentication> _authenticationHandlers = new List<Win32BluetoothAuthentication>();
                 
-        static bool PlatformPairRequest(BluetoothAddress device, string pin, bool? requireMitmProtection)
+        public bool PairRequest(BluetoothAddress device, string pin, bool? requireMitmProtection)
         {
             if (pin != null)
             {
@@ -57,7 +57,7 @@ namespace InTheHand.Net.Bluetooth
             }
 
             authHandler.WaitOne();
-            BluetoothDeviceInfo deviceInfo = new BluetoothDeviceInfo(info);
+            BluetoothDeviceInfo deviceInfo = new Win32BluetoothDeviceInfo(info);
             deviceInfo.Refresh();
 
             // On Windows 7 these services are not automatically activated
@@ -90,7 +90,7 @@ namespace InTheHand.Net.Bluetooth
             }
         }
 
-        static bool PlatformRemoveDevice(BluetoothAddress device)
+        public bool RemoveDevice(BluetoothAddress device)
         {
             ulong addr = device;
             RemoveRedundantAuthHandler(addr);

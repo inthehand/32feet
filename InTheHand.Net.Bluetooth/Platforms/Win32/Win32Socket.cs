@@ -21,7 +21,7 @@ namespace InTheHand.Net.Sockets
         public Win32Socket() : base(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Unspecified)
         {
             // AF_BT, Type_Stream, Protocol_Rfcomm
-            _socket = NativeMethods.socket(BluetoothClient.AddressFamilyBluetooth, SocketType.Stream, BluetoothProtocolType.RFComm);
+            _socket = NativeMethods.socket(Win32BluetoothClient.AddressFamilyBluetooth, SocketType.Stream, BluetoothProtocolType.RFComm);
         }
 
         internal Win32Socket(int socket) : base(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Unspecified)

@@ -2,7 +2,7 @@
 //
 // InTheHand.Net.Bluetooth.BluetoothSecurity (Windows)
 // 
-// Copyright (c) 2019-2022 In The Hand Ltd, All rights reserved.
+// Copyright (c) 2019-2023 In The Hand Ltd, All rights reserved.
 // This source code is licensed under the MIT License
 
 using System;
@@ -13,11 +13,11 @@ using Windows.Devices.Enumeration;
 
 namespace InTheHand.Net.Bluetooth
 {
-    partial class BluetoothSecurity
+    internal sealed class WindowsBluetoothSecurity : IBluetoothSecurity
     {
         private static Dictionary<string, string> pinMappings = new Dictionary<string, string>();
 
-        static bool PlatformPairRequest(BluetoothAddress device, string pin, bool? requireMitmProtection)
+        public bool PairRequest(BluetoothAddress device, string pin, bool? requireMitmProtection)
         {
             BluetoothDevice bluetoothDevice = null;
             var t = Task<bool>.Run(async () =>
@@ -55,7 +55,7 @@ namespace InTheHand.Net.Bluetooth
             pinMappings.Remove(args.DeviceInformation.Id);
         }
 
-        static bool PlatformRemoveDevice(BluetoothAddress device)
+        public bool RemoveDevice(BluetoothAddress device)
         {
             BluetoothDevice bluetoothDevice = null;
             var t = Task<bool>.Run(async () =>

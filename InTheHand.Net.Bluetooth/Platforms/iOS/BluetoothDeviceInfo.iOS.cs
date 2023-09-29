@@ -15,39 +15,28 @@ using System.Collections.ObjectModel;
 
 namespace InTheHand.Net.Sockets
 {
-    partial class BluetoothDeviceInfo
+    internal sealed class ExternalAccessoryBluetoothDeviceInfo : BluetoothDeviceInfo
     {
         private EAAccessory _accessory;
 
-        internal BluetoothDeviceInfo(EAAccessory accessory)
+        internal ExternalAccessoryBluetoothDeviceInfo(EAAccessory accessory)
         {
             _accessory = accessory;
         }
 
-        public static implicit operator EAAccessory(BluetoothDeviceInfo deviceInfo)
+        public static implicit operator EAAccessory(ExternalAccessoryBluetoothDeviceInfo deviceInfo)
         {
             return deviceInfo._accessory;
         }
 
-        public static implicit operator BluetoothDeviceInfo(EAAccessory accessory)
+        public static implicit operator ExternalAccessoryBluetoothDeviceInfo(EAAccessory accessory)
         {
-            return new BluetoothDeviceInfo(accessory);
+            return new ExternalAccessoryBluetoothDeviceInfo(accessory);
         }
 
-        BluetoothAddress GetDeviceAddress()
-        {
-            return new BluetoothAddress(_accessory);
-        }
+        public override BluetoothAddress DeviceAddress { get => new BluetoothAddress(_accessory); }
 
-        string GetDeviceName()
-        {
-            return _accessory.Name;
-        }
-
-        ClassOfDevice GetClassOfDevice()
-        {
-            return (ClassOfDevice)0;
-        }
+        public override string DeviceName {  get => _accessory.Name; }
 
         /// <summary>
         /// On iOS returns the ExternalAccessory Protocol strings for the device.
@@ -62,33 +51,9 @@ namespace InTheHand.Net.Sockets
             }
         }
 
-        async Task<IEnumerable<Guid>> PlatformGetRfcommServicesAsync(bool cached)
-        {
-            throw new PlatformNotSupportedException();
-        }
 
-        IReadOnlyCollection<Guid> GetInstalledServices()
-        {
-            return new List<Guid>().AsReadOnly();
-        }
+        public override bool Connected {  get =>  _accessory.Connected; }
 
-        void PlatformSetServiceState(Guid service, bool state)
-        {
-            throw new PlatformNotSupportedException();
-        }
-
-        bool GetConnected()
-        {
-            return _accessory.Connected;
-        }
-
-        bool GetAuthenticated()
-        {
-            return true;
-        }
-
-        void PlatformRefresh()
-        {
-        }
+        public override bool Authenticated { get => true; }
     }
 }

@@ -16,7 +16,7 @@ namespace InTheHand.Net.Sockets
     /// </summary>
     public sealed partial class BluetoothListener : IDisposable
     {
-        Guid serviceUuid;
+        private IBluetoothListener _bluetoothListener;
 
         /// <overloads>
         /// Initializes a new instance of the <see cref="BluetoothListener"/> class.
@@ -48,7 +48,28 @@ namespace InTheHand.Net.Sockets
         /// </remarks>
         public BluetoothListener(Guid service)
         {
-            serviceUuid = service;
+#if ANDROID || MONOANDROID
+            _bluetoothListener = new AndroidBluetoothListener();
+#elif WINDOWS_UWP || WINDOWS10_0_17763_0_OR_GREATER
+            _bluetoothListener = new WindowsBluetoothListener();
+#elif NET461 || WINDOWS7_0_OR_GREATER
+            _bluetoothListener = new Win32BluetoothListener();
+#elif IOS || __IOS__ || NETSTANDARD
+#else
+            switch (Environment.OSVersion.Platform)
+            {
+                case PlatformID.Unix:
+                    _bluetoothListener = new LinuxBluetoothListener();
+                    break;
+                case PlatformID.Win32NT:
+                    _bluetoothListener = new Win32BluetoothListener();
+                    break;
+            }
+#endif
+            if (_bluetoothListener == null)
+                throw new PlatformNotSupportedException();
+
+            _bluetoothListener.ServiceUuid = service;
         }
 
         /// <summary>
@@ -111,11 +132,7 @@ namespace InTheHand.Net.Sockets
         /// <summary>
         /// 
         /// </summary>
-        public bool Active
-        {
-            get;
-            private set;
-        }
+        public bool Active { get => _bluetoothListener.Active; }
 
         /// <summary>
         /// Get or set the Service Class flags that this service adds to the host 
@@ -134,11 +151,7 @@ namespace InTheHand.Net.Sockets
         /// is active.  For Win32 see <see href="http://msdn.microsoft.com/en-us/library/aa362940(VS.85).aspx">MSDN &#x2014; BTH_SET_SERVICE Structure</see>
         /// </para>
         /// </remarks>
-        public ServiceClass ServiceClass
-        {
-            get;
-            set;
-        }
+        public ServiceClass ServiceClass { get => _bluetoothListener.ServiceClass; set => _bluetoothListener.ServiceClass = value; }
 
         /// <summary>
         /// Get or set the ServiceName the server will use in its SDP Record.
@@ -154,11 +167,7 @@ namespace InTheHand.Net.Sockets
         /// A custom Service Record was given at initialization time.  In that case 
         /// the ServiceName attribute should be added to that record.
         /// </exception>
-        public string ServiceName
-        {
-            get;
-            set;
-        }
+        public string ServiceName { get => _bluetoothListener.ServiceName; set => _bluetoothListener.ServiceName = value; }
 
         /// <summary>
         /// Returns the SDP Service Record for this service.
@@ -169,7 +178,7 @@ namespace InTheHand.Net.Sockets
         /// (or a record wasn&#x2019;t supplied at initialization).
         /// </note>
         /// </remarks>
-        public ServiceRecord ServiceRecord { get; private set; }
+        public ServiceRecord ServiceRecord { get => _bluetoothListener.ServiceRecord; private set => _bluetoothListener.ServiceRecord = value; }
 
         /// <summary>
 		/// Determines if there is a connection pending.
@@ -177,7 +186,7 @@ namespace InTheHand.Net.Sockets
 		/// <returns>true if there is a connection pending; otherwise, false.</returns>
 		public bool Pending()
         {
-            return PlatformPending();
+            return _bluetoothListener.Pending();
         }
 
         /// <summary>
@@ -185,8 +194,7 @@ namespace InTheHand.Net.Sockets
         /// </summary>
         public void Start()
         {
-            PlatformStart();
-            Active = true;
+            _bluetoothListener.Start();
         }
 
         /// <summary>
@@ -194,8 +202,7 @@ namespace InTheHand.Net.Sockets
 		/// </summary>
 		public void Stop()
         {
-            PlatformStop();
-            Active = false;
+            _bluetoothListener.Stop();
         }
 
         /// <summary>
@@ -214,7 +221,7 @@ namespace InTheHand.Net.Sockets
             if (!Active)
                 throw new InvalidOperationException("Not listening. You must call the Start() method before calling this method.");
 
-            return PlatformAcceptBluetoothClient();
+            return _bluetoothListener.AcceptBluetoothClient();
         }
 
         #region IDisposable Support

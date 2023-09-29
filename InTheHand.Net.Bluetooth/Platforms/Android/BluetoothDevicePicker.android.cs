@@ -10,31 +10,31 @@ using Android.Content;
 using InTheHand.Net.Bluetooth.Droid;
 using InTheHand.Net.Sockets;
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace InTheHand.Net.Bluetooth
 {
-    partial class BluetoothDevicePicker
+    internal sealed class AndroidBluetoothDevicePicker : IBluetoothDevicePicker
     {
         internal static EventWaitHandle s_handle = new EventWaitHandle(false, EventResetMode.AutoReset);
-        internal static BluetoothDevicePicker s_current;
+        internal static AndroidBluetoothDevicePicker s_current;
 
         internal Android.Bluetooth.BluetoothDevice _device;
 
-        private Task<BluetoothDeviceInfo> PlatformPickSingleDeviceAsync()
+        public Task<BluetoothDeviceInfo> PickSingleDeviceAsync(List<ClassOfDevice> classOfDevices, bool requiresAuthentication)
         {
             if (InTheHand.AndroidActivity.CurrentActivity == null)
                 throw new NotSupportedException("CurrentActivity was not detected or specified");
 
             s_current = this;
 
-            bool paired = false;
             int filterType = 0;
 
-            if (s_current.ClassOfDevices.Count == 1)
+            if (classOfDevices != null && classOfDevices.Count == 1)
             {
-                var bcod = s_current.ClassOfDevices[0];
+                var bcod = classOfDevices[0];
 
                 switch (bcod.Service)
                 {
@@ -62,7 +62,7 @@ namespace InTheHand.Net.Bluetooth
             Intent i = new Intent("android.bluetooth.devicepicker.action.LAUNCH");
             i.PutExtra("android.bluetooth.devicepicker.extra.LAUNCH_PACKAGE", Application.Context.PackageName);
             i.PutExtra("android.bluetooth.devicepicker.extra.DEVICE_PICKER_LAUNCH_CLASS", Java.Lang.Class.FromType(typeof(BluetoothDevicePickerReceiver)).Name);
-            i.PutExtra("android.bluetooth.devicepicker.extra.NEED_AUTH", paired);
+            i.PutExtra("android.bluetooth.devicepicker.extra.NEED_AUTH", requiresAuthentication);
             i.PutExtra("android.bluetooth.devicepicker.extra.FILTER_TYPE", filterType);
 
             InTheHand.AndroidActivity.CurrentActivity.StartActivityForResult(i, 1);
@@ -73,7 +73,7 @@ namespace InTheHand.Net.Bluetooth
 
                 if (_device != null)
                 {
-                    return Task.FromResult<BluetoothDeviceInfo>(_device);
+                    return Task.FromResult<BluetoothDeviceInfo>(new AndroidBluetoothDeviceInfo(_device));
                 }
                 else
                 {

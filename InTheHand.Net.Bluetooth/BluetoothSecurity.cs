@@ -2,8 +2,11 @@
 //
 // InTheHand.Net.Bluetooth.BluetoothSecurity
 // 
-// Copyright (c) 2003-2022 In The Hand Ltd, All rights reserved.
+// Copyright (c) 2003-2023 In The Hand Ltd, All rights reserved.
 // This source code is licensed under the MIT License
+
+using InTheHand.Net.Sockets;
+using System;
 
 namespace InTheHand.Net.Bluetooth
 {
@@ -12,6 +15,35 @@ namespace InTheHand.Net.Bluetooth
     /// </summary>
     public sealed partial class BluetoothSecurity
     {
+        static IBluetoothSecurity _bluetoothSecurity = null;
+
+        static BluetoothSecurity()
+        {
+#if ANDROID || MONOANDROID
+            _bluetoothSecurity = new AndroidBluetoothSecurity();
+#elif IOS || __IOS__
+            _bluetoothSecurity = new ExternalAccessoryBluetoothSecurity();
+#elif WINDOWS_UWP || WINDOWS10_0_17763_0_OR_GREATER
+            _bluetoothSecurity = new WindowsBluetoothSecurity();
+#elif NET461 || WINDOWS7_0_OR_GREATER
+            _bluetoothSecurity = new Win32BluetoothSecurity();
+#elif NETSTANDARD
+#else
+            switch(Environment.OSVersion.Platform)
+            {
+                case PlatformID.Unix:
+                    _bluetoothSecurity = new LinuxBluetoothSecurity();
+                    break;
+                case PlatformID.Win32NT:
+                    //detect Windows 10
+                    _bluetoothSecurity = new Win32BluetoothSecurity();
+                    break;
+            }
+#endif
+            if (_bluetoothSecurity == null)
+                throw new PlatformNotSupportedException();
+        }
+
         /// <summary>
         /// Requests the pairing process for the specified device with the provided pin or numeric code.
         /// </summary>
@@ -21,12 +53,12 @@ namespace InTheHand.Net.Bluetooth
         /// <returns></returns>
         public static bool PairRequest(BluetoothAddress device, string pin, bool? requireMitmProtection)
         {
-            return PlatformPairRequest(device, pin, requireMitmProtection);
+            return _bluetoothSecurity.PairRequest(device, pin, requireMitmProtection);
         }
 
         public static bool PairRequest(BluetoothAddress device, string pin = null)
         {
-            return PairRequest(device, pin, null);
+            return _bluetoothSecurity.PairRequest(device, pin, null);
         }        
 
         /// <summary>
@@ -37,7 +69,7 @@ namespace InTheHand.Net.Bluetooth
         /// <remarks></remarks>
         public static bool RemoveDevice(BluetoothAddress device)
         {
-            return PlatformRemoveDevice(device);
+            return _bluetoothSecurity.RemoveDevice(device);
         }
     }
 }

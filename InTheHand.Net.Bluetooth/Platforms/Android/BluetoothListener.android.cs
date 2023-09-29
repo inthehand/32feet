@@ -11,38 +11,43 @@ using System;
 
 namespace InTheHand.Net.Sockets
 {
-    partial class BluetoothListener
+    internal sealed class AndroidBluetoothListener : IBluetoothListener
     {
         private BluetoothServerSocket socket;
+        public bool Active { get; private set; }
 
-        void PlatformStart()
+        public InTheHand.Net.Bluetooth.ServiceClass ServiceClass { get; set; }
+
+        public string ServiceName { get; set; }
+
+        public InTheHand.Net.Bluetooth.Sdp.ServiceRecord ServiceRecord { get; set; }
+        public Guid ServiceUuid { get; set; }
+
+        public void Start()
         {
-            socket = BluetoothRadio.Default.Adapter.ListenUsingRfcommWithServiceRecord(this.serviceUuid.ToString(), Java.Util.UUID.FromString(this.serviceUuid.ToString()));
+            socket = ((AndroidBluetoothRadio)BluetoothRadio.Default.Radio).Adapter.ListenUsingRfcommWithServiceRecord(ServiceUuid.ToString(), Java.Util.UUID.FromString(ServiceUuid.ToString()));
             if (socket != null)
                 Active = true;
         }
 
-        void PlatformStop()
+        public void Stop()
         {
-            if (Active)
-            {
-                socket?.Close();
-                socket = null;
-                Active = false;
-            }
+            socket?.Close();
+            socket = null;
+            Active = false;
         }
 
-        bool PlatformPending()
+        bool IBluetoothListener.Pending()
         {
             return false;
         }
 
-        BluetoothClient PlatformAcceptBluetoothClient()
+        public BluetoothClient AcceptBluetoothClient()
         {
             var newSocket = socket.Accept();
             if (newSocket != null)
             {
-                return new BluetoothClient(newSocket);
+                return new BluetoothClient(new AndroidBluetoothClient(newSocket));
             }
 
             return null;

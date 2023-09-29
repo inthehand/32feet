@@ -21,9 +21,38 @@ namespace InTheHand.Net.Sockets
     /// </summary>
     public sealed partial class BluetoothClient : IDisposable
     {
+        private IBluetoothClient _bluetoothClient;
+
         public BluetoothClient()
         {
-            PlatformInitialize();
+#if ANDROID || MONOANDROID
+            _bluetoothClient = new AndroidBluetoothClient();
+#elif IOS || __IOS__
+            _bluetoothClient = new ExternalAccessoryBluetoothClient();
+#elif WINDOWS_UWP || WINDOWS10_0_17763_0_OR_GREATER
+            _bluetoothClient = new WindowsBluetoothClient();
+#elif NET461 || WINDOWS7_0_OR_GREATER
+            _bluetoothClient = new Win32BluetoothClient();
+#elif NETSTANDARD
+#else
+            switch(Environment.OSVersion.Platform)
+            {
+                case PlatformID.Unix:
+                    _bluetoothClient = new LinuxBluetoothClient();
+                    break;
+                case PlatformID.Win32NT:
+                    //detect Windows 10
+                    _bluetoothClient = new Win32BluetoothClient();
+                    break;
+            }
+#endif
+            if (_bluetoothClient == null)
+                throw new PlatformNotSupportedException();
+        }
+
+        internal BluetoothClient(IBluetoothClient client)
+        {
+            _bluetoothClient = client;
         }
 
         /// <summary>
@@ -33,7 +62,7 @@ namespace InTheHand.Net.Sockets
         {
             get
             {
-                return GetPairedDevices();
+                return _bluetoothClient.PairedDevices;
             }
         }
 
@@ -52,13 +81,13 @@ namespace InTheHand.Net.Sockets
         /// <returns>A collection of BluetoothDeviceInfo objects describing the devices discovered.</returns>
         public IReadOnlyCollection<BluetoothDeviceInfo> DiscoverDevices(int maxDevices)
         {
-            return PlatformDiscoverDevices(maxDevices);
+            return _bluetoothClient.DiscoverDevices(maxDevices);
         }
 
 #if NET6_0_OR_GREATER || NETSTANDARD2_1_OR_GREATER
         public IAsyncEnumerable<BluetoothDeviceInfo> DiscoverDevicesAsync([EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
-            return PlatformDiscoverDevicesAsync(cancellationToken);
+            return _bluetoothClient.DiscoverDevicesAsync(cancellationToken);
         }
 #endif
         /// <summary>
@@ -69,7 +98,19 @@ namespace InTheHand.Net.Sockets
         /// The standard Bluetooth service classes are provided on <see cref="BluetoothService"/>.</param>
         public void Connect(BluetoothAddress address, Guid service)
         {
-            PlatformConnect(address, service);
+            _bluetoothClient.Connect(address, service);
+        }
+
+        /// <summary>
+        /// Connects the client to a remote Bluetooth host using the specified endpoint.
+        /// </summary>
+        /// <param name="remoteEP">The <see cref="BluetoothEndPoint"/> to which you intend to connect.</param>
+        public void Connect(BluetoothEndPoint remoteEP)
+        {
+            if (remoteEP == null)
+                throw new ArgumentNullException(nameof(remoteEP));
+
+            _bluetoothClient.Connect(remoteEP);
         }
 
         /// <summary>
@@ -81,7 +122,7 @@ namespace InTheHand.Net.Sockets
         /// <exception cref="PlatformNotSupportedException"></exception>
         public Task ConnectAsync(BluetoothAddress address, Guid service)
         {
-            return PlatformConnectAsync(address, service);
+            return _bluetoothClient.ConnectAsync(address, service);
         }
 
         /// <summary>
@@ -90,7 +131,7 @@ namespace InTheHand.Net.Sockets
         /// <remarks>The Close method marks the instance as disposed and requests that the associated Socket close the Bluetooth connection</remarks>
         public void Close()
         {
-            PlatformClose();
+            _bluetoothClient.Close();
         }
 
         /// <summary>
@@ -98,8 +139,10 @@ namespace InTheHand.Net.Sockets
         /// </summary>
         public bool Authenticate
         {
-            get => GetAuthenticate();
-            set => SetAuthenticate(value);
+            [DebuggerStepThrough]
+            get => _bluetoothClient.Authenticate;
+            [DebuggerStepThrough]
+            set => _bluetoothClient.Authenticate = value;
         }
 
         /// <summary>
@@ -107,7 +150,8 @@ namespace InTheHand.Net.Sockets
         /// </summary>
         public Socket Client
         {
-            get => GetClient();
+            [DebuggerStepThrough]
+            get => _bluetoothClient.Client;
         }
 
         /// <summary>
@@ -115,7 +159,8 @@ namespace InTheHand.Net.Sockets
         /// </summary>
         public bool Connected
         {
-            get => GetConnected();
+            [DebuggerStepThrough]
+            get => _bluetoothClient.Connected;
         }
 
         /// <summary>
@@ -123,8 +168,10 @@ namespace InTheHand.Net.Sockets
         /// </summary>
         public bool Encrypt
         {
-            get => GetEncrypt();
-            set => SetEncrypt(value);
+            [DebuggerStepThrough]
+            get => _bluetoothClient.Encrypt;
+            [DebuggerStepThrough]
+            set => _bluetoothClient.Encrypt = value;
         }
 
         /// <summary>
@@ -135,9 +182,9 @@ namespace InTheHand.Net.Sockets
         public TimeSpan InquiryLength
         {
             [DebuggerStepThrough]
-            get { return GetInquiryLength(); }
+            get => _bluetoothClient.InquiryLength;
             [DebuggerStepThrough]
-            set { SetInquiryLength(value); }
+            set => _bluetoothClient.InquiryLength = value;
         }
 
         /// <summary>
@@ -145,28 +192,24 @@ namespace InTheHand.Net.Sockets
         /// </summary>
         public string RemoteMachineName
         {
-            get
-            {
-                return GetRemoteMachineName();
-            }
+            [DebuggerStepThrough]
+            get => _bluetoothClient.RemoteMachineName;
         }
 
         /// <summary>
         /// Gets the underlying stream of data.
         /// </summary>
         /// <returns></returns>
-        public NetworkStream GetStream()
-        {
-            return PlatformGetStream();
-        }
+        [DebuggerStepThrough]
+        public NetworkStream GetStream() => _bluetoothClient.GetStream();
 
         /// <summary>
         /// Closes the BluetoothClient and the underlying connection.
         /// </summary>
         public void Dispose()
         {
-            // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
-            Dispose(true);
+            _bluetoothClient.Dispose();
+            _bluetoothClient = null;
         }
     }
 }

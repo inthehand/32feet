@@ -2,21 +2,21 @@
 //
 // InTheHand.Net.Bluetooth.BluetoothSecurity (iOS)
 // 
-// Copyright (c) 2018-2022 In The Hand Ltd, All rights reserved.
+// Copyright (c) 2018-2023 In The Hand Ltd, All rights reserved.
 // This source code is licensed under the MIT License
 
 using System;
 
 namespace InTheHand.Net.Bluetooth
 {
-    partial class BluetoothSecurity
+    internal sealed class ExternalAccessoryBluetoothSecurity : IBluetoothSecurity
     {
-        static bool PlatformPairRequest(BluetoothAddress device, string pin, bool? requireMitmProtection)
+        public bool PairRequest(BluetoothAddress device, string pin, bool? requireMitmProtection)
         {
             throw new PlatformNotSupportedException();
         }
 
-        static bool PlatformRemoveDevice(BluetoothAddress device)
+        public bool RemoveDevice(BluetoothAddress device)
         {
             throw new PlatformNotSupportedException();
         }  

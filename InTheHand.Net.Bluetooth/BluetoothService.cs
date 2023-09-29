@@ -2,7 +2,7 @@
 //
 // InTheHand.Net.Bluetooth.BluetoothService
 // 
-// Copyright (c) 2003-2020 In The Hand Ltd, All rights reserved.
+// Copyright (c) 2003-2023 In The Hand Ltd, All rights reserved.
 // This source code is licensed under the MIT License
 
 using System;
@@ -232,18 +232,22 @@ namespace InTheHand.Net.Bluetooth
         /// <summary>
         ///  [0x1129]
         /// </summary>
+        [Obsolete("Deprecated", false)]
         public static readonly Guid VideoConferencingGW = new Guid(0x00001129, 0x0000, 0x1000, 0x80, 0x00, 0x00, 0x80, 0x5F, 0x9B, 0x34, 0xFB);
         /// <summary>
         /// UDI_MT [0x112A]
         /// </summary>
+        [Obsolete("Deprecated", false)]
         public static readonly Guid UdiMT = new Guid(0x0000112A, 0x0000, 0x1000, 0x80, 0x00, 0x00, 0x80, 0x5F, 0x9B, 0x34, 0xFB);
         /// <summary>
         /// UDI_TA [0x112B]
         /// </summary>
+        [Obsolete("Deprecated", false)]
         public static readonly Guid UdiTA = new Guid(0x0000112B, 0x0000, 0x1000, 0x80, 0x00, 0x00, 0x80, 0x5F, 0x9B, 0x34, 0xFB);
         /// <summary>
         ///  [0x112C]
         /// </summary>
+        [Obsolete("Deprecated", false)]
         public static readonly Guid AudioVideo = new Guid(0x0000112C, 0x0000, 0x1000, 0x80, 0x00, 0x00, 0x80, 0x5F, 0x9B, 0x34, 0xFB);
         /// <summary>
         /// SIM_Access [0x112D]
@@ -282,36 +286,77 @@ namespace InTheHand.Net.Bluetooth
         /// Message Access Profile [0x1134]
         /// </summary>
         public static readonly Guid MessageAccessProfile = new Guid(0x00001134, 0x0000, 0x1000, 0x80, 0x00, 0x00, 0x80, 0x5F, 0x9B, 0x34, 0xFB);
+        /// <summary>
+        /// GlobalNavigationSatelliteSystem [0x1135]
+        /// </summary>
+        public static readonly Guid GlobalNavigationSatelliteSystem = new Guid(0x00001135, 0x0000, 0x1000, 0x80, 0x00, 0x00, 0x80, 0x5F, 0x9B, 0x34, 0xFB);
+        /// <summary>
+        /// GlobalNavigationSatelliteSystemServer [0x1136]
+        /// </summary>
+        public static readonly Guid GlobalNavigationSatelliteSystemServer = new Guid(0x00001136, 0x0000, 0x1000, 0x80, 0x00, 0x00, 0x80, 0x5F, 0x9B, 0x34, 0xFB);
+        /// <summary>
+        /// 3D Display [0x1137]
+        /// </summary>
+        public static readonly Guid ThreeDimensionalDisplay = new Guid(0x00001137, 0x0000, 0x1000, 0x80, 0x00, 0x00, 0x80, 0x5F, 0x9B, 0x34, 0xFB);
+        /// <summary>
+        /// 3D Glasses [0x1138]
+        /// </summary>
+        public static readonly Guid ThreeDimensionalGlasses = new Guid(0x00001138, 0x0000, 0x1000, 0x80, 0x00, 0x00, 0x80, 0x5F, 0x9B, 0x34, 0xFB);
+        /// <summary>
+        /// 3D Synchronization [0x1139]
+        /// </summary>
+        public static readonly Guid ThreeDimensionalSynchronization = new Guid(0x00001139, 0x0000, 0x1000, 0x80, 0x00, 0x00, 0x80, 0x5F, 0x9B, 0x34, 0xFB);
+        /// <summary>
+        /// MPS Profile [0x113A]
+        /// </summary>
+        public static readonly Guid MultiProfile = new Guid(0x0000113A, 0x0000, 0x1000, 0x80, 0x00, 0x00, 0x80, 0x5F, 0x9B, 0x34, 0xFB);
+        /// <summary>
+        /// MPS SC [0x113B]
+        /// </summary>
+        public static readonly Guid MultiProfileService = new Guid(0x0000113B, 0x0000, 0x1000, 0x80, 0x00, 0x00, 0x80, 0x5F, 0x9B, 0x34, 0xFB);
+        /// <summary>
+        /// CTN Access Service [0x113C]
+        /// </summary>
+        public static readonly Guid CalendarTaskNoteAccess = new Guid(0x0000113C, 0x0000, 0x1000, 0x80, 0x00, 0x00, 0x80, 0x5F, 0x9B, 0x34, 0xFB);
+        /// <summary>
+        /// CTN Notification Service [0x113D]
+        /// </summary>
+        public static readonly Guid CalendarTaskNoteNotification = new Guid(0x0000113D, 0x0000, 0x1000, 0x80, 0x00, 0x00, 0x80, 0x5F, 0x9B, 0x34, 0xFB);
+        /// <summary>
+        /// CTN Profile [0x113E]
+        /// </summary>
+        public static readonly Guid CalendarTaskNotes = new Guid(0x0000113E, 0x0000, 0x1000, 0x80, 0x00, 0x00, 0x80, 0x5F, 0x9B, 0x34, 0xFB);
 
         /// <summary>
         /// Bluetooth Device Identification. [0x1200]
         /// </summary>
         public static readonly Guid PnPInformation = new Guid(0x00001200, 0x0000, 0x1000, 0x80, 0x00, 0x00, 0x80, 0x5F, 0x9B, 0x34, 0xFB);
         /// <summary>
-        ///  [0x1201]
+        /// GenericNetworking [0x1201]
         /// </summary>
         public static readonly Guid GenericNetworking = new Guid(0x00001201, 0x0000, 0x1000, 0x80, 0x00, 0x00, 0x80, 0x5F, 0x9B, 0x34, 0xFB);
         /// <summary>
-        ///  [0x1202]
+        /// GenericFileTransfer [0x1202]
         /// </summary>
         public static readonly Guid GenericFileTransfer = new Guid(0x00001202, 0x0000, 0x1000, 0x80, 0x00, 0x00, 0x80, 0x5F, 0x9B, 0x34, 0xFB);
         /// <summary>
-        ///  [0x1203]
+        /// GenericAudio [0x1203]
         /// </summary>
         public static readonly Guid GenericAudio = new Guid(0x00001203, 0x0000, 0x1000, 0x80, 0x00, 0x00, 0x80, 0x5F, 0x9B, 0x34, 0xFB);
         /// <summary>
-        ///  [0x1204]
+        /// GenericTelephony [0x1204]
         /// </summary>
         public static readonly Guid GenericTelephony = new Guid(0x00001204, 0x0000, 0x1000, 0x80, 0x00, 0x00, 0x80, 0x5F, 0x9B, 0x34, 0xFB);
 
         /// <summary>
-        ///  [0x1205]
+        /// UPNP_Service [0x1205]
         /// </summary>
         public static readonly Guid UPnp = new Guid(0x00001205, 0x0000, 0x1000, 0x80, 0x00, 0x00, 0x80, 0x5F, 0x9B, 0x34, 0xFB);
         /// <summary>
-        ///  [0x1206]
+        /// UPNP_IP_Service [0x1206]
         /// </summary>
         public static readonly Guid UPnpIP = new Guid(0x00001206, 0x0000, 0x1000, 0x80, 0x00, 0x00, 0x80, 0x5F, 0x9B, 0x34, 0xFB);
+
         /// <summary>
         /// ESDP_UPNP_IP_PAN [0x1300]
         /// </summary>

@@ -13,16 +13,29 @@ namespace InTheHand.Net.Bluetooth
 {
     partial class BluetoothRadio
     {
+        public static implicit operator BluetoothAdapter(BluetoothRadio radio)
+        {
+            return ((AndroidBluetoothRadio)radio.Radio).Adapter;
+        }
+
+        public static implicit operator BluetoothRadio(BluetoothAdapter adapter)
+        {
+            return new BluetoothRadio((AndroidBluetoothRadio)adapter);
+        }
+    }
+    
+    internal sealed class AndroidBluetoothRadio : IBluetoothRadio
+    {
         private static BluetoothManager manager;
 
-        static BluetoothRadio()
+        static AndroidBluetoothRadio()
         {
             manager = InTheHand.AndroidActivity.CurrentActivity.GetSystemService(Context.BluetoothService) as BluetoothManager;
         }
 
         internal static BluetoothManager Manager { get => manager; }
 
-        private static BluetoothRadio GetDefault()
+        internal static IBluetoothRadio GetDefault()
         {
             if (manager == null)
                 throw new PlatformNotSupportedException();
@@ -30,78 +43,74 @@ namespace InTheHand.Net.Bluetooth
             if (manager.Adapter == null)
                 return null;
 
-            return new BluetoothRadio(manager.Adapter);
+            return new AndroidBluetoothRadio(manager.Adapter);
         }
 
-        public static implicit operator BluetoothAdapter(BluetoothRadio radio)
+        public static implicit operator BluetoothAdapter(AndroidBluetoothRadio radio)
         {
             return radio._adapter;
         }
 
-        public static implicit operator BluetoothRadio(BluetoothAdapter adapter)
+        public static implicit operator AndroidBluetoothRadio(BluetoothAdapter adapter)
         {
-            return new BluetoothRadio(adapter);
+            return new AndroidBluetoothRadio(adapter);
         }
 
         private readonly BluetoothAdapter _adapter;
 
         internal BluetoothAdapter Adapter { get => _adapter; }
 
-        private BluetoothRadio(BluetoothAdapter adapter)
+        private AndroidBluetoothRadio(BluetoothAdapter adapter)
         {
             _adapter = adapter;
         }
 
-        private string GetName()
-        {
-            return _adapter.Name;
-        }
+        public string Name { get => _adapter.Name; }
 
-        private BluetoothAddress GetLocalAddress()
-        {
-            return BluetoothAddress.Parse(_adapter.Address);
-        }
+        public BluetoothAddress LocalAddress { get => BluetoothAddress.Parse(_adapter.Address); }
 
-        private RadioMode GetMode()
+        public RadioMode Mode
         {
-            State state = _adapter.State;
-
-            switch (state)
+            get
             {
-                case State.TurningOff:
-                case State.Off:
-                    return RadioMode.PowerOff;
+                State state = _adapter.State;
 
-                default:
-                    switch (_adapter.ScanMode)
-                    {
-                        case ScanMode.ConnectableDiscoverable:
-                            return RadioMode.Discoverable;
+                switch (state)
+                {
+                    case State.TurningOff:
+                    case State.Off:
+                        return RadioMode.PowerOff;
 
-                        case ScanMode.Connectable:
-                            return RadioMode.Connectable;
+                    default:
+                        switch (_adapter.ScanMode)
+                        {
+                            case ScanMode.ConnectableDiscoverable:
+                                return RadioMode.Discoverable;
 
-                        case ScanMode.None:
-                        default:
-                            return RadioMode.PowerOff;
-                    }
+                            case ScanMode.Connectable:
+                                return RadioMode.Connectable;
+
+                            case ScanMode.None:
+                            default:
+                                return RadioMode.PowerOff;
+                        }
+                }
             }
-        }
-
-        private void SetMode(RadioMode value)
-        {
-            switch (value)
+            set
             {
-                case RadioMode.PowerOff:
-                    _adapter.Disable();
-                    break;
+                switch (value)
+                {
+                    case RadioMode.PowerOff:
+                        _adapter.Disable();
+                        break;
 
-                default:
-                    // TODO: Determine if setting ScanMode is possible
-                    if (!_adapter.IsEnabled)
-                        _adapter.Enable();
+                    default:
+                        // TODO: Determine if setting ScanMode is possible
+                        if (!_adapter.IsEnabled)
+                            _adapter.Enable();
 
-                    break;
+                        break;
+                }
             }
         }
 
@@ -120,6 +129,10 @@ namespace InTheHand.Net.Bluetooth
             }
         }
 
+        public void Dispose()
+        {
+            Dispose(true);
+        }
 
         #endregion
     }

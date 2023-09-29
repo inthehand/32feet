@@ -11,6 +11,7 @@ using System;
 using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Devices.Bluetooth;
+using System.Collections.Generic;
 #if WinRT
 using System.Diagnostics;
 using System.Runtime.InteropServices;
@@ -18,11 +19,11 @@ using System.Runtime.InteropServices;
 
 namespace InTheHand.Net.Bluetooth
 {
-    partial class BluetoothDevicePicker
+    internal sealed class WindowsBluetoothDevicePicker : IBluetoothDevicePicker
     {
         private DevicePicker picker = new DevicePicker();
             
-        private async Task<BluetoothDeviceInfo> PlatformPickSingleDeviceAsync()
+        public async Task<BluetoothDeviceInfo> PickSingleDeviceAsync(List<ClassOfDevice> classOfDevices, bool requiresAuthentication)
         {
             Rect bounds = new Rect(0, 0, 0, 0);
             var window = Windows.UI.Core.CoreWindow.GetForCurrentThread();
@@ -41,7 +42,7 @@ namespace InTheHand.Net.Bluetooth
 #endif
             }
 
-            picker.Filter.SupportedDeviceSelectors.Add(BluetoothDevice.GetDeviceSelector());
+            picker.Filter.SupportedDeviceSelectors.Add(requiresAuthentication ? BluetoothDevice.GetDeviceSelectorFromPairingState(true) : BluetoothDevice.GetDeviceSelector());
             var deviceInfo = await picker.PickSingleDeviceAsync(bounds);
 
             if (deviceInfo == null)
@@ -50,7 +51,7 @@ namespace InTheHand.Net.Bluetooth
             var device = await BluetoothDevice.FromIdAsync(deviceInfo.Id);
             var access = await device.RequestAccessAsync();
 
-            return new BluetoothDeviceInfo(device);
+            return new WindowsBluetoothDeviceInfo(device);
         }
 
 #if WinRT

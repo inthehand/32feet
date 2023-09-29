@@ -2,7 +2,7 @@
 //
 // InTheHand.Net.Sockets.BluetoothDeviceInfo (WinRT)
 // 
-// Copyright (c) 2003-2022 In The Hand Ltd, All rights reserved.
+// Copyright (c) 2003-2023 In The Hand Ltd, All rights reserved.
 // This source code is licensed under the MIT License
 
 using InTheHand.Net.Bluetooth;
@@ -13,41 +13,32 @@ using Windows.Devices.Bluetooth;
 
 namespace InTheHand.Net.Sockets
 {
-    partial class BluetoothDeviceInfo
+    internal sealed class WindowsBluetoothDeviceInfo : BluetoothDeviceInfo
     {
         internal BluetoothDevice NativeDevice;
 
-        internal BluetoothDeviceInfo(BluetoothDevice device)
+        internal WindowsBluetoothDeviceInfo(BluetoothDevice device)
         {
             NativeDevice = device;
         }
 
-        public static implicit operator BluetoothDevice(BluetoothDeviceInfo device)
+        public static implicit operator BluetoothDevice(WindowsBluetoothDeviceInfo device)
         {
             return device.NativeDevice;
         }
 
-        public static implicit operator BluetoothDeviceInfo(BluetoothDevice device)
+        public static implicit operator WindowsBluetoothDeviceInfo(BluetoothDevice device)
         {
-            return new BluetoothDeviceInfo(device);
+            return new WindowsBluetoothDeviceInfo(device);
         }
 
-        BluetoothAddress GetDeviceAddress()
-        {
-            return NativeDevice.BluetoothAddress;
-        }
+        public override BluetoothAddress DeviceAddress { get => NativeDevice.BluetoothAddress; }
 
-        string GetDeviceName()
-        {
-            return NativeDevice.Name;
-        }
+        public override string DeviceName { get => NativeDevice.Name; }
 
-        ClassOfDevice GetClassOfDevice()
-        {
-            return (ClassOfDevice)NativeDevice.ClassOfDevice.RawValue;
-        }
+        public override ClassOfDevice ClassOfDevice { get => (ClassOfDevice)NativeDevice.ClassOfDevice.RawValue; }
 
-        async Task<IEnumerable<Guid>> PlatformGetRfcommServicesAsync(bool cached)
+        public override async Task<IEnumerable<Guid>> GetRfcommServicesAsync(bool cached)
         {
             List<Guid> services = new List<Guid>();
 
@@ -64,27 +55,8 @@ namespace InTheHand.Net.Sockets
             return services;
         }
 
-        IReadOnlyCollection<Guid> GetInstalledServices()
-        {
-            return new List<Guid>().AsReadOnly();
-        }
+        public override bool Connected { get => NativeDevice.ConnectionStatus == BluetoothConnectionStatus.Connected; }
 
-        void PlatformSetServiceState(Guid service, bool state)
-        {
-        }
-
-        bool GetConnected()
-        {
-            return NativeDevice.ConnectionStatus == BluetoothConnectionStatus.Connected;
-        }
-
-        bool GetAuthenticated()
-        {
-            return NativeDevice.DeviceInformation.Pairing.IsPaired;
-        }
-
-        void PlatformRefresh()
-        {
-        }
+        public override bool Authenticated { get => NativeDevice.DeviceInformation.Pairing.IsPaired; }
     }
 }

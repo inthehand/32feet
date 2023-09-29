@@ -2,23 +2,24 @@
 //
 // InTheHand.Net.Bluetooth.BluetoothDevicePicker (iOS)
 // 
-// Copyright (c) 2018-2022 In The Hand Ltd, All rights reserved.
+// Copyright (c) 2018-2023 In The Hand Ltd, All rights reserved.
 // This source code is licensed under the MIT License
 
 using ExternalAccessory;
 using Foundation;
 using InTheHand.Net.Sockets;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using UIKit;
 
 namespace InTheHand.Net.Bluetooth
 {
-    partial class BluetoothDevicePicker
+    internal sealed class ExternalAccessoryBluetoothDevicePicker : IBluetoothDevicePicker
     {
         NSObject connectionObserver;
 
-        private async Task<BluetoothDeviceInfo> PlatformPickSingleDeviceAsync()
+        public async Task<BluetoothDeviceInfo> PickSingleDeviceAsync(List<ClassOfDevice> classOfDevices, bool requiresAuthentication)
         {
             EAAccessoryManager.SharedAccessoryManager.RegisterForLocalNotifications();
 
@@ -94,7 +95,7 @@ namespace InTheHand.Net.Bluetooth
                 connectionObserver.Dispose();
             }
             
-            return await tcs.Task;
+            return new ExternalAccessoryBluetoothDeviceInfo(await tcs.Task);
         }
     }
 }

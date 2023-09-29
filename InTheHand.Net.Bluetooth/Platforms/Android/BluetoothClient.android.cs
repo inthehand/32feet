@@ -17,38 +17,41 @@ using System.Net.Sockets;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
+using static Android.Bluetooth.BluetoothClass;
 
 namespace InTheHand.Net.Sockets
 {
-    partial class BluetoothClient
+    internal sealed class AndroidBluetoothClient : IBluetoothClient
     {
         private BluetoothSocket _socket;
         private BluetoothRadio _radio;
 
-        private void PlatformInitialize()
+        public AndroidBluetoothClient()
         {
             _radio = BluetoothRadio.Default;
             if (_radio != null && _radio.Mode == RadioMode.PowerOff)
                 _radio.Mode = RadioMode.Connectable;
         }
 
-        internal BluetoothClient(BluetoothSocket socket)
+        internal AndroidBluetoothClient(BluetoothSocket socket) : this()
         {
-            PlatformInitialize();
             _socket = socket;
         }
 
-        IEnumerable<BluetoothDeviceInfo> GetPairedDevices()
+        public IEnumerable<BluetoothDeviceInfo> PairedDevices
         {
-            foreach(BluetoothDevice device in ((BluetoothAdapter)_radio).BondedDevices)
+            get
             {
-                yield return device;
-            }
+                foreach (BluetoothDevice device in ((BluetoothAdapter)_radio).BondedDevices)
+                {
+                    yield return new AndroidBluetoothDeviceInfo(device);
+                }
 
-            yield break;
+                yield break;
+            }
         }
 
-        IReadOnlyCollection<BluetoothDeviceInfo> PlatformDiscoverDevices(int maxDevices)
+        public IReadOnlyCollection<BluetoothDeviceInfo> DiscoverDevices(int maxDevices)
         {
             if (InTheHand.AndroidActivity.CurrentActivity == null)
                 throw new NotSupportedException("CurrentActivity was not detected or specified");
@@ -72,9 +75,10 @@ namespace InTheHand.Net.Sockets
 
             receiver.DeviceFound += (s, e) =>
             {
-                if (!devices.Contains(e))
+                var bdi = new AndroidBluetoothDeviceInfo(e);
+                if (!devices.Contains(bdi))
                 {
-                    devices.Add(e);
+                    devices.Add(bdi);
 
                     if(devices.Count == maxDevices)
                     {
@@ -98,7 +102,7 @@ namespace InTheHand.Net.Sockets
         }
 
 #if NET6_0_OR_GREATER
-        async IAsyncEnumerable<BluetoothDeviceInfo> PlatformDiscoverDevicesAsync([EnumeratorCancellation] CancellationToken cancellationToken)
+        public async IAsyncEnumerable<BluetoothDeviceInfo> DiscoverDevicesAsync([EnumeratorCancellation] CancellationToken cancellationToken)
         {
             if (InTheHand.AndroidActivity.CurrentActivity == null)
                 throw new NotSupportedException("CurrentActivity was not detected or specified");
@@ -122,15 +126,16 @@ namespace InTheHand.Net.Sockets
 
             receiver.DeviceFound += (s, e) =>
             {
+                var bdi = new AndroidBluetoothDeviceInfo(e);
                 if (cancellationToken.IsCancellationRequested)
                 {
                     ((BluetoothAdapter)_radio).CancelDiscovery();
                 }
                 else
                 {
-                    if (!devices.Contains(e))
+                    if (!devices.Contains(bdi))
                     {
-                        devices.Add(e);
+                        devices.Add(bdi);
                         waitable.Set();
                     }
                 }
@@ -161,7 +166,7 @@ namespace InTheHand.Net.Sockets
         }
 #endif
 
-        void PlatformConnect(BluetoothAddress address, Guid service)
+        public void Connect(BluetoothAddress address, Guid service)
         {
             var nativeDevice = ((BluetoothAdapter)_radio).GetRemoteDevice(address.ToString("C"));
 
@@ -199,12 +204,20 @@ namespace InTheHand.Net.Sockets
             }
         }
 
-        async Task PlatformConnectAsync(BluetoothAddress address, Guid service)
+        public void Connect(BluetoothEndPoint remoteEP)
         {
-            PlatformConnect(address, service);
+            if (remoteEP == null)
+                throw new ArgumentNullException(nameof(remoteEP));
+
+            Connect(remoteEP.Address, remoteEP.Service);
         }
 
-            void PlatformClose()
+        public async Task ConnectAsync(BluetoothAddress address, Guid service)
+        {
+            Connect(address, service);
+        }
+
+        public void Close()
         {
             if (_socket is object)
             {
@@ -220,60 +233,38 @@ namespace InTheHand.Net.Sockets
 
         private bool _authenticate;
 
-        bool GetAuthenticate()
+        public bool Authenticate { get => _authenticate; set => _authenticate = value; }
+
+        Socket IBluetoothClient.Client { get => throw new PlatformNotSupportedException(); }
+
+        public bool Connected
         {
-            return _authenticate;
+            get
+            {
+                return _socket is object && _socket.IsConnected;
+            }
         }
 
-        void SetAuthenticate(bool value)
+        private bool _encrypt;
+
+        public bool Encrypt { get => _encrypt; set => _encrypt = value; }
+
+        TimeSpan IBluetoothClient.InquiryLength { get => TimeSpan.Zero; set => throw new PlatformNotSupportedException(); }
+
+        string IBluetoothClient.RemoteMachineName
         {
-            _authenticate = value;
+            get
+            {
+                if (_socket is object && _socket.IsConnected)
+                    return _socket.RemoteDevice.Name;
+
+                return null;
+            }
         }
 
-        Socket GetClient()
+        public NetworkStream GetStream()
         {
-            throw new PlatformNotSupportedException();
-        }
-
-        bool GetConnected()
-        {
-            return _socket is object && _socket.IsConnected;
-        }
-
-        private bool _encrypt = false;
-
-        bool GetEncrypt()
-        {
-
-            return _encrypt;
-        }
-
-        void SetEncrypt(bool value)
-        {
-            _encrypt = value;
-        }
-
-        TimeSpan GetInquiryLength()
-        {
-            return TimeSpan.Zero;
-        }
-
-        void SetInquiryLength(TimeSpan length)
-        {
-
-        }
-
-        public string GetRemoteMachineName()
-        {
-            if(_socket is object && _socket.IsConnected)
-                return _socket.RemoteDevice.Name;
-
-            return null;
-        }
-
-        NetworkStream PlatformGetStream()
-        {
-            if(Connected)
+            if (Connected)
                 return new AndroidNetworkStream(_socket.InputStream, _socket.OutputStream);
 
             return null;
@@ -295,7 +286,11 @@ namespace InTheHand.Net.Sockets
         }
 
         // This code added to correctly implement the disposable pattern.
-        
-#endregion
+        public void Dispose()
+        {
+            // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
+            Dispose(true);
+        }
+        #endregion
     }
 }

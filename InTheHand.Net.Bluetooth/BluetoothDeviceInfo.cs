@@ -17,48 +17,29 @@ namespace InTheHand.Net.Sockets
     /// Provides information about an available device obtained by the client during device discovery.
     /// </summary>
     [DebuggerDisplay("({DeviceAddress.ToString(\"C\")}) {DeviceName}")]
-    public sealed partial class BluetoothDeviceInfo : IEquatable<BluetoothDeviceInfo>
+    public abstract class BluetoothDeviceInfo : IEquatable<BluetoothDeviceInfo>
     {
+        internal BluetoothDeviceInfo() { }
+
         /// <summary>
         /// Forces the system to refresh the device information.
         /// </summary>
-        public void Refresh()
-        {
-            PlatformRefresh();
-        }
+        public virtual void Refresh() { }
 
         /// <summary>
         /// Gets the device identifier.
         /// </summary>
-        public BluetoothAddress DeviceAddress
-        {
-            get
-            {
-                return GetDeviceAddress();
-            }
-        }
+        public virtual BluetoothAddress DeviceAddress { get => BluetoothAddress.None; }
 
         /// <summary>
         /// Gets the name of a device.
         /// </summary>
-        public string DeviceName
-        {
-            get
-            {
-                return GetDeviceName();
-            }
-        }
+        public virtual string DeviceName { get => string.Empty; }
 
         /// <summary>
         /// Returns the Class of Device of the remote device.
         /// </summary>
-        public ClassOfDevice ClassOfDevice
-        {
-            get
-            {
-                return GetClassOfDevice();
-            }
-        }
+        public virtual ClassOfDevice ClassOfDevice { get => (ClassOfDevice)0; }
 
         /// <premliminary/>
         /// <summary>
@@ -66,44 +47,23 @@ namespace InTheHand.Net.Sockets
         /// </summary>
         /// <param name="cached">If true and supported on the runtime platform return locally cached devices without doing an SDP request.</param>
         /// <returns>All available Rfcomm service UUIDs on the remote device.</returns>
-        public Task<IEnumerable<Guid>> GetRfcommServicesAsync(bool cached = true)
-        {
-            return PlatformGetRfcommServicesAsync(cached);
-        }
+        public virtual Task<IEnumerable<Guid>> GetRfcommServicesAsync(bool cached = true) => Task.FromException<IEnumerable<Guid>>(new PlatformNotSupportedException());
 
         /// <summary>
         /// Returns a list of services which are already installed for use on the calling machine.
         /// </summary>
-        public IReadOnlyCollection<Guid> InstalledServices
-        {
-            get
-            {
-                return GetInstalledServices();
-            }
-        }
+        public virtual IReadOnlyCollection<Guid> InstalledServices { get => throw new PlatformNotSupportedException(); }
 
         /// <summary>
         /// Specifies whether the device is connected.
         /// </summary>
-        public bool Connected
-        {
-            get
-            {
-                return GetConnected();
-            }
-        }
+        public virtual bool Connected { get => false; }
 
         /// <summary>
         /// Specifies whether the device is authenticated, paired, or bonded.
         /// All authenticated devices are remembered.
         /// </summary>
-        public bool Authenticated
-        {
-            get
-            {
-                return GetAuthenticated();
-            }
-        }
+        public virtual bool Authenticated { get => false; }
 
         /// <summary>
         /// Enables or disables services for a Bluetooth device.
@@ -111,10 +71,7 @@ namespace InTheHand.Net.Sockets
         /// <remarks>Only applies to Windows platform.</remarks>
         /// <param name="service"></param>
         /// <param name="state"></param>
-        public void SetServiceState(Guid service, bool state)
-        {
-            PlatformSetServiceState(service, state);
-        }
+        public virtual void SetServiceState(Guid service, bool state) => throw new PlatformNotSupportedException();
 
         /// <summary>
         /// Compares two BluetoothDeviceInfo instances for equality.

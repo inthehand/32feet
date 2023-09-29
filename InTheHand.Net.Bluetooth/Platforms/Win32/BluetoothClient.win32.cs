@@ -2,7 +2,7 @@
 //
 // InTheHand.Net.Bluetooth.BluetoothClient (Win32)
 // 
-// Copyright (c) 2003-2022 In The Hand Ltd, All rights reserved.
+// Copyright (c) 2003-2023 In The Hand Ltd, All rights reserved.
 // This source code is licensed under the MIT License
 
 using InTheHand.Net.Bluetooth.Win32;
@@ -16,11 +16,16 @@ using System.Threading.Tasks;
 
 namespace InTheHand.Net.Sockets
 {
-    partial class BluetoothClient
+    internal sealed class Win32BluetoothClient : IBluetoothClient
     {
+        internal const AddressFamily AddressFamilyBluetooth = (AddressFamily)32;
+        private const SocketOptionLevel SocketOptionLevelRFComm = (SocketOptionLevel)0x03;
+        private const SocketOptionName SocketOptionNameAuthenticate = unchecked((SocketOptionName)0x80000001);
+        private const SocketOptionName SocketOptionNameEncrypt = (SocketOptionName)0x00000002;
+
         private Socket _socket;
 
-        private void PlatformInitialize()
+        public Win32BluetoothClient()
         {
             if (NativeMethods.IsRunningOnMono())
             {
@@ -32,39 +37,42 @@ namespace InTheHand.Net.Sockets
             }
         }
 
-        internal BluetoothClient(Socket s)
+        internal Win32BluetoothClient(Socket s)
         {
             _socket = s;
         }
 
-        IEnumerable<BluetoothDeviceInfo> GetPairedDevices()
+        public IEnumerable<BluetoothDeviceInfo> PairedDevices
         {
-            BLUETOOTH_DEVICE_SEARCH_PARAMS search = BLUETOOTH_DEVICE_SEARCH_PARAMS.Create();
-            search.cTimeoutMultiplier = 8;
-            search.fReturnAuthenticated = true;
-            search.fReturnRemembered = false;
-            search.fReturnUnknown = false;
-            search.fReturnConnected = false;
-            search.fIssueInquiry = false;
-
-            BLUETOOTH_DEVICE_INFO device = BLUETOOTH_DEVICE_INFO.Create();
-            IntPtr searchHandle = NativeMethods.BluetoothFindFirstDevice(ref search, ref device);
-            if (searchHandle != IntPtr.Zero)
+            get
             {
-                yield return new BluetoothDeviceInfo(device);
+                BLUETOOTH_DEVICE_SEARCH_PARAMS search = BLUETOOTH_DEVICE_SEARCH_PARAMS.Create();
+                search.cTimeoutMultiplier = 8;
+                search.fReturnAuthenticated = true;
+                search.fReturnRemembered = false;
+                search.fReturnUnknown = false;
+                search.fReturnConnected = false;
+                search.fIssueInquiry = false;
 
-                while (NativeMethods.BluetoothFindNextDevice(searchHandle, ref device))
+                BLUETOOTH_DEVICE_INFO device = BLUETOOTH_DEVICE_INFO.Create();
+                IntPtr searchHandle = NativeMethods.BluetoothFindFirstDevice(ref search, ref device);
+                if (searchHandle != IntPtr.Zero)
                 {
-                    yield return new BluetoothDeviceInfo(device);
+                    yield return new Win32BluetoothDeviceInfo(device);
+
+                    while (NativeMethods.BluetoothFindNextDevice(searchHandle, ref device))
+                    {
+                        yield return new Win32BluetoothDeviceInfo(device);
+                    }
+
+                    NativeMethods.BluetoothFindDeviceClose(searchHandle);
                 }
 
-                NativeMethods.BluetoothFindDeviceClose(searchHandle);
+                yield break;
             }
-
-            yield break;
         }
 
-        IReadOnlyCollection<BluetoothDeviceInfo> PlatformDiscoverDevices(int maxDevices)
+        public IReadOnlyCollection<BluetoothDeviceInfo> DiscoverDevices(int maxDevices)
         {
             List<BluetoothDeviceInfo> devices = new List<BluetoothDeviceInfo>();
 
@@ -74,19 +82,19 @@ namespace InTheHand.Net.Sockets
             search.fReturnUnknown = true;
             search.fReturnConnected = true;
             search.fIssueInquiry = true;
-            search.cTimeoutMultiplier = Convert.ToByte(inquiryLength.TotalSeconds / 1.28);
+            search.cTimeoutMultiplier = Convert.ToByte(InquiryLength.TotalSeconds / 1.28);
             
             BLUETOOTH_DEVICE_INFO device = BLUETOOTH_DEVICE_INFO.Create();
             IntPtr searchHandle = NativeMethods.BluetoothFindFirstDevice(ref search, ref device);
             if(searchHandle != IntPtr.Zero)
             {
                 NativeMethods.BluetoothGetDeviceInfo(IntPtr.Zero, ref device);
-                devices.Add(new BluetoothDeviceInfo(device));
+                devices.Add(new Win32BluetoothDeviceInfo(device));
 
                 while (NativeMethods.BluetoothFindNextDevice(searchHandle, ref device) && devices.Count < maxDevices)
                 {
                     NativeMethods.BluetoothGetDeviceInfo(IntPtr.Zero, ref device);
-                    devices.Add(new BluetoothDeviceInfo(device));
+                    devices.Add(new Win32BluetoothDeviceInfo(device));
                 }
 
                 NativeMethods.BluetoothFindDeviceClose(searchHandle);
@@ -104,14 +112,14 @@ namespace InTheHand.Net.Sockets
             {
                 if (device.LastSeen < DateTime.Now.AddMinutes(-1))
                 {
-                    devices.Remove(new BluetoothDeviceInfo(device));
+                    devices.Remove(new Win32BluetoothDeviceInfo(device));
                 }
 
                 while (NativeMethods.BluetoothFindNextDevice(searchHandle, ref device))
                 {
                     if (device.LastSeen < DateTime.Now.AddMinutes(-1))
                     {
-                        devices.Remove(new BluetoothDeviceInfo(device));
+                        devices.Remove(new Win32BluetoothDeviceInfo(device));
                     }
                 }
 
@@ -122,13 +130,18 @@ namespace InTheHand.Net.Sockets
         }
 
 #if NET6_0_OR_GREATER
-        async IAsyncEnumerable<BluetoothDeviceInfo> PlatformDiscoverDevicesAsync([EnumeratorCancellation]  CancellationToken cancellationToken)
+        public async IAsyncEnumerable<BluetoothDeviceInfo> DiscoverDevicesAsync([EnumeratorCancellation]  CancellationToken cancellationToken)
         {
+            foreach(var device in DiscoverDevices(255))
+            {
+                yield return device;
+            }
+
             yield break;
         }
 #endif
 
-        void PlatformConnect(BluetoothAddress address, Guid service)
+        public void Connect(BluetoothAddress address, Guid service)
         {
             var ep = new BluetoothEndPoint(address, service);
 
@@ -234,7 +247,7 @@ namespace InTheHand.Net.Sockets
             return Task.Factory.FromAsync(BeginConnect, EndConnect, remoteEP, null);
         }
 
-        Task PlatformConnectAsync(BluetoothAddress address, Guid service)
+        public Task ConnectAsync(BluetoothAddress address, Guid service)
         {
             if (NativeMethods.IsRunningOnMono())
                 throw new PlatformNotSupportedException("Async Socket operations not currently supported on Mono");
@@ -242,7 +255,7 @@ namespace InTheHand.Net.Sockets
             return Task.Factory.FromAsync(BeginConnect, EndConnect, address, service, null);
         }
 
-        void PlatformClose()
+        public void Close()
         {
             if(_socket != null && _socket.Connected)
                 _socket.Close();
@@ -250,93 +263,87 @@ namespace InTheHand.Net.Sockets
 
         private bool _authenticate;
 
-        bool GetAuthenticate()
-        {
-            return _authenticate;
+        public bool Authenticate 
+        { 
+            get => _authenticate; 
+            set 
+            {
+                if (_authenticate != value)
+                {
+                    _socket.SetSocketOption(SocketOptionLevelRFComm, SocketOptionNameAuthenticate, value);
+                    _authenticate = value;
+                }
+            } 
         }
 
-        void SetAuthenticate(bool value)
+        public Socket Client { get => _socket; }
+
+        public bool Connected
         {
-            if (_authenticate != value)
+            get
             {
-                _socket.SetSocketOption(SocketOptionLevelRFComm, SocketOptionNameAuthenticate, value);
-                _authenticate = value;
+                if (_socket == null)
+                    return false;
+
+                if (NativeMethods.IsRunningOnMono())
+                    return ((Win32Socket)_socket).Connected;
+
+                return _socket.Connected;
             }
         }
 
-        Socket GetClient()
-        {
-            return _socket;
-        }
-
-        bool GetConnected()
-        {
-            if (_socket == null)
-                return false;
-
-            if (NativeMethods.IsRunningOnMono())
-                return ((Win32Socket)_socket).Connected;
-
-            return _socket.Connected;
-        }
-
         private bool _encrypt = false;
-
-        bool GetEncrypt()
-        {
-            return _encrypt;
-        }
-
-        void SetEncrypt(bool value)
-        {
-            if (_encrypt != value)
+        public bool Encrypt 
+        { 
+            get => _encrypt;
+            set 
             {
-                _socket.SetSocketOption(SocketOptionLevelRFComm, SocketOptionNameEncrypt, value ? 1 : 0);
-                _encrypt = value;
+                if (_encrypt != value)
+                {
+                    _socket.SetSocketOption(SocketOptionLevelRFComm, SocketOptionNameEncrypt, value ? 1 : 0);
+                    _encrypt = value;
+                }
             }
         }
 
         //length of time for query
-        private TimeSpan inquiryLength = new TimeSpan(0, 0, 10);
-
-        TimeSpan GetInquiryLength()
-        {
-            return inquiryLength;
+        private TimeSpan _inquiryLength = new TimeSpan(0, 0, 10);
+        public TimeSpan InquiryLength 
+        { 
+            get => _inquiryLength; 
+            set 
+            {
+                if ((value.TotalSeconds > 0) && (value.TotalSeconds <= 61))
+                {
+                    _inquiryLength = value;
+                }
+                else
+                {
+                    throw new ArgumentOutOfRangeException(nameof(InquiryLength),
+                        "InquiryLength must be a positive TimeSpan between 0 and 61 seconds.");
+                }
+            } 
         }
 
-        void SetInquiryLength(TimeSpan length)
+
+        string IBluetoothClient.RemoteMachineName
         {
-            if ((length.TotalSeconds > 0) && (length.TotalSeconds <= 61))
+            get
             {
-                inquiryLength = length;
-            }
-            else
-            {
-                throw new ArgumentOutOfRangeException("length",
-                    "InquiryLength must be a positive TimeSpan between 0 and 61 seconds.");
+                if (Connected)
+                {
+                    var remote = _socket.RemoteEndPoint as BluetoothEndPoint;
+                    var info = BLUETOOTH_DEVICE_INFO.Create();
+                    info.Address = remote.Address;
+                    NativeMethods.BluetoothGetDeviceInfo(IntPtr.Zero, ref info);
+                    return info.szName;
+                }
+
+                return string.Empty;
             }
         }
 
-        internal const AddressFamily AddressFamilyBluetooth = (AddressFamily)32;
-        private const SocketOptionLevel SocketOptionLevelRFComm = (SocketOptionLevel)0x03;
-        private const SocketOptionName SocketOptionNameAuthenticate = unchecked((SocketOptionName)0x80000001);
-        private const SocketOptionName SocketOptionNameEncrypt = (SocketOptionName)0x00000002;
-
-        string GetRemoteMachineName()
-        {
-            if (GetConnected())
-            {
-                var remote = _socket.RemoteEndPoint as BluetoothEndPoint;
-                var info = BLUETOOTH_DEVICE_INFO.Create();
-                info.Address = remote.Address;
-                NativeMethods.BluetoothGetDeviceInfo(IntPtr.Zero, ref info);
-                return info.szName;
-            }
-
-            return string.Empty;
-        }
-
-        NetworkStream PlatformGetStream()
+        public NetworkStream GetStream()
         {
             if (Connected)
             {
@@ -368,6 +375,12 @@ namespace InTheHand.Net.Sockets
 
                 disposedValue = true;
             }
+        }
+
+        public void Dispose()
+        {
+            // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
+            Dispose(true);
         }
         #endregion
     }

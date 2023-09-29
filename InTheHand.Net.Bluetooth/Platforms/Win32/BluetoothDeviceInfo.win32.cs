@@ -2,7 +2,7 @@
 //
 // InTheHand.Net.Sockets.BluetoothDeviceInfo (Win32)
 // 
-// Copyright (c) 2003-2022 In The Hand Ltd, All rights reserved.
+// Copyright (c) 2003-2023 In The Hand Ltd, All rights reserved.
 // This source code is licensed under the MIT License
 
 using InTheHand.Net.Bluetooth;
@@ -17,11 +17,11 @@ using System.Threading.Tasks;
 
 namespace InTheHand.Net.Sockets
 {
-    partial class BluetoothDeviceInfo
+    internal sealed class Win32BluetoothDeviceInfo : BluetoothDeviceInfo
     {
         private BLUETOOTH_DEVICE_INFO _info;
 
-        internal BluetoothDeviceInfo(BLUETOOTH_DEVICE_INFO info)
+        internal Win32BluetoothDeviceInfo(BLUETOOTH_DEVICE_INFO info)
         {
             _info = info;
         }
@@ -30,29 +30,20 @@ namespace InTheHand.Net.Sockets
         /// Initializes an instance of the BluetoothDeviceInfo class for the device with the given address.
         /// </summary>
         /// <param name="address">The BluetoothAddress.</param>
-        public BluetoothDeviceInfo(BluetoothAddress address)
+        public Win32BluetoothDeviceInfo(BluetoothAddress address)
         {
             _info = BLUETOOTH_DEVICE_INFO.Create();
             _info.Address = address;
-            PlatformRefresh();
+            Refresh();
         }
 
-        BluetoothAddress GetDeviceAddress()
-        {
-            return _info.Address;
-        }
+        public override BluetoothAddress DeviceAddress { get => _info.Address; }
 
-        string GetDeviceName()
-        {
-            return _info.szName.TrimEnd();
-        }
+        public override string DeviceName { get => _info.szName.TrimEnd(); }
 
-        ClassOfDevice GetClassOfDevice()
-        {
-            return (ClassOfDevice)_info.ulClassofDevice;
-        }
+        public override ClassOfDevice ClassOfDevice { get => (ClassOfDevice)_info.ulClassofDevice; }
 
-        async Task<IEnumerable<Guid>> PlatformGetRfcommServicesAsync(bool cached)
+        public override async Task<IEnumerable<Guid>> GetRfcommServicesAsync(bool cached)
         {
             List<Guid> services = new List<Guid>();
             WSAQUERYSET qs = new WSAQUERYSET();
@@ -81,7 +72,7 @@ namespace InTheHand.Net.Sockets
                         System.Diagnostics.Debug.WriteLine(qsResult.lpszServiceInstanceName);
                         var blobLength = Marshal.ReadInt32(qsResult.lpBlob);
                         byte[] blob = new byte[blobLength];
-                        Marshal.Copy(Marshal.ReadIntPtr(qsResult.lpBlob, 4), blob, 0, blobLength);
+                        Marshal.Copy(Marshal.ReadIntPtr(qsResult.lpBlob, IntPtr.Size), blob, 0, blobLength);
 
                         // WSALookupServiceNext only returns empty service uuids even with the right flags set
                         // So we request the raw SDP record in the blob and parse it
@@ -113,41 +104,38 @@ namespace InTheHand.Net.Sockets
             return services;
         }
 
-            IReadOnlyCollection<Guid> GetInstalledServices()
+        public override IReadOnlyCollection<Guid> InstalledServices
         {
-            int serviceCount = 0;
-            int result = NativeMethods.BluetoothEnumerateInstalledServices(IntPtr.Zero, ref _info, ref serviceCount, null);
-            byte[] services = new byte[serviceCount * 16];
-            result = NativeMethods.BluetoothEnumerateInstalledServices(IntPtr.Zero, ref _info, ref serviceCount, services);
-            if (result < 0)
-                return new Guid[0];
-
-            List<Guid> foundServices = new List<Guid>();
-            byte[] buffer = new byte[16];
-
-            for (int s = 0; s < serviceCount; s++)
+            get
             {
-                Buffer.BlockCopy(services, s * 16, buffer, 0, 16);
-                foundServices.Add(new Guid(buffer));
-            }
+                int serviceCount = 0;
+                int result = NativeMethods.BluetoothEnumerateInstalledServices(IntPtr.Zero, ref _info, ref serviceCount, null);
+                byte[] services = new byte[serviceCount * 16];
+                result = NativeMethods.BluetoothEnumerateInstalledServices(IntPtr.Zero, ref _info, ref serviceCount, services);
+                if (result < 0)
+                    return new Guid[0];
 
-            return foundServices.AsReadOnly();
+                List<Guid> foundServices = new List<Guid>();
+                byte[] buffer = new byte[16];
+
+                for (int s = 0; s < serviceCount; s++)
+                {
+                    Buffer.BlockCopy(services, s * 16, buffer, 0, 16);
+                    foundServices.Add(new Guid(buffer));
+                }
+
+                return foundServices.AsReadOnly();
+            }
         }
 
-        void PlatformSetServiceState(Guid service, bool state)
+        public override void SetServiceState(Guid service, bool state)
         {
             int result = NativeMethods.BluetoothSetServiceState(IntPtr.Zero, ref _info, ref service, state ? 1u : 0);
         }
 
-        bool GetConnected()
-        {
-            return _info.fConnected;
-        }
+        public override bool Connected { get => _info.fConnected; }
 
-        bool GetAuthenticated()
-        {
-            return _info.fAuthenticated;
-        }
+        public override bool Authenticated { get => _info.fAuthenticated; }
 
         /// <summary>
         /// Specifies whether the device is a remembered device.
@@ -162,7 +150,7 @@ namespace InTheHand.Net.Sockets
             } 
         }
 
-        void PlatformRefresh()
+        public override void Refresh()
         {
             NativeMethods.BluetoothGetDeviceInfo(IntPtr.Zero, ref _info);
         }

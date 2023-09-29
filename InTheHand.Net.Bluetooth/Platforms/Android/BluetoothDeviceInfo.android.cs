@@ -20,11 +20,11 @@ using System.Threading.Tasks;
 
 namespace InTheHand.Net.Sockets
 {
-    partial class BluetoothDeviceInfo
+    internal sealed class AndroidBluetoothDeviceInfo : BluetoothDeviceInfo
     {
         private readonly BluetoothDevice _device;
 
-        internal BluetoothDeviceInfo(BluetoothDevice device)
+        internal AndroidBluetoothDeviceInfo(BluetoothDevice device)
         {
             if (device is null)
                 throw new ArgumentNullException(nameof(device));
@@ -32,48 +32,45 @@ namespace InTheHand.Net.Sockets
             _device = device;
         }
 
-        public static implicit operator BluetoothDevice(BluetoothDeviceInfo deviceInfo)
+        public static implicit operator BluetoothDevice(AndroidBluetoothDeviceInfo deviceInfo)
         {
             return deviceInfo._device;
         }
 
-        public static implicit operator BluetoothDeviceInfo(BluetoothDevice device)
+        public static implicit operator AndroidBluetoothDeviceInfo(BluetoothDevice device)
         {
-            return new BluetoothDeviceInfo(device);
+            return new AndroidBluetoothDeviceInfo(device);
         }
 
-        BluetoothAddress GetDeviceAddress()
-        {
-            return BluetoothAddress.Parse(_device.Address);
-        }
+        public override BluetoothAddress DeviceAddress { get => BluetoothAddress.Parse(_device.Address); }
 
-        string GetDeviceName()
-        {
-            return _device.Name;
-        }
+        public override string DeviceName { get => _device.Name; }
 
         private ClassOfDevice _cod;
-        ClassOfDevice GetClassOfDevice()
+        public override ClassOfDevice ClassOfDevice
         {
-            if (_cod == 0)
+            get
             {
-                _cod = ClassOfDeviceHelper.ToClassOfDevice(_device.BluetoothClass);
-            }
+                if (_cod == 0)
+                {
+                    _cod = ClassOfDeviceHelper.ToClassOfDevice(_device.BluetoothClass);
+                }
 
-            return _cod;
+                return _cod;
+            }
         }
 
         // WIP
         private Guid UUIDToGuid(UUID uuid)
         {
             byte[] bytes = new byte[16];
-            BitConverter.GetBytes(uuid.MostSignificantBits).CopyTo(bytes, 0); 
+            BitConverter.GetBytes(uuid.MostSignificantBits).CopyTo(bytes, 0);
             BitConverter.GetBytes(uuid.LeastSignificantBits).CopyTo(bytes, 8);
 
             return new Guid(bytes);
         }
 
-        async Task<IEnumerable<Guid>> PlatformGetRfcommServicesAsync(bool cached)
+        public override async Task<IEnumerable<Guid>> GetRfcommServicesAsync(bool cached)
         {
             if (cached)
             {
@@ -104,30 +101,16 @@ namespace InTheHand.Net.Sockets
             }
         }
 
-        IReadOnlyCollection<Guid> GetInstalledServices()
+        public override bool Connected
         {
-            return new List<Guid>().AsReadOnly();
+            get
+            {
+                Method m = _device.Class.GetMethod("isConnected", null);
+                bool connected = (bool)m.Invoke(_device, null);
+                return connected;
+            }
         }
 
-        void PlatformSetServiceState(Guid service, bool state)
-        {
-            throw new PlatformNotSupportedException();
-        }
-
-        bool GetConnected()
-        {
-            Method m = _device.Class.GetMethod("isConnected", null);
-            bool connected = (bool)m.Invoke(_device, null);
-            return connected;
-        }
-
-        bool GetAuthenticated()
-        {
-            return _device.BondState == Bond.Bonded;
-        }
-
-        void PlatformRefresh()
-        {
-        }
+        public override bool Authenticated {  get => _device.BondState == Bond.Bonded; }
     }
 }

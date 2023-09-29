@@ -15,26 +15,26 @@ using Linux.Bluetooth.Extensions;
 
 namespace InTheHand.Net.Sockets
 {
-    partial class BluetoothDeviceInfo
+    internal sealed class LinuxBluetoothDeviceInfo : BluetoothDeviceInfo
     {
         private Device _device;
 
-        internal BluetoothDeviceInfo(Device device)
+        internal LinuxBluetoothDeviceInfo(Device device)
         {
             _device = device;
         }
 
-        public static implicit operator Device(BluetoothDeviceInfo deviceInfo)
+        public static implicit operator Device(LinuxBluetoothDeviceInfo deviceInfo)
         {
             return deviceInfo._device;
         }
 
-        public static implicit operator BluetoothDeviceInfo(Device device)
+        public static implicit operator LinuxBluetoothDeviceInfo(Device device)
         {
-            return new BluetoothDeviceInfo(device);
+            return new LinuxBluetoothDeviceInfo(device);
         }
 
-        public BluetoothDeviceInfo(BluetoothAddress address)
+        public LinuxBluetoothDeviceInfo(BluetoothAddress address)
         {
         }
 
@@ -54,7 +54,7 @@ namespace InTheHand.Net.Sockets
 
         private void OnPropertyChanges(Tmds.DBus.PropertyChanges propertyChanges)
         {
-            foreach(var change in propertyChanges.Changed)
+            foreach (var change in propertyChanges.Changed)
             {
                 Console.WriteLine($"{change.Key} {change.Value}");
                 //TODO - for properties we use update the cached values
@@ -62,23 +62,12 @@ namespace InTheHand.Net.Sockets
         }
 
         BluetoothAddress _address;
-        BluetoothAddress GetDeviceAddress()
-        {
-            return _address;
-        }
+        public override BluetoothAddress DeviceAddress { get => _address; }
 
         string _name = string.Empty;
-        string GetDeviceName()
-        {
-            return _name;
-        }
+        public override string DeviceName { get => _name; }
 
-        ClassOfDevice GetClassOfDevice()
-        {
-            return (ClassOfDevice)0;
-        }
-
-        async Task<IEnumerable<Guid>> PlatformGetRfcommServicesAsync(bool cached)
+        public override async Task<IEnumerable<Guid>> GetRfcommServicesAsync(bool cached)
         {
             List<Guid> services = new List<Guid>();
             var uuids = await _device.GetUUIDsAsync();
@@ -90,28 +79,13 @@ namespace InTheHand.Net.Sockets
             return services;
         }
 
-            IReadOnlyCollection<Guid> GetInstalledServices()
-        {
-            return new List<Guid>().AsReadOnly();
-        }
-
-        void PlatformSetServiceState(Guid service, bool state)
-        {
-        }
-
         private bool _connected;
-        bool GetConnected()
-        {
-            return _connected;
-        }
+        public override bool Connected { get =>  _connected; }
 
         private bool _authenticated;
-        bool GetAuthenticated()
-        {
-            return _authenticated;
-        }
+        public override bool Authenticated {  get => _authenticated; }
 
-        void PlatformRefresh()
+        public override void Refresh()
         {
             Init();
         }

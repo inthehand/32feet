@@ -6,22 +6,29 @@
 // This source code is licensed under the MIT License
 
 using InTheHand.Net.Bluetooth;
+using InTheHand.Net.Bluetooth.Sdp;
 using System;
 using Windows.Devices.Bluetooth.Rfcomm;
 using Windows.Networking.Sockets;
 
 namespace InTheHand.Net.Sockets
 {
-    partial class BluetoothListener
+    internal sealed class WindowsBluetoothListener : IBluetoothListener
     {
         private RfcommServiceProvider provider;
         private StreamSocketListener listener;
         private System.Threading.EventWaitHandle listenHandle = new System.Threading.EventWaitHandle(false, System.Threading.EventResetMode.AutoReset);
         private BluetoothClient currentClient = null;
+        public bool Active { get; private set; }
 
-        void PlatformStart()
+        public ServiceClass ServiceClass { get; set; }
+        public string ServiceName { get; set; }
+        public ServiceRecord ServiceRecord { get; set; }
+        public Guid ServiceUuid { get; set; }
+
+        public void Start()
         {
-            provider = RfcommServiceProvider.CreateAsync(RfcommServiceId.FromUuid(this.serviceUuid)).AsTask().GetAwaiter().GetResult();
+            provider = RfcommServiceProvider.CreateAsync(RfcommServiceId.FromUuid(ServiceUuid)).AsTask().GetAwaiter().GetResult();
             listener = new StreamSocketListener();
             listener.ConnectionReceived += Listener_ConnectionReceived;
             listener.BindServiceNameAsync(provider.ServiceId.AsString(), SocketProtectionLevel.BluetoothEncryptionAllowNullAuthentication).AsTask().GetAwaiter().GetResult();
@@ -32,11 +39,11 @@ namespace InTheHand.Net.Sockets
         private void Listener_ConnectionReceived(StreamSocketListener sender, StreamSocketListenerConnectionReceivedEventArgs args)
         {
             pending = true;
-            currentClient = new BluetoothClient(args.Socket);
+            currentClient = new BluetoothClient(new WindowsBluetoothClient(args.Socket));
             listenHandle.Set();
         }
 
-        void PlatformStop()
+        public void Stop()
         {
             if(Active)
             {
@@ -58,12 +65,12 @@ namespace InTheHand.Net.Sockets
         }
 
         private bool pending = false;
-        bool PlatformPending()
+        public bool Pending()
         {
             return pending;
         }
 
-        BluetoothClient PlatformAcceptBluetoothClient()
+        public BluetoothClient AcceptBluetoothClient()
         {
             if(listener != null)
             {

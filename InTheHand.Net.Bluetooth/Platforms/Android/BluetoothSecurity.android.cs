@@ -11,11 +11,11 @@ using System;
 
 namespace InTheHand.Net.Bluetooth
 {
-    partial class BluetoothSecurity
+    internal sealed class AndroidBluetoothSecurity : IBluetoothSecurity
     {
         private static BluetoothAdapter _adapter;
 
-        static BluetoothSecurity()
+        static AndroidBluetoothSecurity()
         {
             BluetoothManager manager = null;
 
@@ -27,7 +27,7 @@ namespace InTheHand.Net.Bluetooth
             _adapter = manager.Adapter;
         }
 
-        static bool PlatformPairRequest(BluetoothAddress device, string pin, bool? requireMitmProtection)
+        public bool PairRequest(BluetoothAddress device, string pin, bool? requireMitmProtection)
         {
             var nativeDevice = _adapter.GetRemoteDevice(device.ToNetworkOrderSixByteArray());
             
@@ -43,7 +43,7 @@ namespace InTheHand.Net.Bluetooth
             return nativeDevice.CreateBond();
         }
 
-        static bool PlatformRemoveDevice(BluetoothAddress device)
+        public bool RemoveDevice(BluetoothAddress device)
         {
             var nativeDevice = _adapter.GetRemoteDevice(device.ToNetworkOrderSixByteArray());
             var method = nativeDevice.Class.GetMethod("removeBond");
