@@ -1,4 +1,11 @@
-﻿namespace InTheHand.Bluetooth
+﻿//-----------------------------------------------------------------------
+// <copyright file="BluetoothPermissions.Android.cs" company="In The Hand Ltd">
+//   Copyright (c) 2022-23 In The Hand Ltd, All rights reserved.
+//   This source code is licensed under the MIT License - see License.txt
+// </copyright>
+//-----------------------------------------------------------------------
+
+namespace InTheHand.Bluetooth
 {
     /// <summary>
     ///	BluetoothPermissions (.NET MAUI on Android).
@@ -37,7 +44,7 @@
             _advertise = advertise;
         }
 
-        private (string androidPermission, bool isRuntime)[] _requiredPermissions;
+        private (string androidPermission, bool isRuntime)[]? _requiredPermissions;
 
         public override (string androidPermission, bool isRuntime)[] RequiredPermissions
         {
