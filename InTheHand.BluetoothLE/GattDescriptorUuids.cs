@@ -1,6 +1,6 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="GattDescriptorUuids.cs" company="In The Hand Ltd">
-//   Copyright (c) 2017-2022 In The Hand Ltd, All rights reserved.
+//   Copyright (c) 2017-2023 In The Hand Ltd, All rights reserved.
 //   This source code is licensed under the MIT License - see License.txt
 // </copyright>
 //-----------------------------------------------------------------------
@@ -160,10 +160,22 @@ namespace InTheHand.Bluetooth
         public static readonly BluetoothUuid TimeTriggerSetting = 0x290E;
 
         /// <summary>
-        /// Complete BR­EDR Transport Block Data
+        /// Gets the Bluetooth SIG-defined Complete BR­EDR Transport Block Data descriptor UUID.
         /// </summary>
         [BluetoothUti("complete_bredr_transport_block_data")]
         public static readonly BluetoothUuid CompleteBR­EDRTransportBlockData = 0x290F;
+
+        /// <summary>
+        /// Gets the Bluetooth SIG-defined Observation Schedule descriptor UUID.
+        /// </summary>
+        [BluetoothUti("observation_schedule")]
+        public static readonly BluetoothUuid ObservationSchedule = 0x2910;
+
+        /// <summary>
+        /// Gets the Bluetooth SIG-defined Valid Range and Accuracy descriptor UUID.
+        /// </summary>
+        [BluetoothUti("valid_range_accuracy")]
+        public static readonly BluetoothUuid ValidRangeAndAccuracy = 0x2911;
 
     }
 }
