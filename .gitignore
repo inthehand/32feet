@@ -259,3 +259,5 @@ paket-files/
 
 # macOS
 .DS_Store
+/docfx_project/_site
+/docfx_project/api
