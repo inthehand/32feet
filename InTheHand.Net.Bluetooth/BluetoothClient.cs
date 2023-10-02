@@ -38,10 +38,11 @@ namespace InTheHand.Net.Sockets
             switch(Environment.OSVersion.Platform)
             {
                 case PlatformID.Unix:
+                    // check for macOS goes here
                     _bluetoothClient = new LinuxBluetoothClient();
                     break;
                 case PlatformID.Win32NT:
-                    //detect Windows 10
+                    // check for Windows 10 goes here
                     _bluetoothClient = new Win32BluetoothClient();
                     break;
             }

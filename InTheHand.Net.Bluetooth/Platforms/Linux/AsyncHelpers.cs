@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -10,6 +11,7 @@ using System.Threading.Tasks;
 namespace InTheHand.Threading.Tasks
 {
     /// <exclude/>
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public static class AsyncHelpers
     {
         /// <summary>

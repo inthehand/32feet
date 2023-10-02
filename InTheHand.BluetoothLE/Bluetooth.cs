@@ -116,5 +116,14 @@ namespace InTheHand.Bluetooth
             AdvertisementReceived?.Invoke(null, advertisingEvent);
         }
 
+        // Used by Characteristic and Descriptor write operations
+        internal static void ThrowOnInvalidAttributeValue(byte[] value)
+        {
+            if (value == null)
+                throw new ArgumentNullException(nameof(value));
+
+            if (value.Length > 512)
+                throw new ArgumentOutOfRangeException(nameof(value), "Value cannot be larger than 512 bytes.");
+        }
     }
 }

@@ -3,12 +3,15 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Microsoft.MixedReality.Toolkit.Examples.Demos.EyeTracking.Logging
+//namespace Microsoft.MixedReality.Toolkit.Examples.Demos.EyeTracking.Logging
+namespace InTheHand.Threading.Tasks
 {
     /// <exclude/>
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public static class AsyncHelpers
     {
         /// <summary>

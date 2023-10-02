@@ -1,6 +1,6 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="GattDescriptor.cs" company="In The Hand Ltd">
-//   Copyright (c) 2018-20 In The Hand Ltd, All rights reserved.
+//   Copyright (c) 2018-23 In The Hand Ltd, All rights reserved.
 //   This source code is licensed under the MIT License - see License.txt
 // </copyright>
 //-----------------------------------------------------------------------
@@ -45,7 +45,7 @@ namespace InTheHand.Bluetooth
         }
 
         /// <summary>
-        /// 
+        /// Retrieve the current descriptor value from the remote device.
         /// </summary>
         /// <returns></returns>
         public Task<byte[]> ReadValueAsync()
@@ -54,12 +54,13 @@ namespace InTheHand.Bluetooth
         }
 
         /// <summary>
-        /// 
+        /// Writes a new value to the descriptor on the remote device.
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
         public Task WriteValueAsync(byte[] value)
         {
+            Bluetooth.ThrowOnInvalidAttributeValue(value);
             return PlatformWriteValue(value);
         }
     }

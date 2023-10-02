@@ -25,14 +25,25 @@ namespace BluetoothClientApp.Droid
             Xamarin.Essentials.Platform.Init(this, savedInstanceState); // add this line to your code, it may also be called: bundle
             global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
 
-            RequestPermissions(new string[] { Manifest.Permission.AccessCoarseLocation, Manifest.Permission.Bluetooth, Manifest.Permission.BluetoothAdmin, "android.permission.BLUETOOTH_CONNECT" }, 1);
-            LoadApplication(new App());
+
+            if (Android.OS.Build.VERSION.SdkInt <= Android.OS.BuildVersionCodes.R ||  (CheckSelfPermission("android.permission.BLUETOOTH_CONNECT") == Permission.Granted && CheckSelfPermission("android.permission.BLUETOOTH_SCAN") == Permission.Granted))
+                LoadApplication(new App());
+            else
+            {
+                if(ShouldShowRequestPermissionRationale("android.permission.BLUETOOTH_SCAN"))
+                {
+                    //message
+                }
+
+                RequestPermissions(new string[] { "android.permission.BLUETOOTH_SCAN", "android.permission.BLUETOOTH_CONNECT" }, 1);
+            }
         }
 
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions, Android.Content.PM.Permission[] grantResults)
         {
             Xamarin.Essentials.Platform.OnRequestPermissionsResult(requestCode, permissions, grantResults);
             base.OnRequestPermissionsResult(requestCode, permissions, grantResults);
+            LoadApplication(new App());
         }
     }
 }

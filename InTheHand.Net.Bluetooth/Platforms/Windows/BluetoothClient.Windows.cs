@@ -61,14 +61,14 @@ namespace InTheHand.Net.Sockets
         {
             List<BluetoothDeviceInfo> results = new List<BluetoothDeviceInfo>();
 
-            var devices = Microsoft.MixedReality.Toolkit.Examples.Demos.EyeTracking.Logging.AsyncHelpers.RunSync<DeviceInformationCollection>(async ()=>
+            var devices = InTheHand.Threading.Tasks.AsyncHelpers.RunSync<DeviceInformationCollection>(async ()=>
             {
                 return await DeviceInformation.FindAllAsync(BluetoothDevice.GetDeviceSelectorFromPairingState(false));
             });
 
             foreach (var device in devices)
             {
-                var bluetoothDevice = Microsoft.MixedReality.Toolkit.Examples.Demos.EyeTracking.Logging.AsyncHelpers.RunSync<BluetoothDevice>(async () =>
+                var bluetoothDevice = InTheHand.Threading.Tasks.AsyncHelpers.RunSync<BluetoothDevice>(async () =>
                 {
                     return await BluetoothDevice.FromIdAsync(device.Id);
                 });

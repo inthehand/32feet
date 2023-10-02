@@ -12,6 +12,9 @@ using System.Runtime.InteropServices;
 
 namespace InTheHand.Net.Sockets
 {
+    /// <summary>
+    /// Wraps the native Win32 Sockets APIs to allow Bluetooth sockets to be used under Mono.
+    /// </summary>
     public class Win32Socket : Socket
     {
         private int _socket = 0;

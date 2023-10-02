@@ -74,7 +74,7 @@ namespace InTheHand.Bluetooth
         /// <returns></returns>
         public Task WriteValueWithResponseAsync(byte[] value)
         {
-            ThrowOnInvalidValue(value);
+            Bluetooth.ThrowOnInvalidAttributeValue(value);
             return PlatformWriteValue(value, true);
         }
 
@@ -85,17 +85,8 @@ namespace InTheHand.Bluetooth
         /// <returns></returns>
         public Task WriteValueWithoutResponseAsync(byte[] value)
         {
-            ThrowOnInvalidValue(value);
+            Bluetooth.ThrowOnInvalidAttributeValue(value);
             return PlatformWriteValue(value, false);
-        }
-
-        private void ThrowOnInvalidValue(byte[] value)
-        {
-            if (value is null)
-                throw new ArgumentNullException("value");
-
-            if (value.Length > 512)
-                throw new ArgumentOutOfRangeException("value", "Attribute value cannot be longer than 512 bytes");
         }
 
         public Task<GattDescriptor> GetDescriptorAsync(BluetoothUuid descriptor)

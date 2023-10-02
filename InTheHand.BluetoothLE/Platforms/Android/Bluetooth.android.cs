@@ -5,12 +5,14 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
+using Android;
 using Android.App;
 using Android.Bluetooth;
 using Android.Bluetooth.LE;
 using Android.Content;
 using Android.Content.PM;
 using Android.OS;
+using Android.Runtime;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -24,6 +26,12 @@ namespace InTheHand.Bluetooth
         internal static Android.Bluetooth.BluetoothDevice s_device;
         private static RequestDeviceOptions _currentRequest;
         private static BluetoothReceiver _receiver;
+
+#if MONOANDROID
+        const string permissionName = "android.permission.BLUETOOTH_CONNECT";
+#else
+        const string permissionName = Manifest.Permission.BluetoothConnect;
+#endif
 
         static Bluetooth()
         {
@@ -197,6 +205,20 @@ namespace InTheHand.Bluetooth
             {
                 base.OnCreate(savedInstanceState);
 
+
+
+                if (CheckCallingOrSelfPermission(permissionName) != Permission.Granted)
+                {
+                    RequestPermissions(new string[] { permissionName }, 123);
+                }
+                else
+                {
+                    StartSystemPicker();
+                }
+            }
+
+            private void StartSystemPicker()
+            {
                 Intent i = new Intent("android.bluetooth.devicepicker.action.LAUNCH");
                 i.PutExtra("android.bluetooth.devicepicker.extra.LAUNCH_PACKAGE", Android.App.Application.Context.PackageName);
                 i.PutExtra("android.bluetooth.devicepicker.extra.DEVICE_PICKER_LAUNCH_CLASS", Java.Lang.Class.FromType(typeof(DevicePickerReceiver)).Name);
@@ -204,7 +226,6 @@ namespace InTheHand.Bluetooth
                 i.PutExtra("android.bluetooth.devicepicker.extra.FILTER_TYPE", 0);
 
                 this.StartActivityForResult(i, 321);
-
             }
 
             // set the handle when the picker has completed and return control straight back to the calling activity
@@ -217,6 +238,36 @@ namespace InTheHand.Bluetooth
                 s_handle.Set();
 
                 Finish();
+            }
+
+            public override void OnRequestPermissionsResult(int requestCode, string[] permissions, Permission[] grantResults)
+            {
+                bool bluetoothConnectGranted = false;
+
+                // was bluetooth connect granted?
+                for (int i = 0; i < permissions.Length; i++)
+                {
+                    System.Diagnostics.Debug.WriteLine($"{permissions[i]} {grantResults[i]}");
+
+                    if (permissions[i] == permissionName)
+                    {
+                        bluetoothConnectGranted = grantResults[i] == Permission.Granted;
+                        break;
+                    }
+                }
+
+                if (bluetoothConnectGranted)
+                {
+                    StartSystemPicker();
+                }
+                else
+                {
+                    s_handle.Set();
+
+                    Finish();
+                }
+
+                base.OnRequestPermissionsResult(requestCode, permissions, grantResults);
             }
         }
     }

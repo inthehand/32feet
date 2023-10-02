@@ -5,6 +5,7 @@
 // Copyright (c) 2018-2022 In The Hand Ltd, All rights reserved.
 // This source code is licensed under the MIT License
 
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
@@ -14,6 +15,7 @@ using System.Net.Sockets;
 namespace InTheHand.Net.Sockets
 {
     /// <exclude/>
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public abstract class NonSocketNetworkStream : NetworkStream
     {
         /// <exclude/>
