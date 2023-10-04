@@ -4,45 +4,16 @@
       "src": [
         {
           "files": [
-            "**.csproj"
+            	"InTheHand.BluetoothLE/bin/Release/net7.0/InTheHand.BluetoothLE.dll",
+ 		"InTheHand.Bluetooth.Permissions/bin/Release/net7.0/InTheHand.Bluetooth.Permissions.dll",
+		"InTheHand.Net.Bluetooth/bin/Release/net7.0/InTheHand.Net.Bluetooth.dll",
+ 		"InTheHand.Net.IrDA/bin/Release/**/InTheHand.Net.IrDA.dll",
+ 		"InTheHand.Net.Obex/bin/Release/**/InTheHand.Net.Obex.dll"
           ],
-          "src": "S:\\Repos\\inthehand\\32feet\\InTheHand.BluetoothLE"
+          "src": "../"
         }
       ],
-      "dest": "api/InTheHand.BluetoothLE"
-    },
-    {
-      "src": [
-        {
-          "files": [
-            "**.csproj"
-          ],
-          "src": "S:\\Repos\\inthehand\\32feet\\InTheHand.Net.Bluetooth"
-        }
-      ],
-      "dest": "api/InTheHand.Net.Bluetooth"
-    },
-    {
-      "src": [
-        {
-          "files": [
-            "**.csproj"
-          ],
-          "src": "S:\\Repos\\inthehand\\32feet\\InTheHand.Net.IrDA"
-        }
-      ],
-      "dest": "api/InTheHand.Net.IrDA"
-    },
-    {
-      "src": [
-        {
-          "files": [
-            "**.csproj"
-          ],
-          "src": "S:\\Repos\\inthehand\\32feet\\InTheHand.Net.Obex"
-        }
-      ],
-      "dest": "api/InTheHand.Net.Obex"
+      "dest": "api/"
     }
   ],
   "build": {
@@ -51,14 +22,6 @@
         "files": [
           "api/**.yml",
           "api/index.md"
-        ]
-      },
-      {
-        "files": [
-          "articles/**.md",
-          "articles/**/toc.yml",
-          "toc.yml",
-          "*.md"
         ]
       }
     ],
@@ -80,16 +43,27 @@
       }
     ],
     "dest": "_site",
+    "filter": "filterConfig.yml",
     "globalMetadataFiles": [],
     "fileMetadataFiles": [],
+    "sitemap": {
+        "baseUrl": "https://inthehand.github.io",
+        "changefreq": "monthly"
+    },
     "template": [
-      "default"
+      "default", "modern"
     ],
     "postProcessors": [],
     "markdownEngineName": "markdig",
     "noLangKeyword": false,
     "keepFileLink": false,
     "cleanupCacheHistory": false,
-    "disableGitFeatures": false
+    "disableGitFeatures": false,
+    "globalMetadata": {
+        "_appLogoPath": "images/Logo.png",
+        "_appName": "32feet.NET",
+        "_appTitle": "Personal Area Networking for .NET",
+        "_appFooter": "Copyright (c) 2023 In The Hand Ltd."
+    }
   }
 }
