@@ -5,12 +5,12 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-namespace InTheHand.Bluetooth
+namespace InTheHand.Bluetooth.Permissions
 {
-    /// <summary>
-    ///	BluetoothPermissions (.NET MAUI on iOS).
-    /// </summary>
-    public partial class BluetoothPermissions : Permissions.BasePlatformPermission
+    // <summary>
+    //	BluetoothPermissions (.NET MAUI on iOS).
+    // </summary>
+    partial class BluetoothPermissions
     {
         public override Task<PermissionStatus> CheckStatusAsync()
         {

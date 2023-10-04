@@ -5,12 +5,14 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-namespace InTheHand.Bluetooth
+namespace InTheHand.Bluetooth.Permissions
 {
     /// <summary>
     /// Additional Permission for the .NET MAUI Permissions system to cover all Bluetooth permissions.
     /// </summary>
-    public partial class BluetoothPermissions : Permissions.BasePlatformPermission
+    /// <remarks>
+    /// </remarks>
+    public partial class BluetoothPermissions : Microsoft.Maui.ApplicationModel.Permissions.BasePlatformPermission
     {
     }
 }

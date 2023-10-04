@@ -5,13 +5,13 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-namespace InTheHand.Bluetooth
+namespace InTheHand.Bluetooth.Permissions
 {
-    /// <summary>
-    ///	BluetoothPermissions (.NET MAUI on Android).
-    /// </summary>
-    /// <remarks>The Android implementation is based on (https://gist.github.com/salarcode/da8ad2b993e67c602db88a62259d0456).</remarks>
-    public partial class BluetoothPermissions : Permissions.BasePlatformPermission
+    // <summary>
+    //	BluetoothPermissions (.NET MAUI on Android).
+    // </summary>
+    // <remarks>The Android implementation is based on (https://gist.github.com/salarcode/da8ad2b993e67c602db88a62259d0456).</remarks>
+    partial class BluetoothPermissions
     {
         private readonly bool _connect;
         private readonly bool _scan;
@@ -24,15 +24,15 @@ namespace InTheHand.Bluetooth
         }
 
         /// <summary>
-        /// 
+        /// Defines the set of Bluetooth permissions for Android to allow for prompting user for specific requirements.
         /// </summary>
         /// <param name="connect">Needed only if your app communicates with already-paired Bluetooth devices.</param>
-        /// <param name="scan">Needed only if your app looks for Bluetooth devices.
+        /// <param name="scan">Needed only if your app scans for other Bluetooth devices.
         /// If your app doesn't use Bluetooth scan results to derive physical location, you can make a strong assertion that your app never uses the Bluetooth permissions to derive physical location. 
         /// Add the `android:usesPermissionFlags` attribute to your BLUETOOTH_SCAN permission declaration, and set this attribute's value to `neverForLocation`.
         /// </param>
         /// <param name="location">Needed only if your app uses Bluetooth scan results to derive physical location.</param>
-        /// <param name="advertise">Needed only if your app makes the device discoverable to Bluetooth devices.</param>
+        /// <param name="advertise">Needed only if your app makes the device discoverable to other Bluetooth devices.</param>
         /// <remarks>
         ///  https://developer.android.com/guide/topics/connectivity/bluetooth/permissions
         /// </remarks>
@@ -46,6 +46,9 @@ namespace InTheHand.Bluetooth
 
         private (string androidPermission, bool isRuntime)[]? _requiredPermissions;
 
+        /// <summary>
+        /// 
+        /// </summary>
         public override (string androidPermission, bool isRuntime)[] RequiredPermissions
         {
             get
