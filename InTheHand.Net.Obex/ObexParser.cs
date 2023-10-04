@@ -60,10 +60,19 @@ namespace InTheHand.Net
                         return;
                     case (ObexHeader)0x10:
                         Debug.Assert(isConnectPacket, "NOT isConnectPacket");
-                        Debug.Assert(pos == 3, "NOT before any headers!");
-                        remoteMaxPacket = (ushort)IPAddress.NetworkToHostOrder(BitConverter.ToUInt16(packet, pos + 2));
+                        Debug.Assert(pos == 3, "NOT before any headers!"); 
+                        
+                        if (BitConverter.IsLittleEndian)
+                        {
+                            remoteMaxPacket = (ushort)(packet[pos + 2] << 8 + packet[pos + 3]); // works remoteMaxPacket 8192
+                        }
+                        else
+                        {
+                            remoteMaxPacket = (ushort)IPAddress.NetworkToHostOrder(BitConverter.ToUInt16(packet, pos + 2));
+                        }
+
                         if (remoteMaxPacket == 0)
-                            remoteMaxPacket = ushort.MaxValue;
+                            remoteMaxPacket = 0x800;
                         pos += 4;
                         break;
 
