@@ -17,11 +17,7 @@ namespace InTheHand.Bluetooth
     /// Entry point to all Bluetooth LE functionality.
     /// </summary>
     /// <remarks>
-    /// Several platforms require permissions for this functionality to work:-
-    /// iOS 13 (and above) - Set NSBluetoothAlwaysUsageDescription in your Info.plist to a descriptive message to be displayed to the user
-    /// iOS (older versions) - Set NSBluetoothPeripheralUsageDescription in your Info.plist to a descriptive message to be displayed to the user
-    /// Android - Add &lt;uses-permission android:name="android.permission.BLUETOOTH" /&gt; to your android manifest. To enable scanning also add &lt;uses-permission android:name="android.permission.BLUETOOTH_ADMIN" /&gt; and &lt;uses-permission android:name="android.permission.COARSE_LOCATION" /&gt;
-    /// Windows - Add the Bluetooth permission
+    /// Several platforms require permissions for this functionality to work. See <see href="https://github.com/inthehand/32feet/wiki/Permissions">Permissions</see> for more details
     /// </remarks>
     public static partial class Bluetooth
     {

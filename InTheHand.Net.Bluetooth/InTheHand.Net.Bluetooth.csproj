@@ -1,7 +1,7 @@
 ﻿<Project Sdk="MSBuild.Sdk.Extras/3.0.44">
 	<Sdk Name="DotNet.ReproducibleBuilds.Isolated" Version="1.1.1" />
 	<PropertyGroup>
-		<TargetFrameworks>netstandard2.0;netstandard2.1;net6.0;net6.0-windows7.0;net6.0-windows10.0.22000.0;net6.0-android;net6.0-ios;net461;monoandroid10.0;xamarinios10;uap10.0</TargetFrameworks>
+		<TargetFrameworks>netstandard2.0;netstandard2.1;net6.0;net6.0-windows7.0;net6.0-windows10.0.22000.0;net6.0-android;net6.0-ios;net7.0;net7.0-windows7.0;net7.0-windows10.0.22000.0;net7.0-android;net7.0-ios;net461;monoandroid10.0;xamarinios10;uap10.0</TargetFrameworks>
 		<Company>In The Hand Ltd</Company>
 		<Authors>Peter Foot</Authors>
 		<Product>32feet.NET</Product>
@@ -71,16 +71,6 @@
 		<SupportedOSPlatformVersion>10.0.16299.0</SupportedOSPlatformVersion>
 		<TargetPlatformMinVersion>10.0.16299.0</TargetPlatformMinVersion>
 	</PropertyGroup>
-
-	<PropertyGroup Condition=" '$(TargetFramework)' == 'net6.0' ">
-		<RuntimeIdentifiers>linux-arm64;linux-x64;linux-x86</RuntimeIdentifiers>
-		<AppendRuntimeIdentifierToOutputPath>true</AppendRuntimeIdentifierToOutputPath>
-	</PropertyGroup>
-
-	<PropertyGroup Condition=" '$(TargetFramework)' == 'net7.0' ">
-		<RuntimeIdentifiers>linux-arm64;linux-x64;linux-x86</RuntimeIdentifiers>
-		<AppendRuntimeIdentifierToOutputPath>true</AppendRuntimeIdentifierToOutputPath>
-	</PropertyGroup>
 	
 	<PropertyGroup Condition=" '$(TargetFramework)' == 'net6.0-windows10.0.22000.0' ">
 		<DefineConstants>WinRT</DefineConstants>
@@ -94,12 +84,8 @@
 		<TargetPlatformMinVersion>10.0.16299.0</TargetPlatformMinVersion>
 	</PropertyGroup>
 
-	<ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.1' ">
-		<Compile Include="Platforms\Standard\*.cs" />
-	</ItemGroup>
-
 	<ItemGroup Condition=" '$(TargetFramework)' == 'monoandroid10.0' ">
-		<PackageReference Include="InTheHand.AndroidActivity" Version="1.0.3" />
+		<PackageReference Include="InTheHand.AndroidActivity" Version="1.0.4" />
 		<Reference Include="System.Xml.Linq" />
 		<Compile Include="Platforms\Android\*.cs" />
 	</ItemGroup>
@@ -142,16 +128,33 @@
 		<Compile Include="Platforms\Win32\*.cs" />
 	</ItemGroup>
 
+	<ItemGroup Condition=" '$(TargetFramework)' == 'net7.0-windows7.0' ">
+		<Compile Include="Platforms\Win32\*.cs" />
+	</ItemGroup>
+
 	<ItemGroup Condition=" '$(TargetFramework)' == 'net6.0-windows10.0.22000.0' ">
 		<Compile Include="Platforms\Windows\*.cs" />
 	</ItemGroup>
 
+	<ItemGroup Condition=" '$(TargetFramework)' == 'net7.0-windows10.0.22000.0' ">
+		<Compile Include="Platforms\Windows\*.cs" />
+	</ItemGroup>
+
 	<ItemGroup Condition=" '$(TargetFramework)' == 'net6.0-android' ">
-		<PackageReference Include="InTheHand.AndroidActivity" Version="1.0.3" />
+		<PackageReference Include="InTheHand.AndroidActivity" Version="1.0.4" />
+		<Compile Include="Platforms\Android\*.cs" />
+	</ItemGroup>
+
+	<ItemGroup Condition=" '$(TargetFramework)' == 'net7.0-android' ">
+		<PackageReference Include="InTheHand.AndroidActivity" Version="1.0.4" />
 		<Compile Include="Platforms\Android\*.cs" />
 	</ItemGroup>
 	
 	<ItemGroup Condition=" '$(TargetFramework)' == 'net6.0-ios' ">
+		<Compile Include="Platforms\iOS\*.cs" />
+	</ItemGroup>
+
+	<ItemGroup Condition=" '$(TargetFramework)' == 'net7.0-ios' ">
 		<Compile Include="Platforms\iOS\*.cs" />
 	</ItemGroup>
 </Project>
