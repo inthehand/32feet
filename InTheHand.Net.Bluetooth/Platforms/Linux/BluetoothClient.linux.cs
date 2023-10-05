@@ -9,6 +9,7 @@ using InTheHand.Net.Bluetooth;
 using Linux.Bluetooth;
 using Linux.Bluetooth.Extensions;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Net.Sockets;
 using System.Runtime.CompilerServices;
@@ -59,10 +60,19 @@ namespace InTheHand.Net.Sockets
 
         public IReadOnlyCollection<BluetoothDeviceInfo> DiscoverDevices(int maxDevices)
         {
-            List<BluetoothDeviceInfo> devices = new List<BluetoothDeviceInfo>();
+            List<BluetoothDeviceInfo> devices = new();
+
+            var source = new CancellationTokenSource();
+            var token = source.Token;
+            var discoveredDevices = Task.Run(() => DiscoverDevicesAsync(token)).Result;
+            foreach(var dev in discoveredDevices.ToBlockingEnumerable())
+            {
+                devices.Add(dev);
+            }
 
             return devices.AsReadOnly();
         }
+
 
         public async IAsyncEnumerable<BluetoothDeviceInfo> DiscoverDevicesAsync([EnumeratorCancellation] CancellationToken cancellationToken)
         {
@@ -197,4 +207,29 @@ namespace InTheHand.Net.Sockets
         }
         #endregion
     }
+
+    #if NET6_0
+    // this is properly supported in .NET 7.0 - helper method added for 6.0 only
+    internal static class AsyncEnumerableHelper
+    {
+        public static IEnumerable<T> ToBlockingEnumerable<T>(this IAsyncEnumerable<T> asyncEnumerable)
+        {
+            var list = new BlockingCollection<T>();
+
+            async Task AsyncIterate()
+            {
+                await foreach (var item in asyncEnumerable)
+                {
+                    list.Add(item);
+                }
+
+                list.CompleteAdding();
+            }
+
+            _ = AsyncIterate();
+
+            return list.GetConsumingEnumerable();
+        }
+    }
+    #endif
 }
