@@ -133,11 +133,16 @@ namespace InTheHand.Bluetooth
             return false;
         }
 
+        /// <inheritdoc/>
         public override int GetHashCode()
         {
             return Value.GetHashCode();
         }
 
+        /// <summary>
+        /// Returns the UUID as a string using the short id if possible.
+        /// </summary>
+        /// <returns></returns>
         public override string ToString()
         {
             var shortId = TryGetShortId(Value);

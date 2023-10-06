@@ -5,8 +5,6 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-// Based on values from https://www.bluetooth.com/specifications/gatt/services
-
 using System.Reflection;
 
 namespace InTheHand.Bluetooth
@@ -14,7 +12,7 @@ namespace InTheHand.Bluetooth
     /// <summary>
     /// Provides service UUIDs for common GATT services.
     /// </summary>
-    /// <remarks>To view a list of all Bluetooth SIG-defined service UUIDs, see <a href="https://www.bluetooth.com/specifications/gatt/services">Bluetooth SIG-defined Service UUIDs</a>.</remarks>
+    /// <remarks>To view a list of all Bluetooth SIG-defined service UUIDs, see <see href="https://bitbucket.org/bluetooth-SIG/public/src/main/assigned_numbers/uuids/service_uuids.yaml">Bluetooth SIG-defined Service UUIDs</a>.</remarks>
     [BluetoothUti(Namespace)]
     public static class GattServiceUuids
     {

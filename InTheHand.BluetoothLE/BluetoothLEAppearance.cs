@@ -10,7 +10,7 @@ namespace InTheHand.Bluetooth
     /// <summary>
     /// Represents the external appearance of a device.
     /// </summary>
-    /// <remarks>Referenced from https://specificationrefs.bluetooth.com/assigned-values/Appearance%20Values.pdf</remarks>
+    /// <remarks>Referenced from <see href="https://bitbucket.org/bluetooth-SIG/public/src/main/assigned_numbers/core/appearance_values.yaml"/></remarks>
     public enum BluetoothLEAppearance : ushort
     {
         Unknown = 0x0000,

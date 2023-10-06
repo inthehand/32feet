@@ -14,6 +14,7 @@ namespace InTheHand.Bluetooth
     /// <summary>
     /// Represents an enumeration of the most well known Descriptor UUID values.
     /// </summary>
+    /// <remarks>To view a list of all Bluetooth SIG-defined descriptor UUIDs, see <see href="https://bitbucket.org/bluetooth-SIG/public/src/main/assigned_numbers/uuids/descriptors.yaml">Bluetooth SIG-defined Descriptor UUIDs</a>.</remarks>
     [BluetoothUti(Namespace)]
     public static class GattDescriptorUuids
     {

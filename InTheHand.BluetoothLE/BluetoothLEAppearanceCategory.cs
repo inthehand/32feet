@@ -1,6 +1,6 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="BluetoothLEAppearanceCategory.cs" company="In The Hand Ltd">
-//   Copyright (c) 2022 In The Hand Ltd, All rights reserved.
+//   Copyright (c) 2022-23 In The Hand Ltd, All rights reserved.
 //   This source code is licensed under the MIT License - see License.txt
 // </copyright>
 //-----------------------------------------------------------------------
@@ -10,7 +10,7 @@ namespace InTheHand.Bluetooth
     /// <summary>
     /// Represents the external appearance of a device.
     /// </summary>
-    /// <remarks>Referenced from <a href="https://specificationrefs.bluetooth.com/assigned-values/Appearance%20Values.pdf">https://specificationrefs.bluetooth.com/assigned-values/Appearance%20Values.pdf</a></remarks>
+    /// <remarks>Referenced from <see href="https://bitbucket.org/bluetooth-SIG/public/src/main/assigned_numbers/core/appearance_values.yaml"/></remarks>
     public enum BluetoothLEAppearanceCategory : ushort
     {
         Unknown = 0x000,
