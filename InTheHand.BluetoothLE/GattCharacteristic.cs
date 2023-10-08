@@ -150,14 +150,4 @@ namespace InTheHand.Bluetooth
             return PlatformStopNotifications();
         }
     }
-
-    public sealed class GattCharacteristicValueChangedEventArgs : EventArgs
-    {
-        internal GattCharacteristicValueChangedEventArgs(byte[] newValue)
-        {
-            Value = newValue;
-        }
-
-        public byte[] Value { get; private set; }
-    }
 }
