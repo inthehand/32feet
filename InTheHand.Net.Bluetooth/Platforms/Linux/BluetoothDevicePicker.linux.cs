@@ -13,11 +13,11 @@ using System.Threading.Tasks;
 
 namespace InTheHand.Net.Bluetooth
 {
-    partial class BluetoothDevicePicker
+    internal sealed class LinuxBluetoothDevicePicker : IBluetoothDevicePicker
     {
-        private Task<BluetoothDeviceInfo> PlatformPickSingleDeviceAsync()
+        public Task<BluetoothDeviceInfo> PickSingleDeviceAsync(List<ClassOfDevice> classOfDevices, bool requiresAuthentication)
         {
-            return Task.FromResult<BluetoothDeviceInfo>(null);
+            return Task.FromException<BluetoothDeviceInfo>(new PlatformNotSupportedException());
         }
     }
 }

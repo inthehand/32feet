@@ -2,7 +2,7 @@
 //
 // InTheHand.Net.Sockets.NetworkStream
 // 
-// Copyright (c) 2018-2022 In The Hand Ltd, All rights reserved.
+// Copyright (c) 2018-2023 In The Hand Ltd, All rights reserved.
 // This source code is licensed under the MIT License
 
 using System.ComponentModel;
@@ -19,9 +19,7 @@ namespace InTheHand.Net.Sockets
     public abstract class NonSocketNetworkStream : NetworkStream
     {
         /// <exclude/>
-        public NonSocketNetworkStream() : base(GetAConnectedSocket(), false)
-        {
-        }
+        public NonSocketNetworkStream() : base(GetAConnectedSocket(), false) { }
 
         internal static Socket GetAConnectedSocket()
         {
@@ -30,9 +28,6 @@ namespace InTheHand.Net.Sockets
             Debug.Assert(s.Connected);
             return s;
         }
-
-        
-
     
     }//class
 

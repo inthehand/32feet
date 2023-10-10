@@ -8,6 +8,7 @@
 using Android.Bluetooth;
 using Android.Content;
 using System;
+using static Android.Provider.MediaStore.Audio;
 
 namespace InTheHand.Net.Bluetooth
 {
@@ -113,6 +114,9 @@ namespace InTheHand.Net.Bluetooth
                 }
             }
         }
+
+        public CompanyIdentifier Manufacturer { get => CompanyIdentifier.Unknown; }
+
 
         #region IDisposable Support
         private bool disposedValue = false; // To detect redundant calls

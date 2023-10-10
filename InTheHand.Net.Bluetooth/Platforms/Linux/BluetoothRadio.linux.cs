@@ -121,6 +121,8 @@ namespace InTheHand.Net.Bluetooth
             }
         }
 
+        public CompanyIdentifier Manufacturer { get => CompanyIdentifier.Unknown; }
+
         #region IDisposable Support
         private bool disposedValue = false; // To detect redundant calls
 

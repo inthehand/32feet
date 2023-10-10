@@ -20,9 +20,9 @@ namespace InTheHand.Net
         internal const byte AddressFamilyBluetooth = 32;
         internal const byte AddressFamilyBlueZ = 31;
 
-        private ulong _bluetoothAddress;
-        private Guid _serviceId;
-        private int _port;
+        private readonly ulong _bluetoothAddress;
+        private readonly Guid _serviceId;
+        private readonly int _port;
 
         /// <summary>
         /// Initializes a new instance of the BluetoothEndPoint class with the specified address and service.
@@ -44,7 +44,7 @@ namespace InTheHand.Net
             if (Environment.OSVersion.Platform == PlatformID.Unix)
             {
                 if (sockaddr_bt[0] != AddressFamilyBlueZ)
-                    throw new ArgumentException(nameof(sockaddr_bt));
+                    throw new ArgumentException("Invalid AddressFamily", nameof(sockaddr_bt));
 
                 _bluetoothAddress = BitConverter.ToUInt64(sockaddr_bt, 2) & 0xFFFFFFFFFFFF;
                 Debug.WriteLine($"Address: {_bluetoothAddress:X12}");
@@ -130,7 +130,7 @@ namespace InTheHand.Net
         {
             if (socketAddress == null)
             {
-                throw new ArgumentNullException("socketAddress");
+                throw new ArgumentNullException(nameof(socketAddress));
             }
 
             if (socketAddress.Family == AddressFamily)
@@ -139,12 +139,10 @@ namespace InTheHand.Net
 
                 var socketAddressBytes = socketAddress.ToByteArray();
 
-                byte[] addrbytes = new byte[8];
-
                 ulong address = BitConverter.ToUInt64(socketAddressBytes, 2);
 
                 byte[] servicebytes = new byte[16];
-                int port = 0;
+                int port;
 
                 if (Environment.OSVersion.Platform == PlatformID.Unix)
                 {
@@ -172,7 +170,7 @@ namespace InTheHand.Net
         /// <returns></returns>
         public override SocketAddress Serialize()
         {
-            SocketAddress btsa = null;
+            SocketAddress btsa;
 
             if (Environment.OSVersion.Platform == PlatformID.Unix)
             {

@@ -72,5 +72,8 @@ namespace InTheHand.Net.Bluetooth
                                 });
             }
         }
+
+        public CompanyIdentifier Manufacturer { get => CompanyIdentifier.Unknown; }
+
     }
 }

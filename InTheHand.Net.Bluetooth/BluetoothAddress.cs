@@ -23,7 +23,7 @@ namespace InTheHand.Net
         /// <summary>
         /// Provides a null Bluetooth address.
         /// </summary>
-        public static readonly BluetoothAddress None = new BluetoothAddress(0UL);
+        public static readonly BluetoothAddress None = new(0UL);
 
         /// <summary>
         /// Initializes a new instance of the BluetoothAddress class with the specified address.
@@ -208,7 +208,7 @@ namespace InTheHand.Net
 
             byte[] data = ToByteArray();
 
-            System.Text.StringBuilder result = new System.Text.StringBuilder(18);
+            System.Text.StringBuilder result = new(18);
 
             if (format == "8")
             {
@@ -366,7 +366,7 @@ namespace InTheHand.Net
                 return true;
             }
 
-            if ((x is object) && (y is object))
+            if ((x is not null) && (y is not null))
             {
                 if (x._address == y._address)
                 {

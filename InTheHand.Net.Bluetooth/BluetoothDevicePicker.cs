@@ -27,12 +27,15 @@ namespace InTheHand.Net.Bluetooth
             _bluetoothDevicePicker = new ExternalAccessoryBluetoothDevicePicker();
 #elif WINDOWS_UWP || WINDOWS10_0_17763_0_OR_GREATER
             _bluetoothDevicePicker = new WindowsBluetoothDevicePicker();
-#elif WINDOWS8_0_OR_GREATER
+#elif WINDOWS7_0_OR_GREATER
             _bluetoothDevicePicker = new Win32BluetoothDevicePicker();
 #elif NETSTANDARD
 #else
             switch (Environment.OSVersion.Platform)
             {
+                /*case PlatformID.Unix:
+                    _bluetoothDevicePicker = new LinuxBluetoothDevicePicker();
+                    break;*/
                 case PlatformID.Win32NT:
                     _bluetoothDevicePicker = new Win32BluetoothDevicePicker();
                     break;

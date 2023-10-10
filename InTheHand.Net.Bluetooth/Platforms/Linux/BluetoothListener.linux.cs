@@ -52,11 +52,14 @@ namespace InTheHand.Net.Sockets
             return socket.Poll(0, SelectMode.SelectRead);
         }
 
+        public Socket AcceptSocket()
+        {
+            return socket.Accept();
+        }
+
         public BluetoothClient AcceptBluetoothClient()
         {
-            LinuxSocket s = socket.Accept();
-
-            return new BluetoothClient(new LinuxBluetoothClient(s));
+            return new BluetoothClient(new LinuxBluetoothClient((LinuxSocket)AcceptSocket()));
         }
     }
 }

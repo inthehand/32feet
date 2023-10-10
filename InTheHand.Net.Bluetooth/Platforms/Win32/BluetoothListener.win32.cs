@@ -2,7 +2,7 @@
 //
 // InTheHand.Net.Sockets.BluetoothListener (Win32)
 // 
-// Copyright (c) 2018-2020 In The Hand Ltd, All rights reserved.
+// Copyright (c) 2018-2023 In The Hand Ltd, All rights reserved.
 // This source code is licensed under the MIT License
 
 using InTheHand.Net.Bluetooth;
@@ -217,21 +217,21 @@ namespace InTheHand.Net.Sockets
             }
         }
 
-        public BluetoothClient AcceptBluetoothClient()
+        public Socket AcceptSocket()
         {
-            Socket s;
-
             if (NativeMethods.IsRunningOnMono())
             {
-                s = ((Win32Socket)socket).Accept();
+                return ((Win32Socket)socket).Accept();
             }
             else
             {
-                s = socket.Accept();
+                return socket.Accept();
             }
-
-            return new BluetoothClient(new Win32BluetoothClient(s));
         }
 
+        public BluetoothClient AcceptBluetoothClient()
+        {
+            return new BluetoothClient(new Win32BluetoothClient(AcceptSocket()));
+        }
     }
 }

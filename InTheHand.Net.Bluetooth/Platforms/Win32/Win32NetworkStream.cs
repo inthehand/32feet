@@ -2,12 +2,14 @@
 //
 // InTheHand.Net.Sockets.Win32NetworkStream (Win32)
 // 
-// Copyright (c) 2003-2020 In The Hand Ltd, All rights reserved.
+// Copyright (c) 2003-2023 In The Hand Ltd, All rights reserved.
 // This source code is licensed under the MIT License
 
 using System;
 using System.IO;
 using System.Net.Sockets;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace InTheHand.Net.Sockets
 {
@@ -35,13 +37,7 @@ namespace InTheHand.Net.Sockets
             base.Close();
         }
 
-        public override bool DataAvailable
-        {
-            get
-            {
-                return _socket.Available > 0;
-            }
-        }
+        public override bool DataAvailable => _socket.Available > 0;
 
         public override bool CanRead => true;
 
@@ -52,10 +48,6 @@ namespace InTheHand.Net.Sockets
         public override bool CanWrite => true;
 
         public override long Position { get => throw new NotSupportedException(); set => throw new NotSupportedException(); }
-
-        public override void Flush()
-        {
-        }
 
         public override int Read(byte[] buffer, int offset, int count)
         {

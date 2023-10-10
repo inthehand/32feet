@@ -17,6 +17,8 @@ namespace InTheHand.Net.Bluetooth
 
         public RadioMode Mode { get => RadioMode.PowerOff; set => throw new PlatformNotSupportedException(); }
 
+        public CompanyIdentifier Manufacturer { get => CompanyIdentifier.Apple; }
+
         public void Dispose() { }
     }
 }

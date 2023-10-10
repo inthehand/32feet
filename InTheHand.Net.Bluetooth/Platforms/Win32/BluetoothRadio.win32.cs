@@ -127,13 +127,7 @@ namespace InTheHand.Net.Bluetooth
         /// <summary>
         /// Returns the manufacturer of the BluetoothRadio device.
         /// </summary>
-        public ushort Manufacturer
-        {
-            get
-            {
-                return _radio.manufacturer;
-            }
-        }
+        public CompanyIdentifier Manufacturer {  get=> (CompanyIdentifier)_radio.manufacturer; }
 
         #region IDisposable Support
         private bool disposedValue = false; // To detect redundant calls

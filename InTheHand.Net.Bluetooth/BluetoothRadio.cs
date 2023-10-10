@@ -80,6 +80,16 @@ namespace InTheHand.Net.Bluetooth
         /// </summary>
         public RadioMode Mode { get => _radio.Mode; set => _radio.Mode = value; }
 
+        /// <summary>
+        /// Gets the company identifier for the radio if available.
+        /// </summary>
+        /// <remarks>
+        /// On platforms where there is no API to retrieve the manufacturer this property will return <see cref="CompanyIdentifier.Unknown"/>. 
+        /// On iOS and macOS this property always returns <see cref="CompanyIdentifier.Apple"/>.
+        /// </remarks>
+        public CompanyIdentifier Manufacturer { get => _radio.Manufacturer; }
+
+
         #region IDisposable Support
         private bool disposedValue = false; // To detect redundant calls
 

@@ -36,6 +36,17 @@ namespace InTheHand.Net.Sockets
 
         public LinuxBluetoothDeviceInfo(BluetoothAddress address)
         {
+            Task t = Task.Run(async () =>
+            {
+                _device = await ((Adapter)BluetoothRadio.Default).GetDeviceAsync(address.ToString());
+
+                if (_device != null)
+                { 
+                    await Init();
+                }
+            });
+
+            t.Wait();
         }
 
         internal async Task Init()

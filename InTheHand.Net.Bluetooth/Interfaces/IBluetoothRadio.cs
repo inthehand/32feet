@@ -16,5 +16,7 @@ namespace InTheHand.Net.Bluetooth
         BluetoothAddress LocalAddress { get; }
 
         RadioMode Mode { get; set; }
+
+        CompanyIdentifier Manufacturer { get; }
     }
 }
