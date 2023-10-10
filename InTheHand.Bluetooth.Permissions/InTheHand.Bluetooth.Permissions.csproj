@@ -1,23 +1,21 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="MSBuild.Sdk.Extras/3.0.44">
 	<Sdk Name="DotNet.ReproducibleBuilds.Isolated" Version="1.1.1" />
 	<PropertyGroup>
-		<TargetFrameworks>net7.0;net7.0-android;net7.0-ios;net7.0-maccatalyst</TargetFrameworks>
+		<TargetFrameworks>netstandard2.0;monoandroid10.0;xamarinios10;uap10.0;net7.0;net7.0-android;net7.0-ios;net7.0-maccatalyst</TargetFrameworks>
 		<TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net7.0-windows10.0.19041.0</TargetFrameworks>
 		<!-- Uncomment to also build the tizen app. You will need to install tizen by following this: https://github.com/Samsung/Tizen.NET -->
 		<!-- <TargetFrameworks>$(TargetFrameworks);net7.0-tizen</TargetFrameworks> -->
-		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+		<GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">True</GeneratePackageOnBuild>
 		<GenerateDocumentationFile Condition=" '$(Configuration)' == 'Release' ">True</GenerateDocumentationFile>
-		<Title>.NET MAUI Permissions for Bluetooth</Title>
+		<Title>.NET MAUI 7.0 Permissions for Bluetooth</Title>
 		<Authors>Peter Foot</Authors>
 		<Company>In The Hand Ltd</Company>
 		<Product>32feet.NET</Product>
 		<Version>7.0.1</Version>
-		
 		<IncludeSymbols>true</IncludeSymbols>
 		<DebugSymbols>true</DebugSymbols>
 		<DebugType>portable</DebugType>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
-		
 		<RepositoryUrl>https://github.com/inthehand/32feet</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
 		<PublishRepositoryUrl>true</PublishRepositoryUrl>
@@ -26,12 +24,12 @@
 		<PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<PackageTags>bluetooth windows android ios tvos macos uwp win32</PackageTags>
-		<Description>.NET MAUI Permissions for Bluetooth. 32feet.NET is an open-source project to make personal area networking technologies such as Bluetooth easily accessible from .NET code.</Description>
+		<Description>.NET MAUI 7.0 Permissions for Bluetooth. 32feet.NET is an open-source project to make personal area networking technologies such as Bluetooth easily accessible from .NET code.</Description>
 		<Copyright>Copyright (c) 2022-23 In The Hand Ltd</Copyright>
 		<PackageIcon>32feet-package-icon.png</PackageIcon>
 		<UseMaui>true</UseMaui>
 		<SingleProject>true</SingleProject>
-		<ImplicitUsings>enable</ImplicitUsings>
+		<ImplicitUsings>disable</ImplicitUsings>
 
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">14.2</SupportedOSPlatformVersion>
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">14.0</SupportedOSPlatformVersion>
@@ -45,13 +43,57 @@
 	<ItemGroup>
 		<PackageReference Include="DotNet.ReproducibleBuilds" Version="1.1.1" PrivateAssets="All" />
 		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
+		<PackageReference Include="MSBuild.Sdk.Extras" Version="3.0.44" PrivateAssets="All" />
 	</ItemGroup>
 	
+	<PropertyGroup Condition=" '$(TargetFramework)' == 'uap10.0' ">
+		<DefineConstants>UAP</DefineConstants>
+		<RuntimeIdentifiers>win10-x64;win10-x86;win10-arm;win10-arm64</RuntimeIdentifiers>
+		<TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.19041.0</TargetPlatformVersion>
+		<TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
+	</PropertyGroup>
+	
 	<ItemGroup>
+		<Compile Remove="Platforms\**\*.*" />
 		<None Include="..\Misc\32feet-package-icon.png">
 			<Pack>True</Pack>
 			<PackagePath></PackagePath>
 		</None>
+		<None Include="Platforms\**\*.*" />
+	</ItemGroup>
+	
+	<ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
+		<PackageReference Include="Xamarin.Essentials" Version="1.7.7" />
 	</ItemGroup>
 
+	<ItemGroup Condition=" '$(TargetFramework)' == 'monoandroid10.0' ">
+		<PackageReference Include="Xamarin.Essentials" Version="1.7.7" />
+		<Compile Include="Platforms\Android\*.cs" />
+	</ItemGroup>
+
+	<ItemGroup Condition=" '$(TargetFramework)' == 'xamarinios10' ">
+		<PackageReference Include="Xamarin.Essentials" Version="1.7.7" />
+		<Compile Include="Platforms\iOS\*.cs" />
+	</ItemGroup>
+	
+	<ItemGroup Condition=" '$(TargetFramework)' == 'uap10.0' ">
+		<PackageReference Include="Xamarin.Essentials" Version="1.7.7" />
+		<Compile Include="Platforms\Uwp\*.cs" />
+	</ItemGroup>
+	
+	<ItemGroup Condition=" '$(TargetFramework)' == 'net7.0-android' ">
+		<Compile Include="Platforms\Android\*.cs" />
+	</ItemGroup>
+
+	<ItemGroup Condition=" '$(TargetFramework)' == 'net7.0-ios' ">
+		<Compile Include="Platforms\iOS\*.cs" />
+	</ItemGroup>
+
+	<ItemGroup Condition=" '$(TargetFramework)' == 'net7.0-maccatalyst' ">
+		<Compile Include="Platforms\MacCatalyst\*.cs" />
+	</ItemGroup>
+
+	<ItemGroup Condition=" '$(TargetFramework)' == 'net7.0-windows10.0.19041.0' ">
+		<Compile Include="Platforms\Windows\*.cs" />
+	</ItemGroup>
 </Project>

@@ -5,12 +5,19 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
+#if NET6_0_OR_GREATER
+using Microsoft.Maui.ApplicationModel;
+#else
+using Xamarin.Essentials;
+#endif
+using System.Threading.Tasks;
+
 namespace InTheHand.Bluetooth.Permissions
 {
     // <summary>
     //	BluetoothPermissions (.NET MAUI on Windows).
     // </summary>
-    partial class BluetoothPermissions
+    partial class Bluetooth
     {
         // All the code in this file is only included on Windows.
         public override Task<PermissionStatus> CheckStatusAsync()
