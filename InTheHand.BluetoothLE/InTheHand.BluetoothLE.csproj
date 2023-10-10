@@ -9,7 +9,6 @@
 		<IncludeSymbols>true</IncludeSymbols>
 		<DebugSymbols>true</DebugSymbols>
 		<DebugType>portable</DebugType>
-		<Nullable>disable</Nullable>
 		<AssemblyTitle>InTheHand.BluetoothLE-$(TargetFramework)</AssemblyTitle>
 		<RepositoryUrl>https://github.com/inthehand/32feet</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
