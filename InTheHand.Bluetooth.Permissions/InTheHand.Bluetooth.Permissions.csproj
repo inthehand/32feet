@@ -7,7 +7,7 @@
 		<!-- <TargetFrameworks>$(TargetFrameworks);net7.0-tizen</TargetFrameworks> -->
 		<GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">True</GeneratePackageOnBuild>
 		<GenerateDocumentationFile Condition=" '$(Configuration)' == 'Release' ">True</GenerateDocumentationFile>
-		<Title>.NET MAUI 7.0 Permissions for Bluetooth</Title>
+		<Title>.NET MAUI 7.0 and Xamarin Forms permissions for Bluetooth</Title>
 		<Authors>Peter Foot</Authors>
 		<Company>In The Hand Ltd</Company>
 		<Product>32feet.NET</Product>
@@ -23,8 +23,9 @@
 		<PackageProjectUrl>https://github.com/inthehand/32feet</PackageProjectUrl>
 		<PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<PackageTags>bluetooth windows android ios tvos macos uwp win32</PackageTags>
-		<Description>.NET MAUI 7.0 Permissions for Bluetooth. 32feet.NET is an open-source project to make personal area networking technologies such as Bluetooth easily accessible from .NET code.</Description>
+		<Description>.NET MAUI 7.0 and Xamarin Forms permissions for Bluetooth. 32feet.NET is an open-source project to make personal area networking technologies such as Bluetooth easily accessible from .NET code.</Description>
 		<Copyright>Copyright (c) 2022-23 In The Hand Ltd</Copyright>
 		<PackageIcon>32feet-package-icon.png</PackageIcon>
 		<UseMaui>true</UseMaui>
@@ -60,6 +61,7 @@
 			<PackagePath></PackagePath>
 		</None>
 		<None Include="Platforms\**\*.*" />
+		<None Include="README.md" Pack="true" PackagePath="\"/>
 	</ItemGroup>
 	
 	<ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">

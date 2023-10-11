@@ -17,12 +17,14 @@ using System.Threading.Tasks;
 namespace InTheHand.Bluetooth.Permissions
 {
     // <summary>
-    //	BluetoothPermissions (.NET MAUI on iOS).
+    //	Bluetooth (.NET MAUI on iOS).
     // </summary>
     partial class Bluetooth
     {
+        /// <inheritdoc/>
         protected override Func<IEnumerable<string>> RequiredInfoPlistKeys => () => new string[] { "NSBluetoothAlwaysUsageDescription" };
 
+        /// <inheritdoc/>
         public override Task<PermissionStatus> CheckStatusAsync()
         {
             switch (CoreBluetooth.CBManager.Authorization)

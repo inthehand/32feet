@@ -18,8 +18,10 @@ namespace InTheHand.Bluetooth.Permissions
 {
     partial class Bluetooth
     {
+        /// <inheritdoc/>
         protected override Func<IEnumerable<string>> RequiredInfoPlistKeys => () => new string[] { "NSBluetoothAlwaysUsageDescription" };
 
+        /// <inheritdoc/>
         public override Task<PermissionStatus> CheckStatusAsync()
         {
             switch(CoreBluetooth.CBManager.Authorization)

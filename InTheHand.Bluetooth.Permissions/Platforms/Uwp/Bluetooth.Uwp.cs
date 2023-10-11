@@ -12,13 +12,12 @@ using Xamarin.Essentials;
 #endif
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
-using Windows.Devices.Enumeration;
 
 namespace InTheHand.Bluetooth.Permissions
 {
     partial class Bluetooth
     {
+        /// <inheritdoc/>
         protected override Func<IEnumerable<string>> RequiredDeclarations => () =>
                 new[] { "bluetooth" };
 

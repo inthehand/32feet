@@ -21,7 +21,7 @@ namespace InTheHand.Bluetooth.Permissions
 {
     partial class Bluetooth
     {
-        public static bool IsDeclaredInManifest(string permission)
+        internal static bool IsDeclaredInManifest(string permission)
         {
             var context = Android.App.Application.Context;
 #pragma warning disable CS0618, CA1416, CA1422 // Deprecated in API 33: https://developer.android.com/reference/android/content/pm/PackageManager#getPackageInfo(java.lang.String,%20int)
@@ -32,6 +32,7 @@ namespace InTheHand.Bluetooth.Permissions
             return requestedPermissions?.Any(r => r.Equals(permission, StringComparison.OrdinalIgnoreCase)) ?? false;
         }
 
+        /// <inheritdoc/>
         public override (string androidPermission, bool isRuntime)[] RequiredPermissions
         {
             get
