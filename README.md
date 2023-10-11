@@ -4,6 +4,7 @@
 
 - Bluetooth Classic
 - Bluetooth LE
+- Bluetooth Permissions for Xamarin.Forms and .NET MAUI
 - IOBluetooth/IOBluetoothUI bindings for Xamarin Mac
 - IrDA
 - Object Exchange (Obex)
@@ -29,6 +30,9 @@ Downloads are available here on the _Downloads_ tab. Packages are also available
 
 - InTheHand.BluetoothLE - Bluetooth Low Energy (v4.x)
 [![NuGet version](https://badge.fury.io/nu/InTheHand.BluetoothLE.svg)](https://badge.fury.io/nu/InTheHand.BluetoothLE)
+
+- InTheHand.Bluetooth.Permissions - Bluetooth Permissions for .NET MAUI 7.0 and Xamarin.Forms
+[![NuGet version](https://badge.fury.io/nu/InTheHand.Bluetooth.Permissions.svg)](https://badge.fury.io/nu/InTheHand.Bluetooth.Permissions)
 
 - InTheHand.IOBluetooth - IOBluetooth bindings for Xamarin Mac
 [![NuGet version](https://badge.fury.io/nu/InTheHand.IOBluetooth.svg)](https://badge.fury.io/nu/InTheHand.IOBluetooth)
