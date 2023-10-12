@@ -2,23 +2,22 @@
 //
 // InTheHand.Net.Sockets.iOS.ExternalAccessoryNetworkStream (iOS)
 // 
-// Copyright (c) 2018-2022 In The Hand Ltd, All rights reserved.
+// Copyright (c) 2018-2023 In The Hand Ltd, All rights reserved.
 // This source code is licensed under the MIT License
 
 using ExternalAccessory;
 using Foundation;
 using System;
 using System.IO;
-using System.Net.Sockets;
 
 namespace InTheHand.Net.Sockets.iOS
 {
     internal class ExternalAccessoryNetworkStream : NonSocketNetworkStream
     {
-        private NSInputStream _inputStream;
-        private NSOutputStream _outputStream;
-        private MemoryStream _outputBuffer = new MemoryStream();
-        private EAStreamDelegate _delegate;
+        private readonly NSInputStream _inputStream;
+        private readonly NSOutputStream _outputStream;
+        private readonly MemoryStream _outputBuffer = new MemoryStream();
+        private readonly EAStreamDelegate _delegate;
         private bool _streamReady = false;
 
         internal ExternalAccessoryNetworkStream(EASession session)
@@ -29,19 +28,13 @@ namespace InTheHand.Net.Sockets.iOS
 
             _inputStream.Open();
             _outputStream.Delegate = _delegate;
-            _outputStream.Schedule(NSRunLoop.Current,
-#if NET6_0_OR_GREATER
-                NSRunLoopMode.Default 
-#else
-                NSRunLoop.NSDefaultRunLoopMode
-#endif
-                );
+            _outputStream.Schedule(NSRunLoop.Current, NSRunLoopMode.Default);
             _outputStream.Open();
         }
 
         internal class EAStreamDelegate : NSStreamDelegate
         {
-            private ExternalAccessoryNetworkStream _stream;
+            private readonly ExternalAccessoryNetworkStream _stream;
 
             internal EAStreamDelegate(ExternalAccessoryNetworkStream stream)
             {
@@ -65,21 +58,13 @@ namespace InTheHand.Net.Sockets.iOS
             {
                 _inputStream.Close();
                 _inputStream.Dispose();
-                _inputStream = null;
             }
 
             if(_outputStream is object)
             {
                 _outputStream.Close();
-                _outputStream.Unschedule(NSRunLoop.Current,
-#if NET6_0_OR_GREATER
-                NSRunLoopMode.Default
-#else
-                NSRunLoop.NSDefaultRunLoopMode
-#endif
-                );
+                _outputStream.Unschedule(NSRunLoop.Current, NSRunLoopMode.Default);
                 _outputStream.Dispose();
-                _outputStream = null;
             }
 
             base.Dispose(disposing);
@@ -102,7 +87,6 @@ namespace InTheHand.Net.Sockets.iOS
                 byte[] buffer = new byte[_outputBuffer.Length];
                 _outputBuffer.Read(buffer, 0, buffer.Length);
                 _outputBuffer.Dispose();
-                _outputBuffer = null;
                 _outputStream.Write(buffer);
             }
         }
@@ -134,12 +118,6 @@ namespace InTheHand.Net.Sockets.iOS
             }
         }
 
-        public override bool DataAvailable
-        {
-            get
-            {
-                return _inputStream.HasBytesAvailable();
-            }
-        }
+        public override bool DataAvailable { get => _inputStream.HasBytesAvailable(); }
     }
 }

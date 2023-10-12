@@ -30,11 +30,6 @@ namespace InTheHand.Net.Sockets
             streamSocket = socket;
         }
 
-        internal const AddressFamily AddressFamilyBluetooth = (AddressFamily)32;
-        private const SocketOptionLevel SocketOptionLevelRFComm = (SocketOptionLevel)0x03;
-        private const SocketOptionName SocketOptionNameAuthenticate = unchecked((SocketOptionName)0x80000001);
-        private const SocketOptionName SocketOptionNameEncrypt = (SocketOptionName)0x00000002;
-
         public IEnumerable<BluetoothDeviceInfo> PairedDevices
         {
             get

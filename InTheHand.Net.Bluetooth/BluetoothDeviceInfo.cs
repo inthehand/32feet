@@ -17,7 +17,7 @@ namespace InTheHand.Net.Sockets
     /// Provides information about an available device obtained by the client during device discovery.
     /// </summary>
     [DebuggerDisplay("({DeviceAddress.ToString(\"C\")}) {DeviceName}")]
-    public abstract class BluetoothDeviceInfo : IEquatable<BluetoothDeviceInfo>
+    public abstract partial class BluetoothDeviceInfo : IEquatable<BluetoothDeviceInfo>
     {
         internal BluetoothDeviceInfo() { }
 

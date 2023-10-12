@@ -7,8 +7,9 @@
 
 using Android.Bluetooth;
 using Android.Content;
+using Android.Content.PM;
 using System;
-using static Android.Provider.MediaStore.Audio;
+using System.Runtime.CompilerServices;
 
 namespace InTheHand.Net.Bluetooth
 {
@@ -27,7 +28,7 @@ namespace InTheHand.Net.Bluetooth
     
     internal sealed class AndroidBluetoothRadio : IBluetoothRadio
     {
-        private static BluetoothManager manager;
+        private static readonly BluetoothManager manager;
 
         static AndroidBluetoothRadio()
         {
@@ -117,6 +118,34 @@ namespace InTheHand.Net.Bluetooth
 
         public CompanyIdentifier Manufacturer { get => CompanyIdentifier.Unknown; }
 
+        public BluetoothVersion LmpVersion
+        {
+            get
+            {
+                // make best guess at supported version based on the features which Android exposes.
+
+                if (OperatingSystem.IsAndroidVersionAtLeast(26))
+                {
+#if NET7_0_OR_GREATER
+                    if (OperatingSystem.IsAndroidVersionAtLeast(33))
+                    {
+                        if(_adapter.IsLeAudioSupported() == (int)CurrentBluetoothStatusCodes.FeatureSupported) 
+                            return BluetoothVersion.Version52;
+                    }
+#endif
+
+                    if (_adapter.IsLe2MPhySupported || _adapter.IsLeCodedPhySupported || _adapter.IsLeExtendedAdvertisingSupported || _adapter.IsLePeriodicAdvertisingSupported)
+                        return BluetoothVersion.Version50;
+                }
+
+                if (Android.App.Application.Context.PackageManager.HasSystemFeature(PackageManager.FeatureBluetoothLe))
+                    return BluetoothVersion.Version40;
+
+                return BluetoothVersion.Version10;
+            }
+        }
+
+        public ushort LmpSubversion { get => 0; }
 
         #region IDisposable Support
         private bool disposedValue = false; // To detect redundant calls

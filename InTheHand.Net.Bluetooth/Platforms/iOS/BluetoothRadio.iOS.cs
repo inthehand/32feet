@@ -19,6 +19,10 @@ namespace InTheHand.Net.Bluetooth
 
         public CompanyIdentifier Manufacturer { get => CompanyIdentifier.Apple; }
 
+        public BluetoothVersion LmpVersion { get => BluetoothVersion.Version40; }
+
+        public ushort LmpSubversion { get => 0; }
+
         public void Dispose() { }
     }
 }

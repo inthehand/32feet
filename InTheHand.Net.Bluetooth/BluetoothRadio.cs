@@ -81,7 +81,7 @@ namespace InTheHand.Net.Bluetooth
         public RadioMode Mode { get => _radio.Mode; set => _radio.Mode = value; }
 
         /// <summary>
-        /// Gets the company identifier for the radio if available.
+        /// Gets the company identifier for the radio (if available).
         /// </summary>
         /// <remarks>
         /// On platforms where there is no API to retrieve the manufacturer this property will return <see cref="CompanyIdentifier.Unknown"/>. 
@@ -89,6 +89,24 @@ namespace InTheHand.Net.Bluetooth
         /// </remarks>
         public CompanyIdentifier Manufacturer { get => _radio.Manufacturer; }
 
+        /// <summary>
+        /// Returns the Bluetooth specification version supported (if available).
+        /// </summary>
+        /// <remarks>
+        /// It's not possible to determine this version on all platforms. Instead we make a best guess based on supported features.
+        /// <para>Win32 - Can only determine version up to Bluetooth 2.1.</para>
+        /// <para>WinRT - Can determine 5.0, 4.0 or 1.0 based on available features.</para>
+        /// <para>Android - Returns 5.2 if Bluetooth Audio is supported, 5.0 if Le2M or Coded PHY supported, 4.0 if Low Energy is available, else 1.0.</para>
+        /// <para>iOS - Always returns 4.0 as all supported devices support Bluetooth Low Energy.</para>
+        /// <para>Linux - Returns 4.0 if local adapter is running a Gatt service, otherwise returns 1.0 as there isn't currently an API to query the exact version.</para>
+        /// </remarks>
+        public BluetoothVersion LmpVersion { get => _radio.LmpVersion; }
+
+        /// <summary>
+        /// LMP Subversion of the radio (if available).
+        /// </summary>
+        /// <remarks>Currently only supported on Win32.</remarks>
+        public ushort LmpSubversion { get => _radio.LmpSubversion; }
 
         #region IDisposable Support
         private bool disposedValue = false; // To detect redundant calls

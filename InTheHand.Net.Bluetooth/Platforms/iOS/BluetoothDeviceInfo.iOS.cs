@@ -15,9 +15,25 @@ using System.Collections.ObjectModel;
 
 namespace InTheHand.Net.Sockets
 {
+    partial class BluetothDeviceInfo
+    {
+        /// <summary>
+        /// On iOS returns the ExternalAccessory Protocol strings for the device.
+        /// </summary>
+        /// <remarks>Protocol names are formatted as reverse-DNS strings. For example, the string “com.apple.myProtocol” might represent a custom protocol defined by Apple.
+        /// Manufacturers can define custom protocols for their accessories or work with other manufacturers and organizations to define standard protocols for different accessory types.</remarks>
+        public IReadOnlyCollection<string> ProtocolStrings
+        {
+            get
+            {
+                return ((ExternalAccessoryBluetoothDeviceInfo)this).ProtocolStrings;
+            }
+        }
+    }
+
     internal sealed class ExternalAccessoryBluetoothDeviceInfo : BluetoothDeviceInfo
     {
-        private EAAccessory _accessory;
+        private readonly EAAccessory _accessory;
 
         internal ExternalAccessoryBluetoothDeviceInfo(EAAccessory accessory)
         {
@@ -32,6 +48,11 @@ namespace InTheHand.Net.Sockets
         public static implicit operator ExternalAccessoryBluetoothDeviceInfo(EAAccessory accessory)
         {
             return new ExternalAccessoryBluetoothDeviceInfo(accessory);
+        }
+
+        public static explicit operator ExternalAccessoryBluetoothDeviceInfo(BluetothDeviceInfo v)
+        {
+            return (ExternalAccessoryBluetoothDeviceInfo)v;
         }
 
         public override BluetoothAddress DeviceAddress { get => new BluetoothAddress(_accessory); }

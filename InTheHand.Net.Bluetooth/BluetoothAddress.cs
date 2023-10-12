@@ -2,7 +2,7 @@
 //
 // InTheHand.Net.BluetoothAddress
 // 
-// Copyright (c) 2003-2022 In The Hand Ltd, All rights reserved.
+// Copyright (c) 2003-2023 In The Hand Ltd, All rights reserved.
 // This source code is licensed under the MIT License
 
 using System;
@@ -10,6 +10,7 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Net;
+using System.Text;
 
 namespace InTheHand.Net
 {
@@ -23,7 +24,7 @@ namespace InTheHand.Net
         /// <summary>
         /// Provides a null Bluetooth address.
         /// </summary>
-        public static readonly BluetoothAddress None = new(0UL);
+        public static readonly BluetoothAddress None = new BluetoothAddress(0UL);
 
         /// <summary>
         /// Initializes a new instance of the BluetoothAddress class with the specified address.
@@ -208,7 +209,7 @@ namespace InTheHand.Net
 
             byte[] data = ToByteArray();
 
-            System.Text.StringBuilder result = new(18);
+            var result = new StringBuilder(18);
 
             if (format == "8")
             {
@@ -366,7 +367,7 @@ namespace InTheHand.Net
                 return true;
             }
 
-            if ((x is not null) && (y is not null))
+            if ((x is object) && (y is object))
             {
                 if (x._address == y._address)
                 {

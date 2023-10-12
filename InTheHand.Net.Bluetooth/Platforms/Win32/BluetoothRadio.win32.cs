@@ -7,6 +7,7 @@
 
 using InTheHand.Net.Bluetooth.Win32;
 using System;
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 
 namespace InTheHand.Net.Bluetooth
@@ -22,6 +23,10 @@ namespace InTheHand.Net.Bluetooth
             if (hRadio != IntPtr.Zero)
             {
                 int result = NativeMethods.BluetoothGetRadioInfo(hRadio, ref info);
+                if(result != 0)
+                {
+                    throw new PlatformNotSupportedException();
+                }
             }
 
             if (findHandle != IntPtr.Zero)
@@ -37,7 +42,7 @@ namespace InTheHand.Net.Bluetooth
             return null;
         }
 
-        private BLUETOOTH_RADIO_INFO _radio;
+        private readonly BLUETOOTH_RADIO_INFO _radio;
         private IntPtr _handle;
 
         private Win32BluetoothRadio(BLUETOOTH_RADIO_INFO info, IntPtr handle)
@@ -113,10 +118,28 @@ namespace InTheHand.Net.Bluetooth
             }
         }
 
+        public BluetoothVersion LmpVersion 
+        { 
+            get 
+            {
+                // the Win32 API doesn't recognise versions beyond 2.1
+                if (NativeMethods.BluetoothIsVersionAvailable(2, 1))
+                    return BluetoothVersion.Version21;
+                if (NativeMethods.BluetoothIsVersionAvailable(2, 0))
+                    return BluetoothVersion.Version20;
+                if (NativeMethods.BluetoothIsVersionAvailable(1, 2))
+                    return BluetoothVersion.Version12;
+                if (NativeMethods.BluetoothIsVersionAvailable(1, 1))
+                    return BluetoothVersion.Version11;
+
+                return BluetoothVersion.Version10;
+            }
+        }
+
         /// <summary>
         /// Manufacturer's revision number of the LMP implementation.
         /// </summary>
-        public int LmpSubversion
+        public ushort LmpSubversion
         {
             get
             {

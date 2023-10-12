@@ -57,19 +57,12 @@ namespace InTheHand.Net.Bluetooth
             return radio._adapter;
         }
 
-        private Adapter _adapter;
-        internal Adapter Adapter
-        {
-            get
-            {
-                return _adapter;
-            }
-        }
+        private readonly Adapter _adapter;
+        internal Adapter Adapter { get => _adapter; }
 
         private LinuxBluetoothRadio(Adapter adapter)
         {
             ArgumentNullException.ThrowIfNull(adapter, nameof(adapter));
-
             _adapter = adapter;
         }
 
@@ -77,6 +70,22 @@ namespace InTheHand.Net.Bluetooth
         {
             var props = await _adapter.GetAllAsync();
             _name = props.Name;
+            Guid gattService = new(0x00001800, 0x0000, 0x1000, 0x80, 0x00, 0x00, 0x80, 0x5F, 0x9B, 0x34, 0xFB);
+
+            foreach (string uuid in props.UUIDs)
+            {
+                Console.WriteLine(uuid);
+
+                if(Guid.TryParse(uuid, out Guid guid))
+                {
+                    if(guid == gattService)
+                    {
+                        _isLowEnergy = true;
+                        break;
+                    }
+                }
+            }
+
             _address = BluetoothAddress.Parse(props.Address);
         }
 
@@ -122,6 +131,10 @@ namespace InTheHand.Net.Bluetooth
         }
 
         public CompanyIdentifier Manufacturer { get => CompanyIdentifier.Unknown; }
+
+        private bool _isLowEnergy;
+        public BluetoothVersion LmpVersion { get => _isLowEnergy ? BluetoothVersion.Version40: BluetoothVersion.Version10; }
+        public ushort LmpSubversion { get => 0; }
 
         #region IDisposable Support
         private bool disposedValue = false; // To detect redundant calls

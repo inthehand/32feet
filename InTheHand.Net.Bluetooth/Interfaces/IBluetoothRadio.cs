@@ -18,5 +18,9 @@ namespace InTheHand.Net.Bluetooth
         RadioMode Mode { get; set; }
 
         CompanyIdentifier Manufacturer { get; }
+
+        BluetoothVersion LmpVersion { get; }
+
+        ushort LmpSubversion { get; }
     }
 }

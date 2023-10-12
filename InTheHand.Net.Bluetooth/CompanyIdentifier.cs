@@ -1,6 +1,6 @@
 ﻿// 32feet.NET - Personal Area Networking for .NET
 //
-// InTheHand.Net.Bluetooth.BluetoothManufacturer
+// InTheHand.Net.Bluetooth.CompanyIdentifier
 // 
 // Copyright (c) 2003-2023 In The Hand Ltd, All rights reserved.
 // This source code is licensed under the MIT License
@@ -9925,46 +9925,33 @@ namespace InTheHand.Net.Bluetooth
           Newlogic
 
         = 0x0016
-          KC Technology Inc.
+          KC Technology Inc.*/
 
-        = 0x0015
-          RTX A/S
+        RTX = 0x0015,
 
-        = 0x0014
-          Mitsubishi Electric Corporation
+        Mitsubishi = 0x0014,
 
-        = 0x0013
-          Atmel Corporation
+        Atmel = 0x0013,
 
-        = 0x0012
-          Zeevo, Inc.
+        Zeevo = 0x0012,
 
-        = 0x0011
-          Widcomm, Inc.
+        Widcomm = 0x0011,
 
-        = 0x0010
-          Mitel Semiconductor
+        Mitel = 0x0010,
 
-        = 0x000F
-          Broadcom Corporation
+        Broadcom = 0x000F,
 
-        = 0x000E
-          Parthus Technologies Inc.
+        ParthusTechnologies = 0x000E,
 
-        = 0x000D
-          Texas Instruments Inc.
+        TexasInstruments = 0x000D,
 
-        = 0x000C
-          Digianswer A/S
+        Digianswer= 0x000C,
 
-        = 0x000B
-          Silicon Wave
+        SiliconWave = 0x000B,
 
-        = 0x000A
-          Qualcomm Technologies International, Ltd. (QTIL)
+        QualcommTechnologies = 0x000A,
 
-        = 0x0009
-          Infineon Technologies AG*/
+        InfineonTechnologies= 0x0009,
 
         Motorola = 0x0008,
 
