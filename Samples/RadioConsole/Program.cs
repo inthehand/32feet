@@ -14,7 +14,7 @@ namespace MyApp // Note: actual namespace depends on the project name.
             var inputString = Console.ReadLine();
 
             var radio = BluetoothRadio.Default;
-            Console.WriteLine($"{radio.Name}\t{radio.LocalAddress}\t{radio.Mode}");
+            Console.WriteLine($"{radio.Name}\t{radio.LocalAddress}\t{radio.Mode}\t{radio.LmpVersion}\t{radio.LmpSubversion}");
 
             Task t = Task.Run(async () =>
             {

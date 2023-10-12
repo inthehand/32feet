@@ -10,6 +10,10 @@ namespace MauiBluetoothClassic
         public MainPage()
         {
             InitializeComponent();
+
+            var radio = BluetoothRadio.Default;
+
+            System.Diagnostics.Debug.WriteLine($"{radio.Name} {radio.LmpVersion} {radio.LmpSubversion}");
         }
 
         private async void OnCounterClicked(object sender, EventArgs e)

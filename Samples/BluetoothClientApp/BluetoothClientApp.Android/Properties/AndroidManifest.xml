@@ -1,10 +1,19 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android" android:versionCode="1" android:versionName="1.0" package="com.inthehand.BluetoothClientApp" android:installLocation="auto">
 	<uses-sdk android:minSdkVersion="21" android:targetSdkVersion="31" />
+	
+	<!-- For Android 11 BLUETOOTH requests general usage (BLUETOOTH_ADMIN is required for pairing and other advanced features) -->
 	<uses-permission android:name="android.permission.BLUETOOTH" android:maxSdkVersion="30" />
+	<!-- For Android 11 and below location permission is required to allow programmatic device discovery, the picker doesn't require this -->
+	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" android:maxSdkVersion="30" />
+	
+	<!-- For Android 12 and above the app requests the ability to connect to devices -->
 	<uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+	<!-- For Android 12 and above the app requests the ability to programmatically scan for devices. Declaring neverForLocation means we don't also need to request location -->
 	<uses-permission android:name="android.permission.BLUETOOTH_SCAN" android:usesPermissionFlags="neverForLocation" />
+	
+	<!-- Used to indicate that the app requires Bluetooth LE and will not function without it -->
 	<uses-feature android:name="android.hardware.bluetooth_le" android:required="true" />
-	<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" android:maxSdkVersion="30" />
-	<application android:label="BluetoothClientApp.Android"></application>
+	
+	<application android:label="32feet Bluetooth LE"/>
 </manifest>
