@@ -664,6 +664,18 @@ namespace InTheHand.Net
                 packetLength += 3 + headerValue.Length;
             }
 
+            // added David Rodgers
+            // add ContentMd5 header for Md5 check of sent file
+
+            if (Headers["ContentMd5"] != null)
+            {
+                buffer[packetLength] = (byte)ObexHeader.ContentMd5;
+                string md5 = Headers["ContentMd5"];
+                int md5Length = (md5.Length + 1) * 2;
+                BitConverter.GetBytes(IPAddress.HostToNetworkOrder((short)(md5Length + 3))).CopyTo(buffer, packetLength + 1);
+                System.Text.Encoding.BigEndianUnicode.GetBytes(md5).CopyTo(buffer, packetLength + 3);
+                packetLength += (3 + md5Length);
+            }
             // write the final packet size
             BitConverter.GetBytes(IPAddress.HostToNetworkOrder((short)packetLength)).CopyTo(buffer, 1);
 
@@ -1038,8 +1050,16 @@ namespace InTheHand.Net
             ObexStatusCode status;
             MemoryStream ms = new MemoryStream();
             WebHeaderCollection responseHeaders = new WebHeaderCollection();
+            // Added David Rodgers to facilitate sending an Md5 checksum in the header
+            // could be expanded to loop through Headers and add any headers that are set by the user
+            if (Headers["ContentMd5"] != null)
+            {
+                responseHeaders.Add("ContentMd5", Headers["ContentMd5"]);
+            }
+            // end Added David Rodgers
             // try connecting if not already
-            try {
+            try
+            {
                 status = Connect();
                 Debug.Assert(status == ObexStatus_OK, "connect was:  " + status);
             } catch (Exception se) {

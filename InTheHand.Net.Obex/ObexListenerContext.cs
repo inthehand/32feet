@@ -28,6 +28,7 @@ namespace InTheHand.Net
         private MemoryStream bodyStream = new MemoryStream();
         private EndPoint localEndPoint;
         private EndPoint remoteEndPoint;
+        private string _path;
         ushort remoteMaxPacket = 0;
 
         internal ObexListenerContext(Socket s)
@@ -133,7 +134,138 @@ namespace InTheHand.Net
             request = new ObexListenerRequest(bodyStream.ToArray(), headers, localEndPoint, remoteEndPoint);
 
         }
+        #region David Rodgers added
+        // David Rodgers - Added
+        // Uses stream communication rather than socket for compatability with Android
+        // public allows bypassing ObexListener and using BluetoothListener directly for using custom service id for app to app transfer
+        // TODO - extend ObexListener to handle custom service id's
+        public ObexListenerContext(Stream rs)
+        {
 
+            buffer = new byte[0x2000];
+            bool moretoreceive = true;
+            bool putCompleted = false;
+
+            while (moretoreceive)
+            {
+                //receive the request and store the data for the request object
+                int received = 0;
+
+                try
+                {
+
+                    while (received < 3)
+                    {
+                        //int readLen = s.Receive(buffer, received, 3 - received, SocketFlags.None);
+                        int readLen = rs.Read(buffer, received, 3 - received);
+                        if (readLen == 0)
+                        {
+                            moretoreceive = false;
+                            if (received == 0)
+                            {
+                                break; // Waiting for first byte of packet -- OK to close then.
+                            }
+                            else
+                            {
+                                throw new EndOfStreamException("Connection lost.");
+                            }
+                        }
+                        received += readLen;
+                    }
+                    //Debug.WriteLine(s.GetHashCode().ToString("X8") + ": RecvH", "ObexListener");
+                }
+                catch (Exception se)
+                {
+                    //Console.Write(se.Message);
+                    HandleConnectionError(se);
+                }
+
+                if (received == 3)
+                {
+
+                    ObexMethod method = (ObexMethod)buffer[0];
+                    //get length (excluding the 3 byte header)
+
+                    short len = (short)(IPAddress.NetworkToHostOrder(BitConverter.ToInt16(buffer, 1)) - 3);
+                    if (len > 0)
+                    {
+                        int iPos = 0;
+
+                        while (iPos < len)
+                        {
+                            int wanted = len - iPos;
+                            Debug.Assert(wanted > 0, "NOT wanted > 0, is: " + wanted);
+                            int receivedBytes = rs.Read(buffer, iPos + 3, wanted);
+                            if (receivedBytes == 0)
+                            {
+                                moretoreceive = false;
+                                throw new EndOfStreamException("Connection lost.");
+                            }
+                            iPos += receivedBytes;
+                        }
+                    }
+
+                    byte[] responsePacket; // Don't init, then the compiler will check that it's set below.
+                    //Debug.WriteLine(s.GetHashCode().ToString("X8") + ": Method: " + method, "ObexListener");
+                    responsePacket = HandleAndMakeResponse(ref moretoreceive, ref putCompleted, method);
+
+                    try
+                    {
+                        System.Diagnostics.Debug.Assert(responsePacket != null, "Must always respond to the peer.");
+                        if (responsePacket != null)
+                        {
+                            rs.Write(responsePacket, 0, responsePacket.Length);
+                            rs.Flush();
+
+                        }
+
+                    }
+                    catch (Exception se)
+                    {
+                        //Console.WriteLine(se.Message);
+                        HandleConnectionError(se);
+                    }
+                }
+                else
+                {
+                    moretoreceive = false;
+                }
+
+            }//while
+
+            Debug.WriteLine(rs.GetHashCode().ToString("X8") + ": Completed", "ObexListener");
+            rs.Close();
+            rs = null;
+
+            if (!putCompleted)
+            {
+                // Should not return the request.
+                throw new ProtocolViolationException("No PutFinal received.");
+            }
+            request = new ObexListenerRequest(bodyStream.ToArray(), headers, localEndPoint, remoteEndPoint);
+            _path = headers["NAME"];
+        }
+
+        // David Rodgers added
+        // retrieve the Md5 checksum generated by the sender from the headers
+        public string getSentMD5()
+        {
+            return headers["ContentMd5"];
+        }
+
+        /// <summary>
+        /// Gets the filename of the received file from header
+        /// </summary>
+        // David Rodgers added
+        // 
+        public string getPath
+        {
+            get
+            {
+                return _path;
+            }
+        }
+        #endregion
         private byte[] HandleAndMakeResponse(ref bool moretoreceive, ref bool putCompleted, ObexMethod method)
         {
             byte[] responsePacket;

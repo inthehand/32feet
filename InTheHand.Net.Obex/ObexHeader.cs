@@ -149,5 +149,14 @@ namespace InTheHand.Net
         /// </summary>
         /// <remarks>4-byte unsigned integer.</remarks>
         CreatorID = 0xCF,
+
+        // added David Rodgers
+        /// User defined header
+        /// 0x30, 0x30 to 0x3F as the range for user defined Obex headers
+        /// <summary>
+        /// Md5 of the sent file.
+        /// </summary>
+        /// <remarks>Unicode string.</remarks>
+        ContentMd5 = 0x30,
     }
 }
