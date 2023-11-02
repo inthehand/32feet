@@ -2,7 +2,7 @@
 //
 // InTheHand.Net.ObexHeader
 // 
-// Copyright (c) 2003-2022 In The Hand Ltd, All rights reserved.
+// Copyright (c) 2003-2023 In The Hand Ltd, All rights reserved.
 // This source code is licensed under the MIT License
 
 using System;
@@ -149,5 +149,23 @@ namespace InTheHand.Net
         /// </summary>
         /// <remarks>4-byte unsigned integer.</remarks>
         CreatorID = 0xCF,
+
+        //user-defined headers
+        User0 = 0x30,
+        User1 = 0x31,
+        User2 = 0x32,
+        User3 = 0x33,
+        User4 = 0x34,
+        User5 = 0x35,
+        User6 = 0x36,
+        User7 = 0x37,
+        User8 = 0x38,
+        User9 = 0x39,
+        User10 = 0x3A,
+        User11 = 0x3B,
+        User12 = 0x3C,
+        User13 = 0x3D,
+        User14 = 0x3E,
+        User15 = 0x3F,
     }
 }
