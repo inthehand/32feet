@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 	<Sdk Name="DotNet.ReproducibleBuilds.Isolated" Version="1.1.1" />
 	<PropertyGroup>
 		<TargetFramework>netstandard2.0</TargetFramework>
@@ -30,7 +30,7 @@
 
 	<ItemGroup>
 		<PackageReference Include="DotNet.ReproducibleBuilds" Version="1.1.1" PrivateAssets="All" />
-		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
+		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
 	</ItemGroup>
 	<ItemGroup>
 		<None Include="..\Misc\32feet-package-icon.png">
