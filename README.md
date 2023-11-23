@@ -14,7 +14,6 @@ Bluetooth support requires .NET Framework v4.6.1 or later for desktop Windows 7,
 ## Support 32feet
 
  - [Become a GitHub Sponsor](https://github.com/sponsors/peterfoot) ❤️
- - [Become a sponsor via Open Collective](https://opencollective.com/32feet) ❤️
  
 ## Documentation / Tutorial
 The user guide is available in the [Wiki](https://github.com/inthehand/32feet/wiki) section. Please start by reading it.  It contains general information firstly on the various features contained in the library, and on what type of Bluetooth connection you want.  It also contains information on using each feature.
@@ -57,6 +56,9 @@ Downloads are available here on the _Downloads_ tab. Packages are also available
 [Peter's Blog](https://inthehand.com/blog)
 
 ## Sponsors
+
+Thanks to our GitHub Sponsors
+- [bejames095](https://github.com/bejames095)
 
 Many thanks to [NDepend](http://www.NDepend.com) for their support.
 Many thanks to [Aton Spa (Italy)](http://www.aton.eu) for commissioning and funding the implementation of StoneStreet One Bluetopia support.
