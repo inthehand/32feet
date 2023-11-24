@@ -37,14 +37,19 @@ namespace InTheHand.Net.Sockets
             socket.Listen(1);
             // get endpoint with channel
             endPoint = socket.LocalEndPoint as BluetoothEndPoint;
+            Active = true;
 
             Debug.WriteLine($"Listening on Port {endPoint.Port}");
         }
 
         public void Stop()
         {
-            socket.Close();
-            socket = null;
+            if (Active)
+            {
+                socket.Close();
+                socket = null;
+                Active = false;
+            }
         }
 
         public bool Pending()
