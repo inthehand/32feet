@@ -2,7 +2,7 @@
 
 32feet.NET is an open-source project to make personal area networking technologies such as Bluetooth, Infrared (IrDA) and more, easily accessible from .NET code. Supports desktop, mobile or embedded systems.  32feet.NET is free for commercial or non-commercial use. If you use the binaries you can just use the library as-is, if you make modifications to the source you need to include the 32feet.NET License.txt document and ensure the file headers are not modified/removed.  The project currently consists of the following libraries:-
 
-- Bluetooth Classic
+- Bluetooth Classic **(Windows and Linux only)**
 - Bluetooth LE
 - Bluetooth Permissions for Xamarin.Forms and .NET MAUI
 - IOBluetooth/IOBluetoothUI bindings for Xamarin Mac
