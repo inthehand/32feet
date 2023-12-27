@@ -2,7 +2,7 @@
 //
 // InTheHand.Net.ObexListener
 // 
-// Copyright (c) 2003-2021 In The Hand Ltd, All rights reserved.
+// Copyright (c) 2003-2023 In The Hand Ltd, All rights reserved.
 // This source code is licensed under the MIT License
 
 
@@ -14,6 +14,7 @@ using InTheHand.Net.Sockets;
 using InTheHand.Net.Bluetooth;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.IO;
 using InTheHand.Net.Bluetooth.Sdp;
 using InTheHand.Net.Bluetooth.AttributeIds;
 
@@ -245,27 +246,45 @@ namespace InTheHand.Net
 
             try
             {
-                Socket s;
+                Socket socket;
+                Stream stream = null;
 
                 switch (transport)
                 {
                     case ObexTransport.Bluetooth:
-                        s = bListener.AcceptBluetoothClient().Client;
+                        var bluetoothClient = bListener.AcceptBluetoothClient();
+                        socket = bListener.AcceptBluetoothClient().Client;
+                        if (socket == null)
+                        {
+                            stream = bluetoothClient.GetStream(); // platforms which don't use System.Net.Sockets can return a stream instead
+                        }
                         break;
+
                     case ObexTransport.IrDA:
 #if NO_IRDA
                         throw new NotSupportedException("No IrDA on this platform.");
 #else
-                        s = iListener.AcceptIrDAClient().Client;
+                        socket = iListener.AcceptIrDAClient().Client;
                         break;
 #endif
                     default:
-                        s = tListener.AcceptTcpClient().Client;
+                        socket = tListener.AcceptTcpClient().Client;
                         break;
                 }
-                Debug.WriteLine(s.GetHashCode().ToString("X8") + ": Accepted", "ObexListener");
 
-                return new ObexListenerContext(s);
+                if (socket != null)
+                {
+                    Debug.WriteLine($"Socket {socket.GetHashCode():X8}: Accepted", "ObexListener");
+                    return new ObexListenerContext(socket);
+                }
+                else if (stream != null)
+                {
+                    Debug.WriteLine($"Stream {stream.GetHashCode():X8}: Accepted", "ObexListener");
+                    // call to stream implementation to go here
+                    
+                }
+                
+                return null;
             }
             catch
             {

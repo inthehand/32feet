@@ -1,51 +1,50 @@
 <Project Sdk="Microsoft.NET.Sdk">
+	<Sdk Name="DotNet.ReproducibleBuilds.Isolated" Version="1.1.1" />
+	<PropertyGroup>
+		<TargetFramework>netstandard2.0</TargetFramework>
+		<Company>In The Hand Ltd</Company>
+		<Authors>Peter Foot</Authors>
+		<Product>32feet.NET</Product>
+		<Version>4.0.8</Version>
+		<RepositoryUrl>https://github.com/inthehand/32feet</RepositoryUrl>
+		<PublishRepositoryUrl>true</PublishRepositoryUrl>
+		<IncludeSymbols>true</IncludeSymbols>
+		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+		<Nullable>disable</Nullable>
+		<PackageProjectUrl>https://github.com/inthehand/32feet</PackageProjectUrl>
+		<Copyright>Copyright (c) 2004-2023 In The Hand Ltd</Copyright>
+		<Description>32feet.NET is an open-source project to make personal area networking technologies such as Bluetooth easily accessible from .NET code.</Description>
+		<FileVersion>4.0.8.1102</FileVersion>
+		<AssemblyVersion>4.0.0.0</AssemblyVersion>
+		<AssemblyName>InTheHand.Net.Obex</AssemblyName>
+		<DebugSymbols>true</DebugSymbols>
+		<DebugType>portable</DebugType>
+		<GenerateDocumentationFile Condition=" '$(Configuration)' == 'Release' ">true</GenerateDocumentationFile>
+		<PackageTags>irda bluetooth windows win32 android</PackageTags>
+		<GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
+		<PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<PackageId>InTheHand.Net.Obex</PackageId>
+		<PackageIcon>32feet-package-icon.png</PackageIcon>
+		<RepositoryType>GIT</RepositoryType>
+		<PackageReleaseNotes>Added support for user defined headers.</PackageReleaseNotes>
+		<SignAssembly Condition=" '$(Configuration)' == 'Release' ">true</SignAssembly>
+		<AssemblyOriginatorKeyFile Condition=" '$(Configuration)' == 'Release' ">InTheHand.snk</AssemblyOriginatorKeyFile>
+		<DelaySign>false</DelaySign>
+	</PropertyGroup>
 
-  <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
-    <Company>In The Hand Ltd</Company>
-    <Authors>Peter Foot</Authors>
-    <Product>32feet.NET</Product>
-    <Version>4.0.7</Version>
-    <RepositoryUrl>https://github.com/inthehand/32feet</RepositoryUrl>
-    <PublishRepositoryUrl>true</PublishRepositoryUrl>
-    <IncludeSymbols>true</IncludeSymbols>
-    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-	<Nullable>disable</Nullable>
-    <PackageProjectUrl>https://github.com/inthehand/32feet</PackageProjectUrl>
-    <Copyright>Copyright (c) 2004-2023 In The Hand Ltd</Copyright>
-    <Description>32feet.NET is an open-source project to make personal area networking technologies such as Bluetooth easily accessible from .NET code.</Description>
-    <FileVersion>4.0.7.1005</FileVersion>
-    <AssemblyVersion>4.0.0.0</AssemblyVersion>
-    <AssemblyName>InTheHand.Net.Obex</AssemblyName>
-    <DebugType>portable</DebugType>
-    <GenerateDocumentationFile Condition=" '$(Configuration)' == 'Release' ">true</GenerateDocumentationFile>
-    <PackageTags>irda bluetooth windows win32 android iOS</PackageTags>
-    <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
-    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageId>InTheHand.Net.Obex</PackageId>
-    <PackageIcon>32feet-package-icon.png</PackageIcon>
-    <RepositoryType>GIT</RepositoryType>
-    <PackageReleaseNotes>Updated to reference new Bluetooth version.</PackageReleaseNotes>
-    <SignAssembly Condition=" '$(Configuration)' == 'Release' ">true</SignAssembly>
-    <AssemblyOriginatorKeyFile Condition=" '$(Configuration)' == 'Release' ">InTheHand.snk</AssemblyOriginatorKeyFile>
-    <DelaySign>false</DelaySign>
-  </PropertyGroup>
+	<ItemGroup>
+		<None Include="..\Misc\32feet-package-icon.png">
+			<Pack>True</Pack>
+			<PackagePath></PackagePath>
+		</None>
+	</ItemGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DebugSymbols>true</DebugSymbols>
-  </PropertyGroup>
-
-  <ItemGroup>
-    <None Include="..\Misc\32feet-package-icon.png">
-      <Pack>True</Pack>
-      <PackagePath></PackagePath>
-    </None>
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="InTheHand.Net.Bluetooth" Version="4.1.40" />
-    <PackageReference Include="InTheHand.Net.IrDA" Version="4.0.3" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="InTheHand.Net.Bluetooth" Version="4.1.40" />
+		<PackageReference Include="InTheHand.Net.IrDA" Version="4.0.3" />
+		<PackageReference Include="DotNet.ReproducibleBuilds" Version="1.1.1" PrivateAssets="All" />
+		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
+	</ItemGroup>
 
 </Project>

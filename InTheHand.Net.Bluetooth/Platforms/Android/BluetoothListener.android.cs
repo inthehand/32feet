@@ -25,7 +25,9 @@ namespace InTheHand.Net.Sockets
 
         public void Start()
         {
-            socket = ((AndroidBluetoothRadio)BluetoothRadio.Default.Radio).Adapter.ListenUsingRfcommWithServiceRecord(ServiceUuid.ToString(), Java.Util.UUID.FromString(ServiceUuid.ToString()));
+            string serviceName = string.IsNullOrEmpty(ServiceName) ? ServiceUuid.ToString() : ServiceName;
+            
+            socket = ((AndroidBluetoothRadio)BluetoothRadio.Default.Radio).Adapter.ListenUsingRfcommWithServiceRecord(serviceName, Java.Util.UUID.FromString(ServiceUuid.ToString()));
             if (socket != null)
                 Active = true;
         }
