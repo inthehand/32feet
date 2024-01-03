@@ -2,7 +2,7 @@
 //
 // InTheHand.Net.Bluetooth.BluetoothSecurity
 // 
-// Copyright (c) 2003-2023 In The Hand Ltd, All rights reserved.
+// Copyright (c) 2003-2024 In The Hand Ltd, All rights reserved.
 // This source code is licensed under the MIT License
 
 using InTheHand.Net.Sockets;
@@ -15,7 +15,7 @@ namespace InTheHand.Net.Bluetooth
     /// </summary>
     public sealed partial class BluetoothSecurity
     {
-        static IBluetoothSecurity _bluetoothSecurity = null;
+        readonly static IBluetoothSecurity _bluetoothSecurity = null;
 
         static BluetoothSecurity()
         {
@@ -25,7 +25,7 @@ namespace InTheHand.Net.Bluetooth
             _bluetoothSecurity = new ExternalAccessoryBluetoothSecurity();
 #elif WINDOWS_UWP || WINDOWS10_0_17763_0_OR_GREATER
             _bluetoothSecurity = new WindowsBluetoothSecurity();
-#elif NET461 || WINDOWS7_0_OR_GREATER
+#elif NET462 || WINDOWS7_0_OR_GREATER
             _bluetoothSecurity = new Win32BluetoothSecurity();
 #elif NETSTANDARD
 #else

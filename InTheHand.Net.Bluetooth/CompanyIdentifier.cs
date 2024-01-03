@@ -2,7 +2,7 @@
 //
 // InTheHand.Net.Bluetooth.CompanyIdentifier
 // 
-// Copyright (c) 2003-2023 In The Hand Ltd, All rights reserved.
+// Copyright (c) 2003-2024 In The Hand Ltd, All rights reserved.
 // This source code is licensed under the MIT License
 
 using System;
@@ -9693,68 +9693,50 @@ namespace InTheHand.Net.Bluetooth
 
         = 0x005F
           Wicentric, Inc.
+*/
+        StonestreetOne = 0x005E,
 
-        = 0x005E
-          Stonestreet One, LLC
+        RealtekSemiconductor = 0x005D,
 
-        = 0x005D
-          Realtek Semiconductor Corporation
+        BelkinInternational = 0x005C,
 
-        = 0x005C
-          Belkin International, Inc.
+        RalinkTechnology = 0x005B,
 
-        = 0x005B
-          Ralink Technology Corporation
+        EMMicroelectronicMarin = 0x005A,
 
-        = 0x005A
-          EM Microelectronic-Marin SA
+        NordicSemiconductor = 0x0059,
 
-        = 0x0059
-          Nordic Semiconductor ASA
+        Vizio = 0x0058,
 
-        = 0x0058
-          Vizio, Inc.
+        HarmanInternationalIndustries = 0x0057,
 
-        = 0x0057
-          Harman International Industries, Inc.
+        SonyEricssonMobileCommunications = 0x0056,
 
-        = 0x0056
-          Sony Ericsson Mobile Communications
+        Plantronics = 0x0055,
 
-        = 0x0055
-          Plantronics, Inc.
+        ThreeDiJoy = 0x0054,
 
-        = 0x0054
-          3DiJoy Corporation
+        Free2move = 0x0053,
 
-        = 0x0053
-          Free2move AB
+        JandM = 0x0052,
 
-        = 0x0052
-          J&M Corporation
+        TzeroTechnologies = 0x0051,
 
-        = 0x0051
-          Tzero Technologies, Inc.
+        SiRFTechnology = 0x0050,
 
-        = 0x0050
-          SiRF Technology, Inc.
+        APT = 0x004F,
 
-        = 0x004F
-          APT Ltd.
+        AvagoTechnologies = 0x004E,
 
-        = 0x004E
-          Avago Technologies
-
-        = 0x004D
-          Staccato Communications, Inc.
-        */
+        StaccatoCommunications = 0x004D,
+        
         Apple = 0x004C,
             
         ContinentalAutomotiveSystems = 0x004B,
 
         AccelSemiconductor = 0x004A,
 
-        ThreeDSP= 0x0049,
+        ThreeDsp = 0x0049,
 
         MarvellTechnology = 0x0048,
 
@@ -9774,7 +9756,7 @@ namespace InTheHand.Net.Bluetooth
 
         SeikoEpson = 0x0040,
 
-        BluetoothSIG = 0x003F,
+        BluetoothSig = 0x003F,
 
         SystemsAndChips = 0x003E,
 

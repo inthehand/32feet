@@ -1,7 +1,7 @@
 ﻿<Project Sdk="MSBuild.Sdk.Extras/3.0.44">
 	<Sdk Name="DotNet.ReproducibleBuilds.Isolated" Version="1.1.1" />
 	<PropertyGroup>
-		<TargetFrameworks>netstandard2.0;netstandard2.1;net6.0;net6.0-windows7.0;net6.0-windows10.0.19041.0;net6.0-windows10.0.22000.0;net6.0-android;net6.0-ios;net7.0;net7.0-windows7.0;net7.0-windows10.0.22000.0;net7.0-android;net7.0-ios;net461;monoandroid10.0;xamarinios10;uap10.0</TargetFrameworks>
+		<TargetFrameworks>netstandard2.0;netstandard2.1;net6.0;net6.0-windows7.0;net6.0-windows10.0.19041.0;net6.0-windows10.0.22000.0;net7.0;net7.0-windows7.0;net7.0-windows10.0.22000.0;net7.0-android;net7.0-ios;net462;monoandroid10.0;xamarinios10;uap10.0</TargetFrameworks>
 		<Company>In The Hand Ltd</Company>
 		<Authors>Peter Foot</Authors>
 		<Product>32feet.NET</Product>
@@ -13,6 +13,7 @@
 		<DebugSymbols>true</DebugSymbols>
 		<DebugType>portable</DebugType>
 		<Nullable>disable</Nullable>
+		<CheckEolWorkloads>false</CheckEolWorkloads>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 		<PackageProjectUrl>https://github.com/inthehand/32feet</PackageProjectUrl>
 		<PackageLicenseUrl></PackageLicenseUrl>
@@ -99,7 +100,7 @@
 	</ItemGroup>
 
 	<ItemGroup Condition=" '$(TargetFramework)' == 'uap10.0' ">
-		<PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="7.0.0" />
+		<PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="8.0.0" />
 		<Compile Include="Platforms\Windows\*.cs" />
 	</ItemGroup>
 
@@ -116,7 +117,7 @@
 		<Compile Include="Platforms\Win32\*.cs" />
 	</ItemGroup>
 
-	<ItemGroup Condition=" '$(TargetFramework)' == 'net461' ">
+	<ItemGroup Condition=" '$(TargetFramework)' == 'net462' ">
 		<Compile Include="Platforms\Win32\*.cs" />
 	</ItemGroup>
 

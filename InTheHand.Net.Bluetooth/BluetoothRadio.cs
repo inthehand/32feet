@@ -2,7 +2,7 @@
 //
 // InTheHand.Net.Bluetooth.BluetoothRadio
 // 
-// Copyright (c) 2003-2023 In The Hand Ltd, All rights reserved.
+// Copyright (c) 2003-2024 In The Hand Ltd, All rights reserved.
 // This source code is licensed under the MIT License
 
 using InTheHand.Net.Sockets;
@@ -33,7 +33,7 @@ namespace InTheHand.Net.Bluetooth
                     radio = new ExternalAccessoryBluetoothRadio();
 #elif WINDOWS_UWP || WINDOWS10_0_17763_0_OR_GREATER
                     radio = WindowsBluetoothRadio.GetDefault();
-#elif NET461 || WINDOWS7_0_OR_GREATER
+#elif NET462 || WINDOWS7_0_OR_GREATER
                     radio = Win32BluetoothRadio.GetDefault();
 #elif NETSTANDARD
 #else

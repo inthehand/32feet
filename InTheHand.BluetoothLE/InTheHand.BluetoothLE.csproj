@@ -1,7 +1,7 @@
 ﻿<Project Sdk="MSBuild.Sdk.Extras/3.0.44">
 	<Sdk Name="DotNet.ReproducibleBuilds.Isolated" Version="1.1.1" />
 	<PropertyGroup>
-		<TargetFrameworks>netstandard2.0;monoandroid10.0;xamarinios10;xamarintvos10;xamarin.watchos10;uap10.0;net6.0;net6.0-windows10.0.19041.0;net6.0-android;net6.0-ios;net6.0-maccatalyst;net7.0;net7.0-windows10.0.19041.0;net7.0-android;net7.0-ios;net7.0-maccatalyst;net461</TargetFrameworks>
+		<TargetFrameworks>netstandard2.0;monoandroid10.0;xamarinios10;xamarintvos10;xamarin.watchos10;uap10.0;net6.0;net6.0-windows10.0.19041.0;net7.0;net7.0-windows10.0.19041.0;net7.0-android;net7.0-ios;net7.0-maccatalyst;net462</TargetFrameworks>
 		<Company>In The Hand Ltd</Company>
 		<Authors>Peter Foot</Authors>
 		<Product>32feet.NET</Product>
@@ -9,6 +9,7 @@
 		<IncludeSymbols>true</IncludeSymbols>
 		<DebugSymbols>true</DebugSymbols>
 		<DebugType>portable</DebugType>
+		<CheckEolWorkloads>false</CheckEolWorkloads>
 		<AssemblyTitle>InTheHand.BluetoothLE-$(TargetFramework)</AssemblyTitle>
 		<RepositoryUrl>https://github.com/inthehand/32feet</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
@@ -38,7 +39,7 @@
 
 	<ItemGroup>
 		<PackageReference Include="DotNet.ReproducibleBuilds" Version="1.1.1" PrivateAssets="All" />
-		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
+		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
 		<PackageReference Include="MSBuild.Sdk.Extras" Version="3.0.44" PrivateAssets="All" />
 	</ItemGroup>
 
@@ -88,7 +89,7 @@
 		<TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
 	</PropertyGroup>
 
-	<PropertyGroup Condition=" '$(TargetFramework)' == 'net461' ">
+	<PropertyGroup Condition=" '$(TargetFramework)' == 'net462' ">
 		<RuntimeIdentifiers>win10-x64;win10-x86;win10-arm;win10-arm64</RuntimeIdentifiers>
 		<TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.22621.0</TargetPlatformVersion>
 		<TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
@@ -106,7 +107,7 @@
 		<Compile Include="Platforms\Windows\*.cs" />
 	</ItemGroup>
 
-	<ItemGroup Condition=" '$(TargetFramework)' == 'net461' ">
+	<ItemGroup Condition=" '$(TargetFramework)' == 'net462' ">
 		<PackageReference Include="Microsoft.Windows.SDK.Contracts" Version="10.0.22621.2428" />
 		<Compile Include="Platforms\Windows\*.cs" />
 	</ItemGroup>

@@ -2,7 +2,7 @@
 //
 // InTheHand.Net.Bluetooth.BluetoothClient
 // 
-// Copyright (c) 2003-2023 In The Hand Ltd, All rights reserved.
+// Copyright (c) 2003-2024 In The Hand Ltd, All rights reserved.
 // This source code is licensed under the MIT License
 
 using InTheHand.Net.Bluetooth;
@@ -31,7 +31,7 @@ namespace InTheHand.Net.Sockets
             _bluetoothClient = new ExternalAccessoryBluetoothClient();
 #elif WINDOWS_UWP || WINDOWS10_0_17763_0_OR_GREATER
             _bluetoothClient = new WindowsBluetoothClient();
-#elif NET461 || WINDOWS7_0_OR_GREATER
+#elif NET462 || WINDOWS7_0_OR_GREATER
             _bluetoothClient = new Win32BluetoothClient();
 #elif NETSTANDARD
 #else

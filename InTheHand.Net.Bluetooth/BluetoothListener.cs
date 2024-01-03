@@ -2,7 +2,7 @@
 //
 // InTheHand.Net.Sockets.BluetoothListener
 // 
-// Copyright (c) 2003-2023 In The Hand Ltd, All rights reserved.
+// Copyright (c) 2003-2024 In The Hand Ltd, All rights reserved.
 // This source code is licensed under the MIT License
 
 using InTheHand.Net.Bluetooth;
@@ -16,7 +16,7 @@ namespace InTheHand.Net.Sockets
     /// </summary>
     public sealed partial class BluetoothListener : IDisposable
     {
-        private IBluetoothListener _bluetoothListener;
+        private readonly IBluetoothListener _bluetoothListener;
 
         /// <overloads>
         /// Initializes a new instance of the <see cref="BluetoothListener"/> class.
@@ -52,7 +52,7 @@ namespace InTheHand.Net.Sockets
             _bluetoothListener = new AndroidBluetoothListener();
 #elif WINDOWS_UWP || WINDOWS10_0_17763_0_OR_GREATER
             _bluetoothListener = new WindowsBluetoothListener();
-#elif NET461 || WINDOWS7_0_OR_GREATER
+#elif NET462 || WINDOWS7_0_OR_GREATER
             _bluetoothListener = new Win32BluetoothListener();
 #elif IOS || __IOS__ || NETSTANDARD
 #else

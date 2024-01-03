@@ -16,6 +16,7 @@
 		<DebugSymbols>true</DebugSymbols>
 		<DebugType>portable</DebugType>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+		<CheckEolWorkloads>false</CheckEolWorkloads>
 		<RepositoryUrl>https://github.com/inthehand/32feet</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
 		<PublishRepositoryUrl>true</PublishRepositoryUrl>
@@ -43,7 +44,7 @@
 	
 	<ItemGroup>
 		<PackageReference Include="DotNet.ReproducibleBuilds" Version="1.1.1" PrivateAssets="All" />
-		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
+		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
 		<PackageReference Include="MSBuild.Sdk.Extras" Version="3.0.44" PrivateAssets="All" />
 	</ItemGroup>
 	
