@@ -2,7 +2,7 @@
 //
 // InTheHand.Net.Bluetooth.BluetoothDevicePicker (WinRT)
 // 
-// Copyright (c) 2018-2022 In The Hand Ltd, All rights reserved.
+// Copyright (c) 2018-2024 In The Hand Ltd, All rights reserved.
 // This source code is licensed under the MIT License
 
 using InTheHand.Net.Sockets;
@@ -13,7 +13,6 @@ using Windows.Foundation;
 using Windows.Devices.Bluetooth;
 using System.Collections.Generic;
 #if WinRT
-using System.Diagnostics;
 using System.Runtime.InteropServices;
 #endif
 
@@ -51,7 +50,7 @@ namespace InTheHand.Net.Bluetooth
             var device = await BluetoothDevice.FromIdAsync(deviceInfo.Id);
             var access = await device.RequestAccessAsync();
 
-            return new WindowsBluetoothDeviceInfo(device);
+            return new BluetoothDeviceInfo(new WindowsBluetoothDeviceInfo(device));
         }
 
 #if WinRT

@@ -40,10 +40,8 @@ namespace InTheHand.Net.Sockets
             {
                 foreach (EAAccessory accessory in EAAccessoryManager.SharedAccessoryManager.ConnectedAccessories)
                 {
-                    yield return new ExternalAccessoryBluetoothDeviceInfo(accessory);
+                    yield return new BluetoothDeviceInfo(new ExternalAccessoryBluetoothDeviceInfo(accessory));
                 }
-
-                yield break;
             }
         }
 

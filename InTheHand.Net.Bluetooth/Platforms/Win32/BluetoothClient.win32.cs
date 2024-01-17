@@ -2,7 +2,7 @@
 //
 // InTheHand.Net.Bluetooth.BluetoothClient (Win32)
 // 
-// Copyright (c) 2003-2023 In The Hand Ltd, All rights reserved.
+// Copyright (c) 2003-2024 In The Hand Ltd, All rights reserved.
 // This source code is licensed under the MIT License
 
 using InTheHand.Net.Bluetooth.Win32;
@@ -58,17 +58,15 @@ namespace InTheHand.Net.Sockets
                 IntPtr searchHandle = NativeMethods.BluetoothFindFirstDevice(ref search, ref device);
                 if (searchHandle != IntPtr.Zero)
                 {
-                    yield return new Win32BluetoothDeviceInfo(device);
+                    yield return new BluetoothDeviceInfo(new Win32BluetoothDeviceInfo(device));
 
                     while (NativeMethods.BluetoothFindNextDevice(searchHandle, ref device))
                     {
-                        yield return new Win32BluetoothDeviceInfo(device);
+                        yield return new BluetoothDeviceInfo(new Win32BluetoothDeviceInfo(device));
                     }
 
                     NativeMethods.BluetoothFindDeviceClose(searchHandle);
                 }
-
-                yield break;
             }
         }
 
@@ -89,12 +87,12 @@ namespace InTheHand.Net.Sockets
             if(searchHandle != IntPtr.Zero)
             {
                 NativeMethods.BluetoothGetDeviceInfo(IntPtr.Zero, ref device);
-                devices.Add(new Win32BluetoothDeviceInfo(device));
+                devices.Add(new BluetoothDeviceInfo(new Win32BluetoothDeviceInfo(device)));
 
                 while (NativeMethods.BluetoothFindNextDevice(searchHandle, ref device) && devices.Count < maxDevices)
                 {
                     NativeMethods.BluetoothGetDeviceInfo(IntPtr.Zero, ref device);
-                    devices.Add(new Win32BluetoothDeviceInfo(device));
+                    devices.Add(new BluetoothDeviceInfo(new Win32BluetoothDeviceInfo(device)));
                 }
 
                 NativeMethods.BluetoothFindDeviceClose(searchHandle);
@@ -112,14 +110,14 @@ namespace InTheHand.Net.Sockets
             {
                 if (device.LastSeen < DateTime.Now.AddMinutes(-1))
                 {
-                    devices.Remove(new Win32BluetoothDeviceInfo(device));
+                    devices.Remove(new BluetoothDeviceInfo(new Win32BluetoothDeviceInfo(device)));
                 }
 
                 while (NativeMethods.BluetoothFindNextDevice(searchHandle, ref device))
                 {
                     if (device.LastSeen < DateTime.Now.AddMinutes(-1))
                     {
-                        devices.Remove(new Win32BluetoothDeviceInfo(device));
+                        devices.Remove(new BluetoothDeviceInfo(new Win32BluetoothDeviceInfo(device)));
                     }
                 }
 
@@ -136,8 +134,6 @@ namespace InTheHand.Net.Sockets
             {
                 yield return device;
             }
-
-            yield break;
         }
 #endif
 
@@ -324,7 +320,6 @@ namespace InTheHand.Net.Sockets
                 }
             } 
         }
-
 
         string IBluetoothClient.RemoteMachineName
         {

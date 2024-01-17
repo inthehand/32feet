@@ -15,7 +15,7 @@ namespace InTheHand.Net.Bluetooth
     /// <summary>
     /// Picker dialog to select a single Bluetooth device.
     /// </summary>
-    public sealed partial class BluetoothDevicePicker
+    public sealed class BluetoothDevicePicker
     {
         private readonly IBluetoothDevicePicker _bluetoothDevicePicker;
 

@@ -19,7 +19,7 @@ namespace InTheHand.Net.Sockets
     /// <summary>
     /// Provides client connections for Bluetooth Rfcomm network services.
     /// </summary>
-    public sealed partial class BluetoothClient : IDisposable
+    public sealed class BluetoothClient : IDisposable
     {
         private IBluetoothClient _bluetoothClient;
 

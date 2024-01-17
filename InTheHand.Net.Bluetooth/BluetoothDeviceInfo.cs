@@ -2,7 +2,7 @@
 //
 // InTheHand.Net.Sockets.BluetoothDeviceInfo
 // 
-// Copyright (c) 2003-2023 In The Hand Ltd, All rights reserved.
+// Copyright (c) 2003-2024 In The Hand Ltd, All rights reserved.
 // This source code is licensed under the MIT License
 
 using InTheHand.Net.Bluetooth;
@@ -17,29 +17,34 @@ namespace InTheHand.Net.Sockets
     /// Provides information about an available device obtained by the client during device discovery.
     /// </summary>
     [DebuggerDisplay("({DeviceAddress.ToString(\"C\")}) {DeviceName}")]
-    public abstract partial class BluetoothDeviceInfo : IEquatable<BluetoothDeviceInfo>
+    public sealed partial class BluetoothDeviceInfo : IEquatable<BluetoothDeviceInfo>
     {
-        internal BluetoothDeviceInfo() { }
+        private readonly IBluetoothDeviceInfo _bluetoothDeviceInfo;
+
+        internal BluetoothDeviceInfo(IBluetoothDeviceInfo bluetoothDeviceInfo)
+        {
+            _bluetoothDeviceInfo = bluetoothDeviceInfo;
+        }
 
         /// <summary>
         /// Forces the system to refresh the device information.
         /// </summary>
-        public virtual void Refresh() { }
+        public void Refresh() =>  _bluetoothDeviceInfo.Refresh();
 
         /// <summary>
         /// Gets the device identifier.
         /// </summary>
-        public virtual BluetoothAddress DeviceAddress { get => BluetoothAddress.None; }
+        public BluetoothAddress DeviceAddress { get => _bluetoothDeviceInfo.DeviceAddress; }
 
         /// <summary>
         /// Gets the name of a device.
         /// </summary>
-        public virtual string DeviceName { get => string.Empty; }
+        public string DeviceName { get => _bluetoothDeviceInfo.DeviceName; }
 
         /// <summary>
         /// Returns the Class of Device of the remote device.
         /// </summary>
-        public virtual ClassOfDevice ClassOfDevice { get => (ClassOfDevice)0; }
+        public ClassOfDevice ClassOfDevice { get => _bluetoothDeviceInfo.ClassOfDevice; }
 
         /// <premliminary/>
         /// <summary>
@@ -47,23 +52,23 @@ namespace InTheHand.Net.Sockets
         /// </summary>
         /// <param name="cached">If true and supported on the runtime platform return locally cached devices without doing an SDP request.</param>
         /// <returns>All available Rfcomm service UUIDs on the remote device.</returns>
-        public virtual Task<IEnumerable<Guid>> GetRfcommServicesAsync(bool cached = true) => Task.FromException<IEnumerable<Guid>>(new PlatformNotSupportedException());
+        public Task<IEnumerable<Guid>> GetRfcommServicesAsync(bool cached = true) => _bluetoothDeviceInfo.GetRfcommServicesAsync(cached);
 
         /// <summary>
         /// Returns a list of services which are already installed for use on the calling machine.
         /// </summary>
-        public virtual IReadOnlyCollection<Guid> InstalledServices { get => throw new PlatformNotSupportedException(); }
+        public IReadOnlyCollection<Guid> InstalledServices { get => _bluetoothDeviceInfo.InstalledServices; }
 
         /// <summary>
         /// Specifies whether the device is connected.
         /// </summary>
-        public virtual bool Connected { get => false; }
+        public bool Connected { get => _bluetoothDeviceInfo.Connected; }
 
         /// <summary>
         /// Specifies whether the device is authenticated, paired, or bonded.
         /// All authenticated devices are remembered.
         /// </summary>
-        public virtual bool Authenticated { get => false; }
+        public bool Authenticated { get => _bluetoothDeviceInfo.Authenticated; }
 
         /// <summary>
         /// Enables or disables services for a Bluetooth device.
@@ -71,7 +76,7 @@ namespace InTheHand.Net.Sockets
         /// <remarks>Only applies to Windows platform.</remarks>
         /// <param name="service"></param>
         /// <param name="state"></param>
-        public virtual void SetServiceState(Guid service, bool state) => throw new PlatformNotSupportedException();
+        public void SetServiceState(Guid service, bool state) => _bluetoothDeviceInfo.SetServiceState(service, state);
 
         /// <summary>
         /// Compares two BluetoothDeviceInfo instances for equality.

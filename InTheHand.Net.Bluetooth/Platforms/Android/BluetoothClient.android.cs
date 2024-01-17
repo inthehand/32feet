@@ -44,7 +44,7 @@ namespace InTheHand.Net.Sockets
             {
                 foreach (var device in ((BluetoothAdapter)_radio).BondedDevices)
                 {
-                    yield return new AndroidBluetoothDeviceInfo(device);
+                    yield return new BluetoothDeviceInfo(new AndroidBluetoothDeviceInfo(device));
                 }
             }
         }
@@ -73,7 +73,7 @@ namespace InTheHand.Net.Sockets
 
             receiver.DeviceFound += (s, e) =>
             {
-                var bdi = new AndroidBluetoothDeviceInfo(e);
+                var bdi = new BluetoothDeviceInfo(new AndroidBluetoothDeviceInfo(e));
                 if (!devices.Contains(bdi))
                 {
                     devices.Add(bdi);
@@ -124,7 +124,7 @@ namespace InTheHand.Net.Sockets
 
             receiver.DeviceFound += (s, e) =>
             {
-                var bdi = new AndroidBluetoothDeviceInfo(e);
+                var bdi = new BluetoothDeviceInfo(new AndroidBluetoothDeviceInfo(e));
                 if (cancellationToken.IsCancellationRequested)
                 {
                     ((BluetoothAdapter)_radio).CancelDiscovery();

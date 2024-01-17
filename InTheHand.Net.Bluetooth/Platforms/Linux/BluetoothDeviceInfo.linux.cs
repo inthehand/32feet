@@ -2,20 +2,19 @@
 //
 // InTheHand.Net.Sockets.BluetoothDeviceInfo (Linux)
 // 
-// Copyright (c) 2023 In The Hand Ltd, All rights reserved.
+// Copyright (c) 2023-2024 In The Hand Ltd, All rights reserved.
 // This source code is licensed under the MIT License
 
 using Linux.Bluetooth;
 using InTheHand.Net.Bluetooth;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Linux.Bluetooth.Extensions;
 
 namespace InTheHand.Net.Sockets
 {
-    internal sealed class LinuxBluetoothDeviceInfo : BluetoothDeviceInfo
+    internal sealed class LinuxBluetoothDeviceInfo : IBluetoothDeviceInfo
     {
         private Device _device;
 
@@ -73,12 +72,12 @@ namespace InTheHand.Net.Sockets
         }
 
         BluetoothAddress _address;
-        public override BluetoothAddress DeviceAddress { get => _address; }
+        public BluetoothAddress DeviceAddress { get => _address; }
 
         string _name = string.Empty;
-        public override string DeviceName { get => _name; }
+        public string DeviceName { get => _name; }
 
-        public override async Task<IEnumerable<Guid>> GetRfcommServicesAsync(bool cached)
+        public async Task<IEnumerable<Guid>> GetRfcommServicesAsync(bool cached)
         {
             List<Guid> services = new List<Guid>();
             var uuids = await _device.GetUUIDsAsync();
@@ -91,14 +90,25 @@ namespace InTheHand.Net.Sockets
         }
 
         private bool _connected;
-        public override bool Connected { get =>  _connected; }
+        public bool Connected { get =>  _connected; }
 
         private bool _authenticated;
-        public override bool Authenticated {  get => _authenticated; }
+        public bool Authenticated {  get => _authenticated; }
 
-        public override void Refresh()
+        ClassOfDevice IBluetoothDeviceInfo.ClassOfDevice => (ClassOfDevice)0;
+
+        IReadOnlyCollection<Guid> IBluetoothDeviceInfo.InstalledServices => throw new PlatformNotSupportedException();
+
+        bool IBluetoothDeviceInfo.Authenticated => throw new PlatformNotSupportedException();
+
+        public void Refresh()
         {
             Init();
+        }
+
+        void IBluetoothDeviceInfo.SetServiceState(Guid service, bool state)
+        {
+            throw new PlatformNotSupportedException();
         }
     }
 }

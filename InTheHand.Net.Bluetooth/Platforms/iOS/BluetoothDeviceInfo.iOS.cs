@@ -2,7 +2,7 @@
 //
 // InTheHand.Net.Sockets.BluetoothDeviceInfo (iOS)
 // 
-// Copyright (c) 2003-2023 In The Hand Ltd, All rights reserved.
+// Copyright (c) 2003-2024 In The Hand Ltd, All rights reserved.
 // This source code is licensed under the MIT License
 
 using InTheHand.Net.Bluetooth;
@@ -22,16 +22,10 @@ namespace InTheHand.Net.Sockets
         /// </summary>
         /// <remarks>Protocol names are formatted as reverse-DNS strings. For example, the string “com.apple.myProtocol” might represent a custom protocol defined by Apple.
         /// Manufacturers can define custom protocols for their accessories or work with other manufacturers and organizations to define standard protocols for different accessory types.</remarks>
-        public IReadOnlyCollection<string> ProtocolStrings
-        {
-            get
-            {
-                return ((ExternalAccessoryBluetoothDeviceInfo)this).ProtocolStrings;
-            }
-        }
+        public IReadOnlyCollection<string> ProtocolStrings => ((ExternalAccessoryBluetoothDeviceInfo)this).ProtocolStrings;
     }
 
-    internal sealed class ExternalAccessoryBluetoothDeviceInfo : BluetoothDeviceInfo
+    internal sealed class ExternalAccessoryBluetoothDeviceInfo : IBluetoothDeviceInfo
     {
         private readonly EAAccessory _accessory;
 
@@ -55,26 +49,35 @@ namespace InTheHand.Net.Sockets
             return (ExternalAccessoryBluetoothDeviceInfo)v;
         }
 
-        public override BluetoothAddress DeviceAddress { get => new BluetoothAddress(_accessory); }
+        public BluetoothAddress DeviceAddress => new BluetoothAddress(_accessory);
 
-        public override string DeviceName {  get => _accessory.Name; }
+        public string DeviceName => _accessory.Name;
 
         /// <summary>
         /// On iOS returns the ExternalAccessory Protocol strings for the device.
         /// </summary>
         /// <remarks>Protocol names are formatted as reverse-DNS strings. For example, the string “com.apple.myProtocol” might represent a custom protocol defined by Apple.
         /// Manufacturers can define custom protocols for their accessories or work with other manufacturers and organizations to define standard protocols for different accessory types.</remarks>
-        public IReadOnlyCollection<string> ProtocolStrings
+        public IReadOnlyCollection<string> ProtocolStrings => new ReadOnlyCollection<string>(_accessory.ProtocolStrings.ToList());
+
+        public bool Connected => _accessory.Connected;
+
+        public bool Authenticated => true;
+
+        ClassOfDevice IBluetoothDeviceInfo.ClassOfDevice => (ClassOfDevice)0;
+
+        IReadOnlyCollection<Guid> IBluetoothDeviceInfo.InstalledServices => throw new PlatformNotSupportedException();
+
+        void IBluetoothDeviceInfo.Refresh() { }
+
+        Task<IEnumerable<Guid>> IBluetoothDeviceInfo.GetRfcommServicesAsync(bool cached)
         {
-            get
-            {
-                return new ReadOnlyCollection<string>( _accessory.ProtocolStrings.ToList());
-            }
+            throw new PlatformNotSupportedException();
         }
 
-
-        public override bool Connected {  get =>  _accessory.Connected; }
-
-        public override bool Authenticated { get => true; }
+        void IBluetoothDeviceInfo.SetServiceState(Guid service, bool state)
+        {
+            throw new PlatformNotSupportedException();
+        }
     }
 }

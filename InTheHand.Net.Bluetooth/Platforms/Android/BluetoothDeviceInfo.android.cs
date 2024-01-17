@@ -2,25 +2,22 @@
 //
 // InTheHand.Net.Sockets.BluetoothDeviceInfo (Android)
 // 
-// Copyright (c) 2003-2023 In The Hand Ltd, All rights reserved.
+// Copyright (c) 2003-2024 In The Hand Ltd, All rights reserved.
 // This source code is licensed under the MIT License
 
 using Android.Bluetooth;
 using Android.Content;
-using Android.OS;
 using InTheHand.Net.Bluetooth;
 using InTheHand.Net.Bluetooth.Droid;
 using Java.Lang.Reflect;
 using Java.Util;
 using System;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace InTheHand.Net.Sockets
 {
-    internal sealed class AndroidBluetoothDeviceInfo : BluetoothDeviceInfo
+    internal sealed class AndroidBluetoothDeviceInfo : IBluetoothDeviceInfo
     {
         private readonly BluetoothDevice _device;
 
@@ -42,12 +39,12 @@ namespace InTheHand.Net.Sockets
             return new AndroidBluetoothDeviceInfo(device);
         }
 
-        public override BluetoothAddress DeviceAddress { get => BluetoothAddress.Parse(_device.Address); }
+        public BluetoothAddress DeviceAddress { get => BluetoothAddress.Parse(_device.Address); }
 
-        public override string DeviceName { get => _device.Name; }
+        public string DeviceName { get => _device.Name; }
 
         private ClassOfDevice _cod;
-        public override ClassOfDevice ClassOfDevice
+        public ClassOfDevice ClassOfDevice
         {
             get
             {
@@ -70,19 +67,22 @@ namespace InTheHand.Net.Sockets
             return new Guid(bytes);
         }
 
-        public override async Task<IEnumerable<Guid>> GetRfcommServicesAsync(bool cached)
+        public async Task<IEnumerable<Guid>> GetRfcommServicesAsync(bool cached)
         {
             if (cached)
             {
                 List<Guid> services = new List<Guid>();
                 var uuids = _device.GetUuids();
-                foreach (var uuid in uuids)
+                if (uuids != null)
                 {
-                    var u = Guid.Parse(uuid.Uuid.ToString());
-
-                    if (u != BluetoothService.BluetoothBase)
+                    foreach (var uuid in uuids)
                     {
-                        services.Add(u);
+                        var u = Guid.Parse(uuid.Uuid.ToString());
+
+                        if (u != BluetoothService.BluetoothBase)
+                        {
+                            services.Add(u);
+                        }
                     }
                 }
 
@@ -101,7 +101,14 @@ namespace InTheHand.Net.Sockets
             }
         }
 
-        public override bool Connected
+        void IBluetoothDeviceInfo.Refresh() { }
+
+        void IBluetoothDeviceInfo.SetServiceState(Guid service, bool state)
+        {
+            throw new PlatformNotSupportedException();
+        }
+
+        public bool Connected
         {
             get
             {
@@ -111,6 +118,8 @@ namespace InTheHand.Net.Sockets
             }
         }
 
-        public override bool Authenticated {  get => _device.BondState == Bond.Bonded; }
+        public bool Authenticated {  get => _device.BondState == Bond.Bonded; }
+
+        IReadOnlyCollection<Guid> IBluetoothDeviceInfo.InstalledServices => throw new PlatformNotSupportedException();
     }
 }

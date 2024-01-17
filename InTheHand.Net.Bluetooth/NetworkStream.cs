@@ -2,13 +2,12 @@
 //
 // InTheHand.Net.Sockets.NetworkStream
 // 
-// Copyright (c) 2018-2023 In The Hand Ltd, All rights reserved.
+// Copyright (c) 2018-2024 In The Hand Ltd, All rights reserved.
 // This source code is licensed under the MIT License
 
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.IO;
 using System.Net;
 using System.Net.Sockets;
 

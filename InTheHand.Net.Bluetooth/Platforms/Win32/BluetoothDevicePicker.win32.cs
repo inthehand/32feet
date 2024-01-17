@@ -34,7 +34,7 @@ namespace InTheHand.Net.Bluetooth
 
             if (success)
             {
-                info = new Win32BluetoothDeviceInfo(p.Device);
+                info = new BluetoothDeviceInfo(new Win32BluetoothDeviceInfo(p.Device));
             }
 
             return Task.FromResult(info);

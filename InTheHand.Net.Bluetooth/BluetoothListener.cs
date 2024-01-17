@@ -14,7 +14,7 @@ namespace InTheHand.Net.Sockets
     /// <summary>
     /// Listens for connections from Bluetooth RFCOMM network clients.
     /// </summary>
-    public sealed partial class BluetoothListener : IDisposable
+    public sealed class BluetoothListener : IDisposable
     {
         private readonly IBluetoothListener _bluetoothListener;
 

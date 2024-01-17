@@ -95,7 +95,7 @@ namespace InTheHand.Net.Bluetooth
                 connectionObserver.Dispose();
             }
             
-            return new ExternalAccessoryBluetoothDeviceInfo(await tcs.Task);
+            return new BluetoothDeviceInfo(new ExternalAccessoryBluetoothDeviceInfo(await tcs.Task));
         }
     }
 }

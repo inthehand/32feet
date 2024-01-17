@@ -73,7 +73,7 @@ namespace InTheHand.Net.Bluetooth
 
                 if (_device != null)
                 {
-                    return Task.FromResult<BluetoothDeviceInfo>(new AndroidBluetoothDeviceInfo(_device));
+                    return Task.FromResult<BluetoothDeviceInfo>(new BluetoothDeviceInfo(new AndroidBluetoothDeviceInfo(_device)));
                 }
                 else
                 {

@@ -2,7 +2,7 @@
 //
 // InTheHand.Net.Sockets.BluetoothDeviceInfo (WinRT)
 // 
-// Copyright (c) 2003-2023 In The Hand Ltd, All rights reserved.
+// Copyright (c) 2003-2024 In The Hand Ltd, All rights reserved.
 // This source code is licensed under the MIT License
 
 using InTheHand.Net.Bluetooth;
@@ -13,7 +13,7 @@ using Windows.Devices.Bluetooth;
 
 namespace InTheHand.Net.Sockets
 {
-    internal sealed class WindowsBluetoothDeviceInfo : BluetoothDeviceInfo
+    internal sealed class WindowsBluetoothDeviceInfo : IBluetoothDeviceInfo
     {
         internal BluetoothDevice NativeDevice;
 
@@ -32,13 +32,13 @@ namespace InTheHand.Net.Sockets
             return new WindowsBluetoothDeviceInfo(device);
         }
 
-        public override BluetoothAddress DeviceAddress { get => NativeDevice.BluetoothAddress; }
+        public BluetoothAddress DeviceAddress { get => NativeDevice.BluetoothAddress; }
 
-        public override string DeviceName { get => NativeDevice.Name; }
+        public string DeviceName { get => NativeDevice.Name; }
 
-        public override ClassOfDevice ClassOfDevice { get => (ClassOfDevice)NativeDevice.ClassOfDevice.RawValue; }
+        public ClassOfDevice ClassOfDevice { get => (ClassOfDevice)NativeDevice.ClassOfDevice.RawValue; }
 
-        public override async Task<IEnumerable<Guid>> GetRfcommServicesAsync(bool cached)
+        public async Task<IEnumerable<Guid>> GetRfcommServicesAsync(bool cached)
         {
             List<Guid> services = new List<Guid>();
 
@@ -55,8 +55,17 @@ namespace InTheHand.Net.Sockets
             return services;
         }
 
-        public override bool Connected { get => NativeDevice.ConnectionStatus == BluetoothConnectionStatus.Connected; }
+        void IBluetoothDeviceInfo.Refresh() { }
 
-        public override bool Authenticated { get => NativeDevice.DeviceInformation.Pairing.IsPaired; }
+        void IBluetoothDeviceInfo.SetServiceState(Guid service, bool state)
+        {
+            throw new PlatformNotSupportedException();
+        }
+
+        public bool Connected { get => NativeDevice.ConnectionStatus == BluetoothConnectionStatus.Connected; }
+
+        public bool Authenticated { get => NativeDevice.DeviceInformation.Pairing.IsPaired; }
+
+        IReadOnlyCollection<Guid> IBluetoothDeviceInfo.InstalledServices => throw new PlatformNotSupportedException();
     }
 }

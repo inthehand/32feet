@@ -2,7 +2,7 @@
 //
 // InTheHand.Net.Sockets.BluetoothClient (WinRT)
 // 
-// Copyright (c) 2018-2023 In The Hand Ltd, All rights reserved.
+// Copyright (c) 2018-2024 In The Hand Ltd, All rights reserved.
 // This source code is licensed under the MIT License
 
 using System;
@@ -20,14 +20,14 @@ namespace InTheHand.Net.Sockets
 {
     internal sealed class WindowsBluetoothClient : IBluetoothClient
     {
-        private StreamSocket streamSocket;
+        private StreamSocket _streamSocket;
         private bool _authenticate = false;
 
         internal WindowsBluetoothClient() { }
 
         internal WindowsBluetoothClient(StreamSocket socket)
         {
-            streamSocket = socket;
+            _streamSocket = socket;
         }
 
         public IEnumerable<BluetoothDeviceInfo> PairedDevices
@@ -45,10 +45,8 @@ namespace InTheHand.Net.Sockets
                     var td = BluetoothDevice.FromIdAsync(device.Id).AsTask();
                     td.Wait();
                     var bluetoothDevice = td.Result;
-                    yield return new WindowsBluetoothDeviceInfo(bluetoothDevice);
+                    yield return new BluetoothDeviceInfo(new WindowsBluetoothDeviceInfo(bluetoothDevice));
                 }
-
-                yield break;
             }
         }
 
@@ -67,7 +65,7 @@ namespace InTheHand.Net.Sockets
                 {
                     return await BluetoothDevice.FromIdAsync(device.Id);
                 });
-                results.Add(new WindowsBluetoothDeviceInfo(bluetoothDevice));
+                results.Add(new BluetoothDeviceInfo(new WindowsBluetoothDeviceInfo(bluetoothDevice)));
             }
             return results.AsReadOnly();
         }
@@ -79,10 +77,8 @@ namespace InTheHand.Net.Sockets
             
             foreach(var device in devices)
             {
-                yield return new WindowsBluetoothDeviceInfo(await BluetoothDevice.FromIdAsync(device.Id));
+                yield return new BluetoothDeviceInfo(new WindowsBluetoothDeviceInfo(await BluetoothDevice.FromIdAsync(device.Id)));
             }
-
-            yield break;
         }
 #endif
 
@@ -94,8 +90,8 @@ namespace InTheHand.Net.Sockets
             if (rfcommServices.Error == BluetoothError.Success)
             {
                 var rfCommService = rfcommServices.Services[0];
-                streamSocket = new StreamSocket();
-                await streamSocket.ConnectAsync(rfCommService.ConnectionHostName, rfCommService.ConnectionServiceName, Authenticate ? SocketProtectionLevel.BluetoothEncryptionWithAuthentication : SocketProtectionLevel.BluetoothEncryptionAllowNullAuthentication);
+                _streamSocket = new StreamSocket();
+                await _streamSocket.ConnectAsync(rfCommService.ConnectionHostName, rfCommService.ConnectionServiceName, Authenticate ? SocketProtectionLevel.BluetoothEncryptionWithAuthentication : SocketProtectionLevel.BluetoothEncryptionAllowNullAuthentication);
             }
         }
 
@@ -123,10 +119,10 @@ namespace InTheHand.Net.Sockets
 
         public void Close()
         {
-            if (streamSocket != null)
+            if (_streamSocket != null)
             {
-                streamSocket.Dispose();
-                streamSocket = null;
+                _streamSocket.Dispose();
+                _streamSocket = null;
             }
         }
 
@@ -138,7 +134,7 @@ namespace InTheHand.Net.Sockets
         {
             get
             {
-                if (streamSocket == null)
+                if (_streamSocket == null)
                     return false;
 
                 return true;
@@ -155,7 +151,7 @@ namespace InTheHand.Net.Sockets
             {
                 if (Connected)
                 {
-                    return streamSocket.Information.RemoteHostName.DisplayName;
+                    return _streamSocket.Information.RemoteHostName.DisplayName;
                 }
 
                 return string.Empty;
@@ -166,7 +162,7 @@ namespace InTheHand.Net.Sockets
         {
             if (Connected)
             {
-                return new WinRTNetworkStream(streamSocket, true);
+                return new WinRTNetworkStream(_streamSocket, true);
             }
 
             return null;

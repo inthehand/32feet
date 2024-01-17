@@ -13,7 +13,7 @@ namespace InTheHand.Net.Bluetooth
     /// <summary>
     /// Contains functionality to pair (and un-pair) Bluetooth devices.
     /// </summary>
-    public sealed partial class BluetoothSecurity
+    public sealed class BluetoothSecurity
     {
         readonly static IBluetoothSecurity _bluetoothSecurity = null;
 

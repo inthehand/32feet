@@ -57,7 +57,7 @@ namespace InTheHand.Net.Bluetooth
             }
 
             authHandler.WaitOne();
-            BluetoothDeviceInfo deviceInfo = new Win32BluetoothDeviceInfo(info);
+            BluetoothDeviceInfo deviceInfo = new BluetoothDeviceInfo(new Win32BluetoothDeviceInfo(info));
             deviceInfo.Refresh();
 
             // On Windows 7 these services are not automatically activated

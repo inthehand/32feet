@@ -2,7 +2,7 @@
 //
 // InTheHand.Net.Sockets.BluetoothDeviceInfo (Win32)
 // 
-// Copyright (c) 2003-2023 In The Hand Ltd, All rights reserved.
+// Copyright (c) 2003-2024 In The Hand Ltd, All rights reserved.
 // This source code is licensed under the MIT License
 
 using InTheHand.Net.Bluetooth;
@@ -17,7 +17,7 @@ using System.Threading.Tasks;
 
 namespace InTheHand.Net.Sockets
 {
-    internal sealed class Win32BluetoothDeviceInfo : BluetoothDeviceInfo
+    internal sealed class Win32BluetoothDeviceInfo : IBluetoothDeviceInfo
     {
         private BLUETOOTH_DEVICE_INFO _info;
 
@@ -37,13 +37,13 @@ namespace InTheHand.Net.Sockets
             Refresh();
         }
 
-        public override BluetoothAddress DeviceAddress { get => _info.Address; }
+        public BluetoothAddress DeviceAddress { get => _info.Address; }
 
-        public override string DeviceName { get => _info.szName.TrimEnd(); }
+        public string DeviceName { get => _info.szName.TrimEnd(); }
 
-        public override ClassOfDevice ClassOfDevice { get => (ClassOfDevice)_info.ulClassofDevice; }
+        public ClassOfDevice ClassOfDevice { get => (ClassOfDevice)_info.ulClassofDevice; }
 
-        public override async Task<IEnumerable<Guid>> GetRfcommServicesAsync(bool cached)
+        public Task<IEnumerable<Guid>> GetRfcommServicesAsync(bool cached)
         {
             List<Guid> services = new List<Guid>();
             WSAQUERYSET qs = new WSAQUERYSET();
@@ -101,10 +101,11 @@ namespace InTheHand.Net.Sockets
                 Marshal.FreeHGlobal(qs.lpServiceClassId);
                 Marshal.FreeHGlobal(buffer);
             }
-            return services;
+
+            return Task.FromResult(result: (IEnumerable<Guid>)services);
         }
 
-        public override IReadOnlyCollection<Guid> InstalledServices
+        public IReadOnlyCollection<Guid> InstalledServices
         {
             get
             {
@@ -128,14 +129,14 @@ namespace InTheHand.Net.Sockets
             }
         }
 
-        public override void SetServiceState(Guid service, bool state)
+        public void SetServiceState(Guid service, bool state)
         {
             int result = NativeMethods.BluetoothSetServiceState(IntPtr.Zero, ref _info, ref service, state ? 1u : 0);
         }
 
-        public override bool Connected { get => _info.fConnected; }
+        public bool Connected { get => _info.fConnected; }
 
-        public override bool Authenticated { get => _info.fAuthenticated; }
+        public bool Authenticated { get => _info.fAuthenticated; }
 
         /// <summary>
         /// Specifies whether the device is a remembered device.
@@ -150,7 +151,7 @@ namespace InTheHand.Net.Sockets
             } 
         }
 
-        public override void Refresh()
+        public void Refresh()
         {
             NativeMethods.BluetoothGetDeviceInfo(IntPtr.Zero, ref _info);
         }

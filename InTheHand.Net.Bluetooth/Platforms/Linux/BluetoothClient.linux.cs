@@ -49,7 +49,7 @@ namespace InTheHand.Net.Sockets
                     {
                         var bdi = new LinuxBluetoothDeviceInfo(device);
                         await bdi.Init();
-                        pairedDevices.Add(bdi);
+                        pairedDevices.Add(new BluetoothDeviceInfo(bdi));
                     }
                     return pairedDevices.AsReadOnly();
                 });
@@ -77,7 +77,7 @@ namespace InTheHand.Net.Sockets
         public async IAsyncEnumerable<BluetoothDeviceInfo> DiscoverDevicesAsync([EnumeratorCancellation] CancellationToken cancellationToken)
         {
             TaskCompletionSource<bool> result = new TaskCompletionSource<bool>();
-            List<BluetoothDeviceInfo> devices = new List<BluetoothDeviceInfo>();
+            List<LinuxBluetoothDeviceInfo> devices = new List<LinuxBluetoothDeviceInfo>();
             LinuxBluetoothDeviceInfo device = null;
             var waitable = new AutoResetEvent(false);
             var adapter = (Adapter)BluetoothRadio.Default;
@@ -109,11 +109,10 @@ namespace InTheHand.Net.Sockets
             while (!t.IsCompleted)
             {
                 waitable.WaitOne();
-                yield return device;
+                yield return new BluetoothDeviceInfo(device);
             }
 
             adapter.DeviceFound -= handler;
-            yield break;
         }
 
         public void Connect(BluetoothAddress address, Guid service)
