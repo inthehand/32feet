@@ -2,7 +2,7 @@
 //
 // InTheHand.Net.ObexListenerContext
 // 
-// Copyright (c) 2003-2021 In The Hand Ltd, All rights reserved.
+// Copyright (c) 2003-2024 In The Hand Ltd, All rights reserved.
 // This source code is licensed under the MIT License
 
 using System;
@@ -21,13 +21,13 @@ namespace InTheHand.Net
     /// </summary>
     public class ObexListenerContext
     {
-        byte[] buffer;
+        readonly byte[] buffer;
 
-        private ObexListenerRequest request;
-        private WebHeaderCollection headers = new WebHeaderCollection();
-        private MemoryStream bodyStream = new MemoryStream();
-        private EndPoint localEndPoint;
-        private EndPoint remoteEndPoint;
+        private readonly ObexListenerRequest request;
+        private readonly WebHeaderCollection headers = new WebHeaderCollection();
+        private readonly MemoryStream bodyStream = new MemoryStream();
+        private readonly EndPoint localEndPoint;
+        private readonly EndPoint remoteEndPoint;
         ushort remoteMaxPacket = 0;
 
         internal ObexListenerContext(Socket s)
@@ -37,10 +37,10 @@ namespace InTheHand.Net
             this.localEndPoint = s.LocalEndPoint;
             this.remoteEndPoint = s.RemoteEndPoint;
 
-            bool moretoreceive = true;
+            bool moreToReceive = true;
             bool putCompleted = false;
 
-            while (moretoreceive)
+            while (moreToReceive)
             {
                 //receive the request and store the data for the request object
                 int received = 0;
@@ -52,7 +52,7 @@ namespace InTheHand.Net
                         int readLen = s.Receive(buffer, received, 3 - received, SocketFlags.None);
                         if (readLen == 0)
                         {
-                            moretoreceive = false;
+                            moreToReceive = false;
                             if (received == 0)
                             {
                                 break; // Waiting for first byte of packet -- OK to close then.
@@ -88,7 +88,7 @@ namespace InTheHand.Net
                             int receivedBytes = s.Receive(this.buffer, iPos + 3, wanted, SocketFlags.None);
                             if (receivedBytes == 0)
                             {
-                                moretoreceive = false;
+                                moreToReceive = false;
                                 throw new EndOfStreamException("Connection lost.");
                             }
                             iPos += receivedBytes;
@@ -98,7 +98,7 @@ namespace InTheHand.Net
                     byte[] responsePacket; // Don't init, then the compiler will check that it's set below.
 
                     //Debug.WriteLine(s.GetHashCode().ToString("X8") + ": Method: " + method, "ObexListener");
-                    responsePacket = HandleAndMakeResponse(ref moretoreceive, ref putCompleted, method);
+                    responsePacket = HandleAndMakeResponse(ref moreToReceive, ref putCompleted, method);
 
                     try
                     {
@@ -117,7 +117,7 @@ namespace InTheHand.Net
                 }
                 else
                 {
-                    moretoreceive = false;
+                    moreToReceive = false;
                 }
             }//while
 
