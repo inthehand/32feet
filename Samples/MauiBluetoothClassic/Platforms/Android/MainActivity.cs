@@ -12,7 +12,7 @@ namespace MauiBluetoothClassic
         {
             base.OnCreate(savedInstanceState);
             InTheHand.AndroidActivity.CurrentActivity = this;
-            RequestPermissions(new string[] { Manifest.Permission.AccessCoarseLocation, Manifest.Permission.BluetoothAdmin }, 1);
+            RequestPermissions(new string[] { Manifest.Permission.AccessCoarseLocation, Manifest.Permission.BluetoothAdmin, Manifest.Permission.BluetoothConnect, Manifest.Permission.BluetoothScan }, 1);
         }
     }
 }

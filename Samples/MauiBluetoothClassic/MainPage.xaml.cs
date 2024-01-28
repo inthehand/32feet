@@ -28,6 +28,13 @@ namespace MauiBluetoothClassic
             BluetoothDeviceInfo device = null;
             var picker = new BluetoothDevicePicker();
             device = await picker.PickSingleDeviceAsync();
+
+            BluetoothClient client = new BluetoothClient();
+
+            await foreach (var foundDevice in client.DiscoverDevicesAsync())
+            {
+                System.Diagnostics.Debug.WriteLine($"MAUI Discovered: {foundDevice.DeviceName} {foundDevice.DeviceAddress}");
+            }
         }
     }
 }
