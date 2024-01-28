@@ -30,7 +30,7 @@ namespace InTheHand.Net.Bluetooth.Droid
                 case BluetoothDevice.ActionFound:
                     BluetoothDevice device;
 #if NET7_0_OR_GREATER
-                    if (Android.OS.Build.VERSION.SdkInt > Android.OS.BuildVersionCodes.Tiramisu)
+                    if (OperatingSystem.IsAndroidVersionAtLeast((int)Android.OS.BuildVersionCodes.Tiramisu))
                     {
                         device = (BluetoothDevice)intent.GetParcelableExtra(BluetoothDevice.ExtraDevice, Class.FromType(typeof(BluetoothDevice)));
                     }

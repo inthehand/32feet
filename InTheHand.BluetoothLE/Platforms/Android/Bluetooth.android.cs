@@ -1,6 +1,6 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="Bluetooth.android.cs" company="In The Hand Ltd">
-//   Copyright (c) 2018-23 In The Hand Ltd, All rights reserved.
+//   Copyright (c) 2018-24 In The Hand Ltd, All rights reserved.
 //   This source code is licensed under the MIT License - see License.txt
 // </copyright>
 //-----------------------------------------------------------------------
@@ -12,7 +12,7 @@ using Android.Bluetooth.LE;
 using Android.Content;
 using Android.Content.PM;
 using Android.OS;
-using Android.Runtime;
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -28,9 +28,9 @@ namespace InTheHand.Bluetooth
         private static BluetoothReceiver _receiver;
 
 #if MONOANDROID
-        const string permissionName = "android.permission.BLUETOOTH_CONNECT";
+        const string PermissionName = "android.permission.BLUETOOTH_CONNECT";
 #else
-        const string permissionName = Manifest.Permission.BluetoothConnect;
+        const string PermissionName = Manifest.Permission.BluetoothConnect;
 #endif
 
         static Bluetooth()
@@ -43,7 +43,6 @@ namespace InTheHand.Bluetooth
             return Task.FromResult(_manager != null && _manager.Adapter != null && _manager.Adapter.IsEnabled);
         }
 
-        
         private static async void AddAvailabilityChanged()
         {
             _oldAvailability = await PlatformGetAvailability();
@@ -205,11 +204,10 @@ namespace InTheHand.Bluetooth
             {
                 base.OnCreate(savedInstanceState);
 
-
-
-                if (CheckCallingOrSelfPermission(permissionName) != Permission.Granted)
+                // Android 12+
+                if (OperatingSystem.IsAndroidVersionAtLeast(31) && CheckCallingOrSelfPermission(PermissionName) != Permission.Granted)
                 {
-                    RequestPermissions(new string[] { permissionName }, 123);
+                    RequestPermissions(new string[] { PermissionName }, 123);
                 }
                 else
                 {
@@ -225,7 +223,7 @@ namespace InTheHand.Bluetooth
                 i.PutExtra("android.bluetooth.devicepicker.extra.NEED_AUTH", false);
                 i.PutExtra("android.bluetooth.devicepicker.extra.FILTER_TYPE", 0);
 
-                this.StartActivityForResult(i, 321);
+                StartActivityForResult(i, 321);
             }
 
             // set the handle when the picker has completed and return control straight back to the calling activity
@@ -249,7 +247,7 @@ namespace InTheHand.Bluetooth
                 {
                     System.Diagnostics.Debug.WriteLine($"{permissions[i]} {grantResults[i]}");
 
-                    if (permissions[i] == permissionName)
+                    if (permissions[i] == PermissionName)
                     {
                         bluetoothConnectGranted = grantResults[i] == Permission.Granted;
                         break;

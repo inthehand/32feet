@@ -11,9 +11,12 @@
             
         }
 
-        protected override void OnAppearing()
+        protected override async void OnAppearing()
         {
             base.OnAppearing();
+
+            var stat = await Permissions.RequestAsync<InTheHand.Bluetooth.Permissions.Bluetooth>();
+            System.Diagnostics.Debug.WriteLine(stat);
             InTheHand.Bluetooth.Bluetooth.AvailabilityChanged += Bluetooth_AvailabilityChanged;
         }
 
@@ -23,7 +26,7 @@
             System.Diagnostics.Debug.WriteLine($"Availability: {a}");
         }
 
-        private void OnCounterClicked(object sender, EventArgs e)
+        private async void OnCounterClicked(object sender, EventArgs e)
         {
             count++;
 
@@ -32,7 +35,9 @@
             else
                 CounterBtn.Text = $"Clicked {count} times";
 
-            InTheHand.Bluetooth.Bluetooth.RequestDeviceAsync();
+            var device = await InTheHand.Bluetooth.Bluetooth.RequestDeviceAsync();
+
+            System.Diagnostics.Debug.WriteLine(device.Name);
         }
     }
 }
