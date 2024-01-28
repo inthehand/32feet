@@ -2,10 +2,9 @@
 //
 // InTheHand.Net.Bluetooth.AndroidBluetoothClient
 // 
-// Copyright (c) 2018-2023 In The Hand Ltd, All rights reserved.
+// Copyright (c) 2018-2024 In The Hand Ltd, All rights reserved.
 // This source code is licensed under the MIT License
 
-using Android.App;
 using Android.Bluetooth;
 using Android.Content;
 using Android.OS;
@@ -17,7 +16,6 @@ using System.Net.Sockets;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
-using static Android.Bluetooth.BluetoothClass;
 
 namespace InTheHand.Net.Sockets
 {
@@ -29,7 +27,7 @@ namespace InTheHand.Net.Sockets
         public AndroidBluetoothClient()
         {
             _radio = BluetoothRadio.Default;
-            if (_radio != null && _radio.Mode == RadioMode.PowerOff)
+            if (_radio is { Mode: RadioMode.PowerOff })
                 _radio.Mode = RadioMode.Connectable;
         }
 
@@ -120,8 +118,6 @@ namespace InTheHand.Net.Sockets
             filter.AddAction(BluetoothAdapter.ActionDiscoveryStarted);
             InTheHand.AndroidActivity.CurrentActivity.RegisterReceiver(receiver, filter, null, handler);
 
-            EventWaitHandle handle = new EventWaitHandle(false, EventResetMode.AutoReset);
-
             receiver.DeviceFound += (s, e) =>
             {
                 var bdi = new BluetoothDeviceInfo(new AndroidBluetoothDeviceInfo(e));
@@ -144,23 +140,22 @@ namespace InTheHand.Net.Sockets
             receiver.DiscoveryComplete += (s, e) =>
             {
                 InTheHand.AndroidActivity.CurrentActivity.UnregisterReceiver(receiver);
-                handle.Set();
                 handlerThread.QuitSafely();
                 waitable.Set();
             };
 
-            handle.WaitOne();
-
             while(((BluetoothAdapter)_radio).IsDiscovering && !cancellationToken.IsCancellationRequested)
             {
                 waitable.WaitOne();
+
+                if(!handlerThread.IsAlive)
+                    yield break;
+
                 if(devices.Count > 0)
                 {
                     yield return devices[devices.Count - 1];
                 }
             }
-
-            yield break;
         }
 #endif
 
@@ -177,7 +172,7 @@ namespace InTheHand.Net.Sockets
                 _socket = nativeDevice.CreateRfcommSocketToServiceRecord(Java.Util.UUID.FromString(service.ToString()));
             }
 
-            if (_socket is object)
+            if (_socket != null)
             {
                 try
                 {
@@ -233,15 +228,9 @@ namespace InTheHand.Net.Sockets
 
         public bool Authenticate { get => _authenticate; set => _authenticate = value; }
 
-        Socket IBluetoothClient.Client { get => throw new PlatformNotSupportedException(); }
+        Socket IBluetoothClient.Client => throw new PlatformNotSupportedException();
 
-        public bool Connected
-        {
-            get
-            {
-                return _socket is object && _socket.IsConnected;
-            }
-        }
+        public bool Connected => _socket is { IsConnected: true };
 
         private bool _encrypt;
 
@@ -253,7 +242,7 @@ namespace InTheHand.Net.Sockets
         {
             get
             {
-                if (_socket is object && _socket.IsConnected)
+                if (_socket is { IsConnected: true })
                     return _socket.RemoteDevice.Name;
 
                 return null;

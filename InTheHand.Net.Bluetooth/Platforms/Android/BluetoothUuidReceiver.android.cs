@@ -2,7 +2,7 @@
 //
 // InTheHand.Net.Bluetooth.BluetoothUuidReceiver (Android)
 // 
-// Copyright (c) 2003-2023 In The Hand Ltd, All rights reserved.
+// Copyright (c) 2003-2024 In The Hand Ltd, All rights reserved.
 // This source code is licensed under the MIT License
 
 using Android.Bluetooth;

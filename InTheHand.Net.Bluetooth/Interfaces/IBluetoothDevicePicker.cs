@@ -2,13 +2,11 @@
 //
 // InTheHand.Net.Bluetooth.IBluetoothDevicePicker
 // 
-// Copyright (c) 2023 In The Hand Ltd, All rights reserved.
+// Copyright (c) 2023-24 In The Hand Ltd, All rights reserved.
 // This source code is licensed under the MIT License
 
 using InTheHand.Net.Sockets;
-using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace InTheHand.Net.Bluetooth

@@ -2,14 +2,13 @@
 //
 // InTheHand.Net.Bluetooth.BluetoothRadio (Android)
 // 
-// Copyright (c) 2003-2023 In The Hand Ltd, All rights reserved.
+// Copyright (c) 2003-2024 In The Hand Ltd, All rights reserved.
 // This source code is licensed under the MIT License
 
 using Android.Bluetooth;
 using Android.Content;
 using Android.Content.PM;
 using System;
-using System.Runtime.CompilerServices;
 
 namespace InTheHand.Net.Bluetooth
 {

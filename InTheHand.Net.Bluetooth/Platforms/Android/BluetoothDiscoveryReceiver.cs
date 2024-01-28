@@ -2,12 +2,13 @@
 //
 // InTheHand.Net.Bluetooth.Droid.BluetoothDiscoveryReceiver (Android)
 // 
-// Copyright (c) 2018-2020 In The Hand Ltd, All rights reserved.
+// Copyright (c) 2018-2024 In The Hand Ltd, All rights reserved.
 // This source code is licensed under the MIT License
 
 using Android.Bluetooth;
 using Android.Content;
 using System;
+using Java.Lang;
 
 namespace InTheHand.Net.Bluetooth.Droid
 {
@@ -27,7 +28,20 @@ namespace InTheHand.Net.Bluetooth.Droid
                     break;
 
                 case BluetoothDevice.ActionFound:
-                    var device = (BluetoothDevice)intent.GetParcelableExtra(BluetoothDevice.ExtraDevice);
+                    BluetoothDevice device;
+#if NET7_0_OR_GREATER
+                    if (Android.OS.Build.VERSION.SdkInt > Android.OS.BuildVersionCodes.Tiramisu)
+                    {
+                        device = (BluetoothDevice)intent.GetParcelableExtra(BluetoothDevice.ExtraDevice, Class.FromType(typeof(BluetoothDevice)));
+                    }
+                    else
+                    {
+#endif
+                        device = (BluetoothDevice)intent.GetParcelableExtra(BluetoothDevice.ExtraDevice);
+#if NET7_0_OR_GREATER
+                    }
+#endif
+
                     if (device.Type != BluetoothDeviceType.Le)
                     {
                         System.Diagnostics.Debug.WriteLine($"Found {device.Name} {device.Address} {device.BondState}");
@@ -36,7 +50,19 @@ namespace InTheHand.Net.Bluetooth.Droid
                     break;
 
                 case BluetoothDevice.ActionNameChanged:
-                    var device2 = (BluetoothDevice)intent.GetParcelableExtra(BluetoothDevice.ExtraDevice);
+                    BluetoothDevice device2;
+#if NET7_0_OR_GREATER
+                    if (Android.OS.Build.VERSION.SdkInt > Android.OS.BuildVersionCodes.Tiramisu)
+                    {
+                        device2 = (BluetoothDevice)intent.GetParcelableExtra(BluetoothDevice.ExtraDevice, Class.FromType(typeof(BluetoothDevice)));
+                    }
+                    else
+                    {
+#endif
+                        device2 = (BluetoothDevice)intent.GetParcelableExtra(BluetoothDevice.ExtraDevice);
+#if NET7_0_OR_GREATER
+                    }
+#endif
                     System.Diagnostics.Debug.WriteLine($"Name Changed {device2.Name} {device2.Address}");
                     break;
 

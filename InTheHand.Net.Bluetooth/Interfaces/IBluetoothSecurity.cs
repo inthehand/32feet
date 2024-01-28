@@ -2,7 +2,7 @@
 //
 // InTheHand.Net.Bluetooth.IBluetoothSecurity
 // 
-// Copyright (c) 2023 In The Hand Ltd, All rights reserved.
+// Copyright (c) 2023-24 In The Hand Ltd, All rights reserved.
 // This source code is licensed under the MIT License
 
 namespace InTheHand.Net.Bluetooth
