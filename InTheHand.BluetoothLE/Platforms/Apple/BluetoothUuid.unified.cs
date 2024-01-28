@@ -29,9 +29,17 @@ namespace InTheHand.Bluetooth
             switch (uuid.Data.Length)
             {
                 case 2:
-                    b = BluetoothUuid.BluetoothBase.ToByteArray();
+                    b = BluetoothBase.ToByteArray();
                     b[0] = uuid.Data[1];
                     b[1] = uuid.Data[0];
+                    break;
+
+                case 4:
+                    b = BluetoothBase.ToByteArray();
+                    b[0] = uuid.Data[3];
+                    b[1] = uuid.Data[2];
+                    b[2] = uuid.Data[1];
+                    b[3] = uuid.Data[0];
                     break;
 
                 case 16:
