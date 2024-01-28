@@ -17,6 +17,21 @@ using System.Threading.Tasks;
 
 namespace InTheHand.Net.Sockets
 {
+    partial class BluetoothDeviceInfo
+    {
+        /// <summary>
+        /// Returns a list of services which are already installed for use on the calling machine (Win32 only).
+        /// </summary>
+        public IReadOnlyCollection<Guid> InstalledServices => ((Win32BluetoothDeviceInfo)_bluetoothDeviceInfo).InstalledServices;
+
+        /// <summary>
+        /// Enables or disables services for a Bluetooth device (Win32 only).
+        /// </summary>
+        /// <param name="service"></param>
+        /// <param name="state"></param>
+        public void SetServiceState(Guid service, bool state) => ((Win32BluetoothDeviceInfo)_bluetoothDeviceInfo).SetServiceState(service, state);
+    }
+
     internal sealed class Win32BluetoothDeviceInfo : IBluetoothDeviceInfo
     {
         private BLUETOOTH_DEVICE_INFO _info;
@@ -24,6 +39,16 @@ namespace InTheHand.Net.Sockets
         internal Win32BluetoothDeviceInfo(BLUETOOTH_DEVICE_INFO info)
         {
             _info = info;
+        }
+
+        public static implicit operator BLUETOOTH_DEVICE_INFO(Win32BluetoothDeviceInfo deviceInfo)
+        {
+            return deviceInfo._info;
+        }
+
+        public static implicit operator Win32BluetoothDeviceInfo(BLUETOOTH_DEVICE_INFO info)
+        {
+            return new Win32BluetoothDeviceInfo(info);
         }
 
         /// <summary>
@@ -104,6 +129,7 @@ namespace InTheHand.Net.Sockets
 
             return Task.FromResult(result: (IEnumerable<Guid>)services);
         }
+
 
         public IReadOnlyCollection<Guid> InstalledServices
         {

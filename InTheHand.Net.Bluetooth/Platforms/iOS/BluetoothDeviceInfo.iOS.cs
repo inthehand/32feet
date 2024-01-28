@@ -15,14 +15,14 @@ using System.Collections.ObjectModel;
 
 namespace InTheHand.Net.Sockets
 {
-    partial class BluetothDeviceInfo
+    partial class BluetoothDeviceInfo
     {
         /// <summary>
         /// On iOS returns the ExternalAccessory Protocol strings for the device.
         /// </summary>
         /// <remarks>Protocol names are formatted as reverse-DNS strings. For example, the string “com.apple.myProtocol” might represent a custom protocol defined by Apple.
         /// Manufacturers can define custom protocols for their accessories or work with other manufacturers and organizations to define standard protocols for different accessory types.</remarks>
-        public IReadOnlyCollection<string> ProtocolStrings => ((ExternalAccessoryBluetoothDeviceInfo)this).ProtocolStrings;
+        public IReadOnlyCollection<string> ProtocolStrings => ((ExternalAccessoryBluetoothDeviceInfo)_bluetoothDeviceInfo).ProtocolStrings;
     }
 
     internal sealed class ExternalAccessoryBluetoothDeviceInfo : IBluetoothDeviceInfo
@@ -44,11 +44,6 @@ namespace InTheHand.Net.Sockets
             return new ExternalAccessoryBluetoothDeviceInfo(accessory);
         }
 
-        public static explicit operator ExternalAccessoryBluetoothDeviceInfo(BluetothDeviceInfo v)
-        {
-            return (ExternalAccessoryBluetoothDeviceInfo)v;
-        }
-
         public BluetoothAddress DeviceAddress => new BluetoothAddress(_accessory);
 
         public string DeviceName => _accessory.Name;
@@ -66,16 +61,9 @@ namespace InTheHand.Net.Sockets
 
         ClassOfDevice IBluetoothDeviceInfo.ClassOfDevice => (ClassOfDevice)0;
 
-        IReadOnlyCollection<Guid> IBluetoothDeviceInfo.InstalledServices => throw new PlatformNotSupportedException();
-
         void IBluetoothDeviceInfo.Refresh() { }
 
         Task<IEnumerable<Guid>> IBluetoothDeviceInfo.GetRfcommServicesAsync(bool cached)
-        {
-            throw new PlatformNotSupportedException();
-        }
-
-        void IBluetoothDeviceInfo.SetServiceState(Guid service, bool state)
         {
             throw new PlatformNotSupportedException();
         }

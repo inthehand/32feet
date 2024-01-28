@@ -97,18 +97,11 @@ namespace InTheHand.Net.Sockets
 
         ClassOfDevice IBluetoothDeviceInfo.ClassOfDevice => (ClassOfDevice)0;
 
-        IReadOnlyCollection<Guid> IBluetoothDeviceInfo.InstalledServices => throw new PlatformNotSupportedException();
-
         bool IBluetoothDeviceInfo.Authenticated => throw new PlatformNotSupportedException();
 
         public void Refresh()
         {
             Init();
-        }
-
-        void IBluetoothDeviceInfo.SetServiceState(Guid service, bool state)
-        {
-            throw new PlatformNotSupportedException();
         }
     }
 }

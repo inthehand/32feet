@@ -57,15 +57,8 @@ namespace InTheHand.Net.Sockets
 
         void IBluetoothDeviceInfo.Refresh() { }
 
-        void IBluetoothDeviceInfo.SetServiceState(Guid service, bool state)
-        {
-            throw new PlatformNotSupportedException();
-        }
-
         public bool Connected { get => NativeDevice.ConnectionStatus == BluetoothConnectionStatus.Connected; }
 
         public bool Authenticated { get => NativeDevice.DeviceInformation.Pairing.IsPaired; }
-
-        IReadOnlyCollection<Guid> IBluetoothDeviceInfo.InstalledServices => throw new PlatformNotSupportedException();
     }
 }

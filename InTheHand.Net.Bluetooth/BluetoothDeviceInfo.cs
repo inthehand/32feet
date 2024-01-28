@@ -53,12 +53,7 @@ namespace InTheHand.Net.Sockets
         /// <param name="cached">If true and supported on the runtime platform return locally cached devices without doing an SDP request.</param>
         /// <returns>All available Rfcomm service UUIDs on the remote device.</returns>
         public Task<IEnumerable<Guid>> GetRfcommServicesAsync(bool cached = true) => _bluetoothDeviceInfo.GetRfcommServicesAsync(cached);
-
-        /// <summary>
-        /// Returns a list of services which are already installed for use on the calling machine.
-        /// </summary>
-        public IReadOnlyCollection<Guid> InstalledServices { get => _bluetoothDeviceInfo.InstalledServices; }
-
+        
         /// <summary>
         /// Specifies whether the device is connected.
         /// </summary>
@@ -70,13 +65,7 @@ namespace InTheHand.Net.Sockets
         /// </summary>
         public bool Authenticated { get => _bluetoothDeviceInfo.Authenticated; }
 
-        /// <summary>
-        /// Enables or disables services for a Bluetooth device.
-        /// </summary>
-        /// <remarks>Only applies to Windows platform.</remarks>
-        /// <param name="service"></param>
-        /// <param name="state"></param>
-        public void SetServiceState(Guid service, bool state) => _bluetoothDeviceInfo.SetServiceState(service, state);
+        
 
         /// <summary>
         /// Compares two BluetoothDeviceInfo instances for equality.

@@ -22,13 +22,9 @@ namespace InTheHand.Net.Bluetooth
         ClassOfDevice ClassOfDevice { get; }
 
         Task<IEnumerable<Guid>> GetRfcommServicesAsync(bool cached);
-
-        IReadOnlyCollection<Guid> InstalledServices { get; }
-
+        
         bool Connected { get; }
 
         bool Authenticated { get; }
-
-        void SetServiceState(Guid service, bool state);
     }
 }

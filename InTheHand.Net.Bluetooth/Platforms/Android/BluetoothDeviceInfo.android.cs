@@ -103,11 +103,6 @@ namespace InTheHand.Net.Sockets
 
         void IBluetoothDeviceInfo.Refresh() { }
 
-        void IBluetoothDeviceInfo.SetServiceState(Guid service, bool state)
-        {
-            throw new PlatformNotSupportedException();
-        }
-
         public bool Connected
         {
             get
@@ -119,7 +114,5 @@ namespace InTheHand.Net.Sockets
         }
 
         public bool Authenticated {  get => _device.BondState == Bond.Bonded; }
-
-        IReadOnlyCollection<Guid> IBluetoothDeviceInfo.InstalledServices => throw new PlatformNotSupportedException();
     }
 }

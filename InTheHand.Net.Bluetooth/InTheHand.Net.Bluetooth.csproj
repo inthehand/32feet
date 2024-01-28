@@ -5,7 +5,7 @@
 		<Company>In The Hand Ltd</Company>
 		<Authors>Peter Foot</Authors>
 		<Product>32feet.NET</Product>
-		<Version>4.1.41</Version>
+		<Version>4.1.42</Version>
 		<RepositoryUrl>https://github.com/inthehand/32feet</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
 		<PublishRepositoryUrl>true</PublishRepositoryUrl>
@@ -18,9 +18,9 @@
 		<PackageProjectUrl>https://github.com/inthehand/32feet</PackageProjectUrl>
 		<PackageLicenseUrl></PackageLicenseUrl>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
-		<Copyright>Copyright (c) 2004-2023 In The Hand Ltd</Copyright>
+		<Copyright>Copyright (c) 2004-2024 In The Hand Ltd</Copyright>
 		<Description>32feet.NET is an open-source project to make personal area networking technologies such as Bluetooth easily accessible from .NET code.</Description>
-		<FileVersion>4.1.41</FileVersion>
+		<FileVersion>4.1.42</FileVersion>
 		<AssemblyVersion>4.1.0.0</AssemblyVersion>
 		<AssemblyName>InTheHand.Net.Bluetooth</AssemblyName>
 		<AssemblyTitle>InTheHand.Net.Bluetooth-$(TargetFramework)</AssemblyTitle>
@@ -122,13 +122,13 @@
 	</ItemGroup>
 
 	<ItemGroup Condition=" '$(TargetFramework)' == 'net6.0' ">
-		<PackageReference Include="Linux.Bluetooth" Version="5.64.0" />
+		<PackageReference Include="Linux.Bluetooth" Version="5.66.0" />
 		<Compile Include="Platforms\Linux\*.cs" />
 		<Compile Include="Platforms\Win32\*.cs" />
 	</ItemGroup>
 
 	<ItemGroup Condition=" '$(TargetFramework)' == 'net7.0' ">
-		<PackageReference Include="Linux.Bluetooth" Version="5.64.0" />
+		<PackageReference Include="Linux.Bluetooth" Version="5.66.0" />
 		<Compile Include="Platforms\Linux\*.cs" />
 		<Compile Include="Platforms\Win32\*.cs" />
 	</ItemGroup>
