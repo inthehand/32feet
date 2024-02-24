@@ -179,10 +179,10 @@ namespace InTheHand.Bluetooth
         void AddCharacteristicValueChanged()
         {
             CBPeripheral peripheral = Service.Device;
-            peripheral.UpdatedCharacterteristicValue += Peripheral_UpdatedCharacterteristicValue;
+            peripheral.UpdatedCharacterteristicValue += Peripheral_UpdatedCharacteristicValue;
         }
 
-        void Peripheral_UpdatedCharacterteristicValue(object sender, CBCharacteristicEventArgs e)
+        void Peripheral_UpdatedCharacteristicValue(object sender, CBCharacteristicEventArgs e)
         {
             if (e.Characteristic == _characteristic)
                 OnCharacteristicValueChanged(new GattCharacteristicValueChangedEventArgs(e.Characteristic.Value.ToArray()));
@@ -191,8 +191,8 @@ namespace InTheHand.Bluetooth
         void RemoveCharacteristicValueChanged()
         {
             CBPeripheral peripheral = Service.Device;
-            peripheral.UpdatedCharacterteristicValue -= Peripheral_UpdatedCharacterteristicValue;
-            
+            peripheral.UpdatedCharacterteristicValue -= Peripheral_UpdatedCharacteristicValue;
+
         }
 
         private Task PlatformStartNotifications()
