@@ -127,7 +127,14 @@ namespace InTheHand.Bluetooth
                     {
                         if (!tcs.Task.IsCompleted)
                         {
-                            tcs.SetResult(e.Characteristic.Value.ToArray());
+                            if (e.Characteristic.Value == null)
+                            {
+                                tcs.SetException(new NullReferenceException($"The read operation of the characteristic {e.Characteristic.UUID} returned a null value."));
+                            }
+                            else
+                            {
+                                tcs.SetResult(e.Characteristic.Value.ToArray());
+                            }
                         }
                     }
                 }
@@ -185,7 +192,15 @@ namespace InTheHand.Bluetooth
         void Peripheral_UpdatedCharacteristicValue(object sender, CBCharacteristicEventArgs e)
         {
             if (e.Characteristic == _characteristic)
-                OnCharacteristicValueChanged(new GattCharacteristicValueChangedEventArgs(e.Characteristic.Value.ToArray()));
+            {
+                Exception? error = null;
+
+                if (e.Error != null)
+                {
+                    error = new InvalidOperationException($"Error while updating the characteristic {e.Characteristic.UUID}. Error {e.Error} [0x{e.Error.Code:X}]");
+                }
+                OnCharacteristicValueChanged(new GattCharacteristicValueChangedEventArgs(e.Characteristic.Value?.ToArray(), error));
+            }
         }
 
         void RemoveCharacteristicValueChanged()

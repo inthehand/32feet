@@ -15,14 +15,20 @@ namespace InTheHand.Bluetooth
     /// <seealso cref="GattCharacteristic"/>
     public sealed class GattCharacteristicValueChangedEventArgs : EventArgs
     {
-        internal GattCharacteristicValueChangedEventArgs(byte[] newValue)
+        internal GattCharacteristicValueChangedEventArgs(byte[]? newValue, Exception? error = null)
         {
             Value = newValue;
+            Error = error;
         }
 
         /// <summary>
         /// The new value of the <see cref="GattCharacteristic"/>.
         /// </summary>
-        public byte[] Value { get; private set; }
+        public byte[]? Value { get; private set; }
+
+        /// <summary>
+        /// If set, reports the error occurred in the communication. In such case, <param name="Value" /> is invalid.
+        /// </summary>
+        public Exception? Error { get; private set; }
     }
 }
