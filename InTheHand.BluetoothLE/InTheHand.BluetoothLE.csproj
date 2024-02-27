@@ -35,6 +35,8 @@
 		<SignAssembly Condition=" '$(Configuration)' == 'Release' ">true</SignAssembly>
 		<AssemblyOriginatorKeyFile Condition=" '$(Configuration)' == 'Release' ">..\\InTheHand.snk</AssemblyOriginatorKeyFile>
 		<GenerateDocumentationFile Condition=" '$(Configuration)' == 'Release' ">True</GenerateDocumentationFile>
+		<LangVersion>latest</LangVersion>
+		<Nullable>enable</Nullable>
 	</PropertyGroup>
 
 	<ItemGroup>
