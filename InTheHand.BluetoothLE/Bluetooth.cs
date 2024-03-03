@@ -93,13 +93,13 @@ namespace InTheHand.Bluetooth
             return PlatformGetPairedDevices();
         }
 
-        public static Task<IReadOnlyCollection<BluetoothDevice>> ScanForDevicesAsync(RequestDeviceOptions options = null, CancellationToken cancellationToken = default)
+        public static Task<IReadOnlyCollection<BluetoothDevice>> ScanForDevicesAsync(RequestDeviceOptions? options = null, CancellationToken cancellationToken = default)
         {
             ThrowOnInvalidOptions(options);
             return PlatformScanForDevices(options, cancellationToken);
         }
 
-        public static Task<BluetoothLEScan> RequestLEScanAsync(BluetoothLEScanOptions options = null)
+        public static Task<BluetoothLEScan> RequestLEScanAsync(BluetoothLEScanOptions? options = null)
         {
             return PlatformRequestLEScan(options);
         }

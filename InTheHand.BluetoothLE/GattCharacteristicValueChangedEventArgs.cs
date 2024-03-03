@@ -1,6 +1,6 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="GattCharacteristicValueChangedEventArgs.cs" company="In The Hand Ltd">
-//   Copyright (c) 2018-23 In The Hand Ltd, All rights reserved.
+//   Copyright (c) 2018-24 In The Hand Ltd, All rights reserved.
 //   This source code is licensed under the MIT License - see License.txt
 // </copyright>
 //-----------------------------------------------------------------------
@@ -27,7 +27,7 @@ namespace InTheHand.Bluetooth
         public byte[]? Value { get; private set; }
 
         /// <summary>
-        /// If set, reports the error occurred in the communication. In such case, <param name="Value" /> is invalid.
+        /// If set, reports the error occurred in the communication. In such case, <see cref="Value" /> is invalid.
         /// </summary>
         public Exception? Error { get; private set; }
     }

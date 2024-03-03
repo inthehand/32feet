@@ -1,23 +1,21 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="GattCharacteristic.unified.cs" company="In The Hand Ltd">
-//   Copyright (c) 2018-20 In The Hand Ltd, All rights reserved.
+//   Copyright (c) 2018-24 In The Hand Ltd, All rights reserved.
 //   This source code is licensed under the MIT License - see License.txt
 // </copyright>
 //-----------------------------------------------------------------------
 
 using CoreBluetooth;
 using Foundation;
-using Intents;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace InTheHand.Bluetooth
 {
     partial class GattCharacteristic
     {
-        private CBCharacteristic _characteristic;
+        private readonly CBCharacteristic _characteristic;
 
         internal GattCharacteristic(GattService service, CBCharacteristic characteristic) : this(service)
         {
@@ -87,7 +85,7 @@ namespace InTheHand.Bluetooth
                     return;
                 }
 
-                List<GattDescriptor> descriptors = new List<GattDescriptor>();
+                List<GattDescriptor> descriptors = new();
 
                 foreach (CBDescriptor cbdescriptor in _characteristic.Descriptors)
                 {
