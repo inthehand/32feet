@@ -1,6 +1,6 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="Bluetooth.windows.cs" company="In The Hand Ltd">
-//   Copyright (c) 2018-23 In The Hand Ltd, All rights reserved.
+//   Copyright (c) 2018-24 In The Hand Ltd, All rights reserved.
 //   This source code is licensed under the MIT License - see License.txt
 // </copyright>
 //-----------------------------------------------------------------------
@@ -12,6 +12,7 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Security;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Windows.Devices.Bluetooth;
@@ -65,10 +66,8 @@ namespace InTheHand.Bluetooth
             return false;
         }
 
-        static async Task<BluetoothDevice> PlatformRequestDevice(RequestDeviceOptions options)
+        static async Task<BluetoothDevice> PlatformRequestDevice(RequestDeviceOptions? options)
         {
-            string namePrefix = options?.Filters.FirstOrDefault(f => !string.IsNullOrEmpty(f.NamePrefix))?.NamePrefix;
-
             DevicePicker picker = new DevicePicker();
             Windows.Foundation.Rect bounds = Windows.Foundation.Rect.Empty;
 #if !UAP
@@ -132,30 +131,34 @@ namespace InTheHand.Bluetooth
             bounds = Windows.UI.ViewManagement.ApplicationView.GetForCurrentView().VisibleBounds;
             picker.Appearance.SelectedAccentColor = (Color)Windows.UI.Xaml.Application.Current.Resources["SystemAccentColor"];
 #endif
-
+            
             if (options != null && !options.AcceptAllDevices)
             {
                 foreach (var filter in options.Filters)
                 {
+                    string filterString = string.Empty;
+
                     if (!string.IsNullOrEmpty(filter.NamePrefix))
                     {
-                        picker.Filter.SupportedDeviceSelectors.Add($"System.ItemNameDisplay:~<\"{namePrefix}\" AND " + BluetoothLEDevice.GetDeviceSelector());
+                        filterString += $" AND System.ItemNameDisplay:~<\"{filter.NamePrefix}\"";
                     }
                     if (!string.IsNullOrEmpty(filter.Name))
                     {
-                        picker.Filter.SupportedDeviceSelectors.Add(BluetoothLEDevice.GetDeviceSelectorFromDeviceName(filter.Name));
+                        filterString += $" AND System.ItemNameDisplay:=\"{filter.Name}\"";
                     }
                     foreach (var service in filter.Services)
                     {
-                        picker.Filter.SupportedDeviceSelectors.Add(GattDeviceService.GetDeviceSelectorFromUuid(service));
+                        filterString += $" AND System.Devices.AepService.Bluetooth.ServiceGuid:=\"{{{(Guid)service}}}\"";
                     }
+
+                    picker.Filter.SupportedDeviceSelectors.Add(BluetoothLEDevice.GetDeviceSelectorFromPairingState(true) + filterString);
+                    picker.Filter.SupportedDeviceSelectors.Add(BluetoothLEDevice.GetDeviceSelectorFromPairingState(false) + filterString);
                 }
             }
 
             if (picker.Filter.SupportedDeviceSelectors.Count == 0)
             {
-                picker.Filter.SupportedDeviceSelectors.Add(BluetoothLEDevice.GetDeviceSelector());
-                //picker.Filter.SupportedDeviceSelectors.Add(BluetoothLEDevice.GetDeviceSelectorFromPairingState(true));
+                picker.Filter.SupportedDeviceSelectors.Add(BluetoothLEDevice.GetDeviceSelectorFromPairingState(true));
                 picker.Filter.SupportedDeviceSelectors.Add(BluetoothLEDevice.GetDeviceSelectorFromPairingState(false));
             }
 
@@ -199,24 +202,71 @@ namespace InTheHand.Bluetooth
         {
             List<BluetoothDevice> devices = new List<BluetoothDevice>();
 
-            string namePrefix = options?.Filters.FirstOrDefault(f => !string.IsNullOrEmpty(f.NamePrefix))?.NamePrefix;
-
             // None of the build in selectors do a scan and return both paired and unpaired devices so here is the raw AQS string
-            foreach (var device in await DeviceInformation.FindAllAsync($"{(!string.IsNullOrEmpty(namePrefix) ? $"System.ItemNameDisplay:~<\"{namePrefix}\" AND" : "")} System.Devices.DevObjectType:=5 AND System.Devices.Aep.ProtocolId:=\"{{BB7BB05E-5972-42B5-94FC-76EAA7084D49}}\" AND (System.Devices.Aep.IsPaired:=System.StructuredQueryType.Boolean#False OR System.Devices.Aep.IsPaired:=System.StructuredQueryType.Boolean#True OR System.Devices.Aep.Bluetooth.IssueInquiry:=System.StructuredQueryType.Boolean#True)"))
+            string selectionQuery = "System.Devices.DevObjectType:=5 AND System.Devices.Aep.ProtocolId:=\"{BB7BB05E-5972-42B5-94FC-76EAA7084D49}\" AND (System.Devices.Aep.IsPaired:=System.StructuredQueryType.Boolean#False OR System.Devices.Aep.IsPaired:=System.StructuredQueryType.Boolean#True OR System.Devices.Aep.Bluetooth.IssueInquiry:=System.StructuredQueryType.Boolean#True)";
+            StringBuilder filterQuery = new StringBuilder();
+
+            if (options is { Filters: not null })
+            {
+                foreach (var filter in options.Filters)
+                {
+                    List<string> clauses = new List<string>();
+
+                    if (!string.IsNullOrEmpty(filter.Name)) 
+                        clauses.Add($"System.ItemNameDisplay:=\"{filter.Name}\""); 
+                    
+                    if (!string.IsNullOrEmpty(filter.NamePrefix)) 
+                        clauses.Add($"System.ItemNameDisplay:~<\"{filter.NamePrefix}\"");
+
+                    filterQuery.Append(string.Join(" OR ", clauses));
+                }
+
+                if (filterQuery.Length > 0)
+                    selectionQuery += " AND (" + filterQuery + ")";
+            }
+
+            foreach (var device in await DeviceInformation.FindAllAsync(selectionQuery))
             {
                 try
                 {
+                    bool returnDevice = true;
+
                     var bluetoothDevice = await BluetoothLEDevice.FromIdAsync(device.Id);
                     if (bluetoothDevice != null)
                     {
-                        devices.Add(bluetoothDevice);
+                        if (options is { Filters: not null })
+                        {
+                            foreach (var filter in options.Filters)
+                            {
+                                foreach (var service in filter.Services)
+                                {
+                                    var deviceServices =
+                                        await bluetoothDevice.GetGattServicesAsync(BluetoothCacheMode.Cached);
+                                    if (deviceServices.Status == GattCommunicationStatus.Success)
+                                    {
+                                        returnDevice = false; // because service enumeration is so unreliable only apply the service filter if we are able to retrieve the services
+                                        foreach (var gattService in deviceServices.Services)
+                                        {
+                                            if (gattService.Uuid == (Guid)service)
+                                            {
+                                                returnDevice = true;
+                                                break;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        if(returnDevice)
+                            devices.Add(bluetoothDevice);
                     }
                     else
                     {
                         ThrowSecurityExceptionOnMissingDeviceCapability();
                     }
                 }
-                catch (System.ArgumentException)
+                catch (ArgumentException)
                 {
                 }
             }

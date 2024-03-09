@@ -36,18 +36,24 @@ namespace InTheHand.Bluetooth
         /// </summary>
         /// <param name="options"></param>
         /// <returns>A BluetoothDevice or null if unsuccessful.</returns>
-        public static Task<BluetoothDevice> RequestDeviceAsync(RequestDeviceOptions options = null)
+        public static Task<BluetoothDevice> RequestDeviceAsync(RequestDeviceOptions? options = null)
         {
             ThrowOnInvalidOptions(options);
             return PlatformRequestDevice(options);
         }
 
-        private static void ThrowOnInvalidOptions(RequestDeviceOptions options)
+        private static void ThrowOnInvalidOptions(RequestDeviceOptions? options)
         {
             if (options != null)
             {
-                if ((options.Filters != null && options.Filters.Count > 0) == options.AcceptAllDevices)
+                if (options.Filters.Count > 0 && options.AcceptAllDevices)
                     throw new ArgumentException("Cannot set both Filters and AcceptAllDevices");
+
+                foreach (var filter in options.Filters)
+                {
+                    if (!string.IsNullOrEmpty(filter.NamePrefix) && !string.IsNullOrEmpty(filter.Name))
+                        throw new ArgumentException("Cannot set filter Name and NamePrefix");
+                }
             }
         }
 
