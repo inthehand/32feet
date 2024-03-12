@@ -1,12 +1,11 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="BluetoothLEScan.android.cs" company="In The Hand Ltd">
-//   Copyright (c) 2018-20 In The Hand Ltd, All rights reserved.
+//   Copyright (c) 2018-24 In The Hand Ltd, All rights reserved.
 //   This source code is licensed under the MIT License - see License.txt
 // </copyright>
 //-----------------------------------------------------------------------
 
 using Android.Bluetooth.LE;
-using Android.Runtime;
 using System.Collections.Generic;
 using System.Diagnostics;
 
@@ -14,19 +13,17 @@ namespace InTheHand.Bluetooth
 {
     partial class BluetoothLEScan
     {
-        private readonly BluetoothLEScanOptions _options;
+        private readonly BluetoothLEScanOptions? _options;
         private readonly BluetoothLeScanner _scanner;
         private readonly Callback _callback;
 
-        internal BluetoothLEScan(BluetoothLEScanOptions options, BluetoothLeScanner scanner)
+        internal BluetoothLEScan(BluetoothLEScanOptions? options, BluetoothLeScanner scanner)
         {
             _options = options;
             if (options != null)
             {
                 _filters = options.Filters;
             }
-
-            //var settings = new ScanSettings.Builder().SetScanMode(ScanMode.LowLatency).Build();
 
             _callback = new Callback(this);
             _scanner = scanner;

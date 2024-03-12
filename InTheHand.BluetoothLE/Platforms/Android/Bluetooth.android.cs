@@ -21,11 +21,10 @@ namespace InTheHand.Bluetooth
 {
     partial class Bluetooth
     {
-        internal static BluetoothManager _manager = (BluetoothManager) Android.App.Application.Context.GetSystemService(Android.App.Application.BluetoothService);
+        internal static BluetoothManager _manager = (BluetoothManager)Application.Context.GetSystemService(Context.BluetoothService);
         private static readonly EventWaitHandle s_handle = new EventWaitHandle(false, EventResetMode.AutoReset);
-        internal static Android.Bluetooth.BluetoothDevice s_device;
-        private static RequestDeviceOptions _currentRequest;
-        private static BluetoothReceiver _receiver;
+        internal static Android.Bluetooth.BluetoothDevice? s_device;
+        private static BluetoothReceiver? _receiver;
 
 #if MONOANDROID
         const string PermissionName = "android.permission.BLUETOOTH_CONNECT";
@@ -38,7 +37,7 @@ namespace InTheHand.Bluetooth
             AndroidActivity.Init();
         }
 
-        static Task<bool> PlatformGetAvailability()
+        private static Task<bool> PlatformGetAvailability()
         {
             return Task.FromResult(_manager != null && _manager.Adapter != null && _manager.Adapter.IsEnabled);
         }
@@ -47,12 +46,13 @@ namespace InTheHand.Bluetooth
         {
             _oldAvailability = await PlatformGetAvailability();
 
-            if (_receiver == null)
-            {
-                _receiver = new BluetoothReceiver();
-                // Register broadcast receiver to monitor state for AvailabilityChanged event
-                AndroidActivity.CurrentActivity.RegisterReceiver(_receiver, new IntentFilter(BluetoothAdapter.ActionStateChanged));
-            }
+            if (_receiver != null)
+                return;
+
+            _receiver = new BluetoothReceiver();
+            // Register broadcast receiver to monitor state for AvailabilityChanged event
+            AndroidActivity.CurrentActivity.RegisterReceiver(_receiver,
+                new IntentFilter(BluetoothAdapter.ActionStateChanged));
         }
 
         private static void RemoveAvailabilityChanged()
@@ -65,19 +65,17 @@ namespace InTheHand.Bluetooth
         /// <param name="options"></param>
         /// <param name="context">Current activity.</param>
         /// <returns>A BluetoothDevice or null if unsuccessful.</returns>
-        public static Task<BluetoothDevice> RequestDevice(RequestDeviceOptions options, Activity context)
+        public static Task<BluetoothDevice?> RequestDevice(RequestDeviceOptions? options, Activity context)
         {
             InTheHand.AndroidActivity.CurrentActivity = context;
             return PlatformRequestDevice(options);
         }
 
-        static Task<BluetoothDevice> PlatformRequestDevice(RequestDeviceOptions options)
+        private static Task<BluetoothDevice?> PlatformRequestDevice(RequestDeviceOptions? options)
         {
             if (AndroidActivity.CurrentActivity == null)
-                return null;
-
-            _currentRequest = options;
-
+                return Task.FromResult<BluetoothDevice?>(null);
+            
             Intent i = new Intent(AndroidActivity.CurrentActivity, typeof(DevicePickerActivity));
             AndroidActivity.CurrentActivity.StartActivity(i);
 
@@ -85,18 +83,11 @@ namespace InTheHand.Bluetooth
             {
                 s_handle.WaitOne();
 
-                if (s_device != null)
-                {
-                    return Task.FromResult<BluetoothDevice>(s_device);
-                }
-                else
-                {
-                    return Task.FromResult<BluetoothDevice>(null);
-                }
+                return Task.FromResult<BluetoothDevice?>(s_device ?? null);
             });
         }
 
-        static async Task<IReadOnlyCollection<BluetoothDevice>> PlatformScanForDevices(RequestDeviceOptions options, CancellationToken cancellationToken = default)
+        private static async Task<IReadOnlyCollection<BluetoothDevice>> PlatformScanForDevices(RequestDeviceOptions? options, CancellationToken cancellationToken = default)
         {
             List<ScanFilter> filters = new List<ScanFilter>();
                 
@@ -113,8 +104,9 @@ namespace InTheHand.Bluetooth
                 }
             }
 
-            ScanSettings.Builder sb = new ScanSettings.Builder();
-            sb.SetScanMode(Android.Bluetooth.LE.ScanMode.Balanced);
+            var sb = new ScanSettings.Builder();
+            // This is a higher power consuming mode but should give better results for fixed discovery period.
+            sb.SetScanMode(Android.Bluetooth.LE.ScanMode.LowLatency);
             var settings = sb.Build();
             var callback = new DevicesCallback();
 
@@ -131,9 +123,9 @@ namespace InTheHand.Bluetooth
             return callback.Devices.AsReadOnly();
         }
 
-        static async Task<IReadOnlyCollection<BluetoothDevice>> PlatformGetPairedDevices()
+        private static Task<IReadOnlyCollection<BluetoothDevice>> PlatformGetPairedDevices()
         {
-            List<BluetoothDevice> devices = new List<BluetoothDevice>();
+            var devices = new List<BluetoothDevice>();
 
             foreach (var device in _manager.Adapter.BondedDevices)
             {
@@ -143,7 +135,7 @@ namespace InTheHand.Bluetooth
                 }
             }
 
-            return devices.AsReadOnly();
+            return Task.FromResult<IReadOnlyCollection<BluetoothDevice>>(devices.AsReadOnly());
         }
 
         private class DevicesCallback : ScanCallback
@@ -192,9 +184,9 @@ namespace InTheHand.Bluetooth
             }
         }
 
-        private static async Task<BluetoothLEScan> PlatformRequestLEScan(BluetoothLEScanOptions options)
+        private static Task<BluetoothLEScan> PlatformRequestLEScan(BluetoothLEScanOptions? options)
         {
-            return new BluetoothLEScan(options, _manager.Adapter.BluetoothLeScanner);
+            return Task.FromResult(new BluetoothLEScan(options, _manager.Adapter.BluetoothLeScanner));
         }
 
         [Activity(NoHistory = false, LaunchMode = LaunchMode.Multiple)]
