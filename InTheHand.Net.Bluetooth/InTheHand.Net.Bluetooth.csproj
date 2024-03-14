@@ -1,4 +1,4 @@
-<Project Sdk="MSBuild.Sdk.Extras/3.0.44">
+﻿<Project Sdk="MSBuild.Sdk.Extras/3.0.44">
 	<Sdk Name="DotNet.ReproducibleBuilds.Isolated" Version="1.1.1" />
 	<PropertyGroup>
 		<TargetFrameworks>netstandard2.0;netstandard2.1;net6.0;net6.0-windows7.0;net6.0-windows10.0.19041.0;net7.0;net7.0-windows7.0;net7.0-windows10.0.19041.0;net7.0-android;net7.0-ios;net462;monoandroid10.0;xamarinios10;uap10.0</TargetFrameworks>
@@ -31,7 +31,7 @@
 		<PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<PackageId>InTheHand.Net.Bluetooth</PackageId>
-		<PackageReleaseNotes>Added BluetoothRadio versions to provide best guess version support.</PackageReleaseNotes>
+		<PackageReleaseNotes>Added BluetoothDeviceInfo constructor from a BluetoothAddress.</PackageReleaseNotes>
 		<PackageIcon>32feet-package-icon.png</PackageIcon>
 		<SignAssembly Condition=" '$(Configuration)' == 'Release' ">true</SignAssembly>
 		<AssemblyOriginatorKeyFile Condition=" '$(Configuration)' == 'Release' ">InTheHand.snk</AssemblyOriginatorKeyFile>

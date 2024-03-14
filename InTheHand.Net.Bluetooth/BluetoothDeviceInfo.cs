@@ -31,6 +31,7 @@ namespace InTheHand.Net.Sockets
         /// </summary>
         /// <param name="address">Bluetooth address of remote device.</param>
         /// <exception cref="PlatformNotSupportedException">Current platform doesn't support initialization from an address.</exception>
+        /// <remarks>Supported on Android, Linux, Win32 and Windows</remarks>
         public BluetoothDeviceInfo(BluetoothAddress address)
         {
 #if ANDROID || MONOANDROID
