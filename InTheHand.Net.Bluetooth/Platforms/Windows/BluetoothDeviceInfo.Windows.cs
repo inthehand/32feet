@@ -17,6 +17,16 @@ namespace InTheHand.Net.Sockets
     {
         internal BluetoothDevice NativeDevice;
 
+        internal WindowsBluetoothDeviceInfo(BluetoothAddress address)
+        {
+            Task t = Task.Run(async () =>
+            {
+                NativeDevice = await BluetoothDevice.FromBluetoothAddressAsync(address.ToUInt64());
+            });
+
+            t.Wait();
+        }
+
         internal WindowsBluetoothDeviceInfo(BluetoothDevice device)
         {
             NativeDevice = device;

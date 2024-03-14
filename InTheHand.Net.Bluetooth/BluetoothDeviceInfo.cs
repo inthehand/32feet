@@ -27,6 +27,39 @@ namespace InTheHand.Net.Sockets
         }
 
         /// <summary>
+        /// Initializes a new instance of the BluetoothDeviceInfo class
+        /// </summary>
+        /// <param name="address">Bluetooth address of remote device.</param>
+        /// <exception cref="PlatformNotSupportedException">Current platform doesn't support initialization from an address.</exception>
+        public BluetoothDeviceInfo(BluetoothAddress address)
+        {
+#if ANDROID || MONOANDROID
+            _bluetoothDeviceInfo = new AndroidBluetoothDeviceInfo(address);
+#elif IOS || __IOS__
+            // not supported
+#elif WINDOWS_UWP || WINDOWS10_0_17763_0_OR_GREATER
+            _bluetoothDeviceInfo = new WindowsBluetoothDeviceInfo(address);
+#elif NET462 || WINDOWS7_0_OR_GREATER
+            _bluetoothDeviceInfo = new Win32BluetoothDeviceInfo(address);
+#elif NETSTANDARD
+#else
+            switch (Environment.OSVersion.Platform)
+            {
+                case PlatformID.Unix:
+                    // check for macOS goes here
+                    _bluetoothDeviceInfo = new LinuxBluetoothDeviceInfo(address);
+                    break;
+                case PlatformID.Win32NT:
+                    // check for Windows 10 goes here
+                    _bluetoothDeviceInfo = new Win32BluetoothDeviceInfo(address);
+                    break;
+            }
+#endif
+            if (_bluetoothDeviceInfo == null)
+                throw new PlatformNotSupportedException();
+        }
+
+        /// <summary>
         /// Forces the system to refresh the device information.
         /// </summary>
         public void Refresh() =>  _bluetoothDeviceInfo.Refresh();

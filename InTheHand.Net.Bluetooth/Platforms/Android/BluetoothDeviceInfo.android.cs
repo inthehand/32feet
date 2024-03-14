@@ -21,6 +21,16 @@ namespace InTheHand.Net.Sockets
     {
         private readonly BluetoothDevice _device;
 
+        internal AndroidBluetoothDeviceInfo(BluetoothAddress address)
+        {
+            var device = ((BluetoothAdapter)BluetoothRadio.Default).GetRemoteDevice(address.ToString());
+
+            if (device is null)
+                throw new ArgumentException(nameof(address));
+
+            _device = device;
+        }
+
         internal AndroidBluetoothDeviceInfo(BluetoothDevice device)
         {
             if (device is null)
