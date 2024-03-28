@@ -2,7 +2,7 @@
 //
 // InTheHand.Net.Sockets.LinuxSocket (Linux)
 // 
-// Copyright (c) 2023 In The Hand Ltd, All rights reserved.
+// Copyright (c) 2023-24 In The Hand Ltd, All rights reserved.
 // This source code is licensed under the MIT License
 
 using System;
@@ -14,7 +14,8 @@ using System.Runtime.InteropServices;
 namespace InTheHand.Net.Sockets
 {
     /// <summary>
-    /// Required because .NET Core on Linux only supports a subset of AddressFamily values so it was neccessary to build a Socket class from the native APIs.
+    /// Required because .NET Core on Linux only supports a subset of AddressFamily values,
+    /// so it was necessary to build a Socket class from the native APIs.
     /// </summary>
     /// <remarks>To use the Socket on Linux - e.g. that received from BluetoothClient.Client it is necessary to cast to LinuxSocket as it replaces the Socket properties and methods and the base type is a non-functional IPv4 Socket.</remarks>
     public class LinuxSocket : Socket
@@ -22,6 +23,10 @@ namespace InTheHand.Net.Sockets
         private int _socket = 0;
         private Socket _listener;
 
+        /// <summary>
+        /// Creates a new instance of LinuxSocket.
+        /// </summary>
+        /// <exception cref="PlatformNotSupportedException">Called on a non-Linux OS.</exception>
         public LinuxSocket() : base(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Unspecified)
         {
             if (Environment.OSVersion.Platform != PlatformID.Unix)
@@ -46,7 +51,7 @@ namespace InTheHand.Net.Sockets
         {
             if (result == -1)
             {
-                int socketError = Marshal.GetLastSystemError();
+                var socketError = Marshal.GetLastSystemError();
 
                 Debug.WriteLine($"Socket Error: {socketError:X8}");
                 if (!throwOnDisconnected)
@@ -69,7 +74,7 @@ namespace InTheHand.Net.Sockets
         {
             ThrowIfSocketClosed();
 
-            int newSocket = NativeMethods.accept(_socket, null, 0);
+            var newSocket = NativeMethods.accept(_socket, null, 0);
 
             ThrowOnSocketError(newSocket, true);
 
@@ -81,8 +86,7 @@ namespace InTheHand.Net.Sockets
         {
             get
             {
-                int len;
-                int result = NativeMethods.ioctl(_socket, NativeMethods.FIONREAD, out len);
+                var result = NativeMethods.ioctl(_socket, NativeMethods.FIONREAD, out var len);
                 ThrowOnSocketError(result, true);
 
                 return len;
@@ -100,7 +104,7 @@ namespace InTheHand.Net.Sockets
             var sockAddr = localEP.Serialize();
             var raw = sockAddr.ToByteArray();
 
-            int result = NativeMethods.bind(_socket, raw, sockAddr.Size);
+            var result = NativeMethods.bind(_socket, raw, sockAddr.Size);
 
             ThrowOnSocketError(result, true);
         }
@@ -111,7 +115,7 @@ namespace InTheHand.Net.Sockets
             get
             {
                 var ep = LocalEndPointRaw;
-                if(ep != null)
+                if (ep != null)
                 {
                     // check if local endpoint port is not zero
                     if(BitConverter.ToInt32(ep, 8) != 0)
@@ -139,7 +143,7 @@ namespace InTheHand.Net.Sockets
         {
             if (_socket != 0)
             {
-                int result = NativeMethods.close(_socket);
+                var result = NativeMethods.close(_socket);
                 _socket = 0;
                 base.Close();
                 ThrowOnSocketError(result, false);  
@@ -156,13 +160,13 @@ namespace InTheHand.Net.Sockets
 
             var sa = remoteEP.Serialize().ToByteArray();
 
-            for(int i = 0; i < 10; i++)
+            for (int i = 0; i < 10; i++)
             {
                 Debug.Write(sa[i].ToString("X2"));
             }
             Debug.WriteLine("");
 
-            int result = NativeMethods.connect(_socket, sa, 10);
+            var result = NativeMethods.connect(_socket, sa, 10);
 
             ThrowOnSocketError(result, true);
             using (Socket lstnr = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Unspecified))
@@ -187,7 +191,7 @@ namespace InTheHand.Net.Sockets
             return RawReceive(buffer, buffer.Length, socketFlags);
         }
 
-        int RawReceive(byte[] buffer, int size, SocketFlags socketFlags)
+        private int RawReceive(byte[] buffer, int size, SocketFlags socketFlags)
         {
             ThrowIfSocketClosed();
 
@@ -197,7 +201,7 @@ namespace InTheHand.Net.Sockets
             if (size > buffer.Length)
                 throw new ArgumentOutOfRangeException(nameof(size));
 
-            int result = NativeMethods.recv(_socket, buffer, size, (int)socketFlags);
+            var result = NativeMethods.recv(_socket, buffer, size, (int)socketFlags);
 
             ThrowOnSocketError(result, true);
 
@@ -213,8 +217,8 @@ namespace InTheHand.Net.Sockets
         /// <inheritdoc/>
         public new int Receive(byte[] buffer, int offset, int size, SocketFlags socketFlags)
         {
-            byte[] newBuffer = new byte[size];
-            int bytesReceived = RawReceive(newBuffer, size, socketFlags);
+            var newBuffer = new byte[size];
+            var bytesReceived = RawReceive(newBuffer, size, socketFlags);
             if (bytesReceived > 0)
             {
                 newBuffer.CopyTo(buffer, offset);
@@ -233,15 +237,16 @@ namespace InTheHand.Net.Sockets
 
             if (offset + size > buffer.Length)
                 throw new ArgumentOutOfRangeException(nameof(size));
-            byte[] newBuffer = new byte[size];
 
-            int bytesReceived = NativeMethods.recv(_socket, newBuffer, size, (int)socketFlags);
+            var newBuffer = new byte[size];
+
+            var bytesReceived = NativeMethods.recv(_socket, newBuffer, size, (int)socketFlags);
             if (bytesReceived > 0)
             {
                 newBuffer.CopyTo(buffer, offset);
             }
 
-            int socketError = Marshal.GetLastSystemError();
+            var socketError = Marshal.GetLastSystemError();
             errorCode = (SocketError)socketError;
 
             return bytesReceived;
@@ -250,26 +255,20 @@ namespace InTheHand.Net.Sockets
         /// <inheritdoc/>
         public new void Listen(int backlog)
         {
-            int result = NativeMethods.listen(_socket, backlog);
+            var result = NativeMethods.listen(_socket, backlog);
             ThrowOnSocketError(result, true);
         }
 
         /// <inheritdoc/>
-        public new EndPoint LocalEndPoint
-        {
-            get
-            {
-                return new BluetoothEndPoint(LocalEndPointRaw);
-            }
-        }
+        public new EndPoint LocalEndPoint => new BluetoothEndPoint(LocalEndPointRaw);
 
         internal byte[] LocalEndPointRaw
         {
             get
             {
-                byte[] addr = new byte[30];
-                int len = addr.Length;
-                int result = NativeMethods.getsockname(_socket, addr, ref len);
+                var addr = new byte[30];
+                var len = addr.Length;
+                var result = NativeMethods.getsockname(_socket, addr, ref len);
                 ThrowOnSocketError(result, false);
 
                 return addr;
@@ -280,10 +279,10 @@ namespace InTheHand.Net.Sockets
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "Matching Socket API")]
         public new bool Poll(int microSeconds, SelectMode mode)
         {
-            int[] fileDescriptorSet = new int[2] { 1, _socket };
-            int result = NativeMethods.select(0, mode == SelectMode.SelectRead ? fileDescriptorSet : null, mode == SelectMode.SelectWrite ? fileDescriptorSet : null, mode == SelectMode.SelectError ? fileDescriptorSet : null, IntPtr.Zero);
+            var fileDescriptorSet = new int[2] { 1, _socket };
+            var result = NativeMethods.select(0, mode == SelectMode.SelectRead ? fileDescriptorSet : null, mode == SelectMode.SelectWrite ? fileDescriptorSet : null, mode == SelectMode.SelectError ? fileDescriptorSet : null, IntPtr.Zero);
 
-            if(result == -1)
+            if (result == -1)
             {
                 ThrowOnSocketError(result, true);
             }
@@ -301,9 +300,9 @@ namespace InTheHand.Net.Sockets
         {
             get
             {
-                byte[] addr = new byte[30];
-                int len = addr.Length;
-                int result = NativeMethods.getpeername(_socket, addr, ref len);
+                var addr = new byte[30];
+                var len = addr.Length;
+                var result = NativeMethods.getpeername(_socket, addr, ref len);
                 Debug.WriteLine($"getpeername: {result}");
                 if (result == 0)
                     return new BluetoothEndPoint(addr);
@@ -351,10 +350,10 @@ namespace InTheHand.Net.Sockets
             if (size + offset > buffer.Length)
                 throw new ArgumentOutOfRangeException(nameof(size));
 
-            byte[] requiredBuffer = new byte[size];
+            var requiredBuffer = new byte[size];
             Buffer.BlockCopy(buffer, offset, requiredBuffer, 0, size);
 
-            int result = NativeMethods.send(_socket, requiredBuffer, size, (int)socketFlags);
+            var result = NativeMethods.send(_socket, requiredBuffer, size, (int)socketFlags);
 
             ThrowOnSocketError(result, true);
 
@@ -364,22 +363,21 @@ namespace InTheHand.Net.Sockets
         /// <inheritdoc/>
         public new void SetSocketOption(SocketOptionLevel optionLevel, SocketOptionName optionName, bool optionValue)
         {
-            int result = NativeMethods.setsockopt(_socket, (int)optionLevel, (int)optionName, BitConverter.GetBytes(Convert.ToInt32(optionValue)), Marshal.SizeOf(typeof(int)));
+            var result = NativeMethods.setsockopt(_socket, (int)optionLevel, (int)optionName, BitConverter.GetBytes(Convert.ToInt32(optionValue)), Marshal.SizeOf(typeof(int)));
             ThrowOnSocketError(result, true);
         }
 
         /// <inheritdoc/>
         public new void SetSocketOption(SocketOptionLevel optionLevel, SocketOptionName optionName, int optionValue)
         {
-            int result = NativeMethods.setsockopt(_socket, (int)optionLevel, (int)optionName, BitConverter.GetBytes(optionValue), Marshal.SizeOf(typeof(int)));
+            var result = NativeMethods.setsockopt(_socket, (int)optionLevel, (int)optionName, BitConverter.GetBytes(optionValue), Marshal.SizeOf(typeof(int)));
             ThrowOnSocketError(result, true);
         }
 
         /// <inheritdoc/>
         protected override void Dispose(bool disposing)
         {
-            if (Connected)
-                Close();
+            Close();
         }
 
         private static class NativeMethods
