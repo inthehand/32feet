@@ -92,12 +92,11 @@ namespace InTheHand.Net.Sockets
         private bool _connected;
         public bool Connected { get =>  _connected; }
 
-        private bool _authenticated;
-        public bool Authenticated {  get => _authenticated; }
-
+        
         ClassOfDevice IBluetoothDeviceInfo.ClassOfDevice => (ClassOfDevice)0;
 
-        bool IBluetoothDeviceInfo.Authenticated => throw new PlatformNotSupportedException();
+        private bool _authenticated;
+        bool IBluetoothDeviceInfo.Authenticated => _authenticated;
 
         public void Refresh()
         {

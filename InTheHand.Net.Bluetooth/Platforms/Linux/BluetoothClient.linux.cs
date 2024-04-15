@@ -2,7 +2,7 @@
 //
 // InTheHand.Net.Sockets.BluetoothClient (Linux)
 // 
-// Copyright (c) 2022-23 In The Hand Ltd, All rights reserved.
+// Copyright (c) 2022-24 In The Hand Ltd, All rights reserved.
 // This source code is licensed under the MIT License
 
 using InTheHand.Net.Bluetooth;
@@ -13,10 +13,8 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Net.Sockets;
 using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Xml;
 
 namespace InTheHand.Net.Sockets
 {
@@ -84,15 +82,16 @@ namespace InTheHand.Net.Sockets
 
             async Task handler(Adapter sender, DeviceFoundEventArgs eventArgs)
             {
-                if (!eventArgs.IsStateChange)
-                {
+                //if (!eventArgs.IsStateChange)
+                //{
                     if (!devices.Contains((LinuxBluetoothDeviceInfo)eventArgs.Device))
                     {
                         device = eventArgs.Device;
                         await device.Init();
-                        waitable.Set();
+                        if(device.DeviceAddress != BluetoothAddress.None)
+                            waitable.Set();
                     }
-                }
+                //}
             }
 
             adapter.DeviceFound += handler;
@@ -109,7 +108,8 @@ namespace InTheHand.Net.Sockets
             while (!t.IsCompleted)
             {
                 waitable.WaitOne();
-                yield return new BluetoothDeviceInfo(device);
+                if(device != null)
+                    yield return new BluetoothDeviceInfo(device);
             }
 
             adapter.DeviceFound -= handler;

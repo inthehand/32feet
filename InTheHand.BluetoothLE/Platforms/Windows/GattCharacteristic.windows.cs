@@ -1,6 +1,6 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="GattCharacteristic.windows.cs" company="In The Hand Ltd">
-//   Copyright (c) 2018-21 In The Hand Ltd, All rights reserved.
+//   Copyright (c) 2018-24 In The Hand Ltd, All rights reserved.
 //   This source code is licensed under the MIT License - see License.txt
 // </copyright>
 //-----------------------------------------------------------------------
@@ -27,7 +27,7 @@ namespace InTheHand.Bluetooth
             return characteristic._characteristic;
         }
 
-        BluetoothUuid GetUuid()
+        private BluetoothUuid GetUuid()
         {
             return _characteristic.Uuid;
         }
@@ -43,12 +43,12 @@ namespace InTheHand.Bluetooth
             }
         }
 
-        GattCharacteristicProperties GetProperties()
+        private GattCharacteristicProperties GetProperties()
         {
             return (GattCharacteristicProperties)(int)_characteristic.CharacteristicProperties;
         }
 
-        async Task<GattDescriptor> PlatformGetDescriptor(Guid descriptor)
+        private async Task<GattDescriptor?> PlatformGetDescriptor(Guid descriptor)
         {
             var result = await _characteristic.GetDescriptorsForUuidAsync(descriptor);
 
@@ -58,7 +58,7 @@ namespace InTheHand.Bluetooth
             return null;
         }
 
-        async Task<IReadOnlyList<GattDescriptor>> PlatformGetDescriptors()
+        private async Task<IReadOnlyList<GattDescriptor>> PlatformGetDescriptors()
         {
             List<GattDescriptor> descriptors = new List<GattDescriptor>();
 
@@ -75,7 +75,7 @@ namespace InTheHand.Bluetooth
             return descriptors;
         }
 
-        byte[] PlatformGetValue()
+        private byte[] PlatformGetValue()
         {
             var t = _characteristic.ReadValueAsync(Windows.Devices.Bluetooth.BluetoothCacheMode.Cached).AsTask();
             t.Wait();
@@ -89,7 +89,7 @@ namespace InTheHand.Bluetooth
             return null;
         }
 
-        async Task<byte[]> PlatformReadValue()
+        private async Task<byte[]> PlatformReadValue()
         {
             var result = await _characteristic.ReadValueAsync(Windows.Devices.Bluetooth.BluetoothCacheMode.Uncached).AsTask().ConfigureAwait(false);
 
@@ -101,12 +101,12 @@ namespace InTheHand.Bluetooth
             return null;
         }
 
-        async Task PlatformWriteValue(byte[] value, bool requireResponse)
+        private async Task PlatformWriteValue(byte[] value, bool requireResponse)
         {
             await _characteristic.WriteValueAsync(value.AsBuffer(), requireResponse ? Uap.GattWriteOption.WriteWithResponse : Uap.GattWriteOption.WriteWithoutResponse);
         }
 
-        void AddCharacteristicValueChanged()
+        private void AddCharacteristicValueChanged()
         {
             _characteristic.ValueChanged += Characteristic_ValueChanged;
         }
@@ -139,7 +139,6 @@ namespace InTheHand.Bluetooth
             {
                 // not supported
             }
-            return;
         }
 
         private async Task PlatformStopNotifications()
@@ -153,7 +152,6 @@ namespace InTheHand.Bluetooth
                 throw new NotSupportedException();
                 // HRESULT 0x800704D6 means that a connection to the server could not be made because the limit on the number of concurrent connections for this account has been reached.
             }
-            return;
         }
     }
 }

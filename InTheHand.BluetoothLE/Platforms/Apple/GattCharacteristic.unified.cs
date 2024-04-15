@@ -27,19 +27,19 @@ namespace InTheHand.Bluetooth
             return characteristic._characteristic;
         }
 
-        BluetoothUuid GetUuid()
+        private BluetoothUuid GetUuid()
         {
             return _characteristic.UUID;
         }
 
-        GattCharacteristicProperties GetProperties()
+        private GattCharacteristicProperties GetProperties()
         {
             return (GattCharacteristicProperties)((int)_characteristic.Properties & 0xff);
         }
 
-        Task<GattDescriptor> PlatformGetDescriptor(BluetoothUuid descriptor)
+        private Task<GattDescriptor?> PlatformGetDescriptor(BluetoothUuid descriptor)
         {
-            TaskCompletionSource<GattDescriptor> tcs = new TaskCompletionSource<GattDescriptor>();
+            TaskCompletionSource<GattDescriptor?> tcs = new();
             CBPeripheral peripheral = Service.Device;
 
             void handler(object sender, CBCharacteristicEventArgs args)
@@ -70,7 +70,7 @@ namespace InTheHand.Bluetooth
             return tcs.Task;
         }
 
-        Task<IReadOnlyList<GattDescriptor>> PlatformGetDescriptors()
+        private Task<IReadOnlyList<GattDescriptor>> PlatformGetDescriptors()
         {
             TaskCompletionSource<IReadOnlyList<GattDescriptor>> tcs = new TaskCompletionSource<IReadOnlyList<GattDescriptor>>();
             CBPeripheral peripheral = Service.Device;
@@ -101,12 +101,12 @@ namespace InTheHand.Bluetooth
             return tcs.Task;
         }
 
-        byte[] PlatformGetValue()
+        private byte[] PlatformGetValue()
         {
             return _characteristic.Value.ToArray();
         }
 
-        Task<byte[]> PlatformReadValue()
+        private Task<byte[]> PlatformReadValue()
         {
             TaskCompletionSource<byte[]> tcs = new TaskCompletionSource<byte[]>();
             CBPeripheral peripheral = Service.Device;
@@ -143,7 +143,7 @@ namespace InTheHand.Bluetooth
             return tcs.Task;
         }
 
-        Task PlatformWriteValue(byte[] value, bool requireResponse)
+        private Task PlatformWriteValue(byte[] value, bool requireResponse)
         {
             TaskCompletionSource<bool> tcs = null;
             CBPeripheral peripheral = Service.Device;
@@ -181,13 +181,13 @@ namespace InTheHand.Bluetooth
             return Task.CompletedTask;
         }
 
-        void AddCharacteristicValueChanged()
+        private void AddCharacteristicValueChanged()
         {
             CBPeripheral peripheral = Service.Device;
             peripheral.UpdatedCharacterteristicValue += Peripheral_UpdatedCharacteristicValue;
         }
 
-        void Peripheral_UpdatedCharacteristicValue(object sender, CBCharacteristicEventArgs e)
+        private void Peripheral_UpdatedCharacteristicValue(object sender, CBCharacteristicEventArgs e)
         {
             if (e.Characteristic == _characteristic)
             {
@@ -201,7 +201,7 @@ namespace InTheHand.Bluetooth
             }
         }
 
-        void RemoveCharacteristicValueChanged()
+        private void RemoveCharacteristicValueChanged()
         {
             CBPeripheral peripheral = Service.Device;
             peripheral.UpdatedCharacterteristicValue -= Peripheral_UpdatedCharacteristicValue;

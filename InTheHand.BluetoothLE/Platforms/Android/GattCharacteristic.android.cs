@@ -1,6 +1,6 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="GattCharacteristic.android.cs" company="In The Hand Ltd">
-//   Copyright (c) 2018-23 In The Hand Ltd, All rights reserved.
+//   Copyright (c) 2018-24 In The Hand Ltd, All rights reserved.
 //   This source code is licensed under the MIT License - see License.txt
 // </copyright>
 //-----------------------------------------------------------------------
@@ -12,7 +12,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Android.OS;
-using Android.Bluetooth;
 
 namespace InTheHand.Bluetooth
 {
@@ -30,26 +29,23 @@ namespace InTheHand.Bluetooth
             return characteristic._characteristic;
         }
 
-        BluetoothUuid GetUuid()
+        private BluetoothUuid GetUuid()
         {
             return _characteristic.Uuid;
         }
 
-        GattCharacteristicProperties GetProperties()
+        private GattCharacteristicProperties GetProperties()
         {
             return (GattCharacteristicProperties)(int)_characteristic.Properties;
         }
 
-        Task<GattDescriptor> PlatformGetDescriptor(BluetoothUuid descriptor)
+        private Task<GattDescriptor?> PlatformGetDescriptor(BluetoothUuid descriptor)
         {
             var gattDescriptor = _characteristic.GetDescriptor(descriptor);
-            if (gattDescriptor is null)
-                return Task.FromResult<GattDescriptor>(null);
-
-            return Task.FromResult(new GattDescriptor(this, gattDescriptor));
+            return gattDescriptor is null ? Task.FromResult<GattDescriptor?>(null) : Task.FromResult<GattDescriptor?>(new GattDescriptor(this, gattDescriptor));
         }
 
-        async Task<IReadOnlyList<GattDescriptor>> PlatformGetDescriptors()
+        private async Task<IReadOnlyList<GattDescriptor>> PlatformGetDescriptors()
         {
             List<GattDescriptor> descriptors = new List<GattDescriptor>();
 
@@ -61,12 +57,12 @@ namespace InTheHand.Bluetooth
             return descriptors;
         }
 
-        byte[] PlatformGetValue()
+        private byte[] PlatformGetValue()
         {
             return _characteristic.GetValue();
         }
 
-        Task<byte[]> PlatformReadValue()
+        private Task<byte[]> PlatformReadValue()
         {
             TaskCompletionSource<byte[]> tcs = new TaskCompletionSource<byte[]>();
 
@@ -95,7 +91,7 @@ namespace InTheHand.Bluetooth
             return tcs.Task;
         }
 
-        Task PlatformWriteValue(byte[] value, bool requireResponse)
+        private Task PlatformWriteValue(byte[] value, bool requireResponse)
         {
             TaskCompletionSource<bool> tcs = null;
 
@@ -124,7 +120,7 @@ namespace InTheHand.Bluetooth
             if (Build.VERSION.SdkInt >= BuildVersionCodes.Tiramisu)
             {
                 int result = ((ABluetooth.BluetoothGatt)Service.Device.Gatt).WriteCharacteristic(_characteristic, value, requireResponse ? (int)ABluetooth.GattWriteType.Default : (int)ABluetooth.GattWriteType.NoResponse);
-                written = result == (int)CurrentBluetoothStatusCodes.Success;
+                written = result == (int)ABluetooth.CurrentBluetoothStatusCodes.Success;
             }
             else
             {
@@ -141,7 +137,7 @@ namespace InTheHand.Bluetooth
             return Task.CompletedTask;
         }
 
-        void AddCharacteristicValueChanged()
+        private void AddCharacteristicValueChanged()
         {
             Service.Device.Gatt.CharacteristicChanged += Gatt_CharacteristicChanged;
         }
@@ -152,7 +148,7 @@ namespace InTheHand.Bluetooth
                 OnCharacteristicValueChanged(new GattCharacteristicValueChangedEventArgs(e.Characteristic.GetValue()));
         }
 
-        void RemoveCharacteristicValueChanged()
+        private void RemoveCharacteristicValueChanged()
         {
             Service.Device.Gatt.CharacteristicChanged -= Gatt_CharacteristicChanged;
         }
@@ -179,7 +175,7 @@ namespace InTheHand.Bluetooth
             if (Service.Device.Gatt.IsConnected)
             {
                 var descriptor = await GetDescriptorAsync(GattDescriptorUuids.ClientCharacteristicConfiguration);
-                await descriptor.WriteValueAsync(new byte[] { 0, 0 });
+                await descriptor.WriteValueAsync([0, 0]);
             }
         }
     }

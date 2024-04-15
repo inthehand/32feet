@@ -1,6 +1,6 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="GattService.linux.cs" company="In The Hand Ltd">
-//   Copyright (c) 2023 In The Hand Ltd, All rights reserved.
+//   Copyright (c) 2023-24 In The Hand Ltd, All rights reserved.
 //   This source code is licensed under the MIT License - see License.txt
 // </copyright>
 //-----------------------------------------------------------------------
@@ -9,7 +9,6 @@ using Linux.Bluetooth;
 using Linux.Bluetooth.Extensions;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace InTheHand.Bluetooth
@@ -66,7 +65,7 @@ namespace InTheHand.Bluetooth
             {
                 foreach(var linuxCharacteristic in chars)
                 {
-                    characteristics.Add(new GattCharacteristic((Linux.Bluetooth.GattCharacteristic)linuxCharacteristic, Guid.Parse(await linuxCharacteristic.GetUUIDAsync())));
+                    characteristics.Add(new GattCharacteristic(linuxCharacteristic, Guid.Parse(await linuxCharacteristic.GetUUIDAsync())));
                 }
             }
 
@@ -78,7 +77,7 @@ namespace InTheHand.Bluetooth
             var paths = await _service.GetIncludesAsync();
             foreach(var path in paths)
             {
-                var serv = Tmds.DBus.Connection.System.CreateProxy<IGattService1>(Linux.Bluetooth.BluezConstants.DbusService, path);
+                var serv = Tmds.DBus.Connection.System.CreateProxy<IGattService1>(BluezConstants.DbusService, path);
                 var uuid = await serv.GetUUIDAsync();
                 if(uuid == service.Value.ToString())
                 {
@@ -91,12 +90,12 @@ namespace InTheHand.Bluetooth
 
         private async Task<IReadOnlyList<GattService>> PlatformGetIncludedServicesAsync()
         {
-            List<GattService> includedServices = new List<GattService>();
+            var includedServices = new List<GattService>();
 
             var paths = await _service.GetIncludesAsync();
             foreach (var path in paths)
             {
-                var serv = Tmds.DBus.Connection.System.CreateProxy<IGattService1>(Linux.Bluetooth.BluezConstants.DbusService, path);
+                var serv = Tmds.DBus.Connection.System.CreateProxy<IGattService1>(BluezConstants.DbusService, path);
                 includedServices.Add(new GattService(Device, serv, Guid.Parse(await serv.GetUUIDAsync())));
             }
 

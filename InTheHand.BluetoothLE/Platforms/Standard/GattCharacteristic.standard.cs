@@ -1,59 +1,58 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="GattCharacteristic.standard.cs" company="In The Hand Ltd">
-//   Copyright (c) 2018-20 In The Hand Ltd, All rights reserved.
+//   Copyright (c) 2018-24 In The Hand Ltd, All rights reserved.
 //   This source code is licensed under the MIT License - see License.txt
 // </copyright>
 //-----------------------------------------------------------------------
 
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace InTheHand.Bluetooth
 {
     partial class GattCharacteristic
     {
-        BluetoothUuid GetUuid()
+        private BluetoothUuid GetUuid()
         {
             return default;
         }
 
-        GattCharacteristicProperties GetProperties()
+        private GattCharacteristicProperties GetProperties()
         {
             return 0;
         }
 
-        Task<GattDescriptor> PlatformGetDescriptor(BluetoothUuid descriptor)
+        private Task<GattDescriptor?> PlatformGetDescriptor(BluetoothUuid descriptor)
         {
-            return Task.FromResult((GattDescriptor)null);
+            return Task.FromResult<GattDescriptor?>(null);
         }
 
-        Task<IReadOnlyList<GattDescriptor>> PlatformGetDescriptors()
+        private Task<IReadOnlyList<GattDescriptor>> PlatformGetDescriptors()
         {
-            return Task.FromResult((IReadOnlyList<GattDescriptor>)null);
+            return Task.FromResult<IReadOnlyList<GattDescriptor>>(null);
         }
 
-        byte[] PlatformGetValue()
+        private byte[] PlatformGetValue()
         {
             return null;
         }
 
-        Task<byte[]> PlatformReadValue()
+        private Task<byte[]> PlatformReadValue()
         {
             return Task.FromResult<byte[]>(null);
         }
 
-        Task PlatformWriteValue(byte[] value, bool requireResponse)
+        private Task PlatformWriteValue(byte[] value, bool requireResponse)
         {
             return Task.FromException(new PlatformNotSupportedException());
         }
 
-        void AddCharacteristicValueChanged()
+        private void AddCharacteristicValueChanged()
         {
         }
 
-        void RemoveCharacteristicValueChanged()
+        private void RemoveCharacteristicValueChanged()
         {
         }
 
