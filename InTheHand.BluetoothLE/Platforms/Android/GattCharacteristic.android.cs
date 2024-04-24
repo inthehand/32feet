@@ -121,6 +121,11 @@ namespace InTheHand.Bluetooth
             {
                 int result = ((ABluetooth.BluetoothGatt)Service.Device.Gatt).WriteCharacteristic(_characteristic, value, requireResponse ? (int)ABluetooth.GattWriteType.Default : (int)ABluetooth.GattWriteType.NoResponse);
                 written = result == (int)ABluetooth.CurrentBluetoothStatusCodes.Success;
+
+                if (result == (int)ABluetooth.CurrentBluetoothStatusCodes.ErrorGattWriteRequestBusy)
+                {
+                    return Task.FromException(new GattWriteRequestBusyException(_characteristic.Uuid?.ToString() ?? "N/A"));
+                }
             }
             else
             {
