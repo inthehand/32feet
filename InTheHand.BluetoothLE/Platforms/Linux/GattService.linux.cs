@@ -54,7 +54,15 @@ namespace InTheHand.Bluetooth
         async Task<GattCharacteristic> PlatformGetCharacteristic(BluetoothUuid characteristic)
         {
             var linuxCharacteristic = await _service.GetCharacteristicAsync(characteristic.Value.ToString());
-            return linuxCharacteristic == null ? null : new GattCharacteristic(linuxCharacteristic, characteristic);
+
+            if (linuxCharacteristic != null)
+            {
+                var gattCharacteristic = new GattCharacteristic(linuxCharacteristic, characteristic);
+                await gattCharacteristic.Init();
+                return gattCharacteristic;
+            }
+
+            return null;
         }
 
         async Task<IReadOnlyList<GattCharacteristic>> PlatformGetCharacteristics()
@@ -65,7 +73,10 @@ namespace InTheHand.Bluetooth
             {
                 foreach(var linuxCharacteristic in chars)
                 {
-                    characteristics.Add(new GattCharacteristic(linuxCharacteristic, Guid.Parse(await linuxCharacteristic.GetUUIDAsync())));
+                    var gattCharacteristic = new GattCharacteristic(linuxCharacteristic,
+                        Guid.Parse(await linuxCharacteristic.GetUUIDAsync()));
+                    await gattCharacteristic.Init();
+                    characteristics.Add(gattCharacteristic);
                 }
             }
 

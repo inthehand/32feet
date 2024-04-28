@@ -8,6 +8,7 @@
 using System;
 using Linux.Bluetooth;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading.Tasks;
 
 namespace InTheHand.Bluetooth
@@ -21,6 +22,17 @@ namespace InTheHand.Bluetooth
         {
             _characteristic = characteristic;
             _uuid = uuid;
+            Init();
+        }
+
+        internal async Task Init()
+        {
+            string[] flags = await GattCharacteristic1Extensions.GetFlagsAsync(_characteristic);
+
+            foreach (var flag in flags)
+            {
+                Debug.WriteLine(flag);
+            }
         }
 
         private BluetoothUuid _uuid;
