@@ -1,4 +1,6 @@
-﻿namespace MauiWebBluetooth
+﻿using InTheHand.Bluetooth;
+
+namespace MauiWebBluetooth
 {
     public partial class MainPage : ContentPage
     {
@@ -35,9 +37,19 @@
             else
                 CounterBtn.Text = $"Clicked {count} times";
 
-            var device = await InTheHand.Bluetooth.Bluetooth.RequestDeviceAsync();
+            var device = await Bluetooth.RequestDeviceAsync(new RequestDeviceOptions
+            {
+                Filters = { new BluetoothLEScanFilter{ Services = { GattServiceUuids.DeviceInformation, GattServiceUuids.Battery } }}
+            });
 
-            System.Diagnostics.Debug.WriteLine(device.Name);
+            System.Diagnostics.Debug.WriteLine($"Device: {device?.Name}");
+            var options = new RequestDeviceOptions { Filters = { new BluetoothLEScanFilter { NamePrefix = "T", Services = {GattServiceUuids.GenericAccess} } } };
+            var devices = await Bluetooth.ScanForDevicesAsync(options);
+
+            foreach (var thisDevice in devices)
+            {
+                System.Diagnostics.Debug.WriteLine($"Device: {thisDevice.Id} {thisDevice.Name}");
+            }
         }
     }
 }

@@ -14,8 +14,4 @@
     <ProjectReference Include="..\..\InTheHand.Net.Bluetooth\InTheHand.Net.Bluetooth.csproj" />
   </ItemGroup>
 
-  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="echo $(ProjectDir)$(OutDir)*&#xD;&#xA;scp -r $(ProjectDir)$(OutDir)* pi@raspberrypi:~/radio-console/" />
-  </Target>
-
 </Project>

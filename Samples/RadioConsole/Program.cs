@@ -20,7 +20,7 @@ namespace MyApp // Note: actual namespace depends on the project name.
             {
 
 
-                BluetoothClient client = new BluetoothClient();
+                /*BluetoothClient client = new BluetoothClient();
                 foreach (var device in client.PairedDevices)
                 {
                     Console.WriteLine($"{device.DeviceAddress}\t{device.DeviceName}\t{device.Authenticated}");
@@ -49,15 +49,17 @@ namespace MyApp // Note: actual namespace depends on the project name.
                 await foreach(var device2 in client.DiscoverDevicesAsync())
             {
                 Console.WriteLine($"{device2.DeviceAddress}\t{device2.DeviceName}\t{device2.Authenticated}\t{device2.Connected}");
-            }
-                /*bool available = await Bluetooth.GetAvailabilityAsync();
+            }*/
+
+
+                bool available = await Bluetooth.GetAvailabilityAsync();
                 Console.WriteLine($"Bluetooth.GetAvailabilityAsync:{available}");
 
                 if(available)
                 {
                     /*var dev2 = await BluetoothDevice.FromIdAsync("D5:C3:DD:2D:0B:88");
                     await dev2.Gatt.ConnectAsync();
-                    var servs2 = await  dev2.Gatt.GetPrimaryServicesAsync();/
+                    var servs2 = await  dev2.Gatt.GetPrimaryServicesAsync();*/
 
 
                     var devs = await Bluetooth.ScanForDevicesAsync();
@@ -66,14 +68,24 @@ namespace MyApp // Note: actual namespace depends on the project name.
                     {
                         Console.WriteLine($"Device {dev.Id} {dev.Name}");
 
-                        if (dev.Name.Contains("nut"))
-                        {
+                        //if (dev.Name.Contains(""))
+                        //{
                             await dev.Gatt.ConnectAsync();
 
                             Console.WriteLine($"Gatt.IsConnected:{dev.Gatt.IsConnected}");
 
                             if (dev.Gatt.IsConnected)
                             {
+                                var bat = await dev.Gatt.GetPrimaryServiceAsync(GattServiceUuids.Battery);
+                                if (bat != null)
+                                {
+                                    var chars = await bat.GetCharacteristicsAsync();
+                                    foreach (var gattchar in chars)
+                                    {
+                                        Console.WriteLine($"Characteristic:{gattchar.Uuid} {gattchar.Properties}");
+                                    }
+                                }
+
                                 var servs = await dev.Gatt.GetPrimaryServicesAsync();
 
                                 foreach (var serv in servs)
@@ -89,10 +101,10 @@ namespace MyApp // Note: actual namespace depends on the project name.
 
                                 dev.Gatt.Disconnect();
                             }
-                        }
+                        //}
                     }
 
-                }*/
+                }
             });
 
             t.Wait();
