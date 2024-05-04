@@ -2,7 +2,7 @@
 //
 // InTheHand.Net.ObexHeader
 // 
-// Copyright (c) 2003-2023 In The Hand Ltd, All rights reserved.
+// Copyright (c) 2003-2024 In The Hand Ltd, All rights reserved.
 // This source code is licensed under the MIT License
 
 using System;
@@ -36,7 +36,7 @@ namespace InTheHand.Net
         Type = 0x42,
 
         /// <summary>
-        /// Date/time stamp – ISO 8601 version - preferred 
+        /// Date/time stamp â€“ ISO 8601 version - preferred 
         /// </summary>
         /// <remarks>Byte sequence. ASCII encoded ISO 8601 DateTime string.</remarks>
         Time = 0x44,
@@ -132,7 +132,7 @@ namespace InTheHand.Net
         Length = 0xC3,
 
         /// <summary>
-        /// Date/time stamp – 4-byte version.
+        /// Date/time stamp â€“ 4-byte version.
         /// </summary>
         /// <remarks>4-byte unsigned integer.</remarks>
         [Obsolete("Use ObexHeader.Time instead", false)]

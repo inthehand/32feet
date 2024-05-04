@@ -2,7 +2,7 @@
 //
 // InTheHand.Net.ObexWebRequest
 // 
-// Copyright (c) 2003-2023 In The Hand Ltd, All rights reserved.
+// Copyright (c) 2003-2024 In The Hand Ltd, All rights reserved.
 // This source code is licensed under the MIT License
 
 using System;
@@ -1056,8 +1056,16 @@ namespace InTheHand.Net
             ObexStatusCode status;
             MemoryStream ms = new MemoryStream();
             WebHeaderCollection responseHeaders = new WebHeaderCollection();
+            // Added David Rodgers to facilitate sending an Md5 checksum in the header
+            // could be expanded to loop through Headers and add any headers that are set by the user
+            if (Headers["ContentMd5"] != null)
+            {
+                responseHeaders.Add("ContentMd5", Headers["ContentMd5"]);
+            }
+            // end Added David Rodgers
             // try connecting if not already
-            try {
+            try
+            {
                 status = Connect();
                 Debug.Assert(status == ObexStatus_OK, "connect was:  " + status);
             } catch (Exception se) {
