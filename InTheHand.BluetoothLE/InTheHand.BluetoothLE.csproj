@@ -19,7 +19,7 @@
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<Copyright>Copyright (c) 2004-2023 In The Hand Ltd</Copyright>
 		<Description>32feet.NET is an open-source project to make personal area networking technologies such as Bluetooth easily accessible from .NET code.</Description>
-		<FileVersion>4.0.35.1005</FileVersion>
+		<FileVersion>4.0.35.1128</FileVersion>
 		<AssemblyVersion>4.0.0.0</AssemblyVersion>
 		<AssemblyName>InTheHand.BluetoothLE</AssemblyName>
 		<PackageIconUrl></PackageIconUrl>
@@ -107,7 +107,7 @@
 	</ItemGroup>
 
 	<ItemGroup Condition=" '$(TargetFramework)' == 'net461' ">
-		<PackageReference Include="Microsoft.Windows.SDK.Contracts" Version="10.0.22621.755" />
+		<PackageReference Include="Microsoft.Windows.SDK.Contracts" Version="10.0.22621.2428" />
 		<Compile Include="Platforms\Windows\*.cs" />
 	</ItemGroup>
 	
@@ -190,8 +190,8 @@
 	</ItemGroup>
 
 	<ItemGroup Condition=" '$(TargetFramework)' == 'net8.0-browser' ">
-		<PackageReference Include="Microsoft.JSInterop.WebAssembly" Version="7.0.11" />
-		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="7.0.11" />
+		<PackageReference Include="Microsoft.JSInterop.WebAssembly" Version="8.0.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.0" />
 		<Compile Include="Platforms\Wasm\*.cs" />
 	</ItemGroup>
 

@@ -2,7 +2,7 @@
 //
 // InTheHand.Net.ObexHeader
 // 
-// Copyright (c) 2003-2022 In The Hand Ltd, All rights reserved.
+// Copyright (c) 2003-2024 In The Hand Ltd, All rights reserved.
 // This source code is licensed under the MIT License
 
 using System;
@@ -36,7 +36,7 @@ namespace InTheHand.Net
         Type = 0x42,
 
         /// <summary>
-        /// Date/time stamp – ISO 8601 version - preferred 
+        /// Date/time stamp â€“ ISO 8601 version - preferred 
         /// </summary>
         /// <remarks>Byte sequence. ASCII encoded ISO 8601 DateTime string.</remarks>
         Time = 0x44,
@@ -132,7 +132,7 @@ namespace InTheHand.Net
         Length = 0xC3,
 
         /// <summary>
-        /// Date/time stamp – 4-byte version.
+        /// Date/time stamp â€“ 4-byte version.
         /// </summary>
         /// <remarks>4-byte unsigned integer.</remarks>
         [Obsolete("Use ObexHeader.Time instead", false)]
@@ -150,13 +150,22 @@ namespace InTheHand.Net
         /// <remarks>4-byte unsigned integer.</remarks>
         CreatorID = 0xCF,
 
-        // added David Rodgers
-        /// User defined header
-        /// 0x30, 0x30 to 0x3F as the range for user defined Obex headers
-        /// <summary>
-        /// Md5 of the sent file.
-        /// </summary>
-        /// <remarks>Unicode string.</remarks>
-        ContentMd5 = 0x30,
+        //user-defined headers
+        User0 = 0x30,
+        User1 = 0x31,
+        User2 = 0x32,
+        User3 = 0x33,
+        User4 = 0x34,
+        User5 = 0x35,
+        User6 = 0x36,
+        User7 = 0x37,
+        User8 = 0x38,
+        User9 = 0x39,
+        User10 = 0x3A,
+        User11 = 0x3B,
+        User12 = 0x3C,
+        User13 = 0x3D,
+        User14 = 0x3E,
+        User15 = 0x3F,
     }
 }

@@ -1,6 +1,6 @@
 ﻿// 32feet.NET - Personal Area Networking for .NET
 //
-// InTheHand.Net.Bluetooth.BluetoothClient (Android)
+// InTheHand.Net.Bluetooth.AndroidBluetoothClient
 // 
 // Copyright (c) 2018-2023 In The Hand Ltd, All rights reserved.
 // This source code is licensed under the MIT License
@@ -24,7 +24,7 @@ namespace InTheHand.Net.Sockets
     internal sealed class AndroidBluetoothClient : IBluetoothClient
     {
         private BluetoothSocket _socket;
-        private BluetoothRadio _radio;
+        private readonly BluetoothRadio _radio;
 
         public AndroidBluetoothClient()
         {
@@ -42,12 +42,10 @@ namespace InTheHand.Net.Sockets
         {
             get
             {
-                foreach (BluetoothDevice device in ((BluetoothAdapter)_radio).BondedDevices)
+                foreach (var device in ((BluetoothAdapter)_radio).BondedDevices)
                 {
                     yield return new AndroidBluetoothDeviceInfo(device);
                 }
-
-                yield break;
             }
         }
 

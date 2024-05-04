@@ -26,54 +26,39 @@ namespace InTheHand.Net.Bluetooth
 
         ThuleGroup = 0x0CFE,
 
-
         WuhanWoncanConstructionTechnologies = 0x0CFD,
-
 
         ElectronX = 0x0CFC,
 
-
         Tyromotion = 0x0CFB,
 
-
         ProtectAnimalsWithSatellites = 0x0CFA,
-
 
         Tamblue = 0x0CF9,
 
         CoreSensing = 0x0CF8,
-        /*
-        = 0x0CF7
-          TVS Motor Company Ltd.
+        
+        TVSMotorCompany = 0x0CF7,
 
-        = 0x0CF6
-          OJ Electronics A/S
+        OJElectronics = 0x0CF6,
 
-        = 0x0CF5
-          BOS Balance of Storage Systems AG
+        BOSBalanceOfStorageSystems = 0x0CF5,
 
-        = 0x0CF4
-          SOLUX PTY LTD
+        SOLUX = 0x0CF4,
 
-        = 0x0CF3
-          Radio Sound
+        RadioSound = 0x0CF3,
+          
+        BestSens = 0x0CF2,
 
-        = 0x0CF2
-          BestSens AG
+        Midmark = 0x0CF1,
 
-        = 0x0CF1
-          Midmark
+        ThotakaTeknologies = 0x0CF0,
 
-        = 0x0CF0
-          THOTAKA TEKHNOLOGIES INDIA PRIVATE LIMITED
+        POGS = 0x0CEF,
 
-        = 0x0CEF
-          POGS B.V.
+        MadgeTech = 0x0CEE,
 
-        = 0x0CEE
-          MadgeTech, Inc
-
-        = 0x0CED
+       /* = 0x0CED
           CV. NURI TEKNIK
 
         = 0x0CEC
@@ -9763,169 +9748,115 @@ namespace InTheHand.Net.Bluetooth
         = 0x004D
           Staccato Communications, Inc.
         */
-        Apple= 0x004C,
-            /*
-        = 0x004B
-          Continental Automotive Systems
+        Apple = 0x004C,
+            
+        ContinentalAutomotiveSystems = 0x004B,
 
-        = 0x004A
-          Accel Semiconductor Ltd.
+        AccelSemiconductor = 0x004A,
 
-        = 0x0049
-          3DSP Corporation
+        ThreeDSP= 0x0049,
 
-        = 0x0048
-          Marvell Technology Group Ltd.
+        MarvellTechnology = 0x0048,
 
-        = 0x0047
-          Bluegiga
+        Bluegiga = 0x0047,
 
-        = 0x0046
-          MediaTek, Inc.
+        MediaTek = 0x0046,
 
-        = 0x0045
-          Atheros Communications, Inc.
+        AtherosCommunications = 0x0045,
 
-        = 0x0044
-          Socket Mobile
+        SocketMobile = 0x0044,
 
-        = 0x0043
-          PARROT AUTOMOTIVE SAS
+        ParrotAutomotive = 0x0043,
 
-        = 0x0042
-          CONWISE Technology Corporation Ltd
+        CONWISETechnology = 0x0042,
 
-        = 0x0041
-          Integrated Silicon Solution Taiwan, Inc.
+        IntegratedSiliconSolution = 0x0041,
 
-        = 0x0040
-          Seiko Epson Corporation
+        SeikoEpson = 0x0040,
 
-        = 0x003F
-          Bluetooth SIG, Inc
+        BluetoothSIG = 0x003F,
 
-        = 0x003E
-          Systems and Chips, Inc
+        SystemsAndChips = 0x003E,
 
-        = 0x003D
-          IPextreme, Inc.
+        IPextreme = 0x003D,
 
-        = 0x003C
-          BlackBerry Limited
+        BlackBerry = 0x003C,
 
-        = 0x003B
-          Gennum Corporation
+        Gennum = 0x003B,
 
-        = 0x003A
-          Panasonic Holdings Corporation
+        Panasonic = 0x003A,
 
-        = 0x0039
-          Integrated System Solution Corp.
+        IntegratedSystemSolution = 0x0039,
 
-        = 0x0038
-          Syntronix Corporation
+        Syntronix = 0x0038,
 
-        = 0x0037
-          Mobilian Corporation
+        Mobilian = 0x0037,
 
-        = 0x0036
-          Renesas Electronics Corporation
+        RenesasElectronicsCorporation = 0x0036,
 
-        = 0x0035
-          Eclipse (HQ Espana) S.L.
+        EclipseHQEspana = 0x0035,
 
-        = 0x0034
-          Computer Access Technology Corporation (CATC)
+        ComputerAccessTechnologyCorporation = 0x0034,
 
-        = 0x0033
-          Commil Ltd
+        Commil = 0x0033,
 
-        = 0x0032
-          Red-M (Communications) Ltd
+        RedMCommunications = 0x0032,
 
-        = 0x0031
-          Synopsys, Inc.
+        Synopsys = 0x0031,
 
-        = 0x0030
-          ST Microelectronics
+        STMicroelectronics = 0x0030,
 
-        = 0x002F
-          MewTel Technology Inc.
+        MewTelTechnology = 0x002F,
 
-        = 0x002E
-          Norwood Systems
+        NorwoodSystems = 0x002E,
 
-        = 0x002D
-          GCT Semiconductor
+        GCTSemiconductor = 0x002D,
 
-        = 0x002C
-          Macronix International Co. Ltd.
+        MacronixInternational = 0x002C,
 
-        = 0x002B
-          Tenovis
+        Tenovis = 0x002B,
 
-        = 0x002A
-          Symbol Technologies, Inc.
+        SymbolTechnologies = 0x002A,
 
-        = 0x0029
-          Hitachi Ltd
+        Hitachi = 0x0029,
 
-        = 0x0028
-          R F Micro Devices
+        RFMicroDevices = 0x0028,
 
-        = 0x0027
-          Open Interface
+        OpenInterface = 0x0027,
+         
+        CTechnologies = 0x0026,
+          
+        NXP = 0x0025,
 
-        = 0x0026
-          C Technologies
+        Alcatel = 0x0024,
 
-        = 0x0025
-          NXP B.V.
+        WavePlusTechnology = 0x0023,
 
-        = 0x0024
-          Alcatel
+        NEC = 0x0022,
 
-        = 0x0023
-          WavePlus Technology Co., Ltd.
+        Mansella = 0x0021,
 
-        = 0x0022
-          NEC Corporation
+        BandSpeed = 0x0020,
 
-        = 0x0021
-          Mansella Ltd
+        AVMBerlin = 0x001F,
 
-        = 0x0020
-          BandSpeed, Inc.
+        Inventel = 0x001E,
 
-        = 0x001F
-          AVM Berlin
+        Qualcomm = 0x001D,
 
-        = 0x001E
-          Inventel
+        ConexantSystems = 0x001C,
 
-        = 0x001D
-          Qualcomm
+        SigniaTechnologies = 0x001B,
 
-        = 0x001C
-          Conexant Systems Inc.
+        TTPCom = 0x001A,
 
-        = 0x001B
-          Signia Technologies, Inc.
+        RohdeAndSchwarz = 0x0019,
 
-        = 0x001A
-          TTPCom Limited
+        Transilica = 0x0018,
 
-        = 0x0019
-          Rohde & Schwarz GmbH & Co. KG
-
-        = 0x0018
-          Transilica, Inc.
-
-        = 0x0017
-          Newlogic
-
-        = 0x0016
-          KC Technology Inc.*/
+        Newlogic = 0x0017,
+          
+        KCTechnology = 0x0016,
 
         RTX = 0x0015,
 

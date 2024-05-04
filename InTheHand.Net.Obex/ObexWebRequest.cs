@@ -2,7 +2,7 @@
 //
 // InTheHand.Net.ObexWebRequest
 // 
-// Copyright (c) 2003-2023 In The Hand Ltd, All rights reserved.
+// Copyright (c) 2003-2024 In The Hand Ltd, All rights reserved.
 // This source code is licensed under the MIT License
 
 using System;
@@ -15,6 +15,7 @@ using InTheHand.Net.Bluetooth;
 using System.Diagnostics;
 using System.Threading;
 using InTheHand.Net.Obex;
+using System.Security.Cryptography;
 
 namespace InTheHand.Net
 {
@@ -664,18 +665,23 @@ namespace InTheHand.Net
                 packetLength += 3 + headerValue.Length;
             }
 
-            // added David Rodgers
-            // add ContentMd5 header for Md5 check of sent file
-
-            if (Headers["ContentMd5"] != null)
+            foreach (var headerName in Headers.AllKeys)
             {
-                buffer[packetLength] = (byte)ObexHeader.ContentMd5;
-                string md5 = Headers["ContentMd5"];
-                int md5Length = (md5.Length + 1) * 2;
-                BitConverter.GetBytes(IPAddress.HostToNetworkOrder((short)(md5Length + 3))).CopyTo(buffer, packetLength + 1);
-                System.Text.Encoding.BigEndianUnicode.GetBytes(md5).CopyTo(buffer, packetLength + 3);
-                packetLength += (3 + md5Length);
+                if (headerName.StartsWith("User"))
+                {
+                    // add one of the user defined headers - initially support unicode string values only
+                    if (Enum.TryParse<ObexHeader>(headerName, true, out ObexHeader userHeader))
+                    {
+                        buffer[packetLength] = (byte)userHeader;
+                        string headerValue = Headers[headerName];
+                        int stringLength = (headerValue.Length+1) * 2;
+                        BitConverter.GetBytes(IPAddress.HostToNetworkOrder((short)(stringLength + 3))).CopyTo(buffer, packetLength + 1);
+                        System.Text.Encoding.BigEndianUnicode.GetBytes(headerValue).CopyTo(buffer, packetLength + 3);
+                        packetLength += (3 + stringLength);
+                    }
+                }
             }
+
             // write the final packet size
             BitConverter.GetBytes(IPAddress.HostToNetworkOrder((short)packetLength)).CopyTo(buffer, 1);
 
