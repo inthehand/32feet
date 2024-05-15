@@ -53,10 +53,19 @@ namespace InTheHand.Bluetooth
 
         internal async Task Init()
         {
-            _id = await _device.GetAddressAsync();
-            _name = await _device.GetNameAsync();
-            _isPaired = await _device.GetPairedAsync();
-            await Gatt.InitAsync();
+            try
+            {
+                var props = await _device.GetAllAsync();
+                _id = props.Address;
+                _name = props.Name;
+                _isPaired = props.Paired;
+                await Gatt.InitAsync();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
 
             System.Diagnostics.Debug.WriteLine($"BluetoothDevice.Init:{_id} {_name} {_isPaired}");
         }

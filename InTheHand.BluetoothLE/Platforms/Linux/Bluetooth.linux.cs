@@ -50,6 +50,19 @@ namespace InTheHand.Bluetooth
             throw new PlatformNotSupportedException();
         }
 
+        private static bool ContainsAddress(List<BluetoothDevice> devices, string address)
+        {
+            for (int i = devices.Count - 1; i >= 0; i--)
+            {
+                if (devices[i].Id == address)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
         private static void RemoveWithAddress(List<BluetoothDevice> devices, string address)
         {
             for(int i = devices.Count-1; i >=0; i--)
@@ -69,13 +82,15 @@ namespace InTheHand.Bluetooth
             TaskCompletionSource<IReadOnlyCollection<BluetoothDevice>> result = new TaskCompletionSource<IReadOnlyCollection<BluetoothDevice>>();
             async Task handler(Adapter sender, DeviceFoundEventArgs eventArgs)
             {
+                string address = await eventArgs.Device.GetAddressAsync();
+
                 if (eventArgs.IsStateChange)
                 {
-                    RemoveWithAddress(devices, await eventArgs.Device.GetAddressAsync());
+                    RemoveWithAddress(devices, address);
                 }
 
                 BluetoothDevice device = (BluetoothDevice)eventArgs.Device;
-                if (!devices.Contains(device))
+                if (!ContainsAddress(devices, address))
                 {
                     await device.Init();
                     devices.Add(device);

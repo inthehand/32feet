@@ -21,7 +21,16 @@ namespace InTheHand.Bluetooth
 
         internal async Task InitAsync()
         {
-            _connected = await Device._device.GetConnectedAsync();
+            try
+            {
+                _connected = await Device._device.GetConnectedAsync();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+            
         }
 
         bool _connected;
@@ -73,17 +82,22 @@ namespace InTheHand.Bluetooth
         async Task<List<GattService>> PlatformGetPrimaryServices(BluetoothUuid? service)
         {
             List<GattService> services = new List<GattService>();
+            var props = await Device._device.GetAllAsync();
             var servs = await Device._device.GetServicesAsync();
-            if (servs != null && servs.Count > 0)
+            if (props.UUIDs != null && props.UUIDs.Length > 0)
             {
-                foreach (var linuxService in servs)
+                foreach (var uuid in props.UUIDs)
                 {
-                    string uuid = await linuxService.GetUUIDAsync();
-                    if(service == null || service.Value.Value.ToString() == uuid)
+                    var linuxService = await Device._device.GetServiceAsync(uuid);
+                    if (linuxService != null)
                     {
-                        GattService returnedService = new GattService(Device, linuxService, Guid.Parse(uuid));
-                        await returnedService.Init();
-                        services.Add(returnedService);
+                        //string uuid = await linuxService.GetUUIDAsync();
+                        if (service == null || service.Value.Value.ToString() == uuid)
+                        {
+                            GattService returnedService = new GattService(Device, linuxService, Guid.Parse(uuid));
+                            await returnedService.Init();
+                            services.Add(returnedService);
+                        }
                     }
                 }
             }
