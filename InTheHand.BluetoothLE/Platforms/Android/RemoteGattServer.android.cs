@@ -1,6 +1,6 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="RemoteGattServer.android.cs" company="In The Hand Ltd">
-//   Copyright (c) 2018-23 In The Hand Ltd, All rights reserved.
+//   Copyright (c) 2018-24 In The Hand Ltd, All rights reserved.
 //   This source code is licensed under the MIT License - see License.txt
 // </copyright>
 //-----------------------------------------------------------------------
@@ -191,6 +191,15 @@ namespace InTheHand.Bluetooth
             ServicesDiscovered += handler;
 
             return await tcs.Task;
+        }
+
+        private void Refresh()
+        {
+            var refreshMethod = _gatt.Class.GetMethod("refresh"); // unsupported
+            if (refreshMethod != null)
+            {
+                var result = (bool)refreshMethod.Invoke(_gatt);
+            }
         }
 
         Task PlatformConnect()

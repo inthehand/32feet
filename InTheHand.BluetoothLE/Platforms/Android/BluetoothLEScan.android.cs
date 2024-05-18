@@ -72,7 +72,7 @@ namespace InTheHand.Bluetooth
                 _scan = owner;
             }
 
-            public override void OnScanResult(ScanCallbackType callbackType, ScanResult result)
+            public override void OnScanResult(ScanCallbackType callbackType, ScanResult? result)
             {
                 Debug.WriteLine($"BluetoothLEScan.OnScanResult {result.Device} {result.Rssi} {result.TxPower} {result.ScanRecord}");
                 Bluetooth.OnAdvertisementReceived(result);

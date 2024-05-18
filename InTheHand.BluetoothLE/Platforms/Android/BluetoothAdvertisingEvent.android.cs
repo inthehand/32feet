@@ -1,13 +1,12 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="BluetoothAdvertisingEvent.android.cs" company="In The Hand Ltd">
-//   Copyright (c) 2018-23 In The Hand Ltd, All rights reserved.
+//   Copyright (c) 2018-24 In The Hand Ltd, All rights reserved.
 //   This source code is licensed under the MIT License - see License.txt
 // </copyright>
 //-----------------------------------------------------------------------
 
 using Android.Bluetooth.LE;
 using Android.OS;
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
@@ -54,7 +53,13 @@ namespace InTheHand.Bluetooth
 
         string PlatformGetName()
         {
-            return _scanResult.ScanRecord.DeviceName;
+            if(_scanResult.ScanRecord != null)
+                return _scanResult.ScanRecord.DeviceName;
+
+            if(_scanResult.Device != null)
+                return _scanResult.Device.Name;
+
+            return string.Empty;
         }
 
         short PlatformGetRssi()
