@@ -9,6 +9,8 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
+using Windows.Devices.Bluetooth;
+using Windows.Devices.Enumeration;
 using Uap = Windows.Devices.Bluetooth.GenericAttributeProfile;
 
 namespace InTheHand.Bluetooth
@@ -91,14 +93,68 @@ namespace InTheHand.Bluetooth
 
         private async Task<byte[]> PlatformReadValue()
         {
-            var result = await _characteristic.ReadValueAsync(Windows.Devices.Bluetooth.BluetoothCacheMode.Uncached).AsTask().ConfigureAwait(false);
-
-            if(result.Status == Uap.GattCommunicationStatus.Success)
+            async Task<(Uap.GattCommunicationStatus Status, byte[]? Data)> ReadCharacteristicAsync()
             {
-                return result.Value.ToArray();
+                var result = await _characteristic.ReadValueAsync(Windows.Devices.Bluetooth.BluetoothCacheMode.Uncached).AsTask().ConfigureAwait(false);
+
+                if (result.Status == Uap.GattCommunicationStatus.Success)
+                {
+                    return (result.Status, result.Value.ToArray());
+                }
+                return (result.Status, null);
             }
 
-            return null;
+            var result = await ReadCharacteristicAsync();
+
+            if (result.Status == Uap.GattCommunicationStatus.AccessDenied || result.Status == Uap.GattCommunicationStatus.ProtocolError)
+            {
+                if (!Service.Device.NativeDevice.DeviceInformation.Pairing.IsPaired &&
+                    Service.Device.NativeDevice.DeviceInformation.Pairing.CanPair)
+                {
+                    // Issue a pairing request, to mimic the mobile platforms behavior.
+                    // When a characteristic is access-protected, iOS and Android automatically prompt for a pairing procedure
+                    Service.Device.NativeDevice.DeviceInformation.Pairing.Custom.PairingRequested += Custom_PairingRequested;
+                    try
+                    {
+                        var pairingResult = await Service.Device.NativeDevice.DeviceInformation.Pairing.Custom.PairAsync(DevicePairingKinds.ConfirmOnly);
+                        if (pairingResult.Status == DevicePairingResultStatus.Paired)
+                        {
+                            result = await ReadCharacteristicAsync();
+                        }
+                    }
+                    finally
+                    {
+                        Service.Device.NativeDevice.DeviceInformation.Pairing.Custom.PairingRequested -= Custom_PairingRequested;
+                    }
+                }
+            }
+
+            if (result.Status == Uap.GattCommunicationStatus.Success)
+            {
+                return result.Data!;
+            }
+            return null!;
+        }
+
+        private void Custom_PairingRequested(DeviceInformationCustomPairing sender, DevicePairingRequestedEventArgs args)
+        {
+            switch (args.PairingKind)
+            {
+                case DevicePairingKinds.None:
+                    args.Accept();
+                    break;
+                case DevicePairingKinds.ConfirmOnly:
+                    args.Accept();
+                    break;
+                case DevicePairingKinds.DisplayPin:
+                    break;
+                case DevicePairingKinds.ProvidePin:
+                    break;
+                case DevicePairingKinds.ConfirmPinMatch:
+                    break;
+                case DevicePairingKinds.ProvidePasswordCredential:
+                    break;
+            }
         }
 
         private async Task PlatformWriteValue(byte[] value, bool requireResponse)
