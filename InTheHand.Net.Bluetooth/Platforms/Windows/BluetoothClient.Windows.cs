@@ -34,17 +34,14 @@ namespace InTheHand.Net.Sockets
         {
             get
             {
-                var t = DeviceInformation.FindAllAsync(BluetoothDevice.GetDeviceSelectorFromPairingState(true));
-
-                t.AsTask().ConfigureAwait(false);
-                t.AsTask().Wait();
-                var devices = t.GetResults();
+                var devicesTask = DeviceInformation.FindAllAsync(BluetoothDevice.GetDeviceSelectorFromPairingState(true)).AsTask();
+                var devices = devicesTask.Result;
 
                 foreach (var device in devices)
                 {
                     var td = BluetoothDevice.FromIdAsync(device.Id).AsTask();
-                    td.Wait();
                     var bluetoothDevice = td.Result;
+
                     yield return new BluetoothDeviceInfo(new WindowsBluetoothDeviceInfo(bluetoothDevice));
                 }
             }
