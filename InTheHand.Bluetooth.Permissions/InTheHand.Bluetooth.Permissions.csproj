@@ -1,5 +1,5 @@
 ﻿<Project Sdk="MSBuild.Sdk.Extras/3.0.44">
-	<Sdk Name="DotNet.ReproducibleBuilds.Isolated" Version="1.1.1" />
+	<Sdk Name="DotNet.ReproducibleBuilds.Isolated" Version="1.2.4" />
 	<PropertyGroup>
 		<TargetFrameworks>netstandard2.0;monoandroid10.0;xamarinios10;uap10.0;net7.0;net7.0-android;net7.0-ios;net7.0-maccatalyst;net8.0-android;net8.0-ios;net8.0-maccatalyst</TargetFrameworks>
 		<TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net7.0-windows10.0.19041.0;net8.0-windows10.0.19041.0</TargetFrameworks>
@@ -11,7 +11,7 @@
 		<Authors>Peter Foot</Authors>
 		<Company>In The Hand Ltd</Company>
 		<Product>32feet.NET</Product>
-		<Version>8.0.1</Version>
+		<Version>8.0.2</Version>
 		<IncludeSymbols>true</IncludeSymbols>
 		<DebugSymbols>true</DebugSymbols>
 		<DebugType>portable</DebugType>
@@ -43,7 +43,7 @@
 	</PropertyGroup>
 	
 	<ItemGroup>
-		<PackageReference Include="DotNet.ReproducibleBuilds" Version="1.1.1" PrivateAssets="All" />
+		<PackageReference Include="DotNet.ReproducibleBuilds" Version="1.2.4" PrivateAssets="All" />
 		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
 		<PackageReference Include="MSBuild.Sdk.Extras" Version="3.0.44" PrivateAssets="All" />
 	</ItemGroup>

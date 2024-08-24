@@ -1,11 +1,11 @@
 ﻿<Project Sdk="MSBuild.Sdk.Extras/3.0.44">
 	<Sdk Name="DotNet.ReproducibleBuilds.Isolated" Version="1.1.1" />
 	<PropertyGroup>
-		<TargetFrameworks>netstandard2.0;monoandroid10.0;xamarinios10;xamarintvos10;xamarin.watchos10;uap10.0;net6.0;net6.0-windows10.0.19041.0;net7.0;net7.0-windows10.0.19041.0;net7.0-android;net7.0-ios;net7.0-maccatalyst;net462</TargetFrameworks>
+		<TargetFrameworks>netstandard2.0;monoandroid10.0;xamarinios10;xamarintvos10;xamarin.watchos10;uap10.0;net7.0;net7.0-windows10.0.19041.0;net7.0-android;net7.0-ios;net7.0-maccatalyst;net8.0;net8.0-windows10.0.19041.0;net8.0-android;net8.0-ios;net8.0-maccatalyst;net462</TargetFrameworks>
 		<Company>In The Hand Ltd</Company>
 		<Authors>Peter Foot</Authors>
 		<Product>32feet.NET</Product>
-		<Version>4.0.36</Version>
+		<Version>4.0.37</Version>
 		<IncludeSymbols>true</IncludeSymbols>
 		<DebugSymbols>true</DebugSymbols>
 		<DebugType>portable</DebugType>
@@ -20,7 +20,7 @@
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<Copyright>Copyright (c) 2004-2024 In The Hand Ltd</Copyright>
 		<Description>32feet.NET is an open-source project to make personal area networking technologies such as Bluetooth easily accessible from .NET code.</Description>
-		<FileVersion>4.0.36.0128</FileVersion>
+		<FileVersion>4.0.37.0824</FileVersion>
 		<AssemblyVersion>4.0.0.0</AssemblyVersion>
 		<AssemblyName>InTheHand.BluetoothLE</AssemblyName>
 		<PackageIconUrl></PackageIconUrl>
@@ -31,7 +31,7 @@
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<RootNamespace>InTheHand.Bluetooth</RootNamespace>
 		<PackageIcon>32feet-package-icon.png</PackageIcon>
-		<PackageReleaseNotes>New RequestMtuAsync for Android which waits for response.</PackageReleaseNotes>
+		<PackageReleaseNotes>Collected fixes since last release. .NET 8.0 targets added.</PackageReleaseNotes>
 		<SignAssembly Condition=" '$(Configuration)' == 'Release' ">true</SignAssembly>
 		<AssemblyOriginatorKeyFile Condition=" '$(Configuration)' == 'Release' ">..\\InTheHand.snk</AssemblyOriginatorKeyFile>
 		<GenerateDocumentationFile Condition=" '$(Configuration)' == 'Release' ">True</GenerateDocumentationFile>
@@ -40,7 +40,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="DotNet.ReproducibleBuilds" Version="1.1.1" PrivateAssets="All" />
+		<PackageReference Include="DotNet.ReproducibleBuilds" Version="1.2.4" PrivateAssets="All" />
 		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
 		<PackageReference Include="MSBuild.Sdk.Extras" Version="3.0.44" PrivateAssets="All" />
 	</ItemGroup>
@@ -61,26 +61,31 @@
 		<DebugType>portable</DebugType>
 	</PropertyGroup>
 	
-	<PropertyGroup Condition=" '$(TargetFramework)' == 'net6.0' ">
+	<PropertyGroup Condition=" '$(TargetFramework)' == 'net7.0' ">
+		<DefineConstants>BLUEZ</DefineConstants>
+		<RuntimeIdentifiers>linux-arm64;linux-x64;linux-x86</RuntimeIdentifiers>
+	</PropertyGroup>
+
+	<PropertyGroup Condition=" '$(TargetFramework)' == 'net8.0' ">
 		<DefineConstants>BLUEZ</DefineConstants>
 		<RuntimeIdentifiers>linux-arm64;linux-x64;linux-x86</RuntimeIdentifiers>
 	</PropertyGroup>
 	
-	<PropertyGroup Condition=" '$(TargetFramework)' == 'net6.0-windows10.0.19041.0' ">
-		<ProduceReferenceAssembly>true</ProduceReferenceAssembly>
-		<TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
-	</PropertyGroup>
-
 	<PropertyGroup Condition=" '$(TargetFramework)' == 'net7.0-windows10.0.19041.0' ">
 		<ProduceReferenceAssembly>true</ProduceReferenceAssembly>
 		<TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
 	</PropertyGroup>
 
-	<PropertyGroup Condition=" '$(TargetFramework)' == 'net6.0-ios' ">
-		<SupportedOSPlatformVersion>14.2</SupportedOSPlatformVersion>
+	<PropertyGroup Condition=" '$(TargetFramework)' == 'net8.0-windows10.0.19041.0' ">
+		<ProduceReferenceAssembly>true</ProduceReferenceAssembly>
+		<TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
 	</PropertyGroup>
 
 	<PropertyGroup Condition=" '$(TargetFramework)' == 'net7.0-ios' ">
+		<SupportedOSPlatformVersion>14.2</SupportedOSPlatformVersion>
+	</PropertyGroup>
+
+	<PropertyGroup Condition=" '$(TargetFramework)' == 'net8.0-ios' ">
 		<SupportedOSPlatformVersion>14.2</SupportedOSPlatformVersion>
 	</PropertyGroup>
 	
@@ -119,17 +124,17 @@
 		<Compile Include="Platforms\Android\*.cs" />
 	</ItemGroup>
 	
-	<ItemGroup Condition=" '$(TargetFramework)' == 'net6.0' ">
+	<ItemGroup Condition=" '$(TargetFramework)' == 'net7.0' ">
 		<PackageReference Include="Linux.Bluetooth" Version="5.66.0" />
 		<Compile Include="Platforms\Linux\*.cs" />
 	</ItemGroup>
 	
-	<ItemGroup Condition=" '$(TargetFramework)' == 'net6.0-android' ">
+	<ItemGroup Condition=" '$(TargetFramework)' == 'net7.0-android' ">
 		<PackageReference Include="InTheHand.AndroidActivity" Version="1.0.4" />
 		<Compile Include="Platforms\Android\*.cs" />
 	</ItemGroup>
 
-	<ItemGroup Condition=" '$(TargetFramework)' == 'net7.0-android' ">
+	<ItemGroup Condition=" '$(TargetFramework)' == 'net8.0-android' ">
 		<PackageReference Include="InTheHand.AndroidActivity" Version="1.0.4" />
 		<Compile Include="Platforms\Android\*.cs" />
 	</ItemGroup>
@@ -138,15 +143,11 @@
 		<Compile Include="Platforms\Apple\*.cs" />
 	</ItemGroup>
 
-	<ItemGroup Condition=" '$(TargetFramework)' == 'net6.0-ios' ">
-		<Compile Include="Platforms\Apple\*.cs" />
-	</ItemGroup>
-
 	<ItemGroup Condition=" '$(TargetFramework)' == 'net7.0-ios' ">
 		<Compile Include="Platforms\Apple\*.cs" />
 	</ItemGroup>
 
-	<ItemGroup Condition=" '$(TargetFramework)' == 'net6.0-macos' ">
+	<ItemGroup Condition=" '$(TargetFramework)' == 'net8.0-ios' ">
 		<Compile Include="Platforms\Apple\*.cs" />
 	</ItemGroup>
 
@@ -154,7 +155,7 @@
 		<Compile Include="Platforms\Apple\*.cs" />
 	</ItemGroup>
 
-	<ItemGroup Condition=" '$(TargetFramework)' == 'net6.0-maccatalyst' ">
+	<ItemGroup Condition=" '$(TargetFramework)' == 'net8.0-macos' ">
 		<Compile Include="Platforms\Apple\*.cs" />
 	</ItemGroup>
 
@@ -162,7 +163,7 @@
 		<Compile Include="Platforms\Apple\*.cs" />
 	</ItemGroup>
 
-	<ItemGroup Condition=" '$(TargetFramework)' == 'net6.0-tvos' ">
+	<ItemGroup Condition=" '$(TargetFramework)' == 'net8.0-maccatalyst' ">
 		<Compile Include="Platforms\Apple\*.cs" />
 	</ItemGroup>
 
@@ -179,15 +180,15 @@
 		<Compile Include="Platforms\Apple\*.cs" />
 	</ItemGroup>
 
-	<ItemGroup Condition=" '$(TargetFramework)' == 'net6.0-windows10.0.19041.0' ">
-		<Compile Include="Platforms\Windows\*.cs" />
-	</ItemGroup>
-
 	<ItemGroup Condition=" '$(TargetFramework)' == 'net7.0-windows10.0.19041.0' ">
 		<Compile Include="Platforms\Windows\*.cs" />
 	</ItemGroup>
 
-	<ItemGroup Condition=" '$(TargetFramework)' == 'net7.0' ">
+	<ItemGroup Condition=" '$(TargetFramework)' == 'net8.0-windows10.0.19041.0' ">
+		<Compile Include="Platforms\Windows\*.cs" />
+	</ItemGroup>
+
+	<ItemGroup Condition=" '$(TargetFramework)' == 'net8.0' ">
 		<PackageReference Include="Linux.Bluetooth" Version="5.66.0" />
 		<Compile Include="Platforms\Linux\*.cs" />
 	</ItemGroup>
