@@ -16,23 +16,88 @@ namespace InTheHand.Bluetooth
     partial class GattCharacteristic
     {
         private readonly IGattCharacteristic1 _characteristic;
+        private GattCharacteristicProperties _characteristicProperties;
         private IDisposable? _eventHandler;
 
         internal GattCharacteristic(IGattCharacteristic1 characteristic, BluetoothUuid uuid)
         {
             _characteristic = characteristic;
             _uuid = uuid;
-            Init();
         }
 
         internal async Task Init()
         {
+            await UpdateCharacteristicProperties();
+        }
+
+        private async Task UpdateCharacteristicProperties()
+        {
             string[] flags = await GattCharacteristic1Extensions.GetFlagsAsync(_characteristic);
 
+            var characteristicProperties = GattCharacteristicProperties.None;
             foreach (var flag in flags)
             {
-                Debug.WriteLine(flag);
+                switch (flag)
+                {
+                    case "broadcast":
+                        characteristicProperties |= GattCharacteristicProperties.Broadcast;
+                        break;
+                    
+                    case "read":
+                        characteristicProperties |= GattCharacteristicProperties.Read;
+                        break;
+                    
+                    case "write-without-response":
+                        characteristicProperties |= GattCharacteristicProperties.WriteWithoutResponse;
+                        break;
+                    
+                    case "write":
+                        characteristicProperties |= GattCharacteristicProperties.Write;
+                        break;
+                    
+                    case "notify":
+                        characteristicProperties |= GattCharacteristicProperties.Notify;
+                        break;
+                    
+                    case "indicate":
+                        characteristicProperties |= GattCharacteristicProperties.Indicate;
+                        break;
+                    
+                    case "authenticated-signed-writes":
+                        characteristicProperties |= GattCharacteristicProperties.AuthenticatedSignedWrites;
+                        break;
+                    
+                    case "extended-properties":
+                        characteristicProperties |= GattCharacteristicProperties.ExtendedProperties;
+                        break;
+                    
+                    case "reliable-write":
+                        characteristicProperties |= GattCharacteristicProperties.ReliableWrites;
+                        break;
+                    
+                    case "writable-auxiliaries":
+                        characteristicProperties |= GattCharacteristicProperties.WriteableAuxiliaries;
+                        break;
+                    
+                    /* Not handled values:
+                       "encrypt-read"
+                       "encrypt-write"
+                       "encrypt-notify" (Server only)
+                       "encrypt-indicate" (Server only)
+                       "encrypt-authenticated-read"
+                       "encrypt-authenticated-write"
+                       "encrypt-authenticated-notify" (Server only)
+                       "encrypt-authenticated-indicate" (Server only)
+                       "secure-read" (Server only)
+                       "secure-write" (Server only)
+                       "secure-notify" (Server only)
+                       "secure-indicate" (Server only)
+                       "authorize"
+                     */
+                }
             }
+
+            _characteristicProperties = characteristicProperties;
         }
 
         private BluetoothUuid _uuid;
@@ -43,7 +108,7 @@ namespace InTheHand.Bluetooth
 
         GattCharacteristicProperties GetProperties()
         {
-            return 0;
+            return _characteristicProperties;
         }
 
         Task<GattDescriptor?> PlatformGetDescriptor(BluetoothUuid descriptor)
