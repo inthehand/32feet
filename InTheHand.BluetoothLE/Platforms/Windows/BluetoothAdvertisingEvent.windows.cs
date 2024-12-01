@@ -1,6 +1,6 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="BluetoothAdvertisingEvent.windows.cs" company="In The Hand Ltd">
-//   Copyright (c) 2018-22 In The Hand Ltd, All rights reserved.
+//   Copyright (c) 2018-24 In The Hand Ltd, All rights reserved.
 //   This source code is licensed under the MIT License - see License.txt
 // </copyright>
 //-----------------------------------------------------------------------
@@ -8,9 +8,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
-using System.Threading.Tasks;
 using Windows.Devices.Bluetooth;
 using Windows.Devices.Bluetooth.Advertisement;
 using Windows.Foundation;
@@ -32,14 +30,6 @@ namespace InTheHand.Bluetooth
             {
                 _txPower = args.TransmitPowerLevelInDBm.HasValue ? (sbyte)args.TransmitPowerLevelInDBm.Value : (sbyte)0;
             }
-            
-            /*var sections = args.Advertisement.GetSectionsByType(0xA);
-            if(sections != null && sections.Count > 0)
-            {
-                var array = sections[0].Data.ToArray();
-
-                _txPower = sections[0].Data.GetByte(0);
-            }*/
 
             var appearanceSections = args.Advertisement.GetSectionsByType(0x19);
             if (appearanceSections != null && appearanceSections.Count > 0)
@@ -93,28 +83,28 @@ namespace InTheHand.Bluetooth
             return advertisingEvent._advertisement;
         }
 
-        private ushort _appearance;
+        private readonly ushort _appearance;
 
-        ushort PlatformGetAppearance()
+        private ushort PlatformGetAppearance()
         {
             return _appearance;
         }
 
-        short PlatformGetRssi()
+        private short PlatformGetRssi()
         {
             return _rssi;
         }
 
-        private sbyte _txPower;
+        private readonly sbyte _txPower;
 
-        sbyte PlatformGetTxPower()
+        private sbyte PlatformGetTxPower()
         {
             return _txPower;
         }
 
         BluetoothUuid[] PlatformGetUuids()
         {
-            List<BluetoothUuid> uuids = new List<BluetoothUuid>();
+            var uuids = new List<BluetoothUuid>();
             foreach(var u in _advertisement.ServiceUuids)
             {
                 uuids.Add(u);
@@ -123,14 +113,14 @@ namespace InTheHand.Bluetooth
             return uuids.ToArray();
         }
 
-        string PlatformGetName()
+        private string PlatformGetName()
         {
             return _advertisement.LocalName;
         }
 
-        IReadOnlyDictionary<ushort,byte[]> PlatformGetManufacturerData()
+        private IReadOnlyDictionary<ushort,byte[]> PlatformGetManufacturerData()
         {
-            Dictionary<ushort, byte[]> manufacturerData = new Dictionary<ushort, byte[]>();
+            var manufacturerData = new Dictionary<ushort, byte[]>();
 
             foreach(BluetoothLEManufacturerData data in _advertisement.ManufacturerData)
             {
@@ -140,13 +130,13 @@ namespace InTheHand.Bluetooth
             return new ReadOnlyDictionary<ushort,byte[]>(manufacturerData);
         }
 
-        IReadOnlyDictionary<BluetoothUuid, byte[]> PlatformGetServiceData()
+        private IReadOnlyDictionary<BluetoothUuid, byte[]> PlatformGetServiceData()
         {
-            Dictionary<BluetoothUuid, byte[]> serviceData = new Dictionary<BluetoothUuid, byte[]>();
+            var serviceData = new Dictionary<BluetoothUuid, byte[]>();
 
             foreach (BluetoothLEAdvertisementDataSection data in _advertisement.DataSections)
             {
-                byte[] uuidBytes = new byte[16];
+                var uuidBytes = new byte[16];
 
                 if (data.DataType == BluetoothLEAdvertisementDataTypes.ServiceData128BitUuids)
                 {
