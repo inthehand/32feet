@@ -8,6 +8,7 @@
 using InTheHand.Net.Bluetooth;
 using InTheHand.Net.Bluetooth.Sdp;
 using System;
+using System.Threading.Tasks;
 
 namespace InTheHand.Net.Sockets
 {
@@ -27,5 +28,6 @@ namespace InTheHand.Net.Sockets
         ServiceRecord ServiceRecord { get; set; }
 
         BluetoothClient AcceptBluetoothClient();
+        Task<BluetoothClient> AcceptBluetoothClientAsync();
     }
 }

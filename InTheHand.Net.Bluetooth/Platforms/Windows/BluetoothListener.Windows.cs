@@ -8,6 +8,8 @@
 using InTheHand.Net.Bluetooth;
 using InTheHand.Net.Bluetooth.Sdp;
 using System;
+using System.Threading;
+using System.Threading.Tasks;
 using Windows.Devices.Bluetooth.Rfcomm;
 using Windows.Networking.Sockets;
 
@@ -82,6 +84,41 @@ namespace InTheHand.Net.Sockets
             {
                 throw new InvalidOperationException();
             }
+        }
+
+        public async Task<BluetoothClient> AcceptBluetoothClientAsync()
+        {
+            if(listener != null)
+            {
+                await FromWaitHandle(listenHandle);
+                pending = false;
+                return currentClient;
+            }
+            else
+            {
+                throw new InvalidOperationException();
+            }
+        }
+        
+        
+        private static Task<bool> FromWaitHandle(EventWaitHandle handle)
+        {
+            // Handle synchronous cases.
+            var alreadySignalled = handle.WaitOne(0);
+            if (alreadySignalled)
+                return Task.FromResult(true);
+
+            
+            var tcs = new TaskCompletionSource<bool>();
+            
+            ThreadPool.RegisterWaitForSingleObject(
+                waitObject: handle,
+                callBack: (state, @out) => tcs.TrySetResult(!@out), 
+                state: null, 
+                millisecondsTimeOutInterval: -1, 
+                executeOnlyOnce: true
+            );
+            return tcs.Task;
         }
     }
 }

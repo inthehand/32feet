@@ -10,6 +10,7 @@ using InTheHand.Net.Bluetooth.Sdp;
 using System;
 using System.Diagnostics;
 using System.Net.Sockets;
+using System.Threading.Tasks;
 
 namespace InTheHand.Net.Sockets
 {
@@ -62,9 +63,19 @@ namespace InTheHand.Net.Sockets
             return socket.Accept();
         }
 
+        public Task<Socket> AcceptSocketAsync()
+        {
+            return Task.Factory.FromAsync(socket.BeginAccept, socket.EndAccept, null);
+        }
+        
         public BluetoothClient AcceptBluetoothClient()
         {
             return new BluetoothClient(new LinuxBluetoothClient((LinuxSocket)AcceptSocket()));
+        }
+
+        public async Task<BluetoothClient> AcceptBluetoothClientAsync()
+        {
+            return new BluetoothClient(new LinuxBluetoothClient((LinuxSocket) await AcceptSocketAsync()));
         }
     }
 }

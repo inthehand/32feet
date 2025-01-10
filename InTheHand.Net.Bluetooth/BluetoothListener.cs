@@ -8,6 +8,8 @@
 using InTheHand.Net.Bluetooth;
 using InTheHand.Net.Bluetooth.Sdp;
 using System;
+using System.Net.Sockets;
+using System.Threading.Tasks;
 
 namespace InTheHand.Net.Sockets
 {
@@ -222,6 +224,14 @@ namespace InTheHand.Net.Sockets
                 throw new InvalidOperationException("Not listening. You must call the Start() method before calling this method.");
 
             return _bluetoothListener.AcceptBluetoothClient();
+        }
+
+        public Task<BluetoothClient> AcceptBluetoothClientAsync()
+        {
+            if (!Active)
+                throw new InvalidOperationException("Not listening. You must call the Start() method before calling this method.");
+
+            return _bluetoothListener.AcceptBluetoothClientAsync();
         }
 
         #region IDisposable Support
