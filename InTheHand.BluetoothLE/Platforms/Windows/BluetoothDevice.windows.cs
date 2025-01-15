@@ -15,7 +15,7 @@ using Windows.Devices.Bluetooth;
 
 namespace InTheHand.Bluetooth
 {
-    partial class BluetoothDevice
+    partial class BluetoothDevice : IDisposable
     {
         internal BluetoothLEDevice NativeDevice;
         internal readonly ConcurrentDictionary<int, IDisposable> NativeDisposeList = new ConcurrentDictionary<int, IDisposable>();
@@ -40,7 +40,7 @@ namespace InTheHand.Bluetooth
 
         ~BluetoothDevice()
         {
-            DisposeAllNativeObjects();
+            Dispose(disposing: false);
         }
 
         /// <summary>Adds a native (IDisposable) object to the dispose list</summary>
@@ -249,5 +249,25 @@ namespace InTheHand.Bluetooth
                 _advertisementWatcher.Stop();
             }
         }*/
+
+        private void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    // TODO: dispose managed state (managed objects)
+                }
+
+                DisposeAllNativeObjects();
+                disposedValue = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
+        }
     }
 }
