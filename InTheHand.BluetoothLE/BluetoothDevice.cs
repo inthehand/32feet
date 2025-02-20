@@ -74,7 +74,7 @@ namespace InTheHand.Bluetooth
             return PlatformPairAsync(pairingCode);
         }
 
-        public static Task<BluetoothDevice> FromIdAsync(string id)
+        public static Task<BluetoothDevice?> FromIdAsync(string id)
         {
             return PlatformFromId(id);
         }
@@ -107,6 +107,6 @@ namespace InTheHand.Bluetooth
         /// <summary>
         /// Fired when an active GATT connection is lost.
         /// </summary>
-        public event EventHandler GattServerDisconnected;
+        public event EventHandler? GattServerDisconnected;
     }
 }

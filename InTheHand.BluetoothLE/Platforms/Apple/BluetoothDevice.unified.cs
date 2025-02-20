@@ -47,7 +47,7 @@ namespace InTheHand.Bluetooth
             return base.Equals(obj);
         }
 
-        private static async Task<BluetoothDevice> PlatformFromId(string id)
+        private static async Task<BluetoothDevice?> PlatformFromId(string id)
         {
             try
             {

@@ -19,7 +19,7 @@ namespace InTheHand.Bluetooth
         private bool _watchingAdvertisements = false;
         internal Device _device;
 
-        private static async Task<BluetoothDevice> PlatformFromId(string id)
+        private static async Task<BluetoothDevice?> PlatformFromId(string id)
         {
             var linuxDevice = await Bluetooth.adapter.GetDeviceAsync(id);
 

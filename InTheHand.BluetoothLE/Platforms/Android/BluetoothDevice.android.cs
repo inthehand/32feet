@@ -40,7 +40,7 @@ namespace InTheHand.Bluetooth
             return base.Equals(obj);
         }
 
-        private static async Task<BluetoothDevice> PlatformFromId(string id)
+        private static async Task<BluetoothDevice?> PlatformFromId(string id)
         {
             var adapter = Bluetooth._manager.Adapter;
             return adapter.GetRemoteDevice(id);

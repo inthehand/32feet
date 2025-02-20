@@ -144,15 +144,15 @@ namespace InTheHand.Bluetooth
             return base.Equals(obj);
         }
 
-        private static async Task<BluetoothDevice> PlatformFromId(string id)
+        private static async Task<BluetoothDevice?> PlatformFromId(string id)
         {
-            BluetoothLEDevice device = null;
+            BluetoothLEDevice? device;
 
             if (ulong.TryParse(id, System.Globalization.NumberStyles.HexNumber, null, out var parsedId))
             {
-                if (Bluetooth.KnownDevices.ContainsKey(parsedId))
+                if (Bluetooth.KnownDevices.TryGetValue(parsedId, out var device1))
                 {
-                    BluetoothDevice knownDevice = (BluetoothDevice)Bluetooth.KnownDevices[parsedId].Target;
+                    var knownDevice = (BluetoothDevice)device1.Target;
                     if (knownDevice != null)
                         return knownDevice;
                 }
