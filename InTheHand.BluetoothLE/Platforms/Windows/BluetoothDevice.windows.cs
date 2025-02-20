@@ -12,6 +12,7 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Windows.Devices.Bluetooth;
+using Windows.Devices.Enumeration;
 
 namespace InTheHand.Bluetooth
 {
@@ -33,7 +34,7 @@ namespace InTheHand.Bluetooth
 
             LastKnownAddress = device.BluetoothAddress;
 
-            // this will cache the Id and Name for use in cases where 'NativeDevice' has been disposed. 
+            // this will cache the Id and Name for use in cases where 'NativeDevice' has been disposed.
             GetId();
             GetName();
         }
@@ -211,6 +212,27 @@ namespace InTheHand.Bluetooth
         Task PlatformPairAsync()
         {
             return NativeDevice.DeviceInformation.Pairing.PairAsync().AsTask();
+        }
+
+        async Task PlatformPairAsync(string pairingCode)
+        {
+            var pairing = NativeDevice.DeviceInformation.Pairing.Custom;
+            pairing.PairingRequested += SetPairingCode;
+
+            try
+            {
+                var result = await pairing.PairAsync(DevicePairingKinds.ProvidePin);
+                // result.Status indicates success or failure
+            }
+            finally
+            {
+                pairing.PairingRequested -= SetPairingCode;
+            }
+
+            void SetPairingCode(object sender, DevicePairingRequestedEventArgs eventArgs)
+            {
+                eventArgs.Accept(pairingCode);
+            }
         }
 
         /*bool GetWatchingAdvertisements()

@@ -44,6 +44,11 @@ namespace InTheHand.Bluetooth
             throw new PlatformNotSupportedException();
         }
 
+        Task PlatformPairAsync(string pairingCode)
+        {
+            throw new PlatformNotSupportedException();
+        }
+
         /*
         bool GetWatchingAdvertisements()
         {

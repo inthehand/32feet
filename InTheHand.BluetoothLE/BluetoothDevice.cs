@@ -34,7 +34,7 @@ namespace InTheHand.Bluetooth
         /// <summary>
         /// Provides a way to interact with this device’s GATT server.
         /// </summary>
-        public RemoteGattServer Gatt 
+        public RemoteGattServer Gatt
         {
             get
             {
@@ -44,7 +44,7 @@ namespace InTheHand.Bluetooth
                 }
 
                 return _remoteGattServer;
-            } 
+            }
         }
 
         /// <summary>
@@ -61,6 +61,15 @@ namespace InTheHand.Bluetooth
         internal Task PairAsync()
         {
             return PlatformPairAsync();
+        }
+
+        /// <summary>
+        /// Initiate pairing with a pairing code (Work in progress)
+        /// </summary>
+        /// <param name="pairingCode">Bluetooth pairing code</param>
+        internal Task PairAsync(string pairingCode)
+        {
+            return PlatformPairAsync(pairingCode);
         }
 
         public static Task<BluetoothDevice> FromIdAsync(string id)

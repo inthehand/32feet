@@ -8,7 +8,9 @@
 using Linux.Bluetooth;
 using Linux.Bluetooth.Extensions;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
+using Tmds.DBus;
 
 namespace InTheHand.Bluetooth
 {
@@ -20,7 +22,7 @@ namespace InTheHand.Bluetooth
         private static async Task<BluetoothDevice> PlatformFromId(string id)
         {
             var linuxDevice = await Bluetooth.adapter.GetDeviceAsync(id);
-            
+
             if(linuxDevice != null)
             {
                 System.Diagnostics.Debug.WriteLine($"BluetoothDevice.FromIdAsync:{linuxDevice.ObjectPath}");
@@ -106,6 +108,32 @@ namespace InTheHand.Bluetooth
         {
             await _device.PairAsync();
             _isPaired = await _device.GetPairedAsync();
+        }
+
+        async Task PlatformPairAsync(string pairingCode)
+        {
+            var managers = await DBusMethods.GetProxiesAsync<IAgentManager1>("org.bluez.AgentManager1");
+            var manager = managers.FirstOrDefault();
+            if (manager is null)
+            {
+                throw new InvalidOperationException("AgentManager1 not found");
+            }
+
+            var agent = new PairingAgent(pairingCode);
+
+            await Connection.System.RegisterObjectAsync(agent);
+            await manager.RegisterAgentAsync(agent.ObjectPath, "DisplayOnly");
+            await manager.RequestDefaultAgentAsync(agent.ObjectPath);
+
+            try
+            {
+                await PlatformPairAsync();
+            }
+            finally
+            {
+                await manager.UnregisterAgentAsync(agent.ObjectPath);
+                Connection.System.UnregisterObject(agent);
+            }
         }
 
         /*

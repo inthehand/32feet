@@ -98,6 +98,11 @@ namespace InTheHand.Bluetooth
             throw new PlatformNotSupportedException();
         }
 
+        Task PlatformPairAsync(string pairingCode)
+        {
+            throw new PlatformNotSupportedException();
+        }
+
 #if __IOS__
         /// <summary>
         /// Specifies whether to request Apple Notification Center Services to allow access to notifications from the remote device when connecting.
