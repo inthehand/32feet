@@ -58,7 +58,7 @@ namespace InTheHand.Bluetooth
         /// </summary>
         /// <remarks>Supported on Windows and Android only.</remarks>
         /// <returns></returns>
-        internal Task PairAsync()
+        public Task PairAsync()
         {
             return PlatformPairAsync();
         }
@@ -67,7 +67,8 @@ namespace InTheHand.Bluetooth
         /// Initiate pairing with a pairing code (Work in progress)
         /// </summary>
         /// <param name="pairingCode">Bluetooth pairing code</param>
-        internal Task PairAsync(string pairingCode)
+        /// <remarks>Implemented on Windows and Linux only.</remarks>
+        public Task PairAsync(string pairingCode)
         {
             return PlatformPairAsync(pairingCode);
         }
