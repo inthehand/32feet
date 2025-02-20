@@ -199,22 +199,22 @@ namespace InTheHand.Bluetooth
             return _cachedName;
         }
 
-        RemoteGattServer GetGatt()
+        private RemoteGattServer GetGatt()
         {
             return new RemoteGattServer(this);
         }
 
-        bool GetIsPaired()
+        private bool GetIsPaired()
         {
             return NativeDevice.DeviceInformation.Pairing.IsPaired;
         }
 
-        Task PlatformPairAsync()
+        private Task PlatformPairAsync()
         {
             return NativeDevice.DeviceInformation.Pairing.PairAsync().AsTask();
         }
 
-        async Task PlatformPairAsync(string pairingCode)
+        private async Task PlatformPairAsync(string pairingCode)
         {
             var pairing = NativeDevice.DeviceInformation.Pairing.Custom;
             pairing.PairingRequested += SetPairingCode;

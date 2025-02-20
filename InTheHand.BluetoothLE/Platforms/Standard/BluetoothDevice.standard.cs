@@ -19,32 +19,32 @@ namespace InTheHand.Bluetooth
             return null;
         }
 
-        string GetId()
+        private string GetId()
         {
             return string.Empty;
         }
 
-        string GetName()
+        private string GetName()
         {
             return string.Empty;
         }
 
-        RemoteGattServer GetGatt()
+        private RemoteGattServer GetGatt()
         {
             return new RemoteGattServer(this);
         }
 
-        bool GetIsPaired()
+        private bool GetIsPaired()
         {
             return false;
         }
 
-        Task PlatformPairAsync()
+        private Task PlatformPairAsync()
         {
             throw new PlatformNotSupportedException();
         }
 
-        Task PlatformPairAsync(string pairingCode)
+        private Task PlatformPairAsync(string pairingCode)
         {
             throw new PlatformNotSupportedException();
         }

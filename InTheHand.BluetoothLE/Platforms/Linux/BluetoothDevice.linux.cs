@@ -82,35 +82,38 @@ namespace InTheHand.Bluetooth
         }
 
         private string? _id;
-        string GetId()
+
+        private string GetId()
         {
             return _id == null ? string.Empty : _id;
         }
 
         private string? _name;
-        string GetName()
+
+        private string GetName()
         {
             return _name == null ? string.Empty : _name;
         }
 
-        RemoteGattServer GetGatt()
+        private RemoteGattServer GetGatt()
         {
             return new RemoteGattServer(this);
         }
 
         private bool _isPaired;
-        bool GetIsPaired()
+
+        private bool GetIsPaired()
         {
             return _isPaired;
         }
 
-        async Task PlatformPairAsync()
+        private async Task PlatformPairAsync()
         {
             await _device.PairAsync();
             _isPaired = await _device.GetPairedAsync();
         }
 
-        async Task PlatformPairAsync(string pairingCode)
+        private async Task PlatformPairAsync(string pairingCode)
         {
             var managers = await DBusMethods.GetProxiesAsync<IAgentManager1>("org.bluez.AgentManager1");
             var manager = managers.FirstOrDefault();
