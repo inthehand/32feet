@@ -12,6 +12,7 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Windows.Devices.Bluetooth;
+using Windows.Devices.Enumeration;
 
 namespace InTheHand.Bluetooth
 {
@@ -33,7 +34,7 @@ namespace InTheHand.Bluetooth
 
             LastKnownAddress = device.BluetoothAddress;
 
-            // this will cache the Id and Name for use in cases where 'NativeDevice' has been disposed. 
+            // this will cache the Id and Name for use in cases where 'NativeDevice' has been disposed.
             GetId();
             GetName();
         }
@@ -143,15 +144,15 @@ namespace InTheHand.Bluetooth
             return base.Equals(obj);
         }
 
-        private static async Task<BluetoothDevice> PlatformFromId(string id)
+        private static async Task<BluetoothDevice?> PlatformFromId(string id)
         {
-            BluetoothLEDevice device = null;
+            BluetoothLEDevice? device;
 
             if (ulong.TryParse(id, System.Globalization.NumberStyles.HexNumber, null, out var parsedId))
             {
-                if (Bluetooth.KnownDevices.ContainsKey(parsedId))
+                if (Bluetooth.KnownDevices.TryGetValue(parsedId, out var device1))
                 {
-                    BluetoothDevice knownDevice = (BluetoothDevice)Bluetooth.KnownDevices[parsedId].Target;
+                    var knownDevice = (BluetoothDevice)device1.Target;
                     if (knownDevice != null)
                         return knownDevice;
                 }
@@ -198,19 +199,40 @@ namespace InTheHand.Bluetooth
             return _cachedName;
         }
 
-        RemoteGattServer GetGatt()
+        private RemoteGattServer GetGatt()
         {
             return new RemoteGattServer(this);
         }
 
-        bool GetIsPaired()
+        private bool GetIsPaired()
         {
             return NativeDevice.DeviceInformation.Pairing.IsPaired;
         }
 
-        Task PlatformPairAsync()
+        private Task PlatformPairAsync()
         {
             return NativeDevice.DeviceInformation.Pairing.PairAsync().AsTask();
+        }
+
+        private async Task PlatformPairAsync(string pairingCode)
+        {
+            var pairing = NativeDevice.DeviceInformation.Pairing.Custom;
+            pairing.PairingRequested += SetPairingCode;
+
+            try
+            {
+                var result = await pairing.PairAsync(DevicePairingKinds.ProvidePin);
+                // result.Status indicates success or failure
+            }
+            finally
+            {
+                pairing.PairingRequested -= SetPairingCode;
+            }
+
+            void SetPairingCode(object sender, DevicePairingRequestedEventArgs eventArgs)
+            {
+                eventArgs.Accept(pairingCode);
+            }
         }
 
         /*bool GetWatchingAdvertisements()

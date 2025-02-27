@@ -8,7 +8,9 @@
 using Linux.Bluetooth;
 using Linux.Bluetooth.Extensions;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
+using Tmds.DBus;
 
 namespace InTheHand.Bluetooth
 {
@@ -17,10 +19,10 @@ namespace InTheHand.Bluetooth
         private bool _watchingAdvertisements = false;
         internal Device _device;
 
-        private static async Task<BluetoothDevice> PlatformFromId(string id)
+        private static async Task<BluetoothDevice?> PlatformFromId(string id)
         {
             var linuxDevice = await Bluetooth.adapter.GetDeviceAsync(id);
-            
+
             if(linuxDevice != null)
             {
                 System.Diagnostics.Debug.WriteLine($"BluetoothDevice.FromIdAsync:{linuxDevice.ObjectPath}");
@@ -80,32 +82,61 @@ namespace InTheHand.Bluetooth
         }
 
         private string? _id;
-        string GetId()
+
+        private string GetId()
         {
             return _id == null ? string.Empty : _id;
         }
 
         private string? _name;
-        string GetName()
+
+        private string GetName()
         {
             return _name == null ? string.Empty : _name;
         }
 
-        RemoteGattServer GetGatt()
+        private RemoteGattServer GetGatt()
         {
             return new RemoteGattServer(this);
         }
 
         private bool _isPaired;
-        bool GetIsPaired()
+
+        private bool GetIsPaired()
         {
             return _isPaired;
         }
 
-        async Task PlatformPairAsync()
+        private async Task PlatformPairAsync()
         {
             await _device.PairAsync();
             _isPaired = await _device.GetPairedAsync();
+        }
+
+        private async Task PlatformPairAsync(string pairingCode)
+        {
+            var managers = await DBusMethods.GetProxiesAsync<IAgentManager1>("org.bluez.AgentManager1");
+            var manager = managers.FirstOrDefault();
+            if (manager is null)
+            {
+                throw new InvalidOperationException("AgentManager1 not found");
+            }
+
+            var agent = new PairingAgent(pairingCode);
+
+            await Connection.System.RegisterObjectAsync(agent);
+            await manager.RegisterAgentAsync(agent.ObjectPath, "DisplayOnly");
+            await manager.RequestDefaultAgentAsync(agent.ObjectPath);
+
+            try
+            {
+                await PlatformPairAsync();
+            }
+            finally
+            {
+                await manager.UnregisterAgentAsync(agent.ObjectPath);
+                Connection.System.UnregisterObject(agent);
+            }
         }
 
         /*

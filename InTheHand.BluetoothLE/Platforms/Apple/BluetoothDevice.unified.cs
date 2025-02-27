@@ -8,7 +8,6 @@
 using CoreBluetooth;
 using Foundation;
 using System;
-using System.Diagnostics;
 using System.Threading.Tasks;
 
 namespace InTheHand.Bluetooth
@@ -48,7 +47,7 @@ namespace InTheHand.Bluetooth
             return base.Equals(obj);
         }
 
-        private static async Task<BluetoothDevice> PlatformFromId(string id)
+        private static async Task<BluetoothDevice?> PlatformFromId(string id)
         {
             try
             {
@@ -73,27 +72,32 @@ namespace InTheHand.Bluetooth
             return _peripheral.GetHashCode();
         }
 
-        string GetId()
+        private string GetId()
         {
             return _peripheral.Identifier.ToString();
         }
 
-        string GetName()
+        private string GetName()
         {
             return _peripheral.Name;
         }
 
-        RemoteGattServer GetGatt()
+        private RemoteGattServer GetGatt()
         {
             return new RemoteGattServer(this);
         }
 
-        bool GetIsPaired()
+        private bool GetIsPaired()
         {
             return false;
         }
 
-        Task PlatformPairAsync()
+        private Task PlatformPairAsync()
+        {
+            throw new PlatformNotSupportedException();
+        }
+
+        private Task PlatformPairAsync(string pairingCode)
         {
             throw new PlatformNotSupportedException();
         }
