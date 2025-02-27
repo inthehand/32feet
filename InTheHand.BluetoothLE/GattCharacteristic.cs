@@ -83,15 +83,9 @@ namespace InTheHand.Bluetooth
             return PlatformWriteValue(value, false);
         }
 
-        public Task<GattDescriptor?> GetDescriptorAsync(BluetoothUuid descriptor)
-        {
-            return PlatformGetDescriptor(descriptor);
-        }
+        public Task<GattDescriptor?> GetDescriptorAsync(BluetoothUuid descriptor) => PlatformGetDescriptor(descriptor);
 
-        public Task<IReadOnlyList<GattDescriptor>> GetDescriptorsAsync()
-        {
-            return PlatformGetDescriptors();
-        }
+        public Task<IReadOnlyList<GattDescriptor>> GetDescriptorsAsync() => PlatformGetDescriptors();
 
         private event EventHandler<GattCharacteristicValueChangedEventArgs> characteristicValueChanged;
 

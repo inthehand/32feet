@@ -1,6 +1,6 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="RemoteGattServer.cs" company="In The Hand Ltd">
-//   Copyright (c) 2018-23 In The Hand Ltd, All rights reserved.
+//   Copyright (c) 2018-25 In The Hand Ltd, All rights reserved.
 //   This source code is licensed under the MIT License - see License.txt
 // </copyright>
 //-----------------------------------------------------------------------
@@ -42,13 +42,13 @@ namespace InTheHand.Bluetooth
         [EditorBrowsable(EditorBrowsableState.Never)]
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
 
-        public bool Connected { get { return IsConnected; } }
+        public bool Connected => IsConnected;
 
         /// <summary>
         /// Gets a value indicating if there is an active connection with the remote GATT server.
         /// </summary>
         /// <value>True if connected, else False.</value>
-        public bool IsConnected { get { return GetConnected(); } }
+        public bool IsConnected => GetConnected();
 
         /// <summary>
         /// Gets the maximum transmission unit (MTU) size.

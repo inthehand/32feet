@@ -1,3 +1,10 @@
+//-----------------------------------------------------------------------
+// <copyright file="BluetoothLEScan.android.cs" company="In The Hand Ltd">
+//   Copyright (c) 2025 In The Hand Ltd, All rights reserved.
+//   This source code is licensed under the MIT License - see License.txt
+// </copyright>
+//-----------------------------------------------------------------------
+
 using System.Threading.Tasks;
 using Tmds.DBus;
 
@@ -21,7 +28,7 @@ internal interface IAgent1 : IDBusObject
     Task CancelAsync();
 }
 
-public class PairingAgent(string pairingCode) : IAgent1
+internal class PairingAgent(string pairingCode) : IAgent1
 {
     public ObjectPath ObjectPath { get; } = new("/InTheHand/CustomAgent");
 

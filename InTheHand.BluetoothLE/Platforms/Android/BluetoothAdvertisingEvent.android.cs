@@ -1,6 +1,6 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="BluetoothAdvertisingEvent.android.cs" company="In The Hand Ltd">
-//   Copyright (c) 2018-24 In The Hand Ltd, All rights reserved.
+//   Copyright (c) 2018-25 In The Hand Ltd, All rights reserved.
 //   This source code is licensed under the MIT License - see License.txt
 // </copyright>
 //-----------------------------------------------------------------------
@@ -21,22 +21,30 @@ namespace InTheHand.Bluetooth
             _scanResult = scanResult;
         }
 
+        /// <summary>
+        /// Implicit conversion from <see cref="BluetoothAdvertisingEvent"/> to <see cref="ScanResult"/>.
+        /// </summary>
+        /// <param name="advertisingEvent"></param>
         public static implicit operator ScanResult(BluetoothAdvertisingEvent advertisingEvent)
         {
             return advertisingEvent._scanResult;
         }
 
+        /// <summary>
+        /// Implicit conversion from <see cref="ScanResult"/> to <see cref="BluetoothAdvertisingEvent"/>.
+        /// </summary>
+        /// <param name="scanResult"></param>
         public static implicit operator BluetoothAdvertisingEvent(ScanResult scanResult)
         {
             return new BluetoothAdvertisingEvent(scanResult);
         }
 
-        ushort PlatformGetAppearance()
+        private ushort PlatformGetAppearance()
         {
             return 0;
         }
 
-        BluetoothUuid[] PlatformGetUuids()
+        private BluetoothUuid[] PlatformGetUuids()
         {
             List<BluetoothUuid> uuids = new List<BluetoothUuid>();
 
@@ -51,7 +59,7 @@ namespace InTheHand.Bluetooth
             return uuids.ToArray();
         }
 
-        string PlatformGetName()
+        private string PlatformGetName()
         {
             if(_scanResult.ScanRecord != null)
                 return _scanResult.ScanRecord.DeviceName;
@@ -62,12 +70,12 @@ namespace InTheHand.Bluetooth
             return string.Empty;
         }
 
-        short PlatformGetRssi()
+        private short PlatformGetRssi()
         {
             return (short)_scanResult.Rssi;
         }
 
-        sbyte PlatformGetTxPower()
+        private sbyte PlatformGetTxPower()
         {
             if (Build.VERSION.SdkInt >= BuildVersionCodes.O)
             {
@@ -77,7 +85,7 @@ namespace InTheHand.Bluetooth
             return 0;
         }
 
-        IReadOnlyDictionary<ushort, byte[]> PlatformGetManufacturerData()
+        private IReadOnlyDictionary<ushort, byte[]> PlatformGetManufacturerData()
         {
             Dictionary<ushort, byte[]> data = new Dictionary<ushort, byte[]>();
             for (int i = 0; i < _scanResult.ScanRecord.ManufacturerSpecificData.Size(); i++)
@@ -90,7 +98,7 @@ namespace InTheHand.Bluetooth
             return new ReadOnlyDictionary<ushort, byte[]>(data);
         }
 
-        IReadOnlyDictionary<BluetoothUuid, byte[]> PlatformGetServiceData()
+        private IReadOnlyDictionary<BluetoothUuid, byte[]> PlatformGetServiceData()
         {
             Dictionary<BluetoothUuid, byte[]> data = new Dictionary<BluetoothUuid, byte[]>();
             foreach(var entry in _scanResult.ScanRecord.ServiceData)

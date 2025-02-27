@@ -1,6 +1,6 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="BluetoothLEScan.cs" company="In The Hand Ltd">
-//   Copyright (c) 2020-22 In The Hand Ltd, All rights reserved.
+//   Copyright (c) 2020-25 In The Hand Ltd, All rights reserved.
 //   This source code is licensed under the MIT License - see License.txt
 // </copyright>
 //-----------------------------------------------------------------------
@@ -20,11 +20,11 @@ namespace InTheHand.Bluetooth
 
         }
 
-        public IReadOnlyList<BluetoothLEScanFilter> Filters { get => _filters.AsReadOnly(); }
+        public IReadOnlyList<BluetoothLEScanFilter> Filters => _filters.AsReadOnly();
 
-        public bool KeepRepeatedDevices { get => PlatformKeepRepeatedDevices; }
+        public bool KeepRepeatedDevices => PlatformKeepRepeatedDevices;
 
-        public bool AcceptAllAdvertisements { get => PlatformAcceptAllAdvertisements; }
+        public bool AcceptAllAdvertisements => PlatformAcceptAllAdvertisements;
 
         public bool Active { get; private set; }
 

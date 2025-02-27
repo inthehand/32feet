@@ -35,18 +35,7 @@ namespace InTheHand.Bluetooth
         /// <summary>
         /// Provides a way to interact with this device’s GATT server.
         /// </summary>
-        public RemoteGattServer Gatt
-        {
-            get
-            {
-                if (_remoteGattServer == null)
-                {
-                    _remoteGattServer = GetGatt();
-                }
-
-                return _remoteGattServer;
-            }
-        }
+        public RemoteGattServer Gatt => _remoteGattServer ?? (_remoteGattServer = GetGatt());
 
         /// <summary>
         /// Returns true if the device is paired.
@@ -57,27 +46,18 @@ namespace InTheHand.Bluetooth
         /// <summary>
         /// Initiate pairing. (Work in progress)
         /// </summary>
-        /// <remarks>Supported on Windows and Android only.</remarks>
+        /// <remarks>Supported on Windows, Linux and Android only.</remarks>
         /// <returns></returns>
-        public Task PairAsync()
-        {
-            return PlatformPairAsync();
-        }
+        public Task PairAsync() => PlatformPairAsync();
 
         /// <summary>
         /// Initiate pairing with a pairing code (Work in progress)
         /// </summary>
         /// <param name="pairingCode">Bluetooth pairing code</param>
         /// <remarks>Implemented on Windows and Linux only.</remarks>
-        public Task PairAsync(string pairingCode)
-        {
-            return PlatformPairAsync(pairingCode);
-        }
+        public Task PairAsync(string pairingCode) => PlatformPairAsync(pairingCode);
 
-        public static Task<BluetoothDevice?> FromIdAsync(string id)
-        {
-            return PlatformFromId(id);
-        }
+        public static Task<BluetoothDevice?> FromIdAsync(string id) => PlatformFromId(id);
         /*
         public Task WatchAdvertisementsAsync()
         {
