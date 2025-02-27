@@ -1,6 +1,6 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="GattDescriptor.cs" company="In The Hand Ltd">
-//   Copyright (c) 2018-23 In The Hand Ltd, All rights reserved.
+//   Copyright (c) 2018-25 In The Hand Ltd, All rights reserved.
 //   This source code is licensed under the MIT License - see License.txt
 // </copyright>
 //-----------------------------------------------------------------------
@@ -30,28 +30,19 @@ namespace InTheHand.Bluetooth
         /// <summary>
         /// The UUID of the characteristic descriptor.
         /// </summary>
-        public BluetoothUuid Uuid { get { return GetUuid(); } }
+        public BluetoothUuid Uuid => GetUuid();
 
         /// <summary>
         /// The currently cached descriptor value. 
         /// This value gets updated when the value of the descriptor is read.
         /// </summary>
-        public byte[] Value
-        {
-            get
-            {
-                return PlatformGetValue();
-            }
-        }
+        public byte[] Value => PlatformGetValue();
 
         /// <summary>
         /// Retrieve the current descriptor value from the remote device.
         /// </summary>
         /// <returns></returns>
-        public Task<byte[]> ReadValueAsync()
-        {
-            return PlatformReadValue();
-        }
+        public Task<byte[]> ReadValueAsync() => PlatformReadValue();
 
         /// <summary>
         /// Writes a new value to the descriptor on the remote device.

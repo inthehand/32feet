@@ -1,6 +1,6 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="GattService.cs" company="In The Hand Ltd">
-//   Copyright (c) 2018-23 In The Hand Ltd, All rights reserved.
+//   Copyright (c) 2018-25 In The Hand Ltd, All rights reserved.
 //   This source code is licensed under the MIT License - see License.txt
 // </copyright>
 //-----------------------------------------------------------------------
@@ -32,12 +32,12 @@ namespace InTheHand.Bluetooth
         /// <summary>
         /// The UUID of the service, e.g. '0000180d-0000-1000-8000-00805f9b34fb' for the Heart Rate service.
         /// </summary>
-        public BluetoothUuid Uuid { get { return GetUuid(); } }
+        public BluetoothUuid Uuid => GetUuid();
 
         /// <summary>
         /// Indicates whether the type of this service is primary or secondary.
         /// </summary>
-        public bool IsPrimary { get { return GetIsPrimary(); } }
+        public bool IsPrimary => GetIsPrimary();
 
         /// <summary>
         /// Retrieves a Characteristic inside this Service.

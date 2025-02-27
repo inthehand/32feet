@@ -1,6 +1,6 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="GattCharacteristic.cs" company="In The Hand Ltd">
-//   Copyright (c) 2018-24 In The Hand Ltd, All rights reserved.
+//   Copyright (c) 2018-25 In The Hand Ltd, All rights reserved.
 //   This source code is licensed under the MIT License - see License.txt
 // </copyright>
 //-----------------------------------------------------------------------
@@ -35,25 +35,19 @@ namespace InTheHand.Bluetooth
         /// The UUID of the characteristic.
         /// </summary>
         /// <seealso cref="BluetoothUuid"/>
-        public BluetoothUuid Uuid { get { return GetUuid(); } }
+        public BluetoothUuid Uuid => GetUuid();
 
         /// <summary>
         /// The properties of this characteristic.
         /// </summary>
         /// <seealso cref="GattCharacteristicProperties"/>
-        public GattCharacteristicProperties Properties { get { return GetProperties(); } }
+        public GattCharacteristicProperties Properties => GetProperties();
 
         /// <summary>
         /// The currently cached characteristic value. 
         /// This value gets updated when the value of the characteristic is read or updated via a notification or indication.
         /// </summary>
-        public byte[] Value
-        {
-            get
-            {
-                return PlatformGetValue();
-            }
-        }
+        public byte[] Value => PlatformGetValue();
 
         /// <summary>
         /// Performs a Characteristic Value read from the Bluetooth LE device.
@@ -101,7 +95,7 @@ namespace InTheHand.Bluetooth
 
         private event EventHandler<GattCharacteristicValueChangedEventArgs> characteristicValueChanged;
 
-        void OnCharacteristicValueChanged(GattCharacteristicValueChangedEventArgs args)
+        private void OnCharacteristicValueChanged(GattCharacteristicValueChangedEventArgs args)
         {
             characteristicValueChanged?.Invoke(this, args);
         }
@@ -135,10 +129,8 @@ namespace InTheHand.Bluetooth
             {
                 return PlatformStartNotifications();
             }
-            else
-            {
-                throw new NotSupportedException("Characteristic does not support Notify or Indicate.");
-            }
+
+            throw new NotSupportedException("Characteristic does not support Notify or Indicate.");
         }
 
         /// <summary>
