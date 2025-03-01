@@ -8,6 +8,7 @@
 using Android.Bluetooth;
 using InTheHand.Net.Bluetooth;
 using System;
+using System.Threading.Tasks;
 
 namespace InTheHand.Net.Sockets
 {
@@ -54,5 +55,17 @@ namespace InTheHand.Net.Sockets
 
             return null;
         }
+        
+        public async Task<BluetoothClient> AcceptBluetoothClientAsync()
+        {
+            var newSocket = await socket.AcceptAsync();
+            if (newSocket != null)
+            {
+                return new BluetoothClient(new AndroidBluetoothClient(newSocket));
+            }
+
+            return null;
+        }
+        
     }
 }

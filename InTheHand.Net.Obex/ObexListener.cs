@@ -15,6 +15,7 @@ using InTheHand.Net.Bluetooth;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
+using System.Threading.Tasks;
 using InTheHand.Net.Bluetooth.Sdp;
 using InTheHand.Net.Bluetooth.AttributeIds;
 
@@ -269,6 +270,61 @@ namespace InTheHand.Net
 #endif
                     default:
                         socket = tListener.AcceptTcpClient().Client;
+                        break;
+                }
+
+                if (socket != null)
+                {
+                    Debug.WriteLine($"Socket {socket.GetHashCode():X8}: Accepted", "ObexListener");
+                    return new ObexListenerContext(socket);
+                }
+                else if (stream != null)
+                {
+                    Debug.WriteLine($"Stream {stream.GetHashCode():X8}: Accepted", "ObexListener");
+                    // call to stream implementation to go here
+                    
+                }
+                
+                return null;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+        
+        public async Task<ObexListenerContext> GetContextAsync()
+        {
+            if (!listening)
+            {
+                throw new InvalidOperationException("Listener not started");
+            }
+
+            try
+            {
+                Socket socket;
+                Stream stream = null;
+
+                switch (transport)
+                {
+                    case ObexTransport.Bluetooth:
+                        var bluetoothClient = await bListener.AcceptBluetoothClientAsync();
+                        socket = (await bListener.AcceptBluetoothClientAsync()).Client;
+                        if (socket == null)
+                        {
+                            stream = bluetoothClient.GetStream(); // platforms which don't use System.Net.Sockets can return a stream instead
+                        }
+                        break;
+
+                    case ObexTransport.IrDA:
+#if NO_IRDA
+                        throw new NotSupportedException("No IrDA on this platform.");
+#else
+                        socket = (await iListener.AcceptIrDAClientAsync(null)).Client;
+                        break;
+#endif
+                    default:
+                        socket = (await tListener.AcceptTcpClientAsync()).Client;
                         break;
                 }
 
