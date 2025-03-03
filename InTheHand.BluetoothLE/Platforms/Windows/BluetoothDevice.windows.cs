@@ -22,6 +22,7 @@ namespace InTheHand.Bluetooth
         private string _cachedId;
         private string _cachedName;
         internal ulong LastKnownAddress;
+        private bool _disposed;
 
         internal BluetoothDevice(BluetoothLEDevice device)
         {
@@ -252,7 +253,7 @@ namespace InTheHand.Bluetooth
 
         private void Dispose(bool disposing)
         {
-            if (!disposedValue)
+            if (!_disposed)
             {
                 if (disposing)
                 {
@@ -260,7 +261,7 @@ namespace InTheHand.Bluetooth
                 }
 
                 DisposeAllNativeObjects();
-                disposedValue = true;
+                _disposed = true;
             }
         }
 
