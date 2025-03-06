@@ -81,9 +81,9 @@ namespace InTheHand.Bluetooth
             t.Wait();
             var result = t.Result;
 
-            if(result.Status == Uap.GattCommunicationStatus.Success)
+            if (result.Status == Uap.GattCommunicationStatus.Success)
             {
-                return result.Value.ToArray();
+                return result.Value.Length == 0 ? [] : result.Value.ToArray();
             }
 
             return null;
@@ -93,9 +93,9 @@ namespace InTheHand.Bluetooth
         {
             var result = await _characteristic.ReadValueAsync(Windows.Devices.Bluetooth.BluetoothCacheMode.Uncached).AsTask().ConfigureAwait(false);
 
-            if(result.Status == Uap.GattCommunicationStatus.Success)
+            if (result.Status == Uap.GattCommunicationStatus.Success)
             {
-                return result.Value.ToArray();
+                return result.Value.Length == 0 ? [] : result.Value.ToArray();
             }
 
             return null;
@@ -113,7 +113,7 @@ namespace InTheHand.Bluetooth
 
         private void Characteristic_ValueChanged(Uap.GattCharacteristic sender, Uap.GattValueChangedEventArgs args)
         {
-            OnCharacteristicValueChanged(new GattCharacteristicValueChangedEventArgs(args.CharacteristicValue.ToArray()));
+            OnCharacteristicValueChanged(new GattCharacteristicValueChangedEventArgs(args.CharacteristicValue.Length == 0 ? [] : args.CharacteristicValue.ToArray()));
         }
 
         void RemoveCharacteristicValueChanged()

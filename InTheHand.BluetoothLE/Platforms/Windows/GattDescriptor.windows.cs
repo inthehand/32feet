@@ -37,7 +37,7 @@ namespace InTheHand.Bluetooth
 
             if (result.Status == Uap.GattCommunicationStatus.Success)
             {
-                return result.Value.ToArray();
+                return result.Value.Length == 0 ? [] : result.Value.ToArray();
             }
 
             return null;
@@ -49,7 +49,7 @@ namespace InTheHand.Bluetooth
 
             if (result.Status == Uap.GattCommunicationStatus.Success)
             {
-                return result.Value.ToArray();
+                return result.Value.Length == 0 ? [] : result.Value.ToArray();
             }
 
             return null;
