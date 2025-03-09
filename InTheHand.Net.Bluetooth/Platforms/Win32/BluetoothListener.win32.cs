@@ -229,9 +229,28 @@ namespace InTheHand.Net.Sockets
             }
         }
 
+        public Task<Socket> AcceptSocketAsync()
+        {
+            if (NativeMethods.IsRunningOnMono())
+            {
+                var w32Socket = (Win32Socket)socket;
+                
+                return Task.Factory.FromAsync(w32Socket.BeginAccept, w32Socket.EndAccept,null);
+            }
+            else
+            {
+                return Task.Factory.FromAsync(socket.BeginAccept, socket.EndAccept, null);
+            }
+        }
+        
         public BluetoothClient AcceptBluetoothClient()
         {
             return new BluetoothClient(new Win32BluetoothClient(AcceptSocket()));
+        }
+
+        public async Task<BluetoothClient> AcceptBluetoothClientAsync()
+        {
+            return new BluetoothClient(new Win32BluetoothClient(await AcceptSocketAsync()));
         }
     }
 }
