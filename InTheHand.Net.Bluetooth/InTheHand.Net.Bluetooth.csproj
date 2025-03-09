@@ -1,7 +1,7 @@
 ﻿<Project Sdk="MSBuild.Sdk.Extras/3.0.44">
 	<Sdk Name="DotNet.ReproducibleBuilds.Isolated" Version="1.2.4" />
 	<PropertyGroup>
-		<TargetFrameworks>netstandard2.0;netstandard2.1;net6.0;net6.0-windows7.0;net6.0-windows10.0.19041.0;net7.0;net7.0-windows7.0;net7.0-windows10.0.19041.0;net7.0-android;net7.0-ios;net8.0;net8.0-windows7.0;net8.0-windows10.0.19041.0;net8.0-android;net8.0-ios;net462;monoandroid10.0;xamarinios10;uap10.0</TargetFrameworks>
+		<TargetFrameworks>netstandard2.0;netstandard2.1;net6.0;net6.0-windows7.0;net6.0-windows10.0.19041.0;net7.0;net7.0-windows7.0;net7.0-windows10.0.19041.0;net8.0;net8.0-windows7.0;net8.0-windows10.0.19041.0;net8.0-android;net8.0-ios;net462;monoandroid10.0;xamarinios10;uap10.0</TargetFrameworks>
 		<Company>In The Hand Ltd</Company>
 		<Authors>Peter Foot</Authors>
 		<Product>32feet.NET</Product>
@@ -18,7 +18,7 @@
 		<PackageProjectUrl>https://github.com/inthehand/32feet</PackageProjectUrl>
 		<PackageLicenseUrl></PackageLicenseUrl>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
-		<Copyright>Copyright (c) 2004-2024 In The Hand Ltd</Copyright>
+		<Copyright>Copyright (c) 2004-2025 In The Hand Ltd</Copyright>
 		<Description>32feet.NET is an open-source project to make personal area networking technologies such as Bluetooth easily accessible from .NET code.</Description>
 		<FileVersion>4.2.0</FileVersion>
 		<AssemblyVersion>4.2.0.0</AssemblyVersion>
@@ -122,19 +122,19 @@
 	</ItemGroup>
 
 	<ItemGroup Condition=" '$(TargetFramework)' == 'net6.0' ">
-		<PackageReference Include="Linux.Bluetooth" Version="5.66.0" />
+		<PackageReference Include="Linux.Bluetooth" Version="5.67.1" />
 		<Compile Include="Platforms\Linux\*.cs" />
 		<Compile Include="Platforms\Win32\*.cs" />
 	</ItemGroup>
 
 	<ItemGroup Condition=" '$(TargetFramework)' == 'net7.0' ">
-		<PackageReference Include="Linux.Bluetooth" Version="5.66.0" />
+		<PackageReference Include="Linux.Bluetooth" Version="5.67.1" />
 		<Compile Include="Platforms\Linux\*.cs" />
 		<Compile Include="Platforms\Win32\*.cs" />
 	</ItemGroup>
 
 	<ItemGroup Condition=" '$(TargetFramework)' == 'net8.0' ">
-		<PackageReference Include="Linux.Bluetooth" Version="5.66.0" />
+		<PackageReference Include="Linux.Bluetooth" Version="5.67.1" />
 		<Compile Include="Platforms\Linux\*.cs" />
 		<Compile Include="Platforms\Win32\*.cs" />
 	</ItemGroup>
@@ -163,11 +163,6 @@
 		<Compile Include="Platforms\Windows\*.cs" />
 	</ItemGroup>
 
-	<ItemGroup Condition=" '$(TargetFramework)' == 'net6.0-android' ">
-		<PackageReference Include="InTheHand.AndroidActivity" Version="1.0.4" />
-		<Compile Include="Platforms\Android\*.cs" />
-	</ItemGroup>
-
 	<ItemGroup Condition=" '$(TargetFramework)' == 'net7.0-android' ">
 		<PackageReference Include="InTheHand.AndroidActivity" Version="1.0.4" />
 		<Compile Include="Platforms\Android\*.cs" />
@@ -176,10 +171,6 @@
 	<ItemGroup Condition=" '$(TargetFramework)' == 'net8.0-android' ">
 		<PackageReference Include="InTheHand.AndroidActivity" Version="1.0.4" />
 		<Compile Include="Platforms\Android\*.cs" />
-	</ItemGroup>
-	
-	<ItemGroup Condition=" '$(TargetFramework)' == 'net6.0-ios' ">
-		<Compile Include="Platforms\iOS\*.cs" />
 	</ItemGroup>
 
 	<ItemGroup Condition=" '$(TargetFramework)' == 'net7.0-ios' ">

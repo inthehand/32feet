@@ -13,7 +13,7 @@ namespace InTheHand.Bluetooth
 {
     public sealed partial class BluetoothLEScan
     {
-        private List<BluetoothLEScanFilter> _filters = new List<BluetoothLEScanFilter>();
+        private readonly List<BluetoothLEScanFilter> _filters = new List<BluetoothLEScanFilter>();
 
         internal BluetoothLEScan()
         {
