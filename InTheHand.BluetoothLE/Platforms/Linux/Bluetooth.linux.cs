@@ -98,17 +98,26 @@ namespace InTheHand.Bluetooth
             }
 
             adapter.DeviceFound += handler;
+
+            TimeSpan timeout = options.Timeout ?? TimeSpan.FromMilliseconds(60000);
             
             Task.Run(async () =>
             {
                 try
                 {
                     await adapter.StartDiscoveryAsync();
-                    await Task.Delay(60000, cancellationToken);
+                    await Task.Delay(timeout, cancellationToken);
                     await adapter.StopDiscoveryAsync();
                     result.TrySetResult(devices);
                 }
-                catch (TaskCanceledException) {}
+                catch (TaskCanceledException) 
+                {
+                    result.TrySetResult(devices); // if cancelled, return the devices found so far
+                }
+                finally
+                {
+                    adapter.DeviceFound -= handler;
+                }
             }, CancellationToken.None);
 
             return await result.Task;
