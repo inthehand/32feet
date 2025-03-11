@@ -112,6 +112,7 @@ namespace InTheHand.Bluetooth
                 }
                 catch (TaskCanceledException) 
                 {
+                    await adapter.StopDiscoveryAsync();
                     result.TrySetResult(devices); // if cancelled, return the devices found so far
                 }
                 finally
