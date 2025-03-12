@@ -1,6 +1,6 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="GattCharacteristic.windows.cs" company="In The Hand Ltd">
-//   Copyright (c) 2018-24 In The Hand Ltd, All rights reserved.
+//   Copyright (c) 2018-25 In The Hand Ltd, All rights reserved.
 //   This source code is licensed under the MIT License - see License.txt
 // </copyright>
 //-----------------------------------------------------------------------
@@ -22,6 +22,10 @@ namespace InTheHand.Bluetooth
             _characteristic = characteristic;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="characteristic"></param>
         public static implicit operator Uap.GattCharacteristic(GattCharacteristic characteristic)
         {
             return characteristic._characteristic;
@@ -33,15 +37,9 @@ namespace InTheHand.Bluetooth
         }
 
         /// <summary>
-        /// Get the user friendly description for this GattCharacteristic, if the User Description <see cref="GattDescriptor">Descriptor</see> is present, otherwise this will be an empty string.
+        /// Get the user-friendly description for this GattCharacteristic, if the User Description <see cref="GattDescriptor">Descriptor</see> is present, otherwise this will be an empty string.
         /// </summary>
-        public string UserDescription
-        {
-            get
-            {
-                return _characteristic.UserDescription;
-            }
-        }
+        public string UserDescription => _characteristic.UserDescription;
 
         private GattCharacteristicProperties GetProperties()
         {
@@ -60,11 +58,11 @@ namespace InTheHand.Bluetooth
 
         private async Task<IReadOnlyList<GattDescriptor>> PlatformGetDescriptors()
         {
-            List<GattDescriptor> descriptors = new List<GattDescriptor>();
+            var descriptors = new List<GattDescriptor>();
 
             var result = await _characteristic.GetDescriptorsAsync();
 
-            if(result.Status == Uap.GattCommunicationStatus.Success)
+            if (result.Status == Uap.GattCommunicationStatus.Success)
             {
                 foreach (var d in result.Descriptors)
                 {
@@ -123,7 +121,7 @@ namespace InTheHand.Bluetooth
 
         private async Task PlatformStartNotifications()
         {
-            Uap.GattClientCharacteristicConfigurationDescriptorValue value = Uap.GattClientCharacteristicConfigurationDescriptorValue.None;
+            var value = Uap.GattClientCharacteristicConfigurationDescriptorValue.None;
             if (_characteristic.CharacteristicProperties.HasFlag(Uap.GattCharacteristicProperties.Notify))
                 value = Uap.GattClientCharacteristicConfigurationDescriptorValue.Notify;
             else if (_characteristic.CharacteristicProperties.HasFlag(Uap.GattCharacteristicProperties.Indicate))

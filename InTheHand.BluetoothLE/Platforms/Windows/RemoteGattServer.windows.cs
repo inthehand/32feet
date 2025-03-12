@@ -1,6 +1,6 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="BluetoothRemoteGATTServer.windows.cs" company="In The Hand Ltd">
-//   Copyright (c) 2018-23 In The Hand Ltd, All rights reserved.
+//   Copyright (c) 2018-25 In The Hand Ltd, All rights reserved.
 //   This source code is licensed under the MIT License - see License.txt
 // </copyright>
 //-----------------------------------------------------------------------
@@ -25,13 +25,13 @@ namespace InTheHand.Bluetooth
                 Device.OnGattServerDisconnected();
         }
 
-        bool GetConnected()
+        private bool GetConnected()
         {
             if (Device.IsDisposedItem(Device)) return false;
             return Device.NativeDevice.ConnectionStatus == Windows.Devices.Bluetooth.BluetoothConnectionStatus.Connected;
         }
 
-        async Task PlatformConnect()
+        private async Task PlatformConnect()
         {
             // Ensure that our native objects have not been disposed.
             // If they have, re-create the native device object.
@@ -80,12 +80,12 @@ namespace InTheHand.Bluetooth
             Mtu = sender.MaxPduSize;
         }
 
-        void PlatformDisconnect()
+        private void PlatformDisconnect()
         {
             // Windows has no explicit disconnect 🤪
         }
 
-        void PlatformCleanup()
+        private void PlatformCleanup()
         {
             // The user has explicitly called the Disconnect method so unhook ConnectionStatusChanged
             // and dispose all of the native windows bluetooth objects.  This will release the device
@@ -101,7 +101,7 @@ namespace InTheHand.Bluetooth
             }
         }
 
-        async Task<GattService> PlatformGetPrimaryService(BluetoothUuid service)
+        private async Task<GattService> PlatformGetPrimaryService(BluetoothUuid service)
         {
             if (await Device.CreateNativeInstance()) PlatformInit();
             var result = await Device.NativeDevice.GetGattServicesForUuidAsync(service, Windows.Devices.Bluetooth.BluetoothCacheMode.Uncached);
@@ -112,7 +112,7 @@ namespace InTheHand.Bluetooth
             return new GattService(Device, result.Services[0], true);
         }
 
-        async Task<List<GattService>> PlatformGetPrimaryServices(BluetoothUuid? service)
+        private async Task<List<GattService>> PlatformGetPrimaryServices(BluetoothUuid? service)
         {
             if (await Device.CreateNativeInstance()) PlatformInit();
             var services = new List<GattService>();
@@ -139,16 +139,16 @@ namespace InTheHand.Bluetooth
             return services;
         }
 
-        Task<short> PlatformReadRssi()
+        private Task<short> PlatformReadRssi()
         {
             return Task.FromResult((short)0);
         }
 
-        void PlatformSetPreferredPhy(BluetoothPhy phy)
+        private void PlatformSetPreferredPhy(BluetoothPhy phy)
         {
         }
 
-        Task<bool> PlatformRequestMtuAsync(int mtu)
+        private Task<bool> PlatformRequestMtuAsync(int mtu)
         {
             return Task.FromResult(false);
         }

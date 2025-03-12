@@ -8,16 +8,15 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Windows.Devices.Bluetooth;
 using WBluetooth = Windows.Devices.Bluetooth.GenericAttributeProfile;
 
 namespace InTheHand.Bluetooth
 {
     partial class GattService
     {
-        readonly WBluetooth.GattDeviceService _service;
-        readonly WBluetooth.GattSession _session;
-        readonly bool _isPrimary;
+        private readonly WBluetooth.GattDeviceService _service;
+        private readonly WBluetooth.GattSession _session;
+        private readonly bool _isPrimary;
 
         internal GattService(BluetoothDevice device, WBluetooth.GattDeviceService service, bool isPrimary) : this(device)
         {
@@ -27,11 +26,19 @@ namespace InTheHand.Bluetooth
             device.AddDisposableObject(this,service);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="service"></param>
         public static implicit operator WBluetooth.GattDeviceService(GattService service)
         {
             return service._service;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="service"></param>
         public static implicit operator GattService(WBluetooth.GattDeviceService service)
         {
 #pragma warning disable CS0618 // Type or member is obsolete
@@ -39,14 +46,14 @@ namespace InTheHand.Bluetooth
 #pragma warning restore CS0618 // Type or member is obsolete
         }
 
-        async Task<bool> OpenAsync()
+        private async Task<bool> OpenAsync()
         {
             return IsOpenSuccess(await _service.OpenAsync(WBluetooth.GattSharingMode.SharedReadAndWrite));
         }
 
-        static bool IsOpenSuccess(WBluetooth.GattOpenStatus status)
+        private static bool IsOpenSuccess(WBluetooth.GattOpenStatus status)
         {
-            switch(status)
+            switch (status)
             {
                 case WBluetooth.GattOpenStatus.Success:
                 case WBluetooth.GattOpenStatus.AlreadyOpened:
@@ -57,7 +64,7 @@ namespace InTheHand.Bluetooth
             }
         }
 
-        async Task<GattCharacteristic> PlatformGetCharacteristic(BluetoothUuid characteristic)
+        private async Task<GattCharacteristic> PlatformGetCharacteristic(BluetoothUuid characteristic)
         {
             if (_service.Session.SessionStatus != WBluetooth.GattSessionStatus.Active)
             {
@@ -75,7 +82,7 @@ namespace InTheHand.Bluetooth
             return null;
         }
 
-        async Task<IReadOnlyList<GattCharacteristic>> PlatformGetCharacteristics()
+        private async Task<IReadOnlyList<GattCharacteristic>> PlatformGetCharacteristics()
         {
             if (_service.Session.SessionStatus != WBluetooth.GattSessionStatus.Active)
             {
@@ -88,9 +95,9 @@ namespace InTheHand.Bluetooth
             List<GattCharacteristic> characteristics = new List<GattCharacteristic>();
 
             var result = await _service.GetCharacteristicsAsync();
-            if(result.Status == WBluetooth.GattCommunicationStatus.Success)
+            if (result.Status == WBluetooth.GattCommunicationStatus.Success)
             {
-                foreach(var c in result.Characteristics)
+                foreach (var c in result.Characteristics)
                 {
                     characteristics.Add(new GattCharacteristic(this, c));
                 }
@@ -111,7 +118,7 @@ namespace InTheHand.Bluetooth
 
             var servicesResult = await _service.GetIncludedServicesForUuidAsync(service);
 
-            if(servicesResult.Status == WBluetooth.GattCommunicationStatus.Success)
+            if (servicesResult.Status == WBluetooth.GattCommunicationStatus.Success)
             {
                 return new GattService(Device, servicesResult.Services[0], false);
             }
@@ -132,7 +139,7 @@ namespace InTheHand.Bluetooth
 
             if (servicesResult.Status == WBluetooth.GattCommunicationStatus.Success)
             {
-                foreach(var includedService in servicesResult.Services)
+                foreach (var includedService in servicesResult.Services)
                 {
                     services.Add(new GattService(Device, includedService, false));
                 }
@@ -143,12 +150,12 @@ namespace InTheHand.Bluetooth
             return null;
         }
 
-        BluetoothUuid GetUuid()
+        private BluetoothUuid GetUuid()
         {
             return _service.Uuid;
         }
 
-        bool GetIsPrimary()
+        private bool GetIsPrimary()
         {
             return _isPrimary;
         }

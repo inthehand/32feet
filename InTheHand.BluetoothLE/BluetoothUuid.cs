@@ -156,14 +156,13 @@ namespace InTheHand.Bluetooth
         /// A default Uuid containing a zero Guid.
         /// </summary>
         /// <value>This is not a valid value so be careful passing this to any native function.</value>
-        public static BluetoothUuid Empty
-        {
-            get
-            {
-                return default;
-            }
-        }
+        public static BluetoothUuid Empty => default;
 
+        /// <summary>
+        /// Returns the bluetooth device UUID from a Guid.
+        /// </summary>
+        /// <param name="uuid"></param>
+        /// <returns></returns>
         public static BluetoothUuid FromGuid(Guid uuid)
         {
             return new BluetoothUuid(uuid);
@@ -205,7 +204,7 @@ namespace InTheHand.Bluetooth
 
         /// <summary>
         /// Returns the Uuid for a given Bluetooth SIG name.
-        /// Names must beging with the "org.bluetooth" prefix.
+        /// Names must begin with the "org.bluetooth" prefix.
         /// </summary>
         /// <param name="uuidName"></param>
         /// <returns></returns>
@@ -239,13 +238,18 @@ namespace InTheHand.Bluetooth
             return uuid;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
         public static BluetoothUuid GetService(string name)
         {
-            if (Guid.TryParse(name, out Guid uuid))
+            if (Guid.TryParse(name, out var uuid))
             {
                 return uuid;
             }
-            else if (ushort.TryParse(name, out ushort alias))
+            else if (ushort.TryParse(name, out var alias))
             {
                 return FromShortId(alias);
             }
@@ -255,13 +259,18 @@ namespace InTheHand.Bluetooth
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
         public static BluetoothUuid GetCharacteristic(string name)
         {
-            if (Guid.TryParse(name, out Guid uuid))
+            if (Guid.TryParse(name, out var uuid))
             {
                 return uuid;
             }
-            else if (ushort.TryParse(name, out ushort alias))
+            else if (ushort.TryParse(name, out var alias))
             {
                 return FromShortId(alias);
             }
@@ -273,11 +282,11 @@ namespace InTheHand.Bluetooth
 
         public static BluetoothUuid GetDescriptor(string name)
         {
-            if (Guid.TryParse(name, out Guid uuid))
+            if (Guid.TryParse(name, out var uuid))
             {
                 return uuid;
             }
-            else if (ushort.TryParse(name, out ushort alias))
+            else if (ushort.TryParse(name, out var alias))
             {
                 return FromShortId(alias);
             }

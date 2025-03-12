@@ -1,6 +1,6 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="GattCharacteristicUuids.cs" company="In The Hand Ltd">
-//   Copyright (c) 2015-23 In The Hand Ltd, All rights reserved.
+//   Copyright (c) 2015-25 In The Hand Ltd, All rights reserved.
 //   This source code is licensed under the MIT License - see License.txt
 // </copyright>
 //-----------------------------------------------------------------------
@@ -26,7 +26,7 @@ namespace InTheHand.Bluetooth
         /// <returns>The characteristic Uuid on success else Guid.Empty.</returns>
         public static BluetoothUuid FromBluetoothUti(string bluetoothUti)
         {
-            string requestedUti = bluetoothUti.ToLower();
+            var requestedUti = bluetoothUti.ToLower();
             if (requestedUti.StartsWith(Namespace))
             {
                 requestedUti = requestedUti.Replace(Namespace + ".", string.Empty);

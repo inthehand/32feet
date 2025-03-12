@@ -46,7 +46,7 @@ namespace InTheHand.Bluetooth
         Notify = 16,
 
         /// <summary>
-        /// The characteristic is indicatable
+        /// The characteristic supports indicate notifications
         /// </summary>
         Indicate = 32,
 

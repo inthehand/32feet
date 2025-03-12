@@ -27,7 +27,7 @@ namespace InTheHand.Bluetooth
         /// <returns>The descriptor Uuid on success else an empty <see cref="BluetoothUuid"/>.</returns>
         public static BluetoothUuid FromBluetoothUti(string bluetoothUti)
         {
-            string requestedUti = bluetoothUti.ToLower();
+            var requestedUti = bluetoothUti.ToLower();
             if (requestedUti.StartsWith(Namespace))
             {
                 requestedUti = requestedUti.Replace(Namespace + ".", string.Empty);
