@@ -96,7 +96,7 @@ namespace InTheHand.Bluetooth
         internal static event EventHandler<CBPeripheral[]> OnRetrievedPeripherals;
 #endif
 
-        static Task<bool> PlatformGetAvailability()
+        private static Task<bool> PlatformGetAvailability()
         {
             Initialize();
             bool available = false;
@@ -136,6 +136,28 @@ namespace InTheHand.Bluetooth
         private static UIAlertController controller = null;
 #endif
 
+        internal static CBUUID[] GetUuidsForFilters(RequestDeviceOptions options)
+        {
+            List<CBUUID> uuids = new List<CBUUID>();
+
+            if (!options.AcceptAllDevices)
+            {
+                foreach (BluetoothLEScanFilter filter in options.Filters)
+                {
+                    foreach (BluetoothUuid service in filter.Services)
+                    {
+                        uuids.Add(service);
+                    }
+                }
+            }
+            else
+            {
+                uuids.Add(GattServiceUuids.GenericAttribute);
+            }
+
+            return uuids.ToArray();
+        }
+        
         static async Task<BluetoothDevice> PlatformRequestDevice(RequestDeviceOptions options)
         {
             Initialize();
@@ -186,9 +208,35 @@ namespace InTheHand.Bluetooth
 #endif
         }
 
-        static Task<IReadOnlyCollection<BluetoothDevice>> PlatformScanForDevices(RequestDeviceOptions options, CancellationToken cancellationToken = default)
+        static async Task<IReadOnlyCollection<BluetoothDevice>> PlatformScanForDevices(RequestDeviceOptions options, CancellationToken cancellationToken = default)
         {
-            return Task.FromResult((IReadOnlyCollection<BluetoothDevice>)new List<BluetoothDevice>().AsReadOnly());
+            var discoveredDevices = new List<BluetoothDevice>();
+            var services = GetUuidsForFilters(options);
+
+            DiscoveredPeripheral += (sender, args) =>
+            {
+                var device = args.Peripheral;
+
+                bool shouldAdd = true;
+
+                foreach (var existingDevice in discoveredDevices)
+                {
+                    if (((CBPeripheral)existingDevice).Identifier.Equals(device.Identifier))
+                    {
+                        shouldAdd = false;
+                    }
+                }
+
+                if (shouldAdd)
+                {
+                    discoveredDevices.Add(device);
+                }
+            };
+            
+            StartScanning(services);
+
+            await Task.Delay(5000, cancellationToken);
+            return discoveredDevices.AsReadOnly();
         }
 
         static async Task<IReadOnlyCollection<BluetoothDevice>> PlatformGetPairedDevices()
@@ -200,14 +248,14 @@ namespace InTheHand.Bluetooth
 #if __IOS__
             PairedDeviceHandler deviceHandler = new PairedDeviceHandler();
             OnRetrievedPeripherals += deviceHandler.OnRetrievedPeripherals;
-            List<BluetoothDevice> devices = new List<BluetoothDevice>();
+            var devices = new List<BluetoothDevice>();
             var periphs = _manager.RetrieveConnectedPeripherals(GattServiceUuids.GenericAccess, GattServiceUuids.GenericAttribute, GattServiceUuids.DeviceInformation, GattServiceUuids.Battery);
             foreach (var p in periphs)
             {
                 devices.Add(p);
             }
 
-            return (IReadOnlyCollection<BluetoothDevice>)devices.AsReadOnly();
+            return devices.AsReadOnly();
 #else
             return (IReadOnlyCollection<BluetoothDevice>)new List<BluetoothDevice>().AsReadOnly();
 #endif
@@ -258,7 +306,7 @@ namespace InTheHand.Bluetooth
         internal static void StartScanning(CBUUID[] services)
         {
             _scanCount++;
-            System.Diagnostics.Debug.WriteLine($"StartScanning count:{_scanCount}");
+            Debug.WriteLine($"StartScanning count:{_scanCount}");
 
             if (!_manager.IsScanning)
                 _manager.ScanForPeripherals(services, new PeripheralScanningOptions { AllowDuplicatesKey = false });
@@ -268,7 +316,7 @@ namespace InTheHand.Bluetooth
         {
             _scanCount--;
 
-            System.Diagnostics.Debug.WriteLine($"StopScanning count:{_scanCount}");
+            Debug.WriteLine($"StopScanning count:{_scanCount}");
             if (_scanCount == 0 && _manager.IsScanning)
                 _manager.StopScan();
         }

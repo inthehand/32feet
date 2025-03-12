@@ -72,22 +72,9 @@ namespace InTheHand.Bluetooth.Platforms.Apple
         {
             await Task.Delay(300);
 
-            List<CBUUID> services = new List<CBUUID>();
-            if (_options != null)
-            {
-                if (!_options.AcceptAllDevices)
-                {
-                    foreach (BluetoothLEScanFilter filter in _options.Filters)
-                    {
-                        foreach (BluetoothUuid service in filter.Services)
-                        {
-                            services.Add(service);
-                        }
-                    }
-                }
-            }
+            var services = Bluetooth.GetUuidsForFilters(_options);
 
-            Bluetooth.StartScanning(services.ToArray());
+            Bluetooth.StartScanning(services);
         }
 
         public override bool CanEditRow(UITableView tableView, NSIndexPath indexPath)
