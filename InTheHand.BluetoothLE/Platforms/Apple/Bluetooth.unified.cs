@@ -150,10 +150,10 @@ namespace InTheHand.Bluetooth
                     }
                 }
             }
-            else
+            /*else
             {
                 uuids.Add(GattServiceUuids.GenericAttribute);
-            }
+            }*/
 
             return uuids.ToArray();
         }
@@ -208,34 +208,65 @@ namespace InTheHand.Bluetooth
 #endif
         }
 
-        static async Task<IReadOnlyCollection<BluetoothDevice>> PlatformScanForDevices(RequestDeviceOptions options, CancellationToken cancellationToken = default)
+        static async Task<IReadOnlyCollection<BluetoothDevice>> PlatformScanForDevices(RequestDeviceOptions options,
+            CancellationToken cancellationToken = default)
         {
             var discoveredDevices = new List<BluetoothDevice>();
             var services = GetUuidsForFilters(options);
 
             DiscoveredPeripheral += (sender, args) =>
             {
-                var device = args.Peripheral;
-
-                bool shouldAdd = true;
-
-                foreach (var existingDevice in discoveredDevices)
+                if (args.AdvertisementData.ContainsKey(new NSString("kCBAdvDataIsConnectable")) &&
+                    args.AdvertisementData["kCBAdvDataIsConnectable"].Equals(NSNumber.FromBoolean(true)))
                 {
-                    if (((CBPeripheral)existingDevice).Identifier.Equals(device.Identifier))
+
+                    var device = args.Peripheral;
+
+                    if (!string.IsNullOrEmpty(device.Name))
                     {
-                        shouldAdd = false;
+
+                        bool shouldAdd = options.Filters.Count == 0;
+
+                        foreach (var filter in options.Filters)
+                        {
+                            if (!string.IsNullOrEmpty(filter.Name))
+                            {
+                                if (device.Name.Equals(filter.Name))
+                                {
+                                    shouldAdd = true;
+                                    break;
+                                }
+                            }
+                            else if (!string.IsNullOrEmpty(filter.NamePrefix))
+                            {
+                                if (device.Name.StartsWith(filter.NamePrefix))
+                                {
+                                    shouldAdd = true;
+                                    break;
+                                }
+                            }
+                        }
+                        
+                        foreach (var existingDevice in discoveredDevices)
+                        {
+                            if (((CBPeripheral)existingDevice).Identifier.Equals(device.Identifier))
+                            {
+                                shouldAdd = false;
+                            }
+                        }
+
+                        if (shouldAdd)
+                        {
+                            discoveredDevices.Add(device);
+                        }
                     }
                 }
-
-                if (shouldAdd)
-                {
-                    discoveredDevices.Add(device);
-                }
             };
-            
+
             StartScanning(services);
 
-            await Task.Delay(5000, cancellationToken);
+            await Task.Run(async () => { await Task.Delay(5000, cancellationToken); }, cancellationToken);
+            StopScanning();
             return discoveredDevices.AsReadOnly();
         }
 
