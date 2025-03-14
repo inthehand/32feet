@@ -30,5 +30,10 @@ namespace InTheHand.Bluetooth
         /// If set the request returns all available devices with no filters applied.
         /// </summary>
         public bool AcceptAllDevices { get; set; }
+
+        /// <summary>
+        /// Optional time after which to stop scanning for devices. Currently only supported on Linux.
+        /// </summary>
+        public TimeSpan? Timeout { get; set; }
     }
 }
