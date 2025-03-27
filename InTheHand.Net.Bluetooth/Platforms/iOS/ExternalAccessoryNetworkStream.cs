@@ -16,9 +16,11 @@ namespace InTheHand.Net.Sockets.iOS
     {
         private readonly NSInputStream _inputStream;
         private readonly NSOutputStream _outputStream;
-        private readonly MemoryStream _outputBuffer = new MemoryStream();
+        private MemoryStream _outputBuffer = null;
+        private int _outputBufferOffset = 0;
         private readonly EAStreamDelegate _delegate;
         private bool _streamReady = false;
+        private readonly object _lockObject = new object();
 
         internal ExternalAccessoryNetworkStream(EASession session)
         {
@@ -43,24 +45,36 @@ namespace InTheHand.Net.Sockets.iOS
 
             public override void HandleEvent(NSStream theStream, NSStreamEvent streamEvent)
             {
-                if (theStream == _stream._outputStream && streamEvent == NSStreamEvent.HasSpaceAvailable)
+                if (theStream == _stream._outputStream)
                 {
-                    _stream._streamReady = true;
-                    _stream.Flush();
-                    
+                    switch (streamEvent)
+                    {
+                        case NSStreamEvent.OpenCompleted:
+                            _stream._streamReady = true;
+                            break;
+                        case NSStreamEvent.HasSpaceAvailable:
+                            //Make sure that nobody else changes the _outputBuffer while writing to the accessory.
+                            lock (_stream._lockObject)
+                            {
+                              _stream.WriteToAccessory();
+                            }
+                            break;
+                        default:
+                            break;
+                    }
                 }
             }
         }
 
         protected override void Dispose(bool disposing)
         {
-            if(_inputStream is object)
+            if(_inputStream != null)
             {
                 _inputStream.Close();
                 _inputStream.Dispose();
             }
 
-            if(_outputStream is object)
+            if(_outputStream != null)
             {
                 _outputStream.Close();
                 _outputStream.Unschedule(NSRunLoop.Current, NSRunLoopMode.Default);
@@ -82,13 +96,8 @@ namespace InTheHand.Net.Sockets.iOS
         
         public override void Flush()
         {
-            if (_outputBuffer is object && _outputBuffer.Length > 0)
-            {
-                byte[] buffer = new byte[_outputBuffer.Length];
-                _outputBuffer.Read(buffer, 0, buffer.Length);
-                _outputBuffer.Dispose();
-                _outputStream.Write(buffer);
-            }
+          //As this method can be called by external code, it should not contain any
+          //functions that affect the _outputStream. 
         }
 
         public override int Read(byte[] buffer, int offset, int count)
@@ -108,13 +117,80 @@ namespace InTheHand.Net.Sockets.iOS
 
         public override void Write(byte[] buffer, int offset, int count)
         {
-            if (_streamReady)
+            //Make sure that the delegate does not change the _outputBuffer while the
+            //application layer is writing data to it.
+            lock (_lockObject)
             {
-                _outputStream.Write(buffer, offset, (nuint)count);
+                if (_outputBuffer == null)
+                {
+                    _outputBuffer = new MemoryStream();
+                }
+                else
+                {
+                    throw new InvalidDataException("InTheHand - Write: The previous request is still in progress.");
+                }
+                //Write the incoming data to the _outputBuffer and set the offset to 0.
+                //This is the initial state.
+                _outputBuffer.Write(buffer, offset, count);
+                _outputBufferOffset = 0;
+
+                //If no request is being handled and the output stream is writable,
+                //write the data directly to the output stream
+                if (_streamReady)
+                {
+                    if (_outputStream.HasSpaceAvailable())
+                    {
+                      //Set the following flag to “false” to ensure that each subsequent request
+                      //waits until this request is completed.
+                      _streamReady = false;
+                      WriteToAccessory();
+                    }
+                    else
+                    {
+                        throw new InvalidDataException("InTheHand - Write: Stream is ready but there is no space available!");
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// According to Apple's Stream Programming Guide
+        /// (https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/Streams/Articles/WritingOutputStreams.html#//apple_ref/doc/uid/20002274-1002233)
+        /// This method can be called either by the application layer or by the delegate.
+        /// If it is called by the delegate, this means that the output stream is ready to send more data.
+        /// If the data is too large to be sent in one go, it can be sent in several packets. As soon as
+        /// no more data is written to the output stream in the context of the delegate, it stops sending
+        /// the “HasSpaceAvailable” event. At this point, the _streamReady flag is set to true so that the
+        /// application layer can write to the output stream again.
+        /// </summary>
+        internal void WriteToAccessory()
+        {
+            if (_outputBuffer != null && _outputBuffer.Length > 0)
+            {
+                //Get the amount of data to write to the accessory.
+                var bufferLength = _outputBuffer.Length - _outputBufferOffset;
+                //Create a buffer with the capacity of the amount of the data to be written.
+                byte[] buffer = new byte[bufferLength];
+                //Set the position in the _outputBuffer to the current offset.
+                _outputBuffer.Seek(_outputBufferOffset, SeekOrigin.Begin);
+                //Copy the data from the _outputBuffer to the previously created buffer.
+                _outputBuffer.Read(buffer, 0, buffer.Length);
+                //Write the buffer to the output stream of the accessory.
+                var lengthWritten = _outputStream.Write(buffer);
+                //Recalculate the offset of the data already written to the output stream for the _outputBuffer. 
+                _outputBufferOffset += (int)lengthWritten;
+                //If all data of the _outputBuffer has been written to the output stream, the _outputBuffer is
+                //disposed.
+                if (_outputBufferOffset >= _outputBuffer.Length)
+                {
+                    _outputBuffer.Dispose();
+                    _outputBuffer = null;
+                }
             }
             else
             {
-                _outputBuffer.Write(buffer, offset, count);
+              //Set following flag to true to enable the application layer to write further data.
+              _streamReady = true;
             }
         }
 
