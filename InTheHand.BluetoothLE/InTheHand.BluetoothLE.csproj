@@ -20,7 +20,7 @@
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<Copyright>Copyright (c) 2004-2025 In The Hand Ltd</Copyright>
 		<Description>32feet.NET is an open-source project to make personal area networking technologies such as Bluetooth easily accessible from .NET code.</Description>
-		<FileVersion>4.0.39.5225</FileVersion>
+		<FileVersion>4.0.39.5328</FileVersion>
 		<AssemblyVersion>4.0.0.0</AssemblyVersion>
 		<AssemblyName>InTheHand.BluetoothLE</AssemblyName>
 		<PackageIconUrl></PackageIconUrl>
@@ -31,7 +31,7 @@
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<RootNamespace>InTheHand.Bluetooth</RootNamespace>
 		<PackageIcon>32feet-package-icon.png</PackageIcon>
-		<PackageReleaseNotes>Collected fixes since last release. .NET 8.0 targets added.</PackageReleaseNotes>
+		<PackageReleaseNotes>ScanForDevicesAsync for iOS</PackageReleaseNotes>
 		<SignAssembly Condition=" '$(Configuration)' == 'Release' ">true</SignAssembly>
 		<AssemblyOriginatorKeyFile Condition=" '$(Configuration)' == 'Release' ">..\\InTheHand.snk</AssemblyOriginatorKeyFile>
 		<GenerateDocumentationFile Condition=" '$(Configuration)' == 'Release' ">True</GenerateDocumentationFile>
