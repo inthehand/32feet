@@ -8,6 +8,7 @@
 - IOBluetooth/IOBluetoothUI bindings for Xamarin Mac
 - IrDA
 - Object Exchange (Obex)
+- NFC (Reader)
 
 Bluetooth support requires .NET Framework v4.6.1 or later for desktop Windows 7, 8, 10 and 11. Android and Apple macOS and iOS are also supported using Xamarin or .NET 6.0 and above. Full platform information is [listed in the Wiki](https://github.com/inthehand/32feet/wiki#platforms).
 
@@ -44,6 +45,9 @@ Downloads are available here on the _Downloads_ tab. Packages are also available
 
 - InTheHand.Net.Obex (v4.x)
 [![NuGet version](https://badge.fury.io/nu/InTheHand.Net.Obex.svg)](https://badge.fury.io/nu/InTheHand.Net.Obex)
+
+- InTheHand.Nfc (coming soon)
+[![NuGet version](https://badge.fury.io/nu/InTheHand.Nfc.svg)](https://badge.fury.io/nu/InTheHand.Nfc)
 
 - 32feet.NET - Legacy (v3.x)
 [![NuGet version](https://badge.fury.io/nu/32feet.NET.svg)](https://badge.fury.io/nu/32feet.NET)
