@@ -25,6 +25,12 @@ partial class NdefReader
 
     private Task PlatformScanAsync(NdefScanOptions options = null)
     {
+        if (!NFCReaderSession.ReadingAvailable)
+            throw new InvalidOperationException("NFC scanning not available");
+        
+        if (_session.Ready)
+            throw new InvalidOperationException("Session already started");
+        
         _session?.BeginSession();
 
         if (options?.Signal != null)

@@ -24,7 +24,8 @@
 		<ApplicationTitle>NfcReaderMaui</ApplicationTitle>
 
 		<!-- App Identifier -->
-		<ApplicationId>com.companyname.nfcreadermaui</ApplicationId>
+		<ApplicationId>com.inthehand.nfcsample</ApplicationId>
+		<CodesignEntitlements>Platforms\iOS\Entitlements.plist</CodesignEntitlements>
 
 		<!-- Versions -->
 		<ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
@@ -36,6 +37,11 @@
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</SupportedOSPlatformVersion>
 		<TargetPlatformMinVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</TargetPlatformMinVersion>
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'tizen'">6.5</SupportedOSPlatformVersion>
+	</PropertyGroup>
+
+	<PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+	  <CodesignKey>iPhone Developer</CodesignKey>
+	  <CodesignProvision>NFC Sample Development</CodesignProvision>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -64,6 +70,11 @@
 
 	<ItemGroup>
 	  <ProjectReference Include="..\..\InTheHand.Nfc\InTheHand.Nfc.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Remove="Platforms\iOS\Entitlements.plist" />
+	  <BundleResource Include="Platforms\iOS\Entitlements.plist" />
 	</ItemGroup>
 
 </Project>

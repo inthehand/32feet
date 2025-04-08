@@ -35,6 +35,8 @@ namespace NfcReaderMaui
                         DisplayAlert("NDEF", $"{record.RecordType} {record.Data}", "OK");
                     }
                 }
+                
+                _cts.Cancel();
             });
         }
 
