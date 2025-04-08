@@ -2,10 +2,11 @@
 //
 // InTheHand.Nfc.NdefReader
 // 
-// Copyright (c) 2020 In The Hand Ltd, All rights reserved.
+// Copyright (c) 2020-2025 In The Hand Ltd, All rights reserved.
 // This source code is licensed under the MIT License
 
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace InTheHand.Nfc;
@@ -19,21 +20,25 @@ public sealed partial class NdefReader : IDisposable
 {
     private bool _disposed;
 
-    public Task ScanAsync(NdefScanOptions options = null)
+    /// <summary>
+    /// Start scanning for NDEF tags.
+    /// </summary>
+    /// <param name="token">A CancellationToken to stop scanning.</param>
+    /// <returns></returns>
+    public Task ScanAsync(CancellationToken cancellationToken = default)
     {
-        return PlatformScanAsync(options);
+        return PlatformScanAsync(cancellationToken);
     }
 
+    /// <summary>
+    /// Notify that a new reading is available.
+    /// </summary>
     public event EventHandler<NdefReadingEventArgs> Reading;
 
+    /// <summary>
+    /// Notify that an error happened during reading.
+    /// </summary>
     public event EventHandler Error;
-
-    // // TODO: override finalizer only if 'Dispose(bool disposing)' has code to free unmanaged resources
-    // ~NdefReader()
-    // {
-    //     // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
-    //     Dispose(disposing: false);
-    // }
 
     public void Dispose()
     {

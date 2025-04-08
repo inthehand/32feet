@@ -17,16 +17,11 @@ partial class NdefReader
     private ProximityDevice _proximityDevice = ProximityDevice.GetDefault();
     private long _subscriptionReference;
 
-    private Task PlatformScanAsync(NdefScanOptions options = null)
+    private Task PlatformScanAsync(CancellationToken cancellationToken)
     {
         string subscription = "NDEF";
-        if (options != null)
-        {
-            options.Signal.Register(Unsubscribe);
-
-            if (!string.IsNullOrEmpty(options.RecordType))
-                subscription = options.RecordType;
-        }
+        
+        cancellationToken.Register(Unsubscribe);
 
         _subscriptionReference = _proximityDevice.SubscribeForMessage(subscription, MessageReceived);
 

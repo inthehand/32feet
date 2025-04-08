@@ -6,6 +6,7 @@
 // This source code is licensed under the MIT License
 
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using CoreNFC;
 using Foundation;
@@ -14,35 +15,39 @@ namespace InTheHand.Nfc;
 
 partial class NdefReader
 {
-    private readonly NFCNdefReaderSession _session;
+    private NFCNdefReaderSession _session;
     private readonly ReaderSessionDelegate _sessionDelegate;
 
     public NdefReader()
     {
         _sessionDelegate = new ReaderSessionDelegate(this);
-        _session = new NFCNdefReaderSession(_sessionDelegate, null, false);
     }
 
-    private Task PlatformScanAsync(NdefScanOptions options = null)
+    private Task PlatformScanAsync(CancellationToken cancellationToken)
     {
         if (!NFCReaderSession.ReadingAvailable)
             throw new InvalidOperationException("NFC scanning not available");
         
-        if (_session.Ready)
+        if (_session is { Ready: true })
             throw new InvalidOperationException("Session already started");
         
-        _session?.BeginSession();
+        // if a default cancellation token end session after single read
+        _session ??= new NFCNdefReaderSession(_sessionDelegate, null, !cancellationToken.CanBeCanceled);
 
-        if (options?.Signal != null)
+        _session.BeginSession();
+
+        if (cancellationToken.CanBeCanceled)
         {
-            options.Signal.Register(CancelScan);
+            cancellationToken.Register(CancelScan);
         }
+
         return Task.CompletedTask;
     }
 
     private void CancelScan()
     {
         _session.InvalidateSession();
+        _session = null;
     }
 
     private class ReaderSessionDelegate(NdefReader owner) : NFCNdefReaderSessionDelegate

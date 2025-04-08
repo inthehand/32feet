@@ -6,13 +6,14 @@
 // This source code is licensed under the MIT License
 
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace InTheHand.Nfc;
 
 partial class NdefReader
 {
-    private Task PlatformScanAsync(NdefScanOptions options = null)
+    private Task PlatformScanAsync(CancellationToken cancellationToken)
     {
         return Task.FromException(new PlatformNotSupportedException());
     }

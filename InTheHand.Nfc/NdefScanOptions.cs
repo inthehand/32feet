@@ -10,13 +10,8 @@ using System.Threading;
 namespace InTheHand.Nfc;
 
 /// <preliminary/>
-public class NdefScanOptions
+public class ndefscNdefScanOptions
 {
-    public string Id { get; set; }
-
-    public string RecordType { get; set; }
-
-    public string MediaType { get; set; }
 
     public CancellationToken Signal { get; set; }
 }

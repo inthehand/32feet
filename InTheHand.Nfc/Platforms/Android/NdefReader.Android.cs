@@ -7,6 +7,7 @@
 
 using System;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Android.App;
 using Android.Nfc;
@@ -74,9 +75,9 @@ partial class NdefReader : Java.Lang.Object, NfcAdapter.IReaderCallback
         return builder.ToString();
     }
 
-    private Task PlatformScanAsync(NdefScanOptions options = null)
+    private Task PlatformScanAsync(CancellationToken cancellationToken)
     {
-        options?.Signal.Register(CancelScan);
+        cancellationToken.Register(CancelScan);
         s_adapter.EnableReaderMode(Platform.CurrentActivity, this,
             NfcReaderFlags.NfcA | NfcReaderFlags.NfcB | NfcReaderFlags.NfcF | NfcReaderFlags.NfcV, null);
         return Task.CompletedTask;
