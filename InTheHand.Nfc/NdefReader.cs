@@ -23,7 +23,7 @@ public sealed partial class NdefReader : IDisposable
     /// <summary>
     /// Start scanning for NDEF tags.
     /// </summary>
-    /// <param name="token">A CancellationToken to stop scanning.</param>
+    /// <param name="cancellationToken">A CancellationToken to stop scanning.</param>
     /// <returns></returns>
     public Task ScanAsync(CancellationToken cancellationToken = default)
     {

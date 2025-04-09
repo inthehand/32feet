@@ -21,7 +21,21 @@ namespace InTheHand.Nfc;
 
 partial class NdefReader : Java.Lang.Object, NfcAdapter.IReaderCallback
 {
-    static readonly NfcAdapter s_adapter = NfcAdapter.GetDefaultAdapter(Application.Context);
+    private static readonly NfcAdapter SAdapter = NfcAdapter.GetDefaultAdapter(Application.Context);
+
+    private readonly Activity _activity;
+
+    private bool _autoCancel;
+    
+    public NdefReader(Activity activity)
+    {
+        _activity = activity;
+    }
+
+    public NdefReader()
+    {
+        _activity = Platform.CurrentActivity;
+    }
 
     void NfcAdapter.IReaderCallback.OnTagDiscovered(Tag tag)
     {
@@ -52,9 +66,17 @@ partial class NdefReader : Java.Lang.Object, NfcAdapter.IReaderCallback
                 }
                 catch (Exception e)
                 {
+                    Error?.Invoke(this, EventArgs.Empty);
                     break;
                 }
-
+                finally
+                {
+                    // if no valid cancellation token, end the session after first NFC scan
+                    if (_autoCancel)
+                    {
+                        CancelScan();
+                    }
+                }
             }
         }
     }
@@ -66,7 +88,7 @@ partial class NdefReader : Java.Lang.Object, NfcAdapter.IReaderCallback
         foreach (var b in id)
         {
             builder.Append(b.ToString("X2"));
-            builder.Append(":");
+            builder.Append(':');
         }
 
         if (builder.Length > 0)
@@ -77,15 +99,23 @@ partial class NdefReader : Java.Lang.Object, NfcAdapter.IReaderCallback
 
     private Task PlatformScanAsync(CancellationToken cancellationToken)
     {
-        cancellationToken.Register(CancelScan);
-        s_adapter.EnableReaderMode(Platform.CurrentActivity, this,
+        if (cancellationToken.CanBeCanceled)
+        {
+            cancellationToken.Register(CancelScan);
+        }
+        else
+        {
+            _autoCancel = true;
+        }
+
+        SAdapter.EnableReaderMode(_activity, this,
             NfcReaderFlags.NfcA | NfcReaderFlags.NfcB | NfcReaderFlags.NfcF | NfcReaderFlags.NfcV, null);
         return Task.CompletedTask;
     }
 
     private void CancelScan()
     {
-        s_adapter.DisableReaderMode(Platform.CurrentActivity);
+        SAdapter.DisableReaderMode(_activity);
     }
 
     protected override void Dispose(bool disposing)

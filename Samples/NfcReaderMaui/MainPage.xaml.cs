@@ -47,12 +47,8 @@ namespace NfcReaderMaui
             _reader.Error += Reader_Error;
 
            _cts = new CancellationTokenSource();
-            var options = new NdefScanOptions
-            {
-                Signal = _cts.Token
-            };
 
-            await _reader.ScanAsync(options);
+            await _reader.ScanAsync(_cts.Token);
         }
     }
 
