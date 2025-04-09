@@ -15,31 +15,36 @@ namespace InTheHand.Nfc;
 
 partial class NdefReader
 {
-    private NFCNdefReaderSession _session;
     private readonly ReaderSessionDelegate _sessionDelegate;
-
+    private readonly NFCNdefReaderSession _session;
+    private CancellationToken _cancellationToken;
+    
     public NdefReader()
     {
         _sessionDelegate = new ReaderSessionDelegate(this);
+        _session = new NFCNdefReaderSession(_sessionDelegate, null, false);
+
     }
 
     private Task PlatformScanAsync(CancellationToken cancellationToken)
     {
         if (!NFCReaderSession.ReadingAvailable)
+        {
             throw new InvalidOperationException("NFC scanning not available");
-        
-        if (_session is { Ready: true })
+        }
+
+        if (_session.Ready)
+        {
             throw new InvalidOperationException("Session already started");
-        
-        // if a default cancellation token end session after single read
-        _session ??= new NFCNdefReaderSession(_sessionDelegate, null, !cancellationToken.CanBeCanceled);
+        }
+
+        _cancellationToken = cancellationToken;
+        if (_cancellationToken.CanBeCanceled)
+        {
+            _cancellationToken.Register(CancelScan);
+        }
 
         _session.BeginSession();
-
-        if (cancellationToken.CanBeCanceled)
-        {
-            cancellationToken.Register(CancelScan);
-        }
 
         return Task.CompletedTask;
     }
@@ -47,7 +52,6 @@ partial class NdefReader
     private void CancelScan()
     {
         _session.InvalidateSession();
-        _session = null;
     }
 
     private class ReaderSessionDelegate(NdefReader owner) : NFCNdefReaderSessionDelegate
@@ -64,6 +68,11 @@ partial class NdefReader
                 }
 
                 owner.Reading?.Invoke(this, new NdefReadingEventArgs(string.Empty, newMessage));
+
+                if (!owner._cancellationToken.CanBeCanceled)
+                {
+                    owner.CancelScan();
+                }
             }
         }
 
@@ -161,17 +170,23 @@ partial class NdefReader
         }
     }
 
+    
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+    
+    ~NdefReader()
+    {
+        Dispose(false);
+    }
+    
     private void Dispose(bool disposing)
     {
-        if (!_disposed)
-        {
-            if (disposing)
-            {
-                // TODO: dispose managed state (managed objects)
-            }
+        if (_disposed) return;
 
-            CancelScan();
-            _disposed = true;
-        }
+        _disposed = true;
+        CancelScan();
     }
 }

@@ -25,6 +25,7 @@ public sealed partial class NdefReader : IDisposable
     /// </summary>
     /// <param name="cancellationToken">A CancellationToken to stop scanning.</param>
     /// <returns></returns>
+    /// <remarks>If no cancellation token is passed the reader will end the session after the first Nfc tag is scanned.</remarks>
     public Task ScanAsync(CancellationToken cancellationToken = default)
     {
         return PlatformScanAsync(cancellationToken);
@@ -39,11 +40,4 @@ public sealed partial class NdefReader : IDisposable
     /// Notify that an error happened during reading.
     /// </summary>
     public event EventHandler Error;
-
-    public void Dispose()
-    {
-        // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
-        Dispose(disposing: true);
-        GC.SuppressFinalize(this);
-    }
 }

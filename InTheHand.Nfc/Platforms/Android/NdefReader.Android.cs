@@ -6,6 +6,7 @@
 // This source code is licensed under the MIT License
 
 using System;
+using System.Diagnostics;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -13,28 +14,21 @@ using Android.App;
 using Android.Nfc;
 using Android.Nfc.Tech;
 using Microsoft.Maui.ApplicationModel;
+using Activity = Android.App.Activity;
 
 [assembly: UsesPermission("android.permission.NFC")]
 [assembly: UsesFeature("android.hardware.nfc", Required = false)]
 
 namespace InTheHand.Nfc;
 
-partial class NdefReader : Java.Lang.Object, NfcAdapter.IReaderCallback
+partial class NdefReader(Activity activity) : Java.Lang.Object, NfcAdapter.IReaderCallback
 {
     private static readonly NfcAdapter SAdapter = NfcAdapter.GetDefaultAdapter(Application.Context);
 
-    private readonly Activity _activity;
-
     private bool _autoCancel;
-    
-    public NdefReader(Activity activity)
-    {
-        _activity = activity;
-    }
 
-    public NdefReader()
+    public NdefReader() : this(Platform.CurrentActivity)
     {
-        _activity = Platform.CurrentActivity;
     }
 
     void NfcAdapter.IReaderCallback.OnTagDiscovered(Tag tag)
@@ -44,38 +38,38 @@ partial class NdefReader : Java.Lang.Object, NfcAdapter.IReaderCallback
 
         foreach (var tech in techList)
         {
-            if (tech == "android.nfc.tech.Ndef")
+            if (tech != "android.nfc.tech.Ndef") continue;
+            
+            var serialBytes = tag.GetId();
+            var serial = FormatSerialNumber(serialBytes);
+
+            var ndef = Ndef.Get(tag);
+
+            // this shouldn't happen given the tech property
+            if (ndef == null)
+                break;
+
+            try
             {
-                var serialBytes = tag.GetId();
-                var serial = FormatSerialNumber(serialBytes);
+                ndef.Connect();
+                var msg = new NdefMessage(ndef.NdefMessage);
+                ndef.Dispose();
 
-                var ndef = Ndef.Get(tag);
-
-                // this shouldn't happen given the tech property
-                if (ndef == null)
-                    break;
-
-                try
+                Reading?.Invoke(this, new NdefReadingEventArgs(serial, msg));
+                break;
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine(e);
+                Error?.Invoke(this, EventArgs.Empty);
+                break;
+            }
+            finally
+            {
+                // if no valid cancellation token, end the session after first NFC scan
+                if (_autoCancel)
                 {
-                    ndef.Connect();
-                    var msg = new NdefMessage(ndef.NdefMessage);
-                    ndef.Dispose();
-
-                    Reading?.Invoke(this, new NdefReadingEventArgs(serial, msg));
-                    break;
-                }
-                catch (Exception e)
-                {
-                    Error?.Invoke(this, EventArgs.Empty);
-                    break;
-                }
-                finally
-                {
-                    // if no valid cancellation token, end the session after first NFC scan
-                    if (_autoCancel)
-                    {
-                        CancelScan();
-                    }
+                    CancelScan();
                 }
             }
         }
@@ -108,25 +102,25 @@ partial class NdefReader : Java.Lang.Object, NfcAdapter.IReaderCallback
             _autoCancel = true;
         }
 
-        SAdapter.EnableReaderMode(_activity, this,
+        SAdapter.EnableReaderMode(activity, this,
             NfcReaderFlags.NfcA | NfcReaderFlags.NfcB | NfcReaderFlags.NfcF | NfcReaderFlags.NfcV, null);
         return Task.CompletedTask;
     }
 
     private void CancelScan()
     {
-        SAdapter.DisableReaderMode(_activity);
+        SAdapter.DisableReaderMode(activity);
     }
-
+    
+    ~NdefReader()
+    {
+        Dispose(false);
+    }
+    
     protected override void Dispose(bool disposing)
     {
         if (!_disposed)
         {
-            if (disposing)
-            {
-                // TODO: dispose managed state (managed objects)
-            }
-
             CancelScan();
 
             _disposed = true;

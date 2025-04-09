@@ -48,6 +48,17 @@ partial class NdefReader
         Reading?.Invoke(this, new NdefReadingEventArgs(string.Empty, ndefMessage));
     }
 
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+    
+    ~NdefReader()
+    {
+        Dispose(false);
+    }
+
     private void Dispose(bool disposing)
     {
         if (!_disposed)
