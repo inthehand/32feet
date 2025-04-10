@@ -18,6 +18,6 @@ jobs:
       with:
         dotnet-version: 8.0.x
     - name: Restore dependencies
-      run: dotnet restore InTheHand.Nfc.Build.slnf
+      run: dotnet restore InTheHand.Nfc/InTheHand.Nfc.csproj
     - name: Build
-      run: dotnet build InTheHand.Nfc.Build.slnf --no-restore -m -property:Configuration=Release
+      run: dotnet build InTheHand.Nfc/InTheHand.Nfc.csproj --no-restore -m -property:Configuration=Release
