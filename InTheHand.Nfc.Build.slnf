@@ -1,0 +1,8 @@
+{
+  "solution": {
+    "path": "InTheHand.Nfc.sln",
+    "projects": [
+      "InTheHand.Nfc\\InTheHand.Nfc.csproj"
+    ]
+  }
+}

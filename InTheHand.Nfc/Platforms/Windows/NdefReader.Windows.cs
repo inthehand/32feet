@@ -7,6 +7,7 @@
 
 using System;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading;
 using System.Threading.Tasks;
 using Windows.Networking.Proximity;
 
@@ -19,7 +20,7 @@ partial class NdefReader
 
     private Task PlatformScanAsync(CancellationToken cancellationToken)
     {
-        string subscription = "NDEF";
+        var subscription = "NDEF";
         
         cancellationToken.Register(Unsubscribe);
 
