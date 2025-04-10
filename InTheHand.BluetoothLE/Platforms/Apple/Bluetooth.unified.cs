@@ -138,9 +138,9 @@ namespace InTheHand.Bluetooth
 
         internal static CBUUID[] GetUuidsForFilters(RequestDeviceOptions options)
         {
-            List<CBUUID> uuids = new List<CBUUID>();
+            var uuids = new List<CBUUID>();
 
-            if (!options.AcceptAllDevices)
+            if (options is { AcceptAllDevices: false })
             {
                 foreach (BluetoothLEScanFilter filter in options.Filters)
                 {
@@ -150,15 +150,11 @@ namespace InTheHand.Bluetooth
                     }
                 }
             }
-            /*else
-            {
-                uuids.Add(GattServiceUuids.GenericAttribute);
-            }*/
 
             return uuids.ToArray();
         }
         
-        static async Task<BluetoothDevice> PlatformRequestDevice(RequestDeviceOptions options)
+        private static async Task<BluetoothDevice> PlatformRequestDevice(RequestDeviceOptions options)
         {
             Initialize();
 
@@ -208,7 +204,7 @@ namespace InTheHand.Bluetooth
 #endif
         }
 
-        static async Task<IReadOnlyCollection<BluetoothDevice>> PlatformScanForDevices(RequestDeviceOptions options,
+        private static async Task<IReadOnlyCollection<BluetoothDevice>> PlatformScanForDevices(RequestDeviceOptions options,
             CancellationToken cancellationToken = default)
         {
             var discoveredDevices = new List<BluetoothDevice>();
@@ -225,9 +221,9 @@ namespace InTheHand.Bluetooth
                     if (!string.IsNullOrEmpty(device.Name))
                     {
 
-                        bool shouldAdd = options.Filters.Count == 0;
+                        bool shouldAdd = options?.Filters.Count == 0;
 
-                        foreach (var filter in options.Filters)
+                        foreach (var filter in options?.Filters)
                         {
                             if (!string.IsNullOrEmpty(filter.Name))
                             {
