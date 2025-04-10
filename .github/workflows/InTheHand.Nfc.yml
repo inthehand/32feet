@@ -17,6 +17,8 @@ jobs:
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 8.0.x
+    - name: Add .NET Workloads
+      run: dotnet workload install maui
     - name: Restore dependencies
       run: dotnet restore InTheHand.Nfc/InTheHand.Nfc.csproj
     - name: Build
