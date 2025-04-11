@@ -43,9 +43,9 @@
   <ItemGroup>
 	  <None Include="..\Misc\32feet-package-icon.png">
 		  <Pack>True</Pack>
-		  <PackagePath>nuget</PackagePath>
+		  <PackagePath></PackagePath>
 	  </None>
-	  <None Include="README.md" Pack="True"/>
+	  <None Include="README.md" Pack="true" PackagePath="\" />
 	  <Compile Remove="Platforms\**\*.*" />
 	  <None Include="Platforms\**\*.*" />
   </ItemGroup>
