@@ -13,7 +13,6 @@ using System.Threading.Tasks;
 using Android.App;
 using Android.Nfc;
 using Android.Nfc.Tech;
-using Microsoft.Maui.ApplicationModel;
 using Activity = Android.App.Activity;
 
 [assembly: UsesPermission("android.permission.NFC")]
@@ -27,7 +26,7 @@ partial class NdefReader(Activity activity) : Java.Lang.Object, NfcAdapter.IRead
 
     private bool _autoCancel;
 
-    public NdefReader() : this(Platform.CurrentActivity)
+    public NdefReader() : this(AndroidActivity.CurrentActivity)
     {
     }
 
