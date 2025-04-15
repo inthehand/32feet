@@ -6,10 +6,11 @@
 		<Company>In The Hand Ltd</Company>
 		<Authors>Peter Foot</Authors>
 		<Product>32feet.NET</Product>
-		<Version>1.0.0</Version>
+		<Version>1.0.1</Version>
 		<RepositoryUrl>https://github.com/inthehand/32feet</RepositoryUrl>
 		<PublishRepositoryUrl>true</PublishRepositoryUrl>
 		<DebugSymbols>true</DebugSymbols>
+		<DebugType>portable</DebugType>
 		<IncludeSymbols>true</IncludeSymbols>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 		<PackageProjectUrl>https://github.com/inthehand/32feet</PackageProjectUrl>
@@ -27,7 +28,9 @@
 		<PackageId>InTheHand.Nfc</PackageId>
 		<PackageReleaseNotes>.NET 8.0 Migration</PackageReleaseNotes>
 		<PackageIcon>32feet-package-icon.png</PackageIcon>
-		<RepositoryType>GIT</RepositoryType>
+		<RepositoryUrl>https://github.com/inthehand/32feet</RepositoryUrl>
+		<RepositoryType>git</RepositoryType>
+		<PublishRepositoryUrl>true</PublishRepositoryUrl>
 		<AssemblyOriginatorKeyFile Condition=" '$(Configuration)' == 'Release' ">..\\InTheHand.snk</AssemblyOriginatorKeyFile>
 	</PropertyGroup>
 
