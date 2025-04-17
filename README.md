@@ -46,7 +46,7 @@ Downloads are available here on the _Downloads_ tab. Packages are also available
 - InTheHand.Net.Obex (v4.x)
 [![NuGet version](https://badge.fury.io/nu/InTheHand.Net.Obex.svg)](https://badge.fury.io/nu/InTheHand.Net.Obex)
 
-- InTheHand.Nfc (coming soon)
+- InTheHand.Nfc
 [![NuGet version](https://badge.fury.io/nu/InTheHand.Nfc.svg)](https://badge.fury.io/nu/InTheHand.Nfc)
 
 - 32feet.NET - Legacy (v3.x)
