@@ -68,7 +68,13 @@ partial class NdefReader(Activity activity) : Java.Lang.Object, NfcAdapter.IRead
                 // if no valid cancellation token, end the session after first NFC scan
                 if (_autoCancel)
                 {
-                    CancelScan();
+                    Task.Run(async () =>
+                    {
+                        // add a pause to avoid double scanning
+                        await Task.Delay(1000);
+                        CancelScan();
+                    });
+                    
                 }
             }
         }

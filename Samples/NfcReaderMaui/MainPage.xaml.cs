@@ -22,21 +22,21 @@ namespace NfcReaderMaui
 
         private void Reader_Reading(object sender, NdefReadingEventArgs e)
         {
-            Dispatcher.Dispatch(() =>
+            Dispatcher.Dispatch(async () =>
             {
                 foreach (var record in e.Message.Records)
                 {
                     if (record.RecordType == NdefRecordType.Mime)
                     {
-                        DisplayAlert("NDEF", $"{record.MediaType} {((byte[])record.Data).Length}", "OK");
+                        await DisplayAlert("NDEF", $"{record.MediaType} {((byte[])record.Data).Length}", "OK");
                     }
                     else
                     {
-                        DisplayAlert("NDEF", $"{record.RecordType} {record.Data}", "OK");
+                        await DisplayAlert("NDEF", $"{record.RecordType} {record.Data}", "OK");
                     }
                 }
-                
-                _cts.Cancel();
+
+                await _cts.CancelAsync();
             });
         }
 
