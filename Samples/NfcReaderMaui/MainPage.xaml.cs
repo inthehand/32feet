@@ -50,6 +50,12 @@ namespace NfcReaderMaui
 
             await _reader.ScanAsync(_cts.Token);
         }
+
+        protected override void OnDisappearing()
+        {
+            _reader.Dispose();
+            base.OnDisappearing();
+        }
     }
 
 }

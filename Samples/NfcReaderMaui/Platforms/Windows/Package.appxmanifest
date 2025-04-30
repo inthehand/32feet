@@ -41,6 +41,7 @@
 
   <Capabilities>
     <rescap:Capability Name="runFullTrust" />
+    <DeviceCapability Name="proximity"/>
   </Capabilities>
 
 </Package>

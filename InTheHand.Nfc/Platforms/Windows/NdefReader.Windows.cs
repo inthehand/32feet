@@ -15,16 +15,17 @@ namespace InTheHand.Nfc;
 
 partial class NdefReader
 {
+    private const string NdefMessageType = "NDEF";
     private ProximityDevice _proximityDevice = ProximityDevice.GetDefault();
     private long _subscriptionReference;
 
     private Task PlatformScanAsync(CancellationToken cancellationToken)
     {
-        var subscription = "NDEF";
+        if (_proximityDevice is null)
+            throw new InvalidOperationException("NFC Scanning unavailable");
         
         cancellationToken.Register(Unsubscribe);
-
-        _subscriptionReference = _proximityDevice.SubscribeForMessage(subscription, MessageReceived);
+        _subscriptionReference = _proximityDevice.SubscribeForMessage(NdefMessageType, MessageReceived);
 
         return Task.CompletedTask;
     }
