@@ -16,13 +16,12 @@ namespace InTheHand.Nfc;
 partial class NdefReader
 {
     private readonly ReaderSessionDelegate _sessionDelegate;
-    private readonly NFCNdefReaderSession _session;
+    private NFCNdefReaderSession _session;
     private CancellationToken _cancellationToken;
     
     public NdefReader()
     {
         _sessionDelegate = new ReaderSessionDelegate(this);
-        _session = new NFCNdefReaderSession(_sessionDelegate, null, false);
 
     }
 
@@ -33,10 +32,12 @@ partial class NdefReader
             throw new InvalidOperationException("NFC scanning not available");
         }
 
-        if (_session.Ready)
+        if (_session is { Ready: true })
         {
-            throw new InvalidOperationException("Session already started");
+            throw new InvalidOperationException("Session already active");
         }
+
+        _session = new NFCNdefReaderSession(_sessionDelegate, null, !_cancellationToken.CanBeCanceled);
 
         _cancellationToken = cancellationToken;
         if (_cancellationToken.CanBeCanceled)
@@ -51,7 +52,8 @@ partial class NdefReader
 
     private void CancelScan()
     {
-        _session.InvalidateSession();
+        if(_session.Ready)
+            _session.InvalidateSession();
     }
 
     private class ReaderSessionDelegate(NdefReader owner) : NFCNdefReaderSessionDelegate
@@ -68,11 +70,6 @@ partial class NdefReader
                 }
 
                 owner.Reading?.Invoke(this, new NdefReadingEventArgs(string.Empty, newMessage));
-
-                if (!owner._cancellationToken.CanBeCanceled)
-                {
-                    owner.CancelScan();
-                }
             }
         }
 
