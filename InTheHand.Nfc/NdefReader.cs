@@ -40,4 +40,15 @@ public sealed partial class NdefReader : IDisposable
     /// Notify that an error happened during reading.
     /// </summary>
     public event EventHandler Error;
+    
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+    
+    ~NdefReader()
+    {
+        Dispose(false);
+    }
 }

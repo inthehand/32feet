@@ -22,6 +22,8 @@ namespace NfcReaderMaui
 
         private void Reader_Reading(object sender, NdefReadingEventArgs e)
         {
+            _cts.Cancel();
+            
             Dispatcher.Dispatch(async () =>
             {
                 foreach (var record in e.Message.Records)
@@ -35,8 +37,6 @@ namespace NfcReaderMaui
                         await DisplayAlert("NDEF", $"{record.RecordType} {record.Data}", "OK");
                     }
                 }
-
-                await _cts.CancelAsync();
             });
         }
 
@@ -53,6 +53,7 @@ namespace NfcReaderMaui
 
         protected override void OnDisappearing()
         {
+            _cts?.Dispose();
             _reader.Dispose();
             base.OnDisappearing();
         }

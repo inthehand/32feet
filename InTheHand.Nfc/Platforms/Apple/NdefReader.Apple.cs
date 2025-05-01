@@ -56,7 +56,7 @@ partial class NdefReader
             _session.InvalidateSession();
     }
 
-    private class ReaderSessionDelegate(NdefReader owner) : NFCNdefReaderSessionDelegate
+    private sealed class ReaderSessionDelegate(NdefReader owner) : NFCNdefReaderSessionDelegate
     {
         public override void DidDetect(NFCNdefReaderSession session, NFCNdefMessage[] messages)
         {
@@ -77,7 +77,7 @@ partial class NdefReader
         {
             // filter which codes are errors
             System.Diagnostics.Debug.WriteLine(error);
-            if (error.Code != 0xC8)
+            if (error.Code != 0xC8 && error.Code != 0xCC)
             {
                 owner.Error?.Invoke(owner, EventArgs.Empty);
             }
@@ -165,18 +165,6 @@ partial class NdefReader
             default:
                 return NdefRecordType.Unknown;
         }
-    }
-
-    
-    public void Dispose()
-    {
-        Dispose(true);
-        GC.SuppressFinalize(this);
-    }
-    
-    ~NdefReader()
-    {
-        Dispose(false);
     }
     
     private void Dispose(bool disposing)

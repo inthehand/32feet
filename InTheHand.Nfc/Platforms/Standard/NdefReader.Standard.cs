@@ -18,7 +18,7 @@ partial class NdefReader
         return Task.FromException(new PlatformNotSupportedException());
     }
 
-    public void Dispose()
+    private void Dispose(bool disposing)
     {
     }
 }

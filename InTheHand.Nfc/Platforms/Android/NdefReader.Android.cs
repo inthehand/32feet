@@ -117,11 +117,6 @@ partial class NdefReader(Activity activity) : Java.Lang.Object, NfcAdapter.IRead
         SAdapter.DisableReaderMode(activity);
     }
     
-    ~NdefReader()
-    {
-        Dispose(false);
-    }
-    
     protected override void Dispose(bool disposing)
     {
         if (!_disposed)
