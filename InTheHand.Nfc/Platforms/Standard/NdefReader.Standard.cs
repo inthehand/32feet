@@ -9,6 +9,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
+// ReSharper disable CheckNamespace
 namespace InTheHand.Nfc;
 
 partial class NdefReader

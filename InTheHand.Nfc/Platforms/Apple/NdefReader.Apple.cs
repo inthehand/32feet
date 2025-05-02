@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using CoreNFC;
 using Foundation;
 
+// ReSharper disable CheckNamespace
 namespace InTheHand.Nfc;
 
 partial class NdefReader
@@ -19,6 +20,9 @@ partial class NdefReader
     private NFCNdefReaderSession _session;
     private CancellationToken _cancellationToken;
     
+    /// <summary>
+    /// Creates a new instance of NdefReader.
+    /// </summary>
     public NdefReader()
     {
         _sessionDelegate = new ReaderSessionDelegate(this);
@@ -69,7 +73,7 @@ partial class NdefReader
                     newMessage.AddRecord(parsedRecord);
                 }
 
-                owner.Reading?.Invoke(this, new NdefReadingEventArgs(string.Empty, newMessage));
+                owner.Reading?.Invoke(this, new NdefReadingEventArgs(newMessage));
             }
         }
 
@@ -86,10 +90,10 @@ partial class NdefReader
 
     private static NdefRecord ParseNdefRecord(NFCNdefPayload payload)
     {
-        var typeString = System.Text.Encoding.UTF8.GetString(payload.Type.ToArray());
+        var typeString = System.Text.Encoding.UTF8.GetString([.. payload.Type]);
         var parsedRecord = new NdefRecord()
         {
-            Id = System.Text.Encoding.UTF8.GetString(payload.Identifier.ToArray()),
+            Id = System.Text.Encoding.UTF8.GetString([.. payload.Identifier]),
             RecordType = ParseRecordType(payload.TypeNameFormat, typeString)
         };
 
@@ -138,33 +142,21 @@ partial class NdefReader
 
     private static string ParseRecordType(NFCTypeNameFormat format, string ndefType)
     {
-        switch (format)
+        return format switch
         {
-            case NFCTypeNameFormat.Empty:
-                return NdefRecordType.Empty;
-
-            case NFCTypeNameFormat.NFCWellKnown:
-
-                return ndefType switch
-                {
-                    "T" => NdefRecordType.Text,
-                    "U" => NdefRecordType.Url,
-                    "Sp" => NdefRecordType.SmartPoster,
-                    _ => ":" + ndefType
-                };
-
-            case NFCTypeNameFormat.Media:
-                return NdefRecordType.Mime;
-
-            case NFCTypeNameFormat.AbsoluteUri:
-                return NdefRecordType.AbsoluteUri;
-
-            case NFCTypeNameFormat.NFCExternal:
-                return ndefType;
-
-            default:
-                return NdefRecordType.Unknown;
-        }
+            NFCTypeNameFormat.Empty => NdefRecordType.Empty,
+            NFCTypeNameFormat.NFCWellKnown => ndefType switch
+            {
+                "T" => NdefRecordType.Text,
+                "U" => NdefRecordType.Url,
+                "Sp" => NdefRecordType.SmartPoster,
+                _ => ":" + ndefType
+            },
+            NFCTypeNameFormat.Media => NdefRecordType.Mime,
+            NFCTypeNameFormat.AbsoluteUri => NdefRecordType.AbsoluteUri,
+            NFCTypeNameFormat.NFCExternal => ndefType,
+            _ => NdefRecordType.Unknown
+        };
     }
     
     private void Dispose(bool disposing)

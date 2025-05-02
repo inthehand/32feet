@@ -27,7 +27,7 @@ partial class NdefMessage
                     break;
 
                 case Android.Nfc.NdefRecord.TnfWellKnown:
-                    var typeString = Encoding.UTF8.GetString(record.GetTypeInfo());
+                    var typeString = Encoding.UTF8.GetString(record.GetTypeInfo()!);
                     switch (typeString)
                     {
                         case "U":
@@ -38,6 +38,7 @@ partial class NdefMessage
                                 Id = GetId(record)
                             });
                             break;
+
                         case "T":
                             AddRecord(new NdefRecord
                             {
@@ -46,6 +47,7 @@ partial class NdefMessage
                                 Id = GetId(record)
                             });
                             break;
+
                         case "Sp":
                             AddRecord(new NdefRecord
                             {
@@ -76,7 +78,7 @@ partial class NdefMessage
                         Id = GetId(record)
                     });
                     break;
-
+                    
                 default:
                     AddRecord(new NdefRecord
                     {

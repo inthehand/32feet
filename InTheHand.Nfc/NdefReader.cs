@@ -11,12 +11,14 @@ using System.Threading.Tasks;
 
 namespace InTheHand.Nfc;
 
-/// <preliminary/>
 /// <summary>
 /// Class to read NDEF formatted NFC tags.
 /// </summary>
 /// <remarks>See https://w3c.github.io/web-nfc/ for more details.</remarks>
-public sealed partial class NdefReader : IDisposable
+public sealed partial class NdefReader : INdefReader
+#if !ANDROID
+    , IDisposable
+#endif
 {
     private bool _disposed;
 
@@ -40,13 +42,17 @@ public sealed partial class NdefReader : IDisposable
     /// Notify that an error happened during reading.
     /// </summary>
     public event EventHandler Error;
-    
+
+#if !ANDROID
+    /// <inheritdoc/>
     public void Dispose()
     {
         Dispose(true);
         GC.SuppressFinalize(this);
     }
-    
+#endif
+
+    /// <inheritdoc/>
     ~NdefReader()
     {
         Dispose(false);

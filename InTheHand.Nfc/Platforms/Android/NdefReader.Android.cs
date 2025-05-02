@@ -54,7 +54,7 @@ partial class NdefReader(Activity activity) : Java.Lang.Object, NfcAdapter.IRead
                 var msg = new NdefMessage(ndef.NdefMessage);
                 ndef.Dispose();
 
-                Reading?.Invoke(this, new NdefReadingEventArgs(serial, msg));
+                Reading?.Invoke(this, new NdefReadingEventArgs(msg, serial));
                 break;
             }
             catch (Exception e)

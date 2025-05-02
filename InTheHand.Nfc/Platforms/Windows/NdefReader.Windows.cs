@@ -47,7 +47,7 @@ partial class NdefReader
             RecordType = message.MessageType
         });
 
-        Reading?.Invoke(this, new NdefReadingEventArgs(string.Empty, ndefMessage));
+        Reading?.Invoke(this, new NdefReadingEventArgs(ndefMessage));
     }
 
     private void Dispose(bool disposing)
