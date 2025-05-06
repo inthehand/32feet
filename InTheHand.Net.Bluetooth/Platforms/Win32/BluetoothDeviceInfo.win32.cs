@@ -203,5 +203,8 @@ namespace InTheHand.Net.Sockets
                 return _info.LastUsed;
             }
         }
-    }
+        public string SerialNumber => string.Empty;
+
+        public IReadOnlyCollection<string> ProtocolStrings => throw new PlatformNotSupportedException();
+  }
 }

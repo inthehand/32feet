@@ -70,5 +70,9 @@ namespace InTheHand.Net.Sockets
         public bool Connected { get => NativeDevice.ConnectionStatus == BluetoothConnectionStatus.Connected; }
 
         public bool Authenticated { get => NativeDevice.DeviceInformation.Pairing.IsPaired; }
+
+        public string SerialNumber => string.Empty;
+
+        public IReadOnlyCollection<string> ProtocolStrings => throw new PlatformNotSupportedException();
     }
 }
