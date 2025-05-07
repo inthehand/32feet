@@ -1,0 +1,25 @@
+# This workflow will build a .NET project
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-net
+
+name: InTheHand.Nfc
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+
+    runs-on: macos-15
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.0.x
+    - name: Add .NET Workloads
+      run: dotnet workload install maui
+    - name: Restore dependencies
+      run: dotnet restore InTheHand.Nfc/InTheHand.Nfc.csproj
+    - name: Build
+      run: dotnet build InTheHand.Nfc/InTheHand.Nfc.csproj --no-restore -m -property:Configuration=Release

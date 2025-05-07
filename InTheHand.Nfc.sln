@@ -1,0 +1,37 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.13.35825.156
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InTheHand.Nfc", "InTheHand.Nfc\InTheHand.Nfc.csproj", "{647BD994-F4C0-01E2-B4B7-3B241F7CB68B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Samples", "Samples", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NfcReaderMaui", "Samples\NfcReaderMaui\NfcReaderMaui.csproj", "{4829A609-83E2-8C1F-E2ED-AD745D6D785E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{647BD994-F4C0-01E2-B4B7-3B241F7CB68B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{647BD994-F4C0-01E2-B4B7-3B241F7CB68B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{647BD994-F4C0-01E2-B4B7-3B241F7CB68B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{647BD994-F4C0-01E2-B4B7-3B241F7CB68B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4829A609-83E2-8C1F-E2ED-AD745D6D785E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4829A609-83E2-8C1F-E2ED-AD745D6D785E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4829A609-83E2-8C1F-E2ED-AD745D6D785E}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{4829A609-83E2-8C1F-E2ED-AD745D6D785E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4829A609-83E2-8C1F-E2ED-AD745D6D785E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4829A609-83E2-8C1F-E2ED-AD745D6D785E}.Release|Any CPU.Deploy.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{4829A609-83E2-8C1F-E2ED-AD745D6D785E} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {9835BF22-FDD7-4DDF-8892-2AC74BD9E9AE}
+	EndGlobalSection
+EndGlobal

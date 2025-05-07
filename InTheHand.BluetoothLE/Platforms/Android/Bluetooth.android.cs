@@ -1,6 +1,6 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="Bluetooth.android.cs" company="In The Hand Ltd">
-//   Copyright (c) 2018-24 In The Hand Ltd, All rights reserved.
+//   Copyright (c) 2018-25 In The Hand Ltd, All rights reserved.
 //   This source code is licensed under the MIT License - see License.txt
 // </copyright>
 //-----------------------------------------------------------------------
@@ -108,7 +108,7 @@ namespace InTheHand.Bluetooth
             // This is a higher power consuming mode but should give better results for fixed discovery period.
             sb.SetScanMode(Android.Bluetooth.LE.ScanMode.LowLatency);
             var settings = sb.Build();
-            var callback = new DevicesCallback();
+            var callback = new DevicesCallback(options?.Timeout);
 
             _manager.Adapter.BluetoothLeScanner.StartScan(filters, settings, callback);
 
@@ -140,7 +140,14 @@ namespace InTheHand.Bluetooth
 
         private class DevicesCallback : ScanCallback
         {
+            private readonly TimeSpan _timeout;
             private readonly EventWaitHandle handle = new EventWaitHandle(false, EventResetMode.AutoReset);
+
+            public DevicesCallback(TimeSpan? timeout)
+            {
+                _timeout = timeout ?? TimeSpan.FromSeconds(5);
+
+            }
 
             public List<BluetoothDevice> Devices { get; } = new List<BluetoothDevice>();
 
@@ -149,7 +156,7 @@ namespace InTheHand.Bluetooth
                 Task.Run(async () =>
                 {
                     // ensure discovery times out after fixed delay
-                    await Task.Delay(5000);
+                    await Task.Delay(_timeout);
                     handle.Set();
                 });
                 handle.WaitOne();

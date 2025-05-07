@@ -1,6 +1,6 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="Bluetooth.unified.cs" company="In The Hand Ltd">
-//   Copyright (c) 2018-23 In The Hand Ltd, All rights reserved.
+//   Copyright (c) 2018-25 In The Hand Ltd, All rights reserved.
 //   This source code is licensed under the MIT License - see License.txt
 // </copyright>
 //-----------------------------------------------------------------------
@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 #if __IOS__
@@ -53,18 +54,18 @@ namespace InTheHand.Bluetooth
                 };
 
                 _manager = new CBCentralManager(null, null, options);
-                _manager.UpdatedState += _manager_UpdatedState;
-                _manager.DiscoveredPeripheral += _manager_DiscoveredPeripheral;
+                _manager.UpdatedState += Manager_UpdatedState;
+                _manager.DiscoveredPeripheral += Manager_DiscoveredPeripheral;
                 Debug.WriteLine($"CBCentralManager:{_manager.State}");
             }
         }
 
-        private static void _manager_DiscoveredPeripheral(object sender, CBDiscoveredPeripheralEventArgs e)
+        private static void Manager_DiscoveredPeripheral(object? sender, CBDiscoveredPeripheralEventArgs e)
         {
-            DiscoveredPeripheral?.Invoke(sender, e);
+            DiscoveredPeripheral?.Invoke(null, e);
             
             var bae = new BluetoothAdvertisingEvent(e.Peripheral, e.AdvertisementData, e.RSSI);
-            AdvertisementReceived?.Invoke(sender, bae);
+            AdvertisementReceived?.Invoke(null, bae);
             if (!string.IsNullOrWhiteSpace(e.Peripheral.Name) && !_foundDevices.Contains(e.Peripheral))
             {
                 Debug.WriteLine($"Peripheral: {e.Peripheral.Identifier} Name: {e.Peripheral.Name} RSSI: {e.RSSI}");
@@ -72,7 +73,7 @@ namespace InTheHand.Bluetooth
             }
         }
 
-        private static void _manager_UpdatedState(object sender, EventArgs e)
+        private static void Manager_UpdatedState(object? sender, EventArgs e)
         {
             OnAvailabilityChanged();
         }
@@ -99,11 +100,11 @@ namespace InTheHand.Bluetooth
         private static Task<bool> PlatformGetAvailability()
         {
             Initialize();
-            bool available = false;
+            var available = false;
             
             if (_manager != null)
             {
-                System.Diagnostics.Debug.WriteLine($"GetAvailability:{_manager.State}");
+                Debug.WriteLine($"GetAvailability:{_manager.State}");
 
                 switch (_manager.State)
                 {
@@ -115,17 +116,18 @@ namespace InTheHand.Bluetooth
                     case CBManagerState.Unknown:
                         // Unknown is returned on first creation of the manager - need to wait for first UpdatedState callback
                         TaskCompletionSource<bool> tcs = new TaskCompletionSource<bool>();
-                        void stateHandler(object sender, EventArgs e)
+
+                        _manager.UpdatedState += StateHandler;
+                        return tcs.Task;
+
+                        void StateHandler(object? sender, EventArgs e)
                         {
                             if (_manager.State != CBManagerState.Unknown)
                             {
-                                _manager.UpdatedState -= stateHandler;
+                                _manager.UpdatedState -= StateHandler;
                                 tcs.SetResult(IsAvailable);
                             }
-                        };
-
-                        _manager.UpdatedState += stateHandler;
-                        return tcs.Task;
+                        }
                 }
             }
 
@@ -133,14 +135,14 @@ namespace InTheHand.Bluetooth
         }
 
 #if __IOS__
-        private static UIAlertController controller = null;
+        private static UIAlertController _controller = null;
 #endif
 
         internal static CBUUID[] GetUuidsForFilters(RequestDeviceOptions options)
         {
-            List<CBUUID> uuids = new List<CBUUID>();
+            var uuids = new List<CBUUID>();
 
-            if (!options.AcceptAllDevices)
+            if (options is { AcceptAllDevices: false })
             {
                 foreach (BluetoothLEScanFilter filter in options.Filters)
                 {
@@ -150,15 +152,11 @@ namespace InTheHand.Bluetooth
                     }
                 }
             }
-            /*else
-            {
-                uuids.Add(GattServiceUuids.GenericAttribute);
-            }*/
 
             return uuids.ToArray();
         }
         
-        static async Task<BluetoothDevice> PlatformRequestDevice(RequestDeviceOptions options)
+        private static async Task<BluetoothDevice> PlatformRequestDevice(RequestDeviceOptions options)
         {
             Initialize();
 
@@ -168,8 +166,8 @@ namespace InTheHand.Bluetooth
 #if __IOS__
             TaskCompletionSource<BluetoothDevice> tcs = new TaskCompletionSource<BluetoothDevice>();
 
-            controller = UIAlertController.Create("Select a Bluetooth accessory", null, UIAlertControllerStyle.Alert);
-            controller.AddAction(UIAlertAction.Create("Cancel", UIAlertActionStyle.Cancel, (a)=> {
+            _controller = UIAlertController.Create("Select a Bluetooth accessory", null, UIAlertControllerStyle.Alert);
+            _controller.AddAction(UIAlertAction.Create("Cancel", UIAlertActionStyle.Cancel, (a)=> {
                 tcs.SetResult(null);
                 StopScanning();
                 Debug.WriteLine(a == null ? "<null>" : a.ToString());
@@ -180,7 +178,7 @@ namespace InTheHand.Bluetooth
             {
                 PreferredContentSize = rect.Size
             };
-            controller.PreferredContentSize = rect.Size;
+            _controller.PreferredContentSize = rect.Size;
             var source = new InTheHand.Bluetooth.Platforms.Apple.BluetoothTableViewSource(options);
             source.DeviceSelected += (s, e) =>
              {
@@ -193,14 +191,14 @@ namespace InTheHand.Bluetooth
 
             tvc.TableView.UserInteractionEnabled = true;
             tvc.TableView.AllowsSelection = true;
-            controller.SetValueForKey(tvc, new Foundation.NSString("contentViewController"));
+            _controller.SetValueForKey(tvc, new Foundation.NSString("contentViewController"));
 
             //TODO: investigate what this means for multiple windows e.g. iPad
             UIViewController currentController = UIApplication.SharedApplication.KeyWindow.RootViewController;
             while (currentController.PresentedViewController != null)
                 currentController = currentController.PresentedViewController;
 
-            currentController.PresentViewController(controller, true, null);
+            currentController.PresentViewController(_controller, true, null);
 
             return await tcs.Task;
 #else
@@ -208,7 +206,7 @@ namespace InTheHand.Bluetooth
 #endif
         }
 
-        static async Task<IReadOnlyCollection<BluetoothDevice>> PlatformScanForDevices(RequestDeviceOptions options,
+        private static async Task<IReadOnlyCollection<BluetoothDevice>> PlatformScanForDevices(RequestDeviceOptions options,
             CancellationToken cancellationToken = default)
         {
             var discoveredDevices = new List<BluetoothDevice>();
@@ -216,56 +214,42 @@ namespace InTheHand.Bluetooth
 
             DiscoveredPeripheral += (sender, args) =>
             {
-                if (args.AdvertisementData.ContainsKey(new NSString("kCBAdvDataIsConnectable")) &&
-                    args.AdvertisementData["kCBAdvDataIsConnectable"].Equals(NSNumber.FromBoolean(true)))
+                if (!args.AdvertisementData.ContainsKey(new NSString("kCBAdvDataIsConnectable")) ||
+                    !args.AdvertisementData["kCBAdvDataIsConnectable"].Equals(NSNumber.FromBoolean(true))) return;
+
+                var device = args.Peripheral;
+
+                if (!string.IsNullOrEmpty(device.Name))
                 {
 
-                    var device = args.Peripheral;
+                    var shouldAdd = true;
 
-                    if (!string.IsNullOrEmpty(device.Name))
+                    foreach (var filter in options?.Filters)
                     {
-
-                        bool shouldAdd = options.Filters.Count == 0;
-
-                        foreach (var filter in options.Filters)
+                        if (!string.IsNullOrEmpty(filter.Name) && !device.Name.Equals(filter.Name) ||
+                            !string.IsNullOrEmpty(filter.NamePrefix) && !device.Name.StartsWith(filter.NamePrefix))
                         {
-                            if (!string.IsNullOrEmpty(filter.Name))
-                            {
-                                if (device.Name.Equals(filter.Name))
-                                {
-                                    shouldAdd = true;
-                                    break;
-                                }
-                            }
-                            else if (!string.IsNullOrEmpty(filter.NamePrefix))
-                            {
-                                if (device.Name.StartsWith(filter.NamePrefix))
-                                {
-                                    shouldAdd = true;
-                                    break;
-                                }
-                            }
+                            shouldAdd = false;
+                            break;
                         }
+                    }
                         
-                        foreach (var existingDevice in discoveredDevices)
-                        {
-                            if (((CBPeripheral)existingDevice).Identifier.Equals(device.Identifier))
-                            {
-                                shouldAdd = false;
-                            }
-                        }
+                    foreach (var existingDevice in discoveredDevices.Where(existingDevice =>
+                                 ((CBPeripheral)existingDevice).Identifier.Equals(device.Identifier)))
+                    {
+                        shouldAdd = false;
+                    }
 
-                        if (shouldAdd)
-                        {
-                            discoveredDevices.Add(device);
-                        }
+                    if (shouldAdd)
+                    {
+                        discoveredDevices.Add(device);
                     }
                 }
             };
 
             StartScanning(services);
 
-            await Task.Run(async () => { await Task.Delay(5000, cancellationToken); }, cancellationToken);
+            await Task.Run(async () => { await Task.Delay(options?.Timeout ?? TimeSpan.FromSeconds(5), cancellationToken); }, cancellationToken);
             StopScanning();
             return discoveredDevices.AsReadOnly();
         }
@@ -356,12 +340,12 @@ namespace InTheHand.Bluetooth
         private static async void AddAvailabilityChanged()
         {
             _oldAvailability = await PlatformGetAvailability();
-            _manager.UpdatedState += _manager_UpdatedState;
+            _manager.UpdatedState += Manager_UpdatedState;
         }
 
         private static void RemoveAvailabilityChanged()
         {
-            _manager.UpdatedState -= _manager_UpdatedState;
+            _manager.UpdatedState -= Manager_UpdatedState;
         }
 
 
