@@ -71,7 +71,7 @@ partial class NdefReader(Activity activity) : Java.Lang.Object, NfcAdapter.IRead
                     Task.Run(async () =>
                     {
                         // add a pause to avoid double scanning
-                        await Task.Delay(1000);
+                        await Task.Delay(2000);
                         CancelScan();
                     });
                     

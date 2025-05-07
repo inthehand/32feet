@@ -27,11 +27,12 @@ public sealed class NdefRecord
     /// Creates a text record.
     /// </summary>
     /// <param name="text">Plain text content.</param>
+    /// <param name="encoding">Optional Encoding name. utf-8 by default.</param>
     /// <param name="language">Optional IANA language tag.</param>
     /// <returns>A new text NDEF record.</returns>
-    public static NdefRecord CreateText(string text, string language = null)
+    public static NdefRecord CreateText(string text, string encoding = "utf-8", string language = null)
     {
-        return new NdefRecord { RecordType = NdefRecordType.Text, Data = text, Language = language };
+        return new NdefRecord { RecordType = NdefRecordType.Text, Data = text, Encoding = encoding, Language = language };
     }
 
     /// <summary>

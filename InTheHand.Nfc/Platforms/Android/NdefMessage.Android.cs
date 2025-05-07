@@ -40,12 +40,7 @@ partial class NdefMessage
                             break;
 
                         case "T":
-                            AddRecord(new NdefRecord
-                            {
-                                RecordType = NdefRecordType.Text,
-                                Data = Encoding.UTF8.GetString(record.GetPayload() ?? ReadOnlySpan<byte>.Empty),
-                                Id = GetId(record)
-                            });
+                            AddRecord(GetTextRecord(record));
                             break;
 
                         case "Sp":
@@ -95,6 +90,40 @@ partial class NdefMessage
         string GetId(Android.Nfc.NdefRecord record)
         {
             return Encoding.UTF8.GetString(record.GetId() ?? ReadOnlySpan<byte>.Empty);
+        }
+
+        NdefRecord GetTextRecord(Android.Nfc.NdefRecord record)
+        {
+            var textRecord = new NdefRecord
+            {
+                RecordType = NdefRecordType.Text,
+                Id = GetId(record)
+            };
+
+            var payload = record.GetPayload();
+
+            if (payload is null)
+                return textRecord;
+
+            var languageCodeLength = payload[0] & 0x1f;
+            var encoding = payload[0] & 0x80;
+
+            textRecord.Language = Encoding.UTF8.GetString(payload, 1, languageCodeLength);
+
+            if (encoding != 0)
+            {
+                textRecord.Encoding = "utf-16";
+                textRecord.Data = Encoding.Unicode.GetString(payload, 1 + languageCodeLength,
+                    payload.Length - languageCodeLength - 1);
+            }
+            else
+            {
+                textRecord.Encoding = "utf-8";
+                textRecord.Data = Encoding.UTF8.GetString(payload, 1 + languageCodeLength,
+                    payload.Length - languageCodeLength - 1);
+            }
+
+            return textRecord;
         }
     }
 }
