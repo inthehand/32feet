@@ -15,17 +15,20 @@ namespace InTheHand.Nfc;
 
 partial class NdefReader
 {
+    private static readonly ProximityDevice ProximityDevice = ProximityDevice.GetDefault();
+    
+    private static Task<bool> PlatformGetAvailability() => Task.FromResult(ProximityDevice != null);
+
     private const string NdefMessageType = "NDEF";
-    private ProximityDevice _proximityDevice = ProximityDevice.GetDefault();
     private long _subscriptionReference;
 
     private Task PlatformScanAsync(CancellationToken cancellationToken)
     {
-        if (_proximityDevice is null)
+        if (ProximityDevice is null)
             throw new InvalidOperationException("NFC Scanning unavailable");
         
         cancellationToken.Register(Unsubscribe);
-        _subscriptionReference = _proximityDevice.SubscribeForMessage(NdefMessageType, MessageReceived);
+        _subscriptionReference = ProximityDevice.SubscribeForMessage(NdefMessageType, MessageReceived);
 
         return Task.CompletedTask;
     }
@@ -34,7 +37,7 @@ partial class NdefReader
     {
         if (_subscriptionReference == 0) return;
 
-        _proximityDevice.StopSubscribingForMessage(_subscriptionReference);
+        ProximityDevice.StopSubscribingForMessage(_subscriptionReference);
         _subscriptionReference = 0;
     }
 
@@ -55,7 +58,6 @@ partial class NdefReader
         if (!_disposed)
         {
             Unsubscribe();
-            _proximityDevice = null;
 
             _disposed = true;
         }

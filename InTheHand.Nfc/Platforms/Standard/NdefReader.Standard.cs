@@ -14,6 +14,8 @@ namespace InTheHand.Nfc;
 
 partial class NdefReader
 {
+    private static Task<bool> PlatformGetAvailability() => Task.FromResult(false);
+
     private Task PlatformScanAsync(CancellationToken cancellationToken)
     {
         return Task.FromException(new PlatformNotSupportedException());

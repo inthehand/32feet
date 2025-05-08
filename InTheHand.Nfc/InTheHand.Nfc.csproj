@@ -6,7 +6,7 @@
 		<Company>In The Hand Ltd</Company>
 		<Authors>Peter Foot</Authors>
 		<Product>32feet.NET</Product>
-		<Version>1.0.4</Version>
+		<Version>1.0.5</Version>
 		<RepositoryUrl>https://github.com/inthehand/32feet</RepositoryUrl>
 		<PublishRepositoryUrl>true</PublishRepositoryUrl>
 		<DebugSymbols>true</DebugSymbols>
@@ -26,7 +26,7 @@
 		<PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<PackageId>InTheHand.Nfc</PackageId>
-		<PackageReleaseNotes>Mock support for NdefMessage and records.</PackageReleaseNotes>
+		<PackageReleaseNotes>GetAvailability to determine if NFC is supported. Fixed text record parsing on Android.</PackageReleaseNotes>
 		<PackageIcon>32feet-package-icon.png</PackageIcon>
 		<RepositoryUrl>https://github.com/inthehand/32feet</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>

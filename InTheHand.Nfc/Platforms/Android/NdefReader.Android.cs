@@ -24,6 +24,8 @@ partial class NdefReader(Activity activity) : Java.Lang.Object, NfcAdapter.IRead
 {
     private static readonly NfcAdapter SAdapter = NfcAdapter.GetDefaultAdapter(Application.Context);
 
+    private static Task<bool> PlatformGetAvailability() => Task.FromResult(SAdapter is { IsEnabled: true });
+
     private bool _autoCancel;
 
     public NdefReader() : this(AndroidActivity.CurrentActivity)

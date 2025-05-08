@@ -16,6 +16,8 @@ namespace InTheHand.Nfc;
 
 partial class NdefReader
 {
+    private static Task<bool> PlatformGetAvailability() => Task.FromResult(NFCReaderSession.ReadingAvailable);
+
     private readonly ReaderSessionDelegate _sessionDelegate;
     private NFCNdefReaderSession _session;
     private CancellationToken _cancellationToken;
