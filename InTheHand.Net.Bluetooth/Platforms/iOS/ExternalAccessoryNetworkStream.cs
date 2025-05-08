@@ -52,7 +52,7 @@ namespace InTheHand.Net.Sockets.iOS
                         case NSStreamEvent.OpenCompleted:
                             _stream._streamReady = true;
                             break;
-
+                            
                         case NSStreamEvent.HasSpaceAvailable:
                             //Make sure that nobody else changes the _outputBuffer while writing to the accessory.
                             lock (_stream._lockObject)
@@ -60,6 +60,7 @@ namespace InTheHand.Net.Sockets.iOS
                               _stream.WriteToAccessory();
                             }
                             break;
+
                     }
                 }
             }
@@ -188,7 +189,7 @@ namespace InTheHand.Net.Sockets.iOS
             }
             else
             {
-              //Set following flag to true to enable the application layer to write further data.
+              // Set following flag to true to enable the application layer to write further data.
               _streamReady = true;
             }
         }

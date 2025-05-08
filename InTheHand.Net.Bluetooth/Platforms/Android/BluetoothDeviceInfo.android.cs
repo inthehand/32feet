@@ -124,5 +124,10 @@ namespace InTheHand.Net.Sockets
         }
 
         public bool Authenticated {  get => _device.BondState == Bond.Bonded; }
-    }
+
+        public string SerialNumber => string.Empty;
+
+        public IReadOnlyCollection<string> ProtocolStrings => throw new PlatformNotSupportedException();
+
+  }
 }

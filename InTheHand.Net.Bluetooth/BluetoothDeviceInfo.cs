@@ -99,14 +99,25 @@ namespace InTheHand.Net.Sockets
         /// </summary>
         public bool Authenticated { get => _bluetoothDeviceInfo.Authenticated; }
 
-        
+        /// <summary>
+        /// Gets the serial number of the remote device.
+        /// </summary>
+        public string SerialNumber { get => _bluetoothDeviceInfo.SerialNumber; }
 
         /// <summary>
-        /// Compares two BluetoothDeviceInfo instances for equality.
+        /// On iOS returns the ExternalAccessory Protocol strings for the device.
         /// </summary>
-        /// <param name="other"></param>
-        /// <returns></returns>
-        public bool Equals(BluetoothDeviceInfo other)
+        /// <remarks>Protocol names are formatted as reverse-DNS strings. For example, the string “com.apple.myProtocol” might represent a custom protocol defined by Apple.
+        /// Manufacturers can define custom protocols for their accessories or work with other manufacturers and organizations to define standard protocols for different accessory types.</remarks>
+        public IReadOnlyCollection<string> ProtocolStrings { get => _bluetoothDeviceInfo.ProtocolStrings; }
+
+
+        /// <summary>
+    /// Compares two BluetoothDeviceInfo instances for equality.
+    /// </summary>
+    /// <param name="other"></param>
+    /// <returns></returns>
+    public bool Equals(BluetoothDeviceInfo other)
         {
             if (other is null)
                 return false;

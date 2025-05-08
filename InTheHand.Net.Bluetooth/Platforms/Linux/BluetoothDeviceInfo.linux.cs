@@ -102,5 +102,9 @@ namespace InTheHand.Net.Sockets
         {
             Init();
         }
-    }
+
+        public string SerialNumber => string.Empty;
+
+        public IReadOnlyCollection<string> ProtocolStrings => throw new PlatformNotSupportedException();
+  }
 }
