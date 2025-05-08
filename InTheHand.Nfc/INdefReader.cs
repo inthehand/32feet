@@ -10,6 +10,12 @@ namespace InTheHand.Nfc;
 public interface INdefReader
 {
     /// <summary>
+    /// Gets a value to indicate whether NFC reading is available on this device.
+    /// </summary>
+    /// <returns>True if scanning is available, otherwise false.</returns>
+    Task<bool> GetAvailability();
+
+    /// <summary>
     /// Start scanning for NDEF tags.
     /// </summary>
     /// <param name="cancellationToken">A CancellationToken to stop scanning.</param>

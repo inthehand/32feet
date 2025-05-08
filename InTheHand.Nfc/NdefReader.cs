@@ -20,13 +20,13 @@ public sealed partial class NdefReader : INdefReader
     , IDisposable
 #endif
 {
+    private bool _disposed;
+
     /// <summary>
-    /// Gets whether NFC reading is available on this device.
+    /// Gets a value to indicate whether NFC reading is available on this device.
     /// </summary>
     /// <returns></returns>
-    public static Task<bool> GetAvailability() => PlatformGetAvailability();
-
-    private bool _disposed;
+    public Task<bool> GetAvailability() => PlatformGetAvailability();
 
     /// <summary>
     /// Start scanning for NDEF tags.
