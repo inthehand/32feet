@@ -1,4 +1,11 @@
-﻿using System;
+﻿// 32feet.NET - Personal Area Networking for .NET
+//
+// InTheHand.Nfc.INdefReader
+// 
+// Copyright (c) 2025 In The Hand Ltd, All rights reserved.
+// This source code is licensed under the MIT License
+
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 

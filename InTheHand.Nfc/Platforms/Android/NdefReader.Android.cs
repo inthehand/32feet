@@ -18,6 +18,7 @@ using Activity = Android.App.Activity;
 [assembly: UsesPermission("android.permission.NFC")]
 [assembly: UsesFeature("android.hardware.nfc", Required = false)]
 
+// ReSharper disable once CheckNamespace
 namespace InTheHand.Nfc;
 
 partial class NdefReader(Activity activity) : Java.Lang.Object, NfcAdapter.IReaderCallback
@@ -27,6 +28,8 @@ partial class NdefReader(Activity activity) : Java.Lang.Object, NfcAdapter.IRead
     private static Task<bool> PlatformGetAvailability() => Task.FromResult(SAdapter is { IsEnabled: true });
 
     private bool _autoCancel;
+
+    private Ndef _currentNdef;
 
     public NdefReader() : this(AndroidActivity.CurrentActivity)
     {
@@ -52,11 +55,9 @@ partial class NdefReader(Activity activity) : Java.Lang.Object, NfcAdapter.IRead
 
             try
             {
+                _currentNdef = ndef;
                 ndef.Connect();
-                var msg = new NdefMessage(ndef.NdefMessage);
-                ndef.Dispose();
-
-                Reading?.Invoke(this, new NdefReadingEventArgs(msg, serial));
+                Reading?.Invoke(this, new AndroidNdefReadingEventArgs(ndef, ndef.NdefMessage, serial));
                 break;
             }
             catch (Exception e)
@@ -117,8 +118,29 @@ partial class NdefReader(Activity activity) : Java.Lang.Object, NfcAdapter.IRead
     private void CancelScan()
     {
         SAdapter.DisableReaderMode(activity);
+        _currentNdef?.Dispose();
     }
-    
+
+    private async Task PlatformWriteAsync(NdefMessage message, CancellationToken cancellationToken)
+    {
+        if (_currentNdef == null)
+            throw new InvalidOperationException("No tag currently in range");
+
+        if (!_currentNdef.IsConnected)
+        {
+            _currentNdef.Connect();
+        }
+
+        if (_currentNdef.IsWritable)
+        {
+            await _currentNdef.WriteNdefMessageAsync(message);
+        }
+        else
+        {
+            Error?.Invoke(this, EventArgs.Empty);
+        }
+    }
+
     protected override void Dispose(bool disposing)
     {
         if (!_disposed)

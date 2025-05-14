@@ -11,6 +11,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Windows.Networking.Proximity;
 
+// ReSharper disable once CheckNamespace
 namespace InTheHand.Nfc;
 
 partial class NdefReader
@@ -31,6 +32,11 @@ partial class NdefReader
         _subscriptionReference = ProximityDevice.SubscribeForMessage(NdefMessageType, MessageReceived);
 
         return Task.CompletedTask;
+    }
+
+    private Task PlatformWriteAsync(NdefMessage message, CancellationToken cancellationToken)
+    {
+        return Task.FromException(new PlatformNotSupportedException());
     }
 
     private void Unsubscribe()
@@ -55,11 +61,9 @@ partial class NdefReader
 
     private void Dispose(bool disposing)
     {
-        if (!_disposed)
-        {
-            Unsubscribe();
+        if (_disposed) return;
 
-            _disposed = true;
-        }
+        _disposed = true;
+        Unsubscribe();
     }
 }

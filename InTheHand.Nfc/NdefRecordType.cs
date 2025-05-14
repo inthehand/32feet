@@ -1,4 +1,11 @@
-﻿namespace InTheHand.Nfc;
+﻿// 32feet.NET - Personal Area Networking for .NET
+//
+// InTheHand.Nfc.NdefRecordType
+// 
+// Copyright (c) 2020-2025 In The Hand Ltd, All rights reserved.
+// This source code is licensed under the MIT License
+
+namespace InTheHand.Nfc;
 
 /// <summary>
 /// Specifies the type of the NDEF record.

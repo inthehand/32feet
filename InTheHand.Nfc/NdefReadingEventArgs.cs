@@ -1,11 +1,18 @@
-﻿using System;
+﻿// 32feet.NET - Personal Area Networking for .NET
+//
+// InTheHand.Nfc.NdefReadingEventArgs
+// 
+// Copyright (c) 2020-2025 In The Hand Ltd, All rights reserved.
+// This source code is licensed under the MIT License
+
+using System;
 
 namespace InTheHand.Nfc;
 
 /// <summary>
 /// Contains details of a scanned NDEF tag.
 /// </summary>
-public sealed class NdefReadingEventArgs : EventArgs
+public class NdefReadingEventArgs : EventArgs
 {
     /// <summary>
     /// Creates a new instance of NdefReadingEventArgs.

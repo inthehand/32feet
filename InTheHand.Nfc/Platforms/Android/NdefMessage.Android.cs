@@ -7,13 +7,29 @@
 
 using System;
 using System.Text;
+using ANfc = Android.Nfc;
 
+// ReSharper disable once CheckNamespace
 namespace InTheHand.Nfc;
 
 partial class NdefMessage
 {
-    internal NdefMessage(Android.Nfc.NdefMessage message)
+    private ANfc.NdefMessage _message;
+
+    public static implicit operator ANfc.NdefMessage(NdefMessage message)
     {
+        return message._message;
+    }
+
+    public static implicit operator NdefMessage(ANfc.NdefMessage message)
+    {
+        return message == null ? null : new NdefMessage(message);
+    }
+
+    internal NdefMessage(ANfc.NdefMessage message)
+    {
+        _message = message;
+
         var records = message.GetRecords();
 
         if (records == null) return;
@@ -22,11 +38,11 @@ partial class NdefMessage
         {
             switch (record.Tnf)
             {
-                case Android.Nfc.NdefRecord.TnfEmpty:
+                case ANfc.NdefRecord.TnfEmpty:
                     AddRecord(new NdefRecord { RecordType = NdefRecordType.Empty });
                     break;
 
-                case Android.Nfc.NdefRecord.TnfWellKnown:
+                case ANfc.NdefRecord.TnfWellKnown:
                     var typeString = Encoding.UTF8.GetString(record.GetTypeInfo()!);
                     switch (typeString)
                     {
@@ -55,7 +71,7 @@ partial class NdefMessage
                     }
                     break;
 
-                case Android.Nfc.NdefRecord.TnfMimeMedia:
+                case ANfc.NdefRecord.TnfMimeMedia:
                     AddRecord(new NdefRecord
                     {
                         RecordType = NdefRecordType.Mime,
@@ -65,7 +81,7 @@ partial class NdefMessage
                     });
                     break;
 
-                case Android.Nfc.NdefRecord.TnfAbsoluteUri:
+                case ANfc.NdefRecord.TnfAbsoluteUri:
                     AddRecord(new NdefRecord
                     {
                         RecordType = NdefRecordType.AbsoluteUri,
@@ -87,12 +103,12 @@ partial class NdefMessage
 
         return;
 
-        string GetId(Android.Nfc.NdefRecord record)
+        string GetId(ANfc.NdefRecord record)
         {
             return Encoding.UTF8.GetString(record.GetId() ?? ReadOnlySpan<byte>.Empty);
         }
 
-        NdefRecord GetTextRecord(Android.Nfc.NdefRecord record)
+        NdefRecord GetTextRecord(ANfc.NdefRecord record)
         {
             var textRecord = new NdefRecord
             {
@@ -125,5 +141,16 @@ partial class NdefMessage
 
             return textRecord;
         }
+    }
+
+    private void PlatformParseRecords(NdefRecord[] records)
+    {
+        var nativeRecords = new ANfc.NdefRecord[records.Length];
+        for (int i = 0; i < records.Length; i++)
+        {
+            nativeRecords[i] = records[i];
+        }
+
+        _message = new ANfc.NdefMessage(nativeRecords);
     }
 }

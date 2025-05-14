@@ -6,7 +6,7 @@
 		<Company>In The Hand Ltd</Company>
 		<Authors>Peter Foot</Authors>
 		<Product>32feet.NET</Product>
-		<Version>1.0.6</Version>
+		<Version>1.1.0</Version>
 		<RepositoryUrl>https://github.com/inthehand/32feet</RepositoryUrl>
 		<PublishRepositoryUrl>true</PublishRepositoryUrl>
 		<DebugSymbols>true</DebugSymbols>
@@ -16,17 +16,17 @@
 		<PackageProjectUrl>https://github.com/inthehand/32feet</PackageProjectUrl>
 		<Copyright>Copyright (c) 2020-25 In The Hand Ltd</Copyright>
 		<Description>32feet.NET is an open-source project to make personal area networking technologies such as Bluetooth easily accessible from .NET code.</Description>
-		<FileVersion>1.0.0.0</FileVersion>
-		<AssemblyVersion>1.0.0.0</AssemblyVersion>
+		<FileVersion>1.1.0.0</FileVersion>
+		<AssemblyVersion>1.1.0.0</AssemblyVersion>
 		<AssemblyName>InTheHand.Nfc</AssemblyName>
 		<GenerateDocumentationFile Condition=" '$(Configuration)' == 'Release' ">true</GenerateDocumentationFile>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
-		<PackageTags>nfc windows android iOS</PackageTags>
+		<PackageTags>nfc windows android iOS maccatalyst</PackageTags>
 		<GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
 		<PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<PackageId>InTheHand.Nfc</PackageId>
-		<PackageReleaseNotes>GetAvailability to determine if NFC is supported. Fixed text record parsing on Android.</PackageReleaseNotes>
+		<PackageReleaseNotes>Added tag writing for Android, iOS and macOS.</PackageReleaseNotes>
 		<PackageIcon>32feet-package-icon.png</PackageIcon>
 		<RepositoryUrl>https://github.com/inthehand/32feet</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>

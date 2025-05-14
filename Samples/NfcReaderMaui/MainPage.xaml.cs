@@ -22,8 +22,6 @@ namespace NfcReaderMaui
 
         private void Reader_Reading(object sender, NdefReadingEventArgs e)
         {
-            _cts.Cancel();
-            
             Dispatcher.Dispatch(async () =>
             {
                 foreach (var record in e.Message.Records)
@@ -37,16 +35,36 @@ namespace NfcReaderMaui
                         await DisplayAlert("NDEF", $"{record.RecordType} {record.Data}", "OK");
                     }
                 }
+
+                await _cts.CancelAsync();
             });
         }
 
-        private async void Button_Clicked(object sender, EventArgs e)
+        private async void ReadButton_Clicked(object sender, EventArgs e)
         {
             _reader = new NdefReader();
             _reader.Reading += Reader_Reading;
             _reader.Error += Reader_Error;
 
            _cts = new CancellationTokenSource();
+
+            await _reader.ScanAsync(_cts.Token);
+        }
+
+        private void Writer_Reading(object sender, NdefReadingEventArgs e)
+        {
+            var message = new NdefMessage(NdefRecord.CreateText("Text 1"),
+                NdefRecord.CreateUri(new Uri("https://inthehand.com")));
+            ((NdefReader)sender).WriteAsync(message);
+        }
+
+        private async void WriteButton_Clicked(object sender, EventArgs e)
+        {
+            _reader = new NdefReader();
+            _reader.Reading += Writer_Reading;
+            _reader.Error += Reader_Error;
+
+            _cts = new CancellationTokenSource();
 
             await _reader.ScanAsync(_cts.Token);
         }

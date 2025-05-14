@@ -24,7 +24,9 @@
                 SemanticProperties.HeadingLevel="Level2"
                 SemanticProperties.Description="Welcome to dot net Multi platform App U I" />
 
-            <Button Text="Scan NFC Tag" Clicked="Button_Clicked"/>
+            <Button Text="Read NFC Tag" Clicked="ReadButton_Clicked"/>
+
+            <Button Text="Write NFC Tag" Clicked="WriteButton_Clicked"/>
         </VerticalStackLayout>
     </ScrollView>
 

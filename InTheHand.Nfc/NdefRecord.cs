@@ -12,7 +12,7 @@ namespace InTheHand.Nfc;
 /// <summary>
 /// The content of any NDEF record.
 /// </summary>
-public sealed class NdefRecord
+public sealed partial class NdefRecord
 {
     /// <summary>
     /// Creates an empty NDEF record.
@@ -20,19 +20,20 @@ public sealed class NdefRecord
     /// <returns>A new empty NDEF record.</returns>
     public static NdefRecord CreateEmpty()
     {
-        return new NdefRecord { RecordType = NdefRecordType.Unknown };
+        return PlatformCreateEmpty();
     }
 
     /// <summary>
     /// Creates a text record.
     /// </summary>
     /// <param name="text">Plain text content.</param>
-    /// <param name="encoding">Optional Encoding name. utf-8 by default.</param>
     /// <param name="language">Optional IANA language tag.</param>
     /// <returns>A new text NDEF record.</returns>
-    public static NdefRecord CreateText(string text, string encoding = "utf-8", string language = null)
+    public static NdefRecord CreateText(string text, string language = null)
     {
-        return new NdefRecord { RecordType = NdefRecordType.Text, Data = text, Encoding = encoding, Language = language };
+        ArgumentNullException.ThrowIfNull(text);
+
+        return PlatformCreateText(text, language);
     }
 
     /// <summary>
@@ -42,7 +43,23 @@ public sealed class NdefRecord
     /// <returns>A new Uri NDEF record.</returns>
     public static NdefRecord CreateUri(Uri uri)
     {
-        return new NdefRecord { RecordType = NdefRecordType.Url, Data = uri };
+        ArgumentNullException.ThrowIfNull(uri);
+
+        return PlatformCreateUri(uri);
+    }
+
+    /// <summary>
+    /// Creates a MIME record.
+    /// </summary>
+    /// <param name="mimeType">Mime type of data.</param>
+    /// <param name="data">Record data.</param>
+    /// <returns>A new MIME NDEF record.</returns>
+    public static NdefRecord CreateMime(string mimeType, byte[] data)
+    {
+        ArgumentNullException.ThrowIfNull(mimeType);
+        ArgumentNullException.ThrowIfNull(data);
+
+        return PlatformCreateMime(mimeType, data);
     }
 
     /// <summary>
@@ -83,4 +100,8 @@ public sealed class NdefRecord
     /// For example, the 'en-AU' language range represents English as spoken in Australia, and 'fr-CA' represents French as spoken in Canada.
     /// Language tags that meet the validity criteria of [RFC5646] section 2.2.9 that can be verified without reference to the IANA Language Subtag Registry are considered structurally valid.</remarks>
     public string Language { get; internal set; }
+
+    internal NdefRecord()
+    {
+    }
 }

@@ -21,7 +21,9 @@ partial class NdefReader
     private readonly ReaderSessionDelegate _sessionDelegate;
     private NFCNdefReaderSession _session;
     private CancellationToken _cancellationToken;
+    private INFCNdefTag _currentTag;
     
+
     /// <summary>
     /// Creates a new instance of NdefReader.
     /// </summary>
@@ -62,6 +64,17 @@ partial class NdefReader
             _session.InvalidateSession();
     }
 
+    private Task PlatformWriteAsync(NdefMessage message, CancellationToken cancellationToken)
+    {
+        _currentTag?.WriteNdef(message, (e) =>
+        {
+            if(e.Code != IntPtr.Zero)
+                Error?.Invoke(this, EventArgs.Empty);
+        });
+
+        return Task.CompletedTask;
+    }
+
     private sealed class ReaderSessionDelegate(NdefReader owner) : NFCNdefReaderSessionDelegate
     {
         public override void DidDetect(NFCNdefReaderSession session, NFCNdefMessage[] messages)
@@ -77,6 +90,12 @@ partial class NdefReader
 
                 owner.Reading?.Invoke(this, new NdefReadingEventArgs(newMessage));
             }
+        }
+
+        public override void DidDetectTags(NFCNdefReaderSession session, INFCNdefTag[] tags)
+        {
+            base.DidDetectTags(session, tags);
+            owner._currentTag = tags[0];
         }
 
         public override void DidInvalidate(NFCNdefReaderSession session, NSError error)

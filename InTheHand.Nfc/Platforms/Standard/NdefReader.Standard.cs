@@ -21,7 +21,13 @@ partial class NdefReader
         return Task.FromException(new PlatformNotSupportedException());
     }
 
+    private Task PlatformWriteAsync(NdefMessage message, CancellationToken cancellationToken)
+    {
+        return Task.FromException(new PlatformNotSupportedException());
+    }
+
     private void Dispose(bool disposing)
     {
+        _disposed = true;
     }
 }
