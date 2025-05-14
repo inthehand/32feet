@@ -22,6 +22,11 @@ namespace NfcReaderMaui
 
         private void Reader_Reading(object sender, NdefReadingEventArgs e)
         {
+            if (DeviceInfo.Platform == DevicePlatform.iOS)
+            {
+                _cts.Cancel();
+            }
+
             Dispatcher.Dispatch(async () =>
             {
                 foreach (var record in e.Message.Records)
@@ -36,7 +41,11 @@ namespace NfcReaderMaui
                     }
                 }
 
-                await _cts.CancelAsync();
+                if (!_cts.IsCancellationRequested)
+                {
+                    await _cts.CancelAsync();
+                }
+                
             });
         }
 
@@ -51,11 +60,12 @@ namespace NfcReaderMaui
             await _reader.ScanAsync(_cts.Token);
         }
 
-        private void Writer_Reading(object sender, NdefReadingEventArgs e)
+        private async void Writer_Reading(object sender, NdefReadingEventArgs e)
         {
-            var message = new NdefMessage(NdefRecord.CreateText("Text 1"),
-                NdefRecord.CreateUri(new Uri("https://inthehand.com")));
-            ((NdefReader)sender).WriteAsync(message);
+            var message = new NdefMessage(NdefRecord.CreateText("My first NFC tag!"),
+                NdefRecord.CreateUri(new Uri("https://32feet.net")));
+            await ((NdefReader)sender).WriteAsync(message);
+            await _cts.CancelAsync();
         }
 
         private async void WriteButton_Clicked(object sender, EventArgs e)

@@ -53,7 +53,7 @@ public sealed partial class NdefReader : INdefReader
     /// <summary>
     /// Notify that an error happened during reading.
     /// </summary>
-    public event EventHandler Error;
+    public event EventHandler<NdefErrorEventArgs> Error;
 
 #if !ANDROID
     /// <inheritdoc/>

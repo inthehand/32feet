@@ -63,7 +63,7 @@ partial class NdefReader(Activity activity) : Java.Lang.Object, NfcAdapter.IRead
             catch (Exception e)
             {
                 Debug.WriteLine(e);
-                Error?.Invoke(this, EventArgs.Empty);
+                Error?.Invoke(this, new NdefErrorEventArgs(e));
                 break;
             }
             finally
@@ -133,11 +133,12 @@ partial class NdefReader(Activity activity) : Java.Lang.Object, NfcAdapter.IRead
 
         if (_currentNdef.IsWritable)
         {
-            await _currentNdef.WriteNdefMessageAsync(message);
+            var t = _currentNdef.WriteNdefMessageAsync(message);
+            await t.WaitAsync(cancellationToken);
         }
         else
         {
-            Error?.Invoke(this, EventArgs.Empty);
+            Error?.Invoke(this, new NdefErrorEventArgs(new InvalidOperationException("NFC tag is not writeable")));
         }
     }
 

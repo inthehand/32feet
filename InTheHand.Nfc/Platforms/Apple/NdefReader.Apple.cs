@@ -66,13 +66,22 @@ partial class NdefReader
 
     private Task PlatformWriteAsync(NdefMessage message, CancellationToken cancellationToken)
     {
-        _currentTag?.WriteNdef(message, (e) =>
+        var tcs = new TaskCompletionSource();
+
+        if (cancellationToken.CanBeCanceled)
         {
-            if(e.Code != IntPtr.Zero)
-                Error?.Invoke(this, EventArgs.Empty);
+            cancellationToken.Register(() => { tcs.SetCanceled(cancellationToken); });
+        }
+
+        _currentTag?.WriteNdef(message, (error) =>
+        {
+            if(error != null)
+                Error?.Invoke(this, new NdefErrorEventArgs(new InvalidOperationException(error.ToString())));
+            
+            tcs.SetResult();
         });
 
-        return Task.CompletedTask;
+        return tcs.Task;
     }
 
     private sealed class ReaderSessionDelegate(NdefReader owner) : NFCNdefReaderSessionDelegate
@@ -94,17 +103,36 @@ partial class NdefReader
 
         public override void DidDetectTags(NFCNdefReaderSession session, INFCNdefTag[] tags)
         {
-            base.DidDetectTags(session, tags);
             owner._currentTag = tags[0];
+            
+            tags[0].ReadNdef((message, error) =>
+            {
+                if (error != null)
+                {
+                    owner.Error?.Invoke(owner, new NdefErrorEventArgs(new InvalidOperationException(error.ToString())));
+                    
+                }
+                else
+                {
+                    var newMessage = new NdefMessage();
+                    foreach (var record in message.Records)
+                    {
+                        var parsedRecord = ParseNdefRecord(record);
+                        newMessage.AddRecord(parsedRecord);
+                    }
+
+                    owner.Reading?.Invoke(owner, new NdefReadingEventArgs(newMessage));
+                }
+            });
         }
 
         public override void DidInvalidate(NFCNdefReaderSession session, NSError error)
         {
             // filter which codes are errors
-            System.Diagnostics.Debug.WriteLine(error);
+            System.Diagnostics.Debug.WriteLine($"DidInvalidate {error}");
             if (error.Code != 0xC8 && error.Code != 0xCC)
-            {
-                owner.Error?.Invoke(owner, EventArgs.Empty);
+            { 
+                owner.Error?.Invoke(owner, new NdefErrorEventArgs(new InvalidOperationException(error.ToString())));
             }
         }
     }
@@ -143,9 +171,22 @@ partial class NdefReader
                 var textDataArray = payload.Payload.ToArray();
                 var header = textDataArray[0];
                 var languageLength = header & 0x1f;
-                parsedRecord.Encoding = (header & 0x40) == 0 ? "utf-8" : "utf-16be";
-                parsedRecord.Language = System.Text.Encoding.ASCII.GetString(textDataArray, 1, languageLength);
-                parsedRecord.Data = System.Text.Encoding.UTF8.GetString(textDataArray, languageLength + 1, textDataArray.Length - (languageLength + 1));
+                bool unicode = (header & 0x40) != 0;
+                parsedRecord.Encoding = unicode ? "utf-16" : "utf-8";
+                if (languageLength > 0)
+                {
+                    parsedRecord.Language = System.Text.Encoding.ASCII.GetString(textDataArray, 1, languageLength);
+                }
+
+                if (unicode)
+                {
+                    parsedRecord.Data = System.Text.Encoding.Unicode.GetString(textDataArray, languageLength + 1, textDataArray.Length - (languageLength + 1));
+                }
+                else
+                {
+                    parsedRecord.Data = System.Text.Encoding.UTF8.GetString(textDataArray, languageLength + 1, textDataArray.Length - (languageLength + 1));
+                }
+                
                 break;
 
             case NdefRecordType.Mime:

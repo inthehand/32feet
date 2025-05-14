@@ -38,5 +38,5 @@ public interface INdefReader
     /// <summary>
     /// Notify that an error happened during reading.
     /// </summary>
-    event EventHandler Error;
+    event EventHandler<NdefErrorEventArgs> Error;
 }
