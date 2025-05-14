@@ -65,6 +65,11 @@ namespace NfcReaderMaui
             var message = new NdefMessage(NdefRecord.CreateText("My first NFC tag!"),
                 NdefRecord.CreateUri(new Uri("https://32feet.net")));
             await ((NdefReader)sender).WriteAsync(message);
+            if (DeviceInfo.Platform == DevicePlatform.Android)
+            {
+                await Task.Delay(3000);
+            }
+
             await _cts.CancelAsync();
         }
 
