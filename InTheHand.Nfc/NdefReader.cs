@@ -39,12 +39,19 @@ public sealed partial class NdefReader : INdefReader
         return PlatformScanAsync(cancellationToken);
     }
 
+    /// <summary>
+    /// Write a message to the current tag.
+    /// </summary>
+    /// <param name="message">NDEF message containing one or more records.</param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
     public Task WriteAsync(NdefMessage message, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(message);
 
         return PlatformWriteAsync(message, cancellationToken);
     }
+
     /// <summary>
     /// Notify that a new reading is available.
     /// </summary>

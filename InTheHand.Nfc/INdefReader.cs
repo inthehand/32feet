@@ -31,6 +31,14 @@ public interface INdefReader
     Task ScanAsync(CancellationToken cancellationToken = default);
 
     /// <summary>
+    /// Write a message to the current tag.
+    /// </summary>
+    /// <param name="message">NDEF message containing one or more records.</param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    Task WriteAsync(NdefMessage message, CancellationToken cancellationToken = default);
+
+    /// <summary>
     /// Notify that a new reading is available.
     /// </summary>
     event EventHandler<NdefReadingEventArgs> Reading;
