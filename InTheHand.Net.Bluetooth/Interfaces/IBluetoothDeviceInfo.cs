@@ -26,5 +26,10 @@ namespace InTheHand.Net.Bluetooth
         bool Connected { get; }
 
         bool Authenticated { get; }
-    }
+
+        string SerialNumber { get; }
+
+        IReadOnlyCollection<string> ProtocolStrings { get; }
+
+  }
 }
