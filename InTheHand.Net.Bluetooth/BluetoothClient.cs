@@ -95,8 +95,9 @@ namespace InTheHand.Net.Sockets
         /// Connects the client to a remote Bluetooth host using the specified Bluetooth address and service identifier.
         /// </summary>
         /// <param name="address">The BluetoothAddress of the remote host.</param>
-        /// <param name="service">The Service Class Id of the service on the remote host.
-        /// The standard Bluetooth service classes are provided on <see cref="BluetoothService"/>.</param>
+        /// <param name="service">The Service UUID of the service on the remote host.
+        /// The standard Bluetooth service UUIDs are provided on <see cref="BluetoothService"/>.</param>
+        /// <remarks>On iOS the connection will be made to the first protocol exposed by the ExternalAccessory unless you first provide a mapping between the Uuid of your choice and the protocol name using <see cref="BluetoothServiceProtocolMapping"/>.</remarks>
         public void Connect(BluetoothAddress address, Guid service)
         {
             _bluetoothClient.Connect(address, service);

@@ -2,7 +2,7 @@
 //
 // InTheHand.Net.Sockets.BluetoothDeviceInfo (iOS)
 // 
-// Copyright (c) 2003-2024 In The Hand Ltd, All rights reserved.
+// Copyright (c) 2003-2025 In The Hand Ltd, All rights reserved.
 // This source code is licensed under the MIT License
 
 using InTheHand.Net.Bluetooth;
@@ -23,6 +23,11 @@ namespace InTheHand.Net.Sockets
         /// <remarks>Protocol names are formatted as reverse-DNS strings. For example, the string “com.apple.myProtocol” might represent a custom protocol defined by Apple.
         /// Manufacturers can define custom protocols for their accessories or work with other manufacturers and organizations to define standard protocols for different accessory types.</remarks>
         public IReadOnlyCollection<string> ProtocolStrings => ((ExternalAccessoryBluetoothDeviceInfo)_bluetoothDeviceInfo).ProtocolStrings;
+        
+        /// <summary>
+        /// On iOS returns the ExternalAccessory serial number.
+        /// </summary>
+        public string SerialNumber => ((ExternalAccessoryBluetoothDeviceInfo)_bluetoothDeviceInfo).SerialNumber;
     }
 
     internal sealed class ExternalAccessoryBluetoothDeviceInfo : IBluetoothDeviceInfo
@@ -48,11 +53,6 @@ namespace InTheHand.Net.Sockets
 
         public string DeviceName => _accessory.Name;
 
-        /// <summary>
-        /// On iOS returns the ExternalAccessory Protocol strings for the device.
-        /// </summary>
-        /// <remarks>Protocol names are formatted as reverse-DNS strings. For example, the string “com.apple.myProtocol” might represent a custom protocol defined by Apple.
-        /// Manufacturers can define custom protocols for their accessories or work with other manufacturers and organizations to define standard protocols for different accessory types.</remarks>
         public IReadOnlyCollection<string> ProtocolStrings => new ReadOnlyCollection<string>(_accessory.ProtocolStrings.ToList());
 
         public bool Connected => _accessory.Connected;
@@ -60,12 +60,21 @@ namespace InTheHand.Net.Sockets
         public bool Authenticated => true;
 
         ClassOfDevice IBluetoothDeviceInfo.ClassOfDevice => (ClassOfDevice)0;
+        
+        public string SerialNumber => _accessory.SerialNumber;
 
         void IBluetoothDeviceInfo.Refresh() { }
 
-        Task<IEnumerable<Guid>> IBluetoothDeviceInfo.GetRfcommServicesAsync(bool cached)
+        async Task<IEnumerable<Guid>> IBluetoothDeviceInfo.GetRfcommServicesAsync(bool cached)
         {
-            throw new PlatformNotSupportedException();
+            var services = new List<Guid>();
+
+            foreach (var protocol in ProtocolStrings)
+            {
+                if (BluetoothServiceProtocolMapping.TryGetUuidForProtocol(protocol, out var uuid))
+                    services.Add(uuid);
+            }
+            return services.AsReadOnly();
         }
     }
 }

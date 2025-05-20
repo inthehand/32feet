@@ -12,8 +12,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Net.Sockets;
-using System.Runtime.CompilerServices;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace InTheHand.Net.Sockets
@@ -64,7 +62,14 @@ namespace InTheHand.Net.Sockets
             _accessory = address.Accessory;
             _accessory.Disconnected += _accessory_Disconnected;
             // TODO: provide mapping support for multiple protocol strings
-            _session = new EASession(_accessory, _accessory.ProtocolStrings[0]);
+            if (BluetoothServiceProtocolMapping.TryGetProtocolForUuid(service, out var protocol))
+            {
+                _session = new EASession(_accessory, protocol);
+            }
+            else
+            {
+                _session = new EASession(_accessory, _accessory.ProtocolStrings[0]);
+            }
             _stream = new ExternalAccessoryNetworkStream(_session);
         }
 
