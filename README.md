@@ -8,7 +8,7 @@
 - IOBluetooth/IOBluetoothUI bindings for Xamarin Mac
 - IrDA
 - Object Exchange (Obex)
-- NFC (Reader)
+- NFC
 
 Bluetooth support requires .NET Framework v4.6.1 or later for desktop Windows 7, 8, 10 and 11. Android and Apple macOS and iOS are also supported using Xamarin or .NET 6.0 and above. Full platform information is [listed in the Wiki](https://github.com/inthehand/32feet/wiki#platforms).
 
