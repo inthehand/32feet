@@ -160,11 +160,11 @@ partial class NdefReader
                 };
 
                 urlText  += System.Text.Encoding.UTF8.GetString(dataArray, 1, dataArray.Length - 1);
-                parsedRecord.Data = urlText;
+                parsedRecord.Data = new Uri(urlText);
                 break;
 
             case NdefRecordType.AbsoluteUri:
-                parsedRecord.Data = typeString;
+                parsedRecord.Data = new Uri(typeString);
                 break;
 
             case NdefRecordType.Text:
