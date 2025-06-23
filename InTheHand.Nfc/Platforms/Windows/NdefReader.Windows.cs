@@ -39,6 +39,11 @@ partial class NdefReader
         return Task.FromException(new PlatformNotSupportedException());
     }
 
+    private Task PlatformMakeReadOnlyAsync(CancellationToken cancellationToken)
+    {
+        return Task.FromException(new PlatformNotSupportedException());
+    }
+
     private void Unsubscribe()
     {
         if (_subscriptionReference == 0) return;

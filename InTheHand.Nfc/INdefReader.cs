@@ -39,6 +39,13 @@ public interface INdefReader
     Task WriteAsync(NdefMessage message, CancellationToken cancellationToken = default);
 
     /// <summary>
+    /// Mark the tag as read-only.
+    /// </summary>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    Task MakeReadOnlyAsync(CancellationToken cancellationToken = default);
+
+    /// <summary>
     /// Notify that a new reading is available.
     /// </summary>
     event EventHandler<NdefReadingEventArgs> Reading;

@@ -53,6 +53,15 @@ public sealed partial class NdefReader : INdefReader
     }
 
     /// <summary>
+    /// Make the current tag permanently read-only.
+    /// </summary>
+    /// <returns></returns>
+    public Task MakeReadOnlyAsync(CancellationToken cancellationToken = default)
+    {
+        return PlatformMakeReadOnlyAsync(cancellationToken);
+    }
+
+    /// <summary>
     /// Notify that a new reading is available.
     /// </summary>
     public event EventHandler<NdefReadingEventArgs> Reading;

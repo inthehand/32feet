@@ -6,10 +6,12 @@
 // This source code is licensed under the MIT License
 
 using System;
+using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using CoreNFC;
 using Foundation;
+using UIKit;
 
 // ReSharper disable CheckNamespace
 namespace InTheHand.Nfc;
@@ -45,6 +47,9 @@ partial class NdefReader
             throw new InvalidOperationException("Session already active");
         }
 
+        var tcs = new TaskCompletionSource();
+        _sessionDelegate.SetTaskCompletionSource(tcs);
+        
         _session = new NFCNdefReaderSession(_sessionDelegate, null, !_cancellationToken.CanBeCanceled);
 
         _cancellationToken = cancellationToken;
@@ -55,7 +60,7 @@ partial class NdefReader
 
         _session.BeginSession();
 
-        return Task.CompletedTask;
+        return tcs.Task;
     }
 
     private void CancelScan()
@@ -68,37 +73,69 @@ partial class NdefReader
     {
         var tcs = new TaskCompletionSource();
 
-        if (cancellationToken.CanBeCanceled)
-        {
-            cancellationToken.Register(() => { tcs.SetCanceled(cancellationToken); });
-        }
-
         _currentTag?.WriteNdef(message, (error) =>
         {
-            if(error != null)
-                Error?.Invoke(this, new NdefErrorEventArgs(new InvalidOperationException(error.ToString())));
+            if (error != null)
+            {
+                var ex = new InvalidOperationException(error.ToString(), new NSErrorException(error));
+                Error?.Invoke(this, new NdefErrorEventArgs(ex));
+                tcs.SetException(ex);
+            }
+            else
+            {
+                tcs.SetResult();
+            }
+                
             
-            tcs.SetResult();
+            
         });
 
-        return tcs.Task;
+        return tcs.Task.WaitAsync(cancellationToken);
+    }
+
+    private Task PlatformMakeReadOnlyAsync(CancellationToken cancellationToken)
+    {
+        var tcs = new TaskCompletionSource();
+
+        _currentTag?.WriteLock((e) =>
+        {
+            if (e != null)
+            {
+                Exception ex;
+                if (e.Domain == NFCReaderError.NdefReaderSessionErrorTagUpdateFailure.GetDomain())
+                {
+                    var domainError = (NFCReaderError)e.Code;
+                    ex = new InvalidOperationException(domainError.ToString(), new NSErrorException(e));
+                }
+                else
+                {
+                    ex = new InvalidOperationException(e.ToString(), new NSErrorException(e));
+                }
+                
+                Error?.Invoke(this, new NdefErrorEventArgs(ex));
+                tcs.SetException(ex);
+            }
+            else
+            {
+                tcs.SetResult();
+            }
+        });
+
+        return tcs.Task.WaitAsync(cancellationToken);
     }
 
     private sealed class ReaderSessionDelegate(NdefReader owner) : NFCNdefReaderSessionDelegate
     {
+        private TaskCompletionSource _currentTaskCompletionSource;
+
+        internal void SetTaskCompletionSource(TaskCompletionSource tcs)
+        {
+            _currentTaskCompletionSource = tcs;
+        }
+        
         public override void DidDetect(NFCNdefReaderSession session, NFCNdefMessage[] messages)
         {
-            foreach (var message in messages)
-            {
-                var newMessage = new NdefMessage();
-                foreach (var record in message.Records)
-                {
-                    var parsedRecord = ParseNdefRecord(record);
-                    newMessage.AddRecord(parsedRecord);
-                }
-
-                owner.Reading?.Invoke(this, new NdefReadingEventArgs(newMessage));
-            }
+            Debug.WriteLine("NFCNdefReaderSessionDelegate.DidDetect called even though DidDetectTags implemented");
         }
 
         public override void DidDetectTags(NFCNdefReaderSession session, INFCNdefTag[] tags)
@@ -109,8 +146,11 @@ partial class NdefReader
             {
                 if (error != null)
                 {
-                    owner.Error?.Invoke(owner, new NdefErrorEventArgs(new InvalidOperationException(error.ToString())));
-                    
+                    var ex = new InvalidOperationException(error.ToString(), new NSErrorException(error));
+                    UIApplication.SharedApplication.BeginInvokeOnMainThread(() =>
+                    {
+                        owner.Error?.Invoke(owner, new NdefErrorEventArgs(ex));
+                    });
                 }
                 else
                 {
@@ -121,7 +161,10 @@ partial class NdefReader
                         newMessage.AddRecord(parsedRecord);
                     }
 
-                    owner.Reading?.Invoke(owner, new NdefReadingEventArgs(newMessage));
+                    UIApplication.SharedApplication.BeginInvokeOnMainThread(() =>
+                    {
+                        owner.Reading?.Invoke(owner, new NdefReadingEventArgs(newMessage));
+                    });
                 }
             });
         }
@@ -129,10 +172,19 @@ partial class NdefReader
         public override void DidInvalidate(NFCNdefReaderSession session, NSError error)
         {
             // filter which codes are errors
-            System.Diagnostics.Debug.WriteLine($"DidInvalidate {error}");
+            Debug.WriteLine($"DidInvalidate {error}");
             if (error.Code != 0xC8 && error.Code != 0xCC)
-            { 
-                owner.Error?.Invoke(owner, new NdefErrorEventArgs(new InvalidOperationException(error.ToString())));
+            {
+                var ex = new InvalidOperationException(error.ToString());
+                UIApplication.SharedApplication.BeginInvokeOnMainThread(() =>
+                {
+                    owner.Error?.Invoke(owner, new NdefErrorEventArgs(ex));
+                });
+                _currentTaskCompletionSource?.SetException(ex);
+            }
+            else
+            {
+                _currentTaskCompletionSource?.SetResult();
             }
         }
     }
@@ -178,14 +230,8 @@ partial class NdefReader
                     parsedRecord.Language = System.Text.Encoding.ASCII.GetString(textDataArray, 1, languageLength);
                 }
 
-                if (unicode)
-                {
-                    parsedRecord.Data = System.Text.Encoding.Unicode.GetString(textDataArray, languageLength + 1, textDataArray.Length - (languageLength + 1));
-                }
-                else
-                {
-                    parsedRecord.Data = System.Text.Encoding.UTF8.GetString(textDataArray, languageLength + 1, textDataArray.Length - (languageLength + 1));
-                }
+                parsedRecord.Data = unicode ? System.Text.Encoding.Unicode.GetString(textDataArray, languageLength + 1, textDataArray.Length - (languageLength + 1)) 
+                    : System.Text.Encoding.UTF8.GetString(textDataArray, languageLength + 1, textDataArray.Length - (languageLength + 1));
                 
                 break;
 

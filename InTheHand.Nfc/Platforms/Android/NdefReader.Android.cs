@@ -23,6 +23,8 @@ namespace InTheHand.Nfc;
 
 partial class NdefReader(Activity activity) : Java.Lang.Object, NfcAdapter.IReaderCallback
 {
+    private const int AndroidCancelDelayMilliseconds = 2000;
+    
     private static readonly NfcAdapter SAdapter = NfcAdapter.GetDefaultAdapter(Application.Context);
 
     private static Task<bool> PlatformGetAvailability() => Task.FromResult(SAdapter is { IsEnabled: true });
@@ -57,13 +59,16 @@ partial class NdefReader(Activity activity) : Java.Lang.Object, NfcAdapter.IRead
             {
                 _currentNdef = ndef;
                 ndef.Connect();
-                Reading?.Invoke(this, new AndroidNdefReadingEventArgs(ndef, ndef.NdefMessage, serial));
+                activity.RunOnUiThread(() =>
+                {
+                    Reading?.Invoke(this, new AndroidNdefReadingEventArgs(ndef, ndef.NdefMessage, serial));
+                });
                 break;
             }
             catch (Exception e)
             {
                 Debug.WriteLine(e);
-                Error?.Invoke(this, new NdefErrorEventArgs(e));
+                activity.RunOnUiThread(() => Error?.Invoke(this, new NdefErrorEventArgs(e)));
                 break;
             }
             finally
@@ -71,13 +76,7 @@ partial class NdefReader(Activity activity) : Java.Lang.Object, NfcAdapter.IRead
                 // if no valid cancellation token, end the session after first NFC scan
                 if (_autoCancel)
                 {
-                    Task.Run(async () =>
-                    {
-                        // add a pause to avoid double scanning
-                        await Task.Delay(2000);
-                        CancelScan();
-                    });
-                    
+                    CancelScan();
                 }
             }
         }
@@ -101,9 +100,11 @@ partial class NdefReader(Activity activity) : Java.Lang.Object, NfcAdapter.IRead
 
     private Task PlatformScanAsync(CancellationToken cancellationToken)
     {
+        var tcs = new TaskCompletionSource();
+        
         if (cancellationToken.CanBeCanceled)
         {
-            cancellationToken.Register(CancelScan);
+            cancellationToken.Register(() => CancelScan());
         }
         else
         {
@@ -112,16 +113,19 @@ partial class NdefReader(Activity activity) : Java.Lang.Object, NfcAdapter.IRead
 
         SAdapter.EnableReaderMode(activity, this,
             NfcReaderFlags.NfcA | NfcReaderFlags.NfcB | NfcReaderFlags.NfcF | NfcReaderFlags.NfcV, null);
-        return Task.CompletedTask;
+
+        return tcs.Task.WaitAsync(cancellationToken);
     }
 
-    private void CancelScan()
+    private async Task CancelScan()
     {
-        SAdapter.DisableReaderMode(activity);
+        await Task.Delay(AndroidCancelDelayMilliseconds);
         _currentNdef?.Dispose();
+        _currentNdef = null;
+        SAdapter.DisableReaderMode(activity);
     }
 
-    private async Task PlatformWriteAsync(NdefMessage message, CancellationToken cancellationToken)
+    private Task PlatformWriteAsync(NdefMessage message, CancellationToken cancellationToken)
     {
         if (_currentNdef == null)
             throw new InvalidOperationException("No tag currently in range");
@@ -134,11 +138,38 @@ partial class NdefReader(Activity activity) : Java.Lang.Object, NfcAdapter.IRead
         if (_currentNdef.IsWritable)
         {
             var t = _currentNdef.WriteNdefMessageAsync(message);
-            await t.WaitAsync(cancellationToken);
+            return t.WaitAsync(cancellationToken);
         }
         else
         {
-            Error?.Invoke(this, new NdefErrorEventArgs(new InvalidOperationException("NFC tag is not writeable")));
+            var ex = new InvalidOperationException("NFC tag is not writeable");
+            activity.RunOnUiThread(() => Error?.Invoke(this, new NdefErrorEventArgs(ex)));
+            return Task.FromException(ex);
+        }
+    }
+    
+    private async Task PlatformMakeReadOnlyAsync(CancellationToken cancellationToken)
+    {
+        if (_currentNdef == null)
+            throw new InvalidOperationException("No tag currently in range");
+
+        if (!_currentNdef.IsConnected)
+        {
+            _currentNdef.Connect();
+        }
+
+        if (_currentNdef.IsWritable && _currentNdef.CanMakeReadOnly())
+        {
+            var t = _currentNdef.MakeReadOnlyAsync();
+            var success = await t.WaitAsync(cancellationToken);
+            if (!success)
+                throw new InvalidOperationException("Error making tag read-only");
+        }
+        else
+        {
+            var ex = new InvalidOperationException("NFC tag cannot be made read-only");
+            activity.RunOnUiThread(() => Error?.Invoke(this, new NdefErrorEventArgs(ex)));
+            throw ex;
         }
     }
 

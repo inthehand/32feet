@@ -27,6 +27,8 @@
             <Button Text="Read NFC Tag" Clicked="ReadButton_Clicked"/>
 
             <Button Text="Write NFC Tag" Clicked="WriteButton_Clicked"/>
+            
+            <Button Text="Make Tag Read-only" Clicked="ReadOnlyButton_Clicked" />
         </VerticalStackLayout>
     </ScrollView>
 

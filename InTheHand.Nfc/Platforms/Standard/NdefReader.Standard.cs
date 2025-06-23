@@ -25,6 +25,11 @@ partial class NdefReader
     {
         return Task.FromException(new PlatformNotSupportedException());
     }
+    
+    private Task PlatformMakeReadOnlyAsync(CancellationToken cancellationToken)
+    {
+        return Task.FromException(new PlatformNotSupportedException());
+    }
 
     private void Dispose(bool disposing)
     {
