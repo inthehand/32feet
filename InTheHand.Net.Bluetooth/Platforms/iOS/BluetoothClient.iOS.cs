@@ -2,16 +2,19 @@
 //
 // InTheHand.Net.Bluetooth.BluetoothClient (iOS)
 // 
-// Copyright (c) 2018-2023 In The Hand Ltd, All rights reserved.
+// Copyright (c) 2018-2025 In The Hand Ltd, All rights reserved.
 // This source code is licensed under the MIT License
 
 using ExternalAccessory;
 using Foundation;
+using InTheHand.Net.Bluetooth;
 using InTheHand.Net.Sockets.iOS;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Net.Sockets;
+using System.Runtime.CompilerServices;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace InTheHand.Net.Sockets

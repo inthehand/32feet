@@ -2,7 +2,7 @@
 //
 // InTheHand.Net.Sockets.BluetoothDeviceInfo (Win32)
 // 
-// Copyright (c) 2003-2024 In The Hand Ltd, All rights reserved.
+// Copyright (c) 2003-2025 In The Hand Ltd, All rights reserved.
 // This source code is licensed under the MIT License
 
 using InTheHand.Net.Bluetooth;
@@ -22,6 +22,7 @@ namespace InTheHand.Net.Sockets
         /// <summary>
         /// Returns a list of services which are already installed for use on the calling machine (Win32 only).
         /// </summary>
+        [Obsolete("Use GetRfcommServicesAsync to query services")]
         public IReadOnlyCollection<Guid> InstalledServices => ((Win32BluetoothDeviceInfo)_bluetoothDeviceInfo).InstalledServices;
 
         /// <summary>
@@ -29,6 +30,7 @@ namespace InTheHand.Net.Sockets
         /// </summary>
         /// <param name="service"></param>
         /// <param name="state"></param>
+        [Obsolete("Used to toggle services on Windows Vista to Windows 7")]
         public void SetServiceState(Guid service, bool state) => ((Win32BluetoothDeviceInfo)_bluetoothDeviceInfo).SetServiceState(service, state);
     }
 
@@ -129,7 +131,6 @@ namespace InTheHand.Net.Sockets
 
             return Task.FromResult(result: (IEnumerable<Guid>)services);
         }
-
 
         public IReadOnlyCollection<Guid> InstalledServices
         {

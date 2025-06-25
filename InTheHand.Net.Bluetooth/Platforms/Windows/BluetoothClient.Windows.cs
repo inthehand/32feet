@@ -2,7 +2,7 @@
 //
 // InTheHand.Net.Sockets.BluetoothClient (WinRT)
 // 
-// Copyright (c) 2018-2024 In The Hand Ltd, All rights reserved.
+// Copyright (c) 2018-2025 In The Hand Ltd, All rights reserved.
 // This source code is licensed under the MIT License
 
 using System;
@@ -20,6 +20,7 @@ namespace InTheHand.Net.Sockets
 {
     internal sealed class WindowsBluetoothClient : IBluetoothClient
     {
+        private const string DeviceSelectorForAllBluetoothDevices = "System.Devices.DevObjectType:=5 AND System.Devices.Aep.ProtocolId:=\"{E0CBF06C-CD8B-4647-BB8A-263B43F0F974}\" AND (System.Devices.Aep.IsPaired:=System.StructuredQueryType.Boolean#False OR System.Devices.Aep.IsPaired:=System.StructuredQueryType.Boolean#True OR System.Devices.Aep.Bluetooth.IssueInquiry:=System.StructuredQueryType.Boolean#True)";
         private StreamSocket _streamSocket;
         private bool _authenticate = false;
 
@@ -53,7 +54,7 @@ namespace InTheHand.Net.Sockets
 
             var devices = InTheHand.Threading.Tasks.AsyncHelpers.RunSync<DeviceInformationCollection>(async ()=>
             {
-                return await DeviceInformation.FindAllAsync(BluetoothDevice.GetDeviceSelectorFromPairingState(false));
+                return await DeviceInformation.FindAllAsync(DeviceSelectorForAllBluetoothDevices);
             });
 
             foreach (var device in devices)
@@ -70,7 +71,7 @@ namespace InTheHand.Net.Sockets
 #if NET6_0_OR_GREATER
         public async IAsyncEnumerable<BluetoothDeviceInfo> DiscoverDevicesAsync([EnumeratorCancellation] CancellationToken cancellationToken)
         {
-            var devices = await DeviceInformation.FindAllAsync(BluetoothDevice.GetDeviceSelectorFromPairingState(false)).AsTask(cancellationToken);
+            var devices = await DeviceInformation.FindAllAsync(DeviceSelectorForAllBluetoothDevices).AsTask(cancellationToken);
             
             foreach(var device in devices)
             {

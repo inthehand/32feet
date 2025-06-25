@@ -2,7 +2,7 @@
 //
 // InTheHand.Net.Bluetooth.BluetoothDevicePicker (WinRT)
 // 
-// Copyright (c) 2018-2024 In The Hand Ltd, All rights reserved.
+// Copyright (c) 2018-2025 In The Hand Ltd, All rights reserved.
 // This source code is licensed under the MIT License
 
 using InTheHand.Net.Sockets;
@@ -39,9 +39,13 @@ namespace InTheHand.Net.Bluetooth
 
                 WinRT.Interop.InitializeWithWindow.Initialize(picker, hwnd);
 #endif
+
             }
 
-            picker.Filter.SupportedDeviceSelectors.Add(requiresAuthentication ? BluetoothDevice.GetDeviceSelectorFromPairingState(true) : BluetoothDevice.GetDeviceSelector());
+            picker.Filter.SupportedDeviceSelectors.Add(BluetoothDevice.GetDeviceSelectorFromPairingState(true));
+            if(!requiresAuthentication)
+                picker.Filter.SupportedDeviceSelectors.Add(BluetoothDevice.GetDeviceSelectorFromPairingState(false));
+
             var deviceInfo = await picker.PickSingleDeviceAsync(bounds);
 
             if (deviceInfo == null)
