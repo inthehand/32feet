@@ -21,7 +21,7 @@ namespace InTheHand.Bluetooth
 {
     partial class Bluetooth
     {
-        internal static BluetoothManager _manager = (BluetoothManager)Application.Context.GetSystemService(Context.BluetoothService);
+        internal static readonly BluetoothManager _manager = (BluetoothManager)Application.Context.GetSystemService(Context.BluetoothService);
         private static readonly EventWaitHandle s_handle = new EventWaitHandle(false, EventResetMode.AutoReset);
         internal static Android.Bluetooth.BluetoothDevice? s_device;
         private static BluetoothReceiver? _receiver;
@@ -89,18 +89,25 @@ namespace InTheHand.Bluetooth
 
         private static async Task<IReadOnlyCollection<BluetoothDevice>> PlatformScanForDevices(RequestDeviceOptions? options, CancellationToken cancellationToken = default)
         {
-            List<ScanFilter> filters = new List<ScanFilter>();
+            var filters = new List<ScanFilter>();
                 
             if (options != null)
             {
                 foreach (var f in options.Filters)
                 {
+                    ScanFilter.Builder b = new ScanFilter.Builder();
+                                         
                     foreach (var u in f.Services)
                     {
-                        ScanFilter.Builder b = new ScanFilter.Builder();
                         b.SetServiceUuid(ParcelUuid.FromString(u.Value.ToString()));
-                        filters.Add(b.Build());
                     }
+
+                    if (!string.IsNullOrEmpty(f.Name))
+                    {
+                        b.SetDeviceName(f.Name);
+                    }
+                    
+                    filters.Add(b.Build());
                 }
             }
 
