@@ -387,7 +387,24 @@ namespace InTheHand.Net.Bluetooth.Sdp
         {
             HackFxCopHintNonStaticMethod();
             // We only support one-byte length fields (currently?).
-            headerState = new HeaderWriteState(elementTypeDescriptor, buf, offset, SizeIndex.AdditionalUInt8, 2);
+            SizeIndex sizeIndex = SizeIndex.AdditionalUInt8;
+            int headerLength = 2;
+            if (buf.Length >= byte.MaxValue && buf.Length < short.MaxValue)
+            {
+                sizeIndex = SizeIndex.AdditionalUInt16;
+                headerLength += 1; // AdditionalUInt16 has an extra byte for the length.
+            }
+            else if (buf.Length >= short.MaxValue && buf.Length < int.MaxValue)
+            {
+                sizeIndex = SizeIndex.AdditionalUInt32;
+                headerLength += 3; // AdditionalUInt32 has three extra bytes for the length.
+            }
+            else if (buf.Length >= int.MaxValue)
+            {
+                throw new NotSupportedException(ErrorMsgSupportOnlyLength255);
+            }
+
+            headerState = new HeaderWriteState(elementTypeDescriptor, buf, offset, sizeIndex, headerLength);
             return headerState.HeaderLength;
         }
 
@@ -412,13 +429,26 @@ namespace InTheHand.Net.Bluetooth.Sdp
                     || headerState.SizeIndex == SizeIndex.AdditionalUInt16
                     || headerState.SizeIndex == SizeIndex.AdditionalUInt32);
                 int contentLength = offsetAtEndOfWritten - headerState.HeaderOffset - headerState.HeaderLength;
-                System.Diagnostics.Debug.Assert(headerState.SizeIndex == SizeIndex.AdditionalUInt8,
-                    "WriteHeader not AdditionalUInt8 but that's all that MakeHeaderSpace supports...");
                 if (headerState.SizeIndex == SizeIndex.AdditionalUInt8) {
                     if (contentLength > Byte.MaxValue) {
                         throw new NotSupportedException(ErrorMsgSupportOnlyLength255);
                     }
                     buf[headerState.HeaderOffset + 1] = checked((byte)contentLength);
+                }
+                else if (headerState.SizeIndex == SizeIndex.AdditionalUInt16) {
+                    Int16 net16 = IPAddress.HostToNetworkOrder((Int16)contentLength);
+                    byte[] valueBytes = BitConverter.GetBytes(net16);
+                    buf[headerState.HeaderOffset + 1] = valueBytes[0];
+                    buf[headerState.HeaderOffset + 2] = valueBytes[1];
+                }
+                else if (headerState.SizeIndex == SizeIndex.AdditionalUInt32)
+                {
+                    Int32 net32 = IPAddress.HostToNetworkOrder((Int32)contentLength);
+                    byte[] valueBytes = BitConverter.GetBytes(net32);
+                    buf[headerState.HeaderOffset + 1] = valueBytes[0];
+                    buf[headerState.HeaderOffset + 2] = valueBytes[1];
+                    buf[headerState.HeaderOffset + 3] = valueBytes[2];
+                    buf[headerState.HeaderOffset + 4] = valueBytes[3];
                 }
                 totalLength = offsetAtEndOfWritten - headerState.HeaderOffset;
             }
