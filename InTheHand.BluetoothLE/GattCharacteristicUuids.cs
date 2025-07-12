@@ -384,8 +384,7 @@ namespace InTheHand.Bluetooth
         [BluetoothUti("floor_number")]
         public static readonly BluetoothUuid FloorNumber = 0x2AB2;
 
-        
-       [BluetoothUti("gender")]
+        [BluetoothUti("gender")]
         public static readonly BluetoothUuid Gender = 0x2A8C;
 
         [BluetoothUti("glucose_feature")]
@@ -622,14 +621,23 @@ namespace InTheHand.Bluetooth
         [BluetoothUti("ieee_11073-20601_regulatoryertification_data_list")]
         public static readonly BluetoothUuid RegulatoryCertificationDataList = 0x2A2A;
         
+        [BluetoothUti("scan_refresh")]
+        public static readonly BluetoothUuid ScanRefresh = 0x2A31;
+
         [BluetoothUti("sensor_location")]
         public static readonly BluetoothUuid SensorLocation = 0x2A5D;
+
+        [BluetoothUti("serial_number_string")]
+        public static readonly BluetoothUuid SerialNumberString = 0x2A25;
 
         [BluetoothUti("server_supported_features")]
         public static readonly BluetoothUuid ServerSupportedFeatures = 0x2B3A;
 
         [BluetoothUti("gap.service_changed")]
         public static readonly BluetoothUuid ServiceChanged = 0x2A05;
+
+        [BluetoothUti("software_revision_string")]
+        public static readonly BluetoothUuid SoftwareRevisionString = 0x2A28;
 
         [BluetoothUti("system_id")]
         public static readonly BluetoothUuid SystemId = 0x2A23;
