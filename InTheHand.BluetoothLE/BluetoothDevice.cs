@@ -9,7 +9,7 @@ using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
 
-namespace InTheHand.Bluetooth
+namespace InTheHand.Bluetooth : IDisposable
 {
     /// <summary>
     /// A BluetoothDevice instance represents a remote Bluetooth device
