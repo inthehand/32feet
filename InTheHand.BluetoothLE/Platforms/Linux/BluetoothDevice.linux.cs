@@ -170,5 +170,7 @@ namespace InTheHand.Bluetooth
 
             return base.Equals(obj);
         }
+
+        public void Dispose() {}
     }
 }
