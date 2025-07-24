@@ -82,5 +82,7 @@ namespace InTheHand.Bluetooth
         {
             _watchingAdvertisements = false;
         }*/
+
+        public void Dispose() {}
     }
 }
