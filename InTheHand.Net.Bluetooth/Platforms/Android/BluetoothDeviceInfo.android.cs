@@ -2,7 +2,7 @@
 //
 // InTheHand.Net.Sockets.BluetoothDeviceInfo (Android)
 // 
-// Copyright (c) 2003-2024 In The Hand Ltd, All rights reserved.
+// Copyright (c) 2003-2025 In The Hand Ltd, All rights reserved.
 // This source code is licensed under the MIT License
 
 using Android.Bluetooth;
@@ -98,17 +98,21 @@ namespace InTheHand.Net.Sockets
 
                 return services.AsReadOnly();
             }
-            else
+
+            var servicesReceiver = new TaskCompletionSource<IEnumerable<Guid>>();
+            var receiver = new BluetoothUuidReceiver(servicesReceiver);
+
+            AndroidActivity.CurrentActivity.RegisterReceiver(receiver, new IntentFilter(BluetoothDevice.ActionUuid));
+
+            bool success = _device.FetchUuidsWithSdp();
+
+            if (!success)
             {
-                TaskCompletionSource<IEnumerable<Guid>> servicesReceiver = new TaskCompletionSource<IEnumerable<Guid>>();
-                var receiver = new BluetoothUuidReceiver(servicesReceiver);
-
-                InTheHand.AndroidActivity.CurrentActivity.RegisterReceiver(receiver, new IntentFilter(BluetoothDevice.ActionUuid));
-
-                bool success = _device.FetchUuidsWithSdp();
-
-                return await servicesReceiver.Task;
+                AndroidActivity.CurrentActivity.UnregisterReceiver(receiver);
+                return System.Array.AsReadOnly(System.Array.Empty<Guid>());
             }
+
+            return await servicesReceiver.Task;
         }
 
         void IBluetoothDeviceInfo.Refresh() { }
