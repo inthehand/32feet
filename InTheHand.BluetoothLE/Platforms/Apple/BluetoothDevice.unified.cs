@@ -102,6 +102,8 @@ namespace InTheHand.Bluetooth
             throw new PlatformNotSupportedException();
         }
 
+        public void Dispose() {}
+
 #if __IOS__
         /// <summary>
         /// Specifies whether to request Apple Notification Center Services to allow access to notifications from the remote device when connecting.
