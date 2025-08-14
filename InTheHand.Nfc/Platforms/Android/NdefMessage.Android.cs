@@ -14,6 +14,7 @@ namespace InTheHand.Nfc;
 
 partial class NdefMessage
 {
+    private ANfc.Tag _tag;
     private ANfc.NdefMessage _message;
 
     public static implicit operator ANfc.NdefMessage(NdefMessage message)
@@ -21,13 +22,19 @@ partial class NdefMessage
         return message._message;
     }
 
-    public static implicit operator NdefMessage(ANfc.NdefMessage message)
+    public static implicit operator ANfc.Tag(NdefMessage message)
     {
-        return message == null ? null : new NdefMessage(message);
+        return message._tag;
     }
 
-    internal NdefMessage(ANfc.NdefMessage message)
+    public static implicit operator NdefMessage(ANfc.NdefMessage message)
     {
+        return message == null ? null : new NdefMessage(null, message);
+    }
+
+    internal NdefMessage(ANfc.Tag tag, ANfc.NdefMessage message)
+    {
+        _tag = tag;
         _message = message;
 
         var records = message.GetRecords();

@@ -61,7 +61,7 @@ partial class NdefReader(Activity activity) : Java.Lang.Object, NfcAdapter.IRead
                 ndef.Connect();
                 activity.RunOnUiThread(() =>
                 {
-                    Reading?.Invoke(this, new AndroidNdefReadingEventArgs(ndef, ndef.NdefMessage, serial));
+                    Reading?.Invoke(this, new AndroidNdefReadingEventArgs(ndef,  new NdefMessage(tag, ndef.NdefMessage), serial));
                 });
                 break;
             }

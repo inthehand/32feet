@@ -6,7 +6,7 @@
 		<Company>In The Hand Ltd</Company>
 		<Authors>Peter Foot</Authors>
 		<Product>32feet.NET</Product>
-		<Version>1.2.0</Version>
+		<Version>1.2.1</Version>
 		<RepositoryUrl>https://github.com/inthehand/32feet</RepositoryUrl>
 		<PublishRepositoryUrl>true</PublishRepositoryUrl>
 		<DebugSymbols>true</DebugSymbols>
@@ -26,7 +26,7 @@
 		<PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<PackageId>InTheHand.Nfc</PackageId>
-		<PackageReleaseNotes>Added MakeReadOnly method. Exception handling and threading improvements.</PackageReleaseNotes>
+		<PackageReleaseNotes>Exposed native Android Tag.</PackageReleaseNotes>
 		<PackageIcon>32feet-package-icon.png</PackageIcon>
 		<RepositoryUrl>https://github.com/inthehand/32feet</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
