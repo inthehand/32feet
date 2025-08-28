@@ -37,7 +37,7 @@ partial class NdefMessage
         _tag = tag;
         _message = message;
 
-        var records = message.GetRecords();
+        var records = message?.GetRecords();
 
         if (records == null) return;
 
