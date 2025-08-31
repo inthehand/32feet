@@ -6,7 +6,7 @@
 		<Company>In The Hand Ltd</Company>
 		<Authors>Peter Foot</Authors>
 		<Product>32feet.NET</Product>
-		<Version>4.0.42</Version>
+		<Version>4.0.43</Version>
 		<IncludeSymbols>true</IncludeSymbols>
 		<DebugSymbols>true</DebugSymbols>
 		<DebugType>portable</DebugType>
@@ -21,7 +21,7 @@
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<Copyright>Copyright (c) 2004-2025 In The Hand Ltd</Copyright>
 		<Description>32feet.NET is an open-source project to make personal area networking technologies such as Bluetooth easily accessible from .NET code.</Description>
-		<FileVersion>4.0.42.712</FileVersion>
+		<FileVersion>4.0.43.831</FileVersion>
 		<AssemblyVersion>4.0.0.0</AssemblyVersion>
 		<AssemblyName>InTheHand.BluetoothLE</AssemblyName>
 		<PackageIconUrl></PackageIconUrl>
@@ -32,7 +32,7 @@
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<RootNamespace>InTheHand.Bluetooth</RootNamespace>
 		<PackageIcon>32feet-package-icon.png</PackageIcon>
-		<PackageReleaseNotes>Linux bug fix for ScanForDevices options null. Fix for duplicate scan results on Android. Added missing Characteristic UUIDs.</PackageReleaseNotes>
+		<PackageReleaseNotes>Latest bug fixes.</PackageReleaseNotes>
 		<SignAssembly Condition=" '$(Configuration)' == 'Release' ">true</SignAssembly>
 		<AssemblyOriginatorKeyFile Condition=" '$(Configuration)' == 'Release' ">..\\InTheHand.snk</AssemblyOriginatorKeyFile>
 		<GenerateDocumentationFile Condition=" '$(Configuration)' == 'Release' ">True</GenerateDocumentationFile>
