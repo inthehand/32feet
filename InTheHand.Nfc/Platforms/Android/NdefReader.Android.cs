@@ -59,7 +59,7 @@ partial class NdefReader(Activity activity) : Java.Lang.Object, NfcAdapter.IRead
             {
                 _currentNdef = ndef;
                 ndef.Connect();
-                if (ndef.IsConnected)
+                if (ndef.IsConnected && ndef.NdefMessage != null)
                 {
                     activity.RunOnUiThread(() =>
                     {
