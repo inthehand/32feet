@@ -9,13 +9,13 @@ using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
 
-namespace InTheHand.Bluetooth : IDisposable
+namespace InTheHand.Bluetooth 
 {
     /// <summary>
     /// A BluetoothDevice instance represents a remote Bluetooth device
     /// </summary>
     [DebuggerDisplay("{Id} ({Name})")]
-    public sealed partial class BluetoothDevice
+    public sealed partial class BluetoothDevice : IDisposable
     {
         private BluetoothDevice() { }
 
