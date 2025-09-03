@@ -37,74 +37,78 @@ partial class NdefMessage
         _tag = tag;
         _message = message;
 
-        var records = message?.GetRecords();
-
-        if (records == null) return;
-
-        foreach (var record in records)
+        if (message != null)
         {
-            switch (record.Tnf)
+            var records = message.GetRecords();
+
+            if (records == null) return;
+
+            foreach (var record in records)
             {
-                case ANfc.NdefRecord.TnfEmpty:
-                    AddRecord(new NdefRecord { RecordType = NdefRecordType.Empty });
-                    break;
+                switch (record.Tnf)
+                {
+                    case ANfc.NdefRecord.TnfEmpty:
+                        AddRecord(new NdefRecord { RecordType = NdefRecordType.Empty });
+                        break;
 
-                case ANfc.NdefRecord.TnfWellKnown:
-                    var typeString = Encoding.UTF8.GetString(record.GetTypeInfo()!);
-                    switch (typeString)
-                    {
-                        case "U":
-                            AddRecord(new NdefRecord
-                            {
-                                RecordType = NdefRecordType.Url,
-                                Data = new Uri(record.ToUri().ToString()),
-                                Id = GetId(record)
-                            });
-                            break;
+                    case ANfc.NdefRecord.TnfWellKnown:
+                        var typeString = Encoding.UTF8.GetString(record.GetTypeInfo()!);
+                        switch (typeString)
+                        {
+                            case "U":
+                                AddRecord(new NdefRecord
+                                {
+                                    RecordType = NdefRecordType.Url,
+                                    Data = new Uri(record.ToUri().ToString()),
+                                    Id = GetId(record)
+                                });
+                                break;
 
-                        case "T":
-                            AddRecord(GetTextRecord(record));
-                            break;
+                            case "T":
+                                AddRecord(GetTextRecord(record));
+                                break;
 
-                        case "Sp":
-                            AddRecord(new NdefRecord
-                            {
-                                RecordType = NdefRecordType.SmartPoster,
-                                Data = record.GetPayload(),
-                                Id = GetId(record),
-                                MediaType = record.ToMimeType()
-                            });
-                            break;
-                    }
-                    break;
+                            case "Sp":
+                                AddRecord(new NdefRecord
+                                {
+                                    RecordType = NdefRecordType.SmartPoster,
+                                    Data = record.GetPayload(),
+                                    Id = GetId(record),
+                                    MediaType = record.ToMimeType()
+                                });
+                                break;
+                        }
 
-                case ANfc.NdefRecord.TnfMimeMedia:
-                    AddRecord(new NdefRecord
-                    {
-                        RecordType = NdefRecordType.Mime,
-                        Data = record.GetPayload(),
-                        Id = GetId(record),
-                        MediaType = record.ToMimeType()
-                    });
-                    break;
+                        break;
 
-                case ANfc.NdefRecord.TnfAbsoluteUri:
-                    AddRecord(new NdefRecord
-                    {
-                        RecordType = NdefRecordType.AbsoluteUri,
-                        Data = new Uri(record.ToUri().ToString()),
-                        Id = GetId(record)
-                    });
-                    break;
-                    
-                default:
-                    AddRecord(new NdefRecord
-                    {
-                        RecordType = NdefRecordType.Unknown, Data = record.GetPayload(),
-                        Id = GetId(record),
-                        MediaType = record.ToMimeType()
-                    });
-                    break;
+                    case ANfc.NdefRecord.TnfMimeMedia:
+                        AddRecord(new NdefRecord
+                        {
+                            RecordType = NdefRecordType.Mime,
+                            Data = record.GetPayload(),
+                            Id = GetId(record),
+                            MediaType = record.ToMimeType()
+                        });
+                        break;
+
+                    case ANfc.NdefRecord.TnfAbsoluteUri:
+                        AddRecord(new NdefRecord
+                        {
+                            RecordType = NdefRecordType.AbsoluteUri,
+                            Data = new Uri(record.ToUri().ToString()),
+                            Id = GetId(record)
+                        });
+                        break;
+
+                    default:
+                        AddRecord(new NdefRecord
+                        {
+                            RecordType = NdefRecordType.Unknown, Data = record.GetPayload(),
+                            Id = GetId(record),
+                            MediaType = record.ToMimeType()
+                        });
+                        break;
+                }
             }
         }
 
