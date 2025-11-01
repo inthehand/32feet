@@ -37,7 +37,7 @@ Downloads are available here on the _Downloads_ tab. Packages are also available
 - InTheHand.IOBluetooth - IOBluetooth bindings for Xamarin Mac
 [![NuGet version](https://badge.fury.io/nu/InTheHand.IOBluetooth.svg)](https://badge.fury.io/nu/InTheHand.IOBluetooth)
 
-- InTheHand.IOBluetooth - IOBluetoothUI bindings for Xamarin Mac
+- InTheHand.IOBluetoothUI - IOBluetoothUI bindings for Xamarin Mac
 [![NuGet version](https://badge.fury.io/nu/InTheHand.IOBluetoothUI.svg)](https://badge.fury.io/nu/InTheHand.IOBluetoothUI)
 
 - InTheHand.Net.IrDA (v4.x)
