@@ -23,7 +23,7 @@ namespace InTheHand.Bluetooth
 
         internal BluetoothAdvertisingEvent(BluetoothLEAdvertisementReceivedEventArgs args)
         {
-            bool has19041 = ApiInformation.IsApiContractPresent("Windows.Foundation.UniversalApiContract", 10);
+            var has19041 = ApiInformation.IsApiContractPresent("Windows.Foundation.UniversalApiContract", 10);
 
             _rssi = args.RawSignalStrengthInDBm;
             if (has19041)
