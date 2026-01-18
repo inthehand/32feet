@@ -1,8 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<Sdk Name="DotNet.ReproducibleBuilds.Isolated" Version="1.2.25" />
 	<PropertyGroup>
-		<TargetFrameworks>net8.0;net8.0-ios;net8.0-android</TargetFrameworks>
-		<TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net8.0-windows10.0.19041.0</TargetFrameworks>
+		<TargetFrameworks>net9.0;net9.0-ios;net9.0-android</TargetFrameworks>
+		<TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net9.0-windows10.0.19041.0</TargetFrameworks>
 		<Company>In The Hand Ltd</Company>
 		<Authors>Peter Foot</Authors>
 		<Product>32feet.NET</Product>
@@ -39,7 +39,7 @@
 	  <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'net8.0-android'">
+  <ItemGroup Condition="'$(TargetFramework)' == 'net9.0-android'">
     <PackageReference Include="InTheHand.AndroidActivity" Version="1.0.5" />
   </ItemGroup>
 
@@ -53,19 +53,19 @@
 	  <None Include="Platforms\**\*.*" />
   </ItemGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net8.0' ">
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net9.0' ">
     <Compile Include="Platforms\Standard\*.cs" />
   </ItemGroup>
   
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net8.0-android' ">
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net9.0-android' ">
     <Compile Include="Platforms\Android\*.cs" />
   </ItemGroup>
 
-	<ItemGroup Condition=" '$(TargetFramework)' == 'net8.0-ios' ">
+	<ItemGroup Condition=" '$(TargetFramework)' == 'net9.0-ios' ">
 		<Compile Include="Platforms\Apple\*.cs" />
 	</ItemGroup>
 
-	<ItemGroup Condition=" '$(TargetFramework)' == 'net8.0-windows10.0.19041.0' ">
+	<ItemGroup Condition=" '$(TargetFramework)' == 'net9.0-windows10.0.19041.0' ">
 		<Compile Include="Platforms\Windows\*.cs" />
 	</ItemGroup>
 </Project>
