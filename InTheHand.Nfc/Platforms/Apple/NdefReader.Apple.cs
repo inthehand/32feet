@@ -202,14 +202,7 @@ partial class NdefReader
         {
             case NdefRecordType.Url:
                 var dataArray = payload.Payload.ToArray();
-                var urlText = dataArray[0] switch
-                {
-                    1 => "http://www.",
-                    2 => "https://www.",
-                    3 => "http://",
-                    4 => "https://",
-                    _ => string.Empty
-                };
+                var urlText = GetUriPrefix(dataArray[0]);
 
                 urlText  += System.Text.Encoding.UTF8.GetString(dataArray, 1, dataArray.Length - 1);
                 parsedRecord.Data = new Uri(urlText);
@@ -264,6 +257,54 @@ partial class NdefReader
             NFCTypeNameFormat.AbsoluteUri => NdefRecordType.AbsoluteUri,
             NFCTypeNameFormat.NFCExternal => ndefType,
             _ => NdefRecordType.Unknown
+        };
+    }
+
+    /// <summary>
+    /// Converts the first byte of a Uri payload to a common prefix (if available)
+    /// </summary>
+    /// <param name="p">The first byte of the Uri value. 0 represents a custom Uri with no standard prefix.</param>
+    /// <returns>A string to be prepended to the Uri value.</returns>
+    private static string GetUriPrefix(byte p)
+    {
+        return p switch
+        {
+            1 => "http://www.",
+            2 => "https://www.",
+            3 => "http://",
+            4 => "https://",
+            5 => "tel:",
+            6 => "mailto:",
+            7 => "ftp://anonymous:anonymous@",
+            8 => "ftp://ftp.",
+            9 => "ftps://",
+            10 => "sftp://",
+            11 => "smb://",
+            12 => "nfs://",
+            13 => "ftp://",
+            14 => "dav://",
+            15 => "news:",
+            16 => "telnet://",
+            17 => "imap:",
+            18 => "rtsp://",
+            19 => "urn:",
+            20 => "pop:",
+            21 => "sip:",
+            22 => "sips:",
+            23 => "tftp:",
+            24 => "btspp://",
+            25 => "btl2cap://",
+            26 => "btgoep://",
+            27 => "tcpobex://",
+            28 => "irdaobex://",
+            29 => "file://",
+            30 => "urn:epc:id:",
+            31 => "urn:epc:tag:",
+            32 => "urn:epc:pat:",
+            33 => "urn:epc:raw:",
+            34 => "urn:epc:",
+            35 => "urn:nfc:",
+            _ => string.Empty,
         };
     }
     
