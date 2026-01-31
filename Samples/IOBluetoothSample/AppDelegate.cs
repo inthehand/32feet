@@ -1,23 +1,32 @@
-﻿using AppKit;
-using Foundation;
+using System.Diagnostics;
+using IOBluetoothUI;
 
-namespace IOBluetoothSample
+namespace IOBluetoothSample;
+
+[Register("AppDelegate")]
+public class AppDelegate : NSApplicationDelegate
 {
-    [Register("AppDelegate")]
-    public class AppDelegate : NSApplicationDelegate
+    public override void DidFinishLaunching(NSNotification notification)
     {
-        public AppDelegate()
+        // Insert code here to initialize your application
+        foreach (var btdev in IOBluetooth.BluetoothDevice.PairedDevices)
         {
+            Debug.WriteLine(btdev.Name);
         }
 
-        public override void DidFinishLaunching(NSNotification notification)
+        var controller = new IOBluetoothUI.DeviceSelectorController();
+        var result = controller.RunModal();
+        if (result == (int)ModalResponse.Success)
         {
-            // Insert code here to initialize your application
+            NSAlert alert = new NSAlert(){ MessageText = controller.Results[0].Name};
+                    alert.RunModal();
         }
 
-        public override void WillTerminate(NSNotification notification)
-        {
-            // Insert code here to tear down your application
-        }
+        
+    }
+
+    public override void WillTerminate(NSNotification notification)
+    {
+        // Insert code here to tear down your application
     }
 }

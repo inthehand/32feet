@@ -25,9 +25,7 @@
     <ObjcBindingCoreSource Include="StructsAndEnums.cs" />
   </ItemGroup>
   <ItemGroup>
-    <NativeReference Include="/System/Library/Frameworks/IOBluetooth.framework">
-      <Kind>Framework</Kind>
-      <ForceLoad>True</ForceLoad>
-    </NativeReference>
+    <LinkerArgument Include="-framework" />
+    <LinkerArgument Include="IOBluetooth" />
   </ItemGroup>
 </Project>

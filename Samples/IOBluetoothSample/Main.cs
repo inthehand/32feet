@@ -1,13 +1,5 @@
-﻿using AppKit;
+using IOBluetoothSample;
 
-namespace IOBluetoothSample
-{
-    static class MainClass
-    {
-        static void Main(string[] args)
-        {
-            NSApplication.Init();
-            NSApplication.Main(args);
-        }
-    }
-}
+// This is the main entry point of the application.
+NSApplication.Init();
+NSApplication.Main(args);

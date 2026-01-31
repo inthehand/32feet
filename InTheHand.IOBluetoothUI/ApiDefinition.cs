@@ -257,7 +257,7 @@ namespace IOBluetoothUI
         /// These return values are the same as NSRunStoppedResponse and NSRunAbortedResponse respectively. 
         /// They are the standard values used in a modal session.</returns>
         [Export("runModal")]
-        nint RunModal();
+        int RunModal();
 
         // -(IOReturn)beginSheetModalForWindow:(NSWindow *)sheetWindow modalDelegate:(id)modalDelegate didEndSelector:(SEL)didEndSelector contextInfo:(void *)contextInfo;
         /// <summary>

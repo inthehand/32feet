@@ -1,3 +1,5 @@
+using System;
+
 namespace IOBluetoothUI;
 
 /// <summary>
@@ -19,7 +21,7 @@ public enum ServiceBrowserControllerOptions : ulong
 }
 
 
-public enum IOBluetoothUI
+public enum ModalResponse :int
 {
     Success = (-1000),
     UserCanceledErr = (-1001)
