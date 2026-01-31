@@ -5,7 +5,6 @@ using IOBluetooth;
 using IOBluetoothUI;
 using ObjCRuntime;
 
-
 namespace IOBluetoothUI
 {
     /// <summary>
@@ -104,7 +103,6 @@ namespace IOBluetoothUI
 
         // -(void)setHeader:(NSString *)headerText;
         // -(NSString *)getHeader;
-
         /// <summary>
         /// Gets or sets the header text that appears in the device selector panel.
         /// </summary>
@@ -184,6 +182,10 @@ namespace IOBluetoothUI
         //[Export("getSearchAttributes")]
         //unsafe IOBluetoothDeviceSearchAttributes* SearchAttributes { get; }
 
+        /// <summary>
+        /// Adds a UUID to the list of UUIDs that are used to validate the user’s selection.
+        /// </summary>
+        /// <param name="allowedUuid">UUID that a device may contain to be selected.</param>
         // -(void)addAllowedUUID:(IOBluetoothSDPUUID *)allowedUUID;
         [Export("addAllowedUUID:")]
         void AddAllowedUuid(SdpUuid allowedUuid);

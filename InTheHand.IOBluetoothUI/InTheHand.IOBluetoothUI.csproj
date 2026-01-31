@@ -1,4 +1,41 @@
-<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0-macos</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>true</ImplicitUsings>
+    <IsBindingProject>true</IsBindingProject>
+    <IsTrimmable>true</IsTrimmable>
+    <RootNamespace>IOBluetoothUI</RootNamespace>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <PackageId>InTheHand.IOBluetoothUI</PackageId>
+    <PackageVersion>0.2.131</PackageVersion>
+    <Authors>peterfoot</Authors>
+    <Title>IOBluetoothUI</Title>
+    <Description>IOBluetoothUI bindings for .NET</Description>
+    <PackOnBuild>true</PackOnBuild>
+    <PackageIconUrl>https://avatars3.githubusercontent.com/u/11249648</PackageIconUrl>
+    <PackageLicenseUrl>https://github.com/InTheHand/32feet/blob/master/LICENSE</PackageLicenseUrl>
+    <Owners>peterfoot</Owners>
+    <PackageProjectUrl>https://github.com/InTheHand/32feet</PackageProjectUrl>
+    <Summary>IOBluetoothUI bindings for .NET</Summary>
+    <PackageTags>Bluetooth macOS dotnet</PackageTags>
+  </PropertyGroup>
+  <ItemGroup>
+    <ObjcBindingApiDefinition Include="ApiDefinition.cs" />
+    <ObjcBindingCoreSource Include="StructsAndEnums.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <NativeReference Include="/System/Library/Frameworks/IOBluetoothUI.framework">
+      <Kind>Framework</Kind>
+      <ForceLoad>True</ForceLoad>
+    </NativeReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\InTheHand.IOBluetooth\InTheHand.IOBluetooth.csproj" />
+  </ItemGroup>
+</Project>
+
+<!--<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="..\packages\NuGet.Build.Packaging.0.2.2\build\NuGet.Build.Packaging.props" Condition="Exists('..\packages\NuGet.Build.Packaging.0.2.2\build\NuGet.Build.Packaging.props')" />
   <PropertyGroup>
@@ -73,4 +110,4 @@
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Mac\Xamarin.Mac.ObjcBinding.CSharp.targets" />
   <Import Project="..\packages\NuGet.Build.Packaging.0.2.2\build\NuGet.Build.Packaging.targets" Condition="Exists('..\packages\NuGet.Build.Packaging.0.2.2\build\NuGet.Build.Packaging.targets')" />
-</Project>
+</Project>-->

@@ -803,10 +803,9 @@ namespace IOBluetooth
     }
 
     [StructLayout(LayoutKind.Sequential)]
-    public struct BluetoothDeviceAddress
+    public unsafe struct BluetoothDeviceAddress
     {
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 6)]
-        public byte[] Data;
+        public fixed byte Data[6];
     }
 
     [StructLayout(LayoutKind.Sequential)]

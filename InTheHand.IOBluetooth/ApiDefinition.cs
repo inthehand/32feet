@@ -4,8 +4,6 @@ using CoreFoundation;
 using Foundation;
 using ObjCRuntime;
 
-[assembly: LinkWith("IOBluetooth.framework", LinkTarget.x86_64, SmartLink = true, ForceLoad = true)]
-
 namespace IOBluetooth
 {
     // @interface IOBluetoothObject : NSObject <NSCopying>
@@ -54,7 +52,7 @@ namespace IOBluetooth
     /// Represents a single remote Bluetooth device.
     /// </summary>
     [BaseType(typeof(BluetoothObject), Name = "IOBluetoothDevice")]
-    public interface BluetoothDevice : INSCoding, INSSecureCoding
+    public partial interface BluetoothDevice : INSCoding, INSSecureCoding
     {
         // +(IOBluetoothUserNotification *)registerForConnectNotifications:(id)observer selector:(SEL)inSelector;
         [Static]
@@ -178,7 +176,7 @@ namespace IOBluetooth
         // -(const BluetoothDeviceAddress *)getAddress;
         [Internal]
         [Export("getAddress")]
-        IntPtr GetAddress();
+        unsafe IntPtr GetAddress();
 
         // @property (readonly) NSString * addressString;
         /// <summary>
