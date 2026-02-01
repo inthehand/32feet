@@ -27,25 +27,25 @@ namespace IOBluetooth
         void Unregister();
     }
 
-    //// @protocol IOBluetoothDeviceAsyncCallbacks
-    //[Protocol, Model]
-    //interface IOBluetoothDeviceAsyncCallbacks
-    //{
-    //    // @required -(void)remoteNameRequestComplete:(IOBluetoothDevice *)device status:(IOReturn)status;
-    //    [Abstract]
-    //    [Export("remoteNameRequestComplete:status:")]
-    //    void RemoteNameRequestComplete(IOBluetoothDevice device, int status);
+    // @protocol IOBluetoothDeviceAsyncCallbacks
+    [Protocol(Name = "IOBluetoothDeviceAsyncCallbacks"), Model]
+    public interface BluetoothDeviceAsyncCallbacks
+    {
+        // @required -(void)remoteNameRequestComplete:(IOBluetoothDevice *)device status:(IOReturn)status;
+        [Abstract]
+        [Export("remoteNameRequestComplete:status:")]
+        void RemoteNameRequestComplete(BluetoothDevice device, int status);
 
-    //    // @required -(void)connectionComplete:(IOBluetoothDevice *)device status:(IOReturn)status;
-    //    [Abstract]
-    //    [Export("connectionComplete:status:")]
-    //    void ConnectionComplete(IOBluetoothDevice device, int status);
+        // @required -(void)connectionComplete:(IOBluetoothDevice *)device status:(IOReturn)status;
+        [Abstract]
+        [Export("connectionComplete:status:")]
+        void ConnectionComplete(BluetoothDevice device, int status);
 
-    //    // @required -(void)sdpQueryComplete:(IOBluetoothDevice *)device status:(IOReturn)status;
-    //    [Abstract]
-    //    [Export("sdpQueryComplete:status:")]
-    //    void SdpQueryComplete(IOBluetoothDevice device, int status);
-    //}
+        // @required -(void)sdpQueryComplete:(IOBluetoothDevice *)device status:(IOReturn)status;
+        [Abstract]
+        [Export("sdpQueryComplete:status:")]
+        void SdpQueryComplete(BluetoothDevice device, int status);
+    }
 
     // @interface IOBluetoothDevice : IOBluetoothObject <NSCoding, NSSecureCoding>
     /// <summary>
@@ -64,27 +64,55 @@ namespace IOBluetooth
         UserNotification RegisterForDisconnectNotification(NSObject observer, Selector inSelector);
 
         // +(instancetype)deviceWithAddress:(const BluetoothDeviceAddress *)address;
+        /// <summary>
+        /// Returns the BluetoothDevice object for the given BluetoothDeviceAddress
+        /// </summary>
+        /// <param name="address">BluetoothDeviceAddress for which a BluetoothDevice instance is desired.</param>
+        /// <returns>Returns the BluetoothDevice object for the given BluetoothDeviceAddress.</returns>
         [Static]
         [Export("deviceWithAddress:")]
         BluetoothDevice DeviceWithAddress(ref BluetoothDeviceAddress address);
 
         // +(instancetype)deviceWithAddressString:(NSString *)address;
         /// <summary>
-        /// Returns the IOBluetoothDevice object for the given BluetoothDeviceAddress.
+        /// Returns the BluetoothDevice object for the given address string.
         /// </summary>
-        /// <returns>The with address string.</returns>
-        /// <param name="address">Address.</param>
+        /// <returns>Returns the BluetoothDevice object for the given.</returns>
+        /// <param name="address">A string containing the BD_ADDR for which a BluetoothDevice instance is desired.
+        /// The string should be of the form xx:xx:xx:xx:xx:xx</param>
         [Static]
         [Export("deviceWithAddressString:")]
         BluetoothDevice DeviceWithAddressString(string address);
 
         // -(IOReturn)openL2CAPChannelSync:(IOBluetoothL2CAPChannel **)newChannel withPSM:(BluetoothL2CAPPSM)psm delegate:(id)channelDelegate;
+        /// <summary>
+        /// Opens a new L2CAP channel to the target device.
+        /// Returns only after the channel is opened.
+        /// </summary>
+        /// <param name="newChannel">A pointer to an IOBluetoothL2CAPChannel object to receive the L2CAP channel requested to be opened.
+        /// The newChannel pointer will only be set if kIOReturnSuccess is returned.</param>
+        /// <param name="psm">The L2CAP PSM value for the new channel.</param>
+        /// <param name="channelDelegate">The object that will play the role of delegate for the channel.
+        /// A channel delegate is the object the l2cap uses as target for data and events.
+        /// The developer will implement only the the methods he/she is interested in.</param>
+        /// <returns>Returns IOReturnSuccess if the open process was successfully started (or if an existing L2CAP channel was found).</returns>
         [Export("openL2CAPChannelSync:withPSM:delegate:")]
-        int OpenL2CAPChannelSync(out L2CapChannel newChannel, L2CapPsm psm, NSObject channelDelegate);
+        int OpenL2CAPChannelSync(out L2CapChannel newChannel, L2CapPsm psm, L2CapChannelDelegate channelDelegate);
 
         // -(IOReturn)openL2CAPChannelAsync:(IOBluetoothL2CAPChannel **)newChannel withPSM:(BluetoothL2CAPPSM)psm delegate:(id)channelDelegate;
+        /// <summary>
+        /// Opens a new L2CAP channel to the target device.
+        /// Returns immediately after starting the opening process.
+        /// </summary>
+        /// <param name="newChannel">An L2CAPChannel object to receive the L2CAP channel requested to be opened.
+        /// The newChannel will only be set if IOReturnSuccess is returned.</param>
+        /// <param name="psm">The L2CAP PSM value for the new channel.</param>
+        /// <param name="channelDelegate">The object that will play the role of delegate for the channel.
+        /// A channel delegate is the object the l2cap uses as target for data and events.
+        /// The developer will implement only the the methods he/she is interested in.</param>
+        /// <returns>Returns IOReturnSuccess if the open process was successfully started (or if an existing L2CAP channel was found).</returns>
         [Export("openL2CAPChannelAsync:withPSM:delegate:")]
-        int OpenL2CAPChannelAsync(out L2CapChannel newChannel, L2CapPsm psm, NSObject channelDelegate);
+        int OpenL2CAPChannelAsync(out L2CapChannel newChannel, L2CapPsm psm, L2CapChannelDelegate channelDelegate);
 
         // -(IOReturn)sendL2CAPEchoRequest:(void *)data length:(UInt16)length;
         /// <summary>
@@ -92,35 +120,49 @@ namespace IOBluetooth
         /// </summary>
         /// <param name="data">Pointer to buffer to send.</param>
         /// <param name="length">Length of the buffer to send.</param>
-        /// <returns>Returns kIOReturnSuccess if the echo request was able to be sent.</returns>
+        /// <returns>Returns IOReturnSuccess if the echo request was able to be sent.</returns>
         [Export("sendL2CAPEchoRequest:length:")]
         int SendL2CAPEchoRequest(NSArray data, ushort length);
 
         // -(IOReturn)openRFCOMMChannelSync:(IOBluetoothRFCOMMChannel **)rfcommChannel withChannelID:(BluetoothRFCOMMChannelID)channelID delegate:(id)channelDelegate;
         /// <summary>
-        /// Opens a new RFCOMM channel to the target device. Returns only once the channel is open or failed to open.
+        /// Opens a new RFCOMM channel to the target device.
+        /// Returns only once the channel is open or failed to open.
         /// </summary>
-        /// <returns>Returns kIOReturnSuccess if the open process was successfully started (or if an existing RFCOMM channel was found). 
+        /// <returns>Returns IOReturnSuccess if the open process was successfully started (or if an existing RFCOMM channel was found). 
         /// The channel must be released when the caller is done with it.</returns>
         /// <param name="rfcommChannel">A pointer to an IOBluetoothRFCOMMChannel object to receive the RFCOMM channel requested to be opened. 
         /// The rfcommChannel pointer will only be set if kIOReturnSuccess is returned.</param>
         /// <param name="channelID">The RFCOMM channel ID for the new channel.</param>
         /// <param name="channelDelegate">the object that will play the role of delegate for the channel. 
         /// A channel delegate is the object the rfcomm uses as target for data and events. 
-        /// The developer will implement only the the methods he/she is interested in. 
-        /// A list of the possible methods is at the end of the file "IOBluetoothRFCOMMChannel.h" in the definition of the protocol IOBluetoothRFCOMMChannelDelegate.</param>
+        /// The developer will implement only the the methods he/she is interested in.</param>
         [Export("openRFCOMMChannelSync:withChannelID:delegate:")]
-        int OpenRfcommChannelSync(out RfcommChannel rfcommChannel, byte channelID, NSObject channelDelegate);
+        int OpenRfcommChannelSync(out RfcommChannel rfcommChannel, byte channelID, RfcommChannelDelegate channelDelegate);
 
         // -(IOReturn)openRFCOMMChannelAsync:(IOBluetoothRFCOMMChannel **)rfcommChannel withChannelID:(BluetoothRFCOMMChannelID)channelID delegate:(id)channelDelegate;
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="rfcommChannel">An RFCommChannel to receive the RFCOMM channel requested to be opened.
+        /// The rfcommChannel will only be set if IOReturnSuccess is returned.</param>
+        /// <param name="channelID">The RFCOMM channel ID for the new channel.</param>
+        /// <param name="channelDelegate">The object that will play the role of delegate for the channel.
+        /// A channel delegate is the object the rfcomm uses as target for data and events.
+        /// The developer will implement only the the methods he/she is interested in.</param>
+        /// <returns>Returns IOReturnSuccess if the open process was successfully started (or if an existing RFCOMM channel was found).
+        /// The channel must be released when the caller is done with it.</returns>
         [Export("openRFCOMMChannelAsync:withChannelID:delegate:")]
-        int OpenRfcommChannelAsync(out RfcommChannel rfcommChannel, byte channelID, NSObject channelDelegate);
+        int OpenRfcommChannelAsync(out RfcommChannel rfcommChannel, byte channelID, RfcommChannelDelegate channelDelegate);
 
         // @property (readonly) BluetoothClassOfDevice classOfDevice;
         /// <summary>
         /// Gets the full class of device value for the remote device.
         /// </summary>
         /// <value>The class of device.</value>
+        /// <remarks>This value is only meaningful if the target device has been seen during an inquiry.
+        /// This can be by checking the result of <see cref="LastInquiryUpdate"/>.
+        /// If null is returned, then the device hasn’t been seen.</remarks>
         [Export("classOfDevice")]
         uint ClassOfDevice { get; }
 
@@ -129,6 +171,9 @@ namespace IOBluetooth
         /// Get the major service class of the device.
         /// </summary>
         /// <value>The service class major.</value>
+        /// <remarks>This value is only meaningful if the target device has been seen during an inquiry.
+        /// This can be by checking the result of <see cref="LastInquiryUpdate"/>.
+        /// If null is returned, then the device hasn’t been seen.</remarks>
         [Export("serviceClassMajor")]
         ServiceClassMajor ServiceClassMajor { get; }
 
@@ -137,6 +182,9 @@ namespace IOBluetooth
         /// Get the major device class of the device.
         /// </summary>
         /// <value>The device class major.</value>
+        /// <remarks>This value is only meaningful if the target device has been seen during an inquiry.
+        /// This can be by checking the result of <see cref="LastInquiryUpdate"/>.
+        /// If null is returned, then the device hasn’t been seen.</remarks>
         [Export("deviceClassMajor")]
         DeviceClassMajor DeviceClassMajor { get; }
 
@@ -145,6 +193,9 @@ namespace IOBluetooth
         /// Get the minor service class of the device.
         /// </summary>
         /// <value>The device class minor.</value>
+        /// <remarks>This value is only meaningful if the target device has been seen during an inquiry.
+        /// This can be by checking the result of <see cref="LastInquiryUpdate"/>.
+        /// If null is returned, then the device hasn’t been seen.</remarks>
         [Export("deviceClassMinor")]
         DeviceClassMinor DeviceClassMinor { get; }
 
@@ -153,6 +204,9 @@ namespace IOBluetooth
         /// Get the human readable name of the remote device.
         /// </summary>
         /// <value>The name.</value>
+        /// <remarks>This value is only meaningful if the target device has been seen during an inquiry.
+        /// This can be by checking the result of <see cref="LastInquiryUpdate"/>.
+        /// If null is returned, then the device hasn’t been seen.</remarks>
         [Export("name")]
         string Name { get; }
 
@@ -162,16 +216,15 @@ namespace IOBluetooth
         /// If the name is not present, it will return a string containing the device's address.
         /// </summary>
         /// <value>The name or address.</value>
+        /// <remarks>If a remote name request has been successfully completed, the device name will be returned.
+        /// If not, a string containg the device address in the format of “XX-XX-XX-XX-XX-XX” will be returned.</remarks>
         [Export("nameOrAddress")]
         string NameOrAddress { get; }
 
         // @property (readonly, retain) NSDate * lastNameUpdate;
-        /// <summary>
-        /// Get the date/time of the last successful remote name request.
-        /// </summary>
-        /// <value>The last name update.</value>
+        [Internal]
         [Export("lastNameUpdate", ArgumentSemantic.Retain)]
-        NSDate LastNameUpdate { get; }
+        NSDate? GetLastNameUpdate();
 
         // -(const BluetoothDeviceAddress *)getAddress;
         [Internal]
@@ -188,31 +241,75 @@ namespace IOBluetooth
         string AddressString { get; }
 
         // -(BluetoothPageScanRepetitionMode)getPageScanRepetitionMode;
+        /// <summary>
+        /// Get the value of the page scan repetition mode for the device.
+        /// </summary>
+        /// <remarks>This value is only meaningful if the target device has been seen during an inquiry.
+        /// This can be by checking the result of <see cref="LastInquiryUpdate"/>.
+        /// If null is returned, then the device hasn’t been seen.</remarks>
         [Export("getPageScanRepetitionMode")]
         PageScanRepetitionMode PageScanRepetitionMode { get; }
 
         // -(BluetoothPageScanPeriodMode)getPageScanPeriodMode;
+        /// <summary>
+        /// Get the value of the page scan period mode for the device.
+        /// </summary>
+        /// <remarks>This value is only meaningful if the target device has been seen during an inquiry.
+        /// This can be by checking the result of <see cref="LastInquiryUpdate"/>.
+        /// If null is returned, then the device hasn’t been seen.</remarks>
         [Export("getPageScanPeriodMode")]
         PageScanPeriodMode PageScanPeriodMode { get; }
 
         // -(BluetoothPageScanMode)getPageScanMode;
+        /// <summary>
+        /// Get the page scan mode for the device.
+        /// </summary>
+        /// <remarks>This value is only meaningful if the target device has been seen during an inquiry.
+        /// This can be by checking the result of <see cref="LastInquiryUpdate"/>.
+        /// If null is returned, then the device hasn’t been seen.</remarks>
         [Export("getPageScanMode")]
         PageScanMode PageScanMode { get; }
 
         // -(BluetoothClockOffset)getClockOffset;
+        /// <summary>
+        /// Get the clock offset value of the device.
+        /// </summary>
+        /// <remarks>This value is only meaningful if the target device has been seen during an inquiry.
+        /// This can be by checking the result of <see cref="LastInquiryUpdate"/>.
+        /// If null is returned, then the device hasn’t been seen.</remarks>
         [Export("getClockOffset")]
         ushort ClockOffset { get; }
 
         // -(NSDate *)getLastInquiryUpdate;
+        /// <summary>
+        /// Get the date/time of the last time the device was returned during an inquiry.
+        /// </summary>
+        /// <value>Returns the date/time of the last time the device was seen during an inquiry.
+        /// If the device has never been seen during an inquiry, null is returned.</value>
+        [Internal]
         [Export("getLastInquiryUpdate")]
-        NSDate LastInquiryUpdate { get; }
+        NSDate? GetLastInquiryUpdate();
 
         // -(BluetoothHCIRSSIValue)RSSI __attribute__((availability(macos, introduced=10.7)));
+        /// <summary>
+        /// Get the RSSI device (if connected), above or below the golden range.
+        /// </summary>
+        /// <value>Returns the RSSI of the device.
+        /// If the value cannot be read (e.g. the device is disconnected), a value of +127 will be returned.</value>
+        /// <remarks>If the RSSI is within the golden range, a value of 0 is returned.
+        /// For the actual RSSI value, use <see cref="RawRssi"/>.
+        /// For more information, see the Bluetooth 4.0 Core Specification.</remarks>
         [Introduced(PlatformName.MacOSX, 10, 7)]
         [Export("RSSI")]
         sbyte Rssi { get; }
 
         // -(BluetoothHCIRSSIValue)rawRSSI __attribute__((availability(macos, introduced=10.7)));
+        /// <summary>
+        /// Get the raw RSSI device (if connected).
+        /// </summary>
+        /// <remarks>This value is the perceived RSSI value, not relative the the golden range (see <see cref="Rssi"/> for that value).
+        /// This value will not available on all Bluetooth modules.
+        /// If the value cannot be read (e.g. the device is disconnected) or is not available on a module, a value of +127 will be returned.</remarks>
         [Introduced(PlatformName.MacOSX, 10, 7)]
         [Export("rawRSSI")]
         sbyte RawRssi { get; }
@@ -226,50 +323,126 @@ namespace IOBluetooth
         bool IsConnected { get; }
 
         // -(IOReturn)openConnection;
+        /// <summary>
+        /// Create a baseband connection to the device.
+        /// </summary>
+        /// <returns>Returns IOReturnSuccess if the connection was successfully created.</returns>
+        /// <remarks>his method is synchronous and will not return until either a connection has been established or the create connection has failed (perhaps timed out).
+        /// This method does the same thing as calling OpenConnection with a null target.
+        /// This call with proceed without authentication required, and using the default page timeout value.
+        /// If authentication or a non-default page timeout is required the method OpenConnection:withPageTimeout:authenticationRequired: should be used instead.
+        /// As of OS X 10.7, this method will no longer mask out “Connection Exists” ‘errors’ with a success result code; your code must account for the cases where the baseband connection is already open.</remarks>
         [Export("openConnection")]
         int OpenConnection();
 
         // -(IOReturn)openConnection:(id)target;
+        /// <summary>
+        /// Create a baseband connection to the device.
+        /// </summary>
+        /// <param name="target">The target to message when the create connection call is complete.</param>
+        /// <returns>Returns IOReturnSuccess if the connection was successfully created (or if asynchronous, if the CREATE_CONNECTION command was successfully issued).</returns>
+        /// <remarks>If a target is specified, the open connection call is asynchronous and on completion of the CREATE_CONNECTION command, the method <see cref="BluetoothDeviceAsyncCallbacks.ConnectionComplete"/> will be called on the specified target.
+        /// If no target is specified, the call is synchronous and will not return until the connection is open or the CREATE_CONNECTION call has failed.
+        /// This call with proceed without authentication required, and using the default page timeout value.
+        /// If authentication or a non-default page timeout is required the method OpenConnection:withPageTimeout:authenticationRequired: should be used instead.
+        /// As of OS X 10.7, this method will no longer mask out “Connection Exists” ‘errors’ with a success result code; your code must account for the cases where the baseband connection is already open.</remarks>
         [Export("openConnection:")]
         int OpenConnection(NSObject target);
 
         // -(IOReturn)openConnection:(id)target withPageTimeout:(BluetoothHCIPageTimeout)pageTimeoutValue authenticationRequired:(BOOL)authenticationRequired;
+        /// <summary>
+        /// Create a baseband connection to the device.
+        /// </summary>
+        /// <param name="target">The target to message when the create connection call is complete.</param>
+        /// <param name="pageTimeoutValue">The page timeout value to use for this call.</param>
+        /// <param name="authenticationRequired">Bool value to indicate whether authentication should be required for the connection.</param>
+        /// <returns>Returns IOReturnSuccess if the connection was successfully created (or if asynchronous, if the CREATE_CONNECTION command was successfully issued).</returns>
+        /// <remarks>If a target is specified, the open connection call is asynchronous and on completion of the CREATE_CONNECTION command, the method <see cref="BluetoothDeviceAsyncCallbacks.ConnectionComplete"/> will be called on the specified target.
+        /// If no target is specified, the call is synchronous and will not return until the connection is open or the CREATE_CONNECTION call has failed.
+        /// NOTE: This method is only available in macOS 10.2.7 (Bluetooth v1.3) or later.
+        /// As of OS X 10.7, this method will no longer mask out “Connection Exists” ‘errors’ with a success result code; your code must account for the cases where the baseband connection is already open.</remarks>
         [Export("openConnection:withPageTimeout:authenticationRequired:")]
         int OpenConnection(NSObject target, ushort pageTimeoutValue, bool authenticationRequired);
 
         // -(IOReturn)closeConnection;
+        /// <summary>
+        /// Close down the baseband connection to the device.
+        /// </summary>
+        /// <returns>Returns IOReturnSuccess if the connection has successfully been closed.</returns>
+        /// <remarks>This method is synchronous and will not return until the connection has been closed (or the command failed).
+        /// In the future this API will be changed to allow asynchronous operation.</remarks>
         [Export("closeConnection")]
         int CloseConnection();
 
         // -(IOReturn)remoteNameRequest:(id)target;
+        /// <summary>
+        /// Issues a remote name request to the target device.
+        /// </summary>
+        /// <param name="target">The target to message when the remote name request is complete.</param>
+        /// <returns>Returns IOReturnSuccess if the remote name request was successfully issued (and if synchronous, if the request completed successfully).</returns>
+        /// <remarks>If a target is specified, the request is asynchronous and on completion of the request, the method <see cref="BluetoothDeviceAsyncCallbacks.RemoteNameRequestComplete"/> will be called on the specified target.
+        /// If no target is specified, the request is made synchronously and won’t return until the request is complete.
+        /// This call with operate with the default page timeout value.
+        /// If a different page timeout value is desired, the method -remoteNameRequest:withPageTimeout: should be used instead.</remarks>
         [Export("remoteNameRequest:")]
         int RemoteNameRequest(NSObject target);
 
         // -(IOReturn)remoteNameRequest:(id)target withPageTimeout:(BluetoothHCIPageTimeout)pageTimeoutValue;
+        /// <summary>
+        /// Issues a remote name request to the target device.
+        /// </summary>
+        /// <param name="target">The target to message when the remote name request is complete.</param>
+        /// <param name="pageTimeoutValue">The page timeout value to use for this call.</param>
+        /// <returns></returns>
+        /// <remarks>If a target is specified, the request is asynchronous and on completion of the REMOTE_NAME_REQUEST command, the method <see cref="BluetoothDeviceAsyncCallbacks.RemoteNameRequestComplete"/> will be called on the specified target.
+        /// If no target is specified, the request is made synchronously and won’t return until the request is complete.
+        /// NOTE: This method is only available in macOS 10.2.7 (Bluetooth v1.3) or later.</remarks>
         [Export("remoteNameRequest:withPageTimeout:")]
         int RemoteNameRequest(NSObject target, ushort pageTimeoutValue);
 
         // -(IOReturn)requestAuthentication;
+        /// <summary>
+        /// Requests that the existing baseband connection be authenticated.
+        /// </summary>
+        /// <returns>Returns IOReturnSuccess if the connection has been successfully been authenticated.
+        /// Returns an error if authentication fails or no baseband connection exists.</returns>
+        /// <remarks>In order to authenticate a baseband connection, a link key needs to be generated as a result of the pairing process.
+        /// This call will synchronously initiate the pairing process with the target device and not return until the authentication process is complete.</remarks>
         [Export("requestAuthentication")]
         int RequestAuthentication();
 
         // @property (readonly, assign) BluetoothConnectionHandle connectionHandle;
+        /// <summary>
+        /// Get the connection handle for the baseband connection.
+        /// </summary>
+        /// <remarks>This method only returns a valid result if a baseband connection is present (IsConnected returns True).</remarks>
         [Export("connectionHandle")]
         ushort ConnectionHandle { get; }
 
         // -(BOOL)isIncoming;
         /// <summary>
-        /// Returns TRUE if the device connection was generated by the remote host.
+        /// Returns True if the device connection was generated by the remote host.
         /// </summary>
         /// <value><c>true</c> if is incoming; otherwise, <c>false</c>.</value>
         [Export("isIncoming")]
         bool IsIncoming { get; }
 
         // -(BluetoothLinkType)getLinkType;
+        /// <summary>
+        /// Get the link type for the baseband connection.
+        /// </summary>
+        /// <value>Returns the link type for the baseband connection.
+        /// If no baseband connection is present, BluetoothLinkType.None is returned.</value>
         [Export("getLinkType")]
         BluetoothLinkType LinkType { get; }
 
         // -(BluetoothHCIEncryptionMode)getEncryptionMode;
+        /// <summary>
+        /// Get the encryption mode for the baseband connection.
+        /// </summary>
+        /// <value>Returns the encryption mode for the baseband connection.
+        /// If no baseband connection is present, HciEncryptionMode.Disabled is returned.</value>
+        /// <remarks>This method only returns a valid result if a baseband connection is present (IsConnected returns True).</remarks>
         [Export("getEncryptionMode")]
         HciEncryptionMode EncryptionMode { get; }
 
@@ -287,12 +460,9 @@ namespace IOBluetooth
         SdpServiceRecord[] Services { get; }
 
         // -(NSDate *)getLastServicesUpdate;
-        /// <summary>
-        /// Get the date/time of the last SDP query.
-        /// </summary>
-        /// <value>The last services update.</value>
+        [Internal]
         [Export("getLastServicesUpdate")]
-        NSDate LastServicesUpdate { get; }
+        NSDate? GetLastServicesUpdate();
 
         // -(IOBluetoothSDPServiceRecord *)getServiceRecordForUUID:(IOBluetoothSDPUUID *)sdpUUID;
         [Export("getServiceRecordForUUID:")]
@@ -319,7 +489,7 @@ namespace IOBluetooth
         /// <summary>
         /// Adds the target device to the user's favorite devices list.
         /// </summary>
-        /// <returns>The to favorites.</returns>
+        /// <returns>Returns IOReturnSuccess if the device was successfully added to the user’s list of favorite devices.</returns>
         [Export("addToFavorites")]
         int AddToFavorites();
 
@@ -327,7 +497,7 @@ namespace IOBluetooth
         /// <summary>
         /// Removes the target device from the user's favorite devices list.
         /// </summary>
-        /// <returns>The from favorites.</returns>
+        /// <returns>Returns IOReturnSuccess if the device was successfully removed from the user’s list of favorite devices.</returns>
         [Export("removeFromFavorites")]
         int RemoveFromFavorites();
 
@@ -336,15 +506,16 @@ namespace IOBluetooth
         /// Gets an array of recently used Bluetooth devices.
         /// </summary>
         /// <returns>Returns an array of device objects recently used by the system. 
-        /// If no devices have been accessed, nil is returned.</returns>
+        /// If no devices have been accessed, null is returned.</returns>
         /// <param name="numDevices">The number of devices to return.</param>
         [Static]
         [Export("recentDevices:")]
         BluetoothDevice[] GetRecentDevices(nuint numDevices);
 
         // -(NSDate *)recentAccessDate;
+        [Internal]
         [Export("recentAccessDate")]
-        NSDate RecentAccessDate { get; }
+        NSDate? GetRecentAccessDate();
 
         // +(NSArray *)pairedDevices;
         /// <summary>
@@ -408,19 +579,22 @@ namespace IOBluetooth
 
         // -(instancetype)initWithDelegate:(id)delegate;
         [Export("initWithDelegate:")]
-        IntPtr Constructor(DeviceInquiryDelegate @delegate);
+        NativeHandle Constructor(DeviceInquiryDelegate @delegate);
 
         // -(IOReturn)start;
         /// <summary>
         /// Tells inquiry object to begin the inquiry and name updating process, if specified.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Returns IOReturnSuccess if start was successful.
+        /// Returns IOReturnBusy if the object is already in process.
+        /// May return other IOReturn values, as appropriate.</returns>
         [Export("start")]
         int Start();
 
         // -(IOReturn)stop;
         /// <summary>
-        /// Halts the inquiry object. Could either stop the search for new devices, or the updating of found device names.
+        /// Halts the inquiry object.
+        /// Could either stop the search for new devices, or the updating of found device names.
         /// </summary>
         /// <returns></returns>
         [Export("stop")]
@@ -1120,11 +1294,11 @@ namespace IOBluetooth
 
         // -(instancetype)initWithUUID16:(BluetoothSDPUUID16)uuid16;
         [Export("initWithUUID16:")]
-        IntPtr Constructor(ushort uuid16);
+        NativeHandle Constructor(ushort uuid16);
 
         // -(instancetype)initWithUUID32:(BluetoothSDPUUID32)uuid32;
         [Export("initWithUUID32:")]
-        IntPtr Constructor(uint uuid32);
+        NativeHandle Constructor(uint uuid32);
 
         // -(instancetype)getUUIDWithLength:(unsigned int)newLength;
         [Export("getUUIDWithLength:")]
@@ -1370,15 +1544,15 @@ namespace IOBluetooth
 
         // -(instancetype)initWithSDPServiceRecord:(IOBluetoothSDPServiceRecord *)inSDPServiceRecord;
         [Export("initWithSDPServiceRecord:")]
-        IntPtr Constructor(SdpServiceRecord sdpServiceRecord);
+        NativeHandle Constructor(SdpServiceRecord sdpServiceRecord);
 
         // -(instancetype)initWithDevice:(IOBluetoothDevice *)inDevice channelID:(BluetoothRFCOMMChannelID)inChannelID;
         [Export("initWithDevice:channelID:")]
-        IntPtr Constructor(BluetoothDevice device, byte channelID);
+        NativeHandle Constructor(BluetoothDevice device, byte channelID);
 
         // -(instancetype)initWithIncomingRFCOMMChannel:(IOBluetoothRFCOMMChannel *)inChannel eventSelector:(SEL)inEventSelector selectorTarget:(id)inEventSelectorTarget refCon:(void *)inUserRefCon;
         [Export("initWithIncomingRFCOMMChannel:eventSelector:selectorTarget:refCon:")]
-        IntPtr Constructor(RfcommChannel channel, Selector eventSelector, NSObject eventSelectorTarget, IntPtr userRefCon);
+        NativeHandle Constructor(RfcommChannel channel, Selector eventSelector, NSObject eventSelectorTarget, IntPtr userRefCon);
 
         // -(IOBluetoothRFCOMMChannel *)getRFCOMMChannel;
         [Export("getRFCOMMChannel")]
@@ -1449,7 +1623,7 @@ namespace IOBluetooth
 
         // -(instancetype)initWithOBEXSession:(IOBluetoothOBEXSession *)inOBEXSession;
         [Export("initWithOBEXSession:")]
-        IntPtr Constructor(BluetoothObexSession obexSession);
+        NativeHandle Constructor(BluetoothObexSession obexSession);
 
         // -(NSString *)currentPath;
         [Export("currentPath")]
@@ -1906,7 +2080,7 @@ namespace IOBluetooth
         // -(instancetype)initWithDevice:(IOBluetoothDevice *)device delegate:(id<IOBluetoothHandsFreeDelegate>)inDelegate __attribute__((availability(macos, introduced=10.7)));
         [Introduced(PlatformName.MacOSX, 10, 7)]
         [Export("initWithDevice:delegate:")]
-        IntPtr Constructor(BluetoothDevice device, HandsFreeDelegate hfDelegate);
+        NativeHandle Constructor(BluetoothDevice device, HandsFreeDelegate hfDelegate);
 
         // -(void)connect __attribute__((availability(macos, introduced=10.7)));
         [Introduced(PlatformName.MacOSX, 10, 7)]
@@ -2010,7 +2184,7 @@ namespace IOBluetooth
         // -(instancetype)initWithDevice:(IOBluetoothDevice *)device delegate:(id)inDelegate __attribute__((availability(macos, introduced=10.7)));
         [Introduced(PlatformName.MacOSX, 10, 7)]
         [Export("initWithDevice:delegate:")]
-        IntPtr Constructor(BluetoothDevice device, NSObject @delegate);
+        NativeHandle Constructor(BluetoothDevice device, NSObject @delegate);
 
         // -(void)createIndicator:(NSString *)indicatorName min:(int)minValue max:(int)maxValue currentValue:(int)currentValue __attribute__((availability(macos, introduced=10.7)));
         [Introduced(PlatformName.MacOSX, 10, 7)]
