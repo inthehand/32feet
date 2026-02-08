@@ -29,6 +29,7 @@ namespace IOBluetooth
 
     // @protocol IOBluetoothDeviceAsyncCallbacks
     [Protocol(Name = "IOBluetoothDeviceAsyncCallbacks"), Model]
+    [BaseType(typeof(NSObject),Name = "IOBluetoothDeviceAsyncCallbacks")]
     public interface BluetoothDeviceAsyncCallbacks
     {
         // @required -(void)remoteNameRequestComplete:(IOBluetoothDevice *)device status:(IOReturn)status;
@@ -1068,109 +1069,45 @@ namespace IOBluetooth
         void RfcommChannelQueueSpaceAvailable(RfcommChannel rfcommChannel);
     }
 
-    /*[Static]
-    [Verify (ConstantsInterfaceAssociation)]
-    partial interface Constants
-    {
-        // extern NSString *const IOBluetoothHandsFreeIndicatorService;
-        [Field ("IOBluetoothHandsFreeIndicatorService")]
-        NSString IOBluetoothHandsFreeIndicatorService { get; }
-
-        // extern NSString *const IOBluetoothHandsFreeIndicatorCall;
-        [Field ("IOBluetoothHandsFreeIndicatorCall")]
-        NSString IOBluetoothHandsFreeIndicatorCall { get; }
-
-        // extern NSString *const IOBluetoothHandsFreeIndicatorCallSetup;
-        [Field ("IOBluetoothHandsFreeIndicatorCallSetup")]
-        NSString IOBluetoothHandsFreeIndicatorCallSetup { get; }
-
-        // extern NSString *const IOBluetoothHandsFreeIndicatorCallHeld;
-        [Field ("IOBluetoothHandsFreeIndicatorCallHeld")]
-        NSString IOBluetoothHandsFreeIndicatorCallHeld { get; }
-
-        // extern NSString *const IOBluetoothHandsFreeIndicatorSignal;
-        [Field ("IOBluetoothHandsFreeIndicatorSignal")]
-        NSString IOBluetoothHandsFreeIndicatorSignal { get; }
-
-        // extern NSString *const IOBluetoothHandsFreeIndicatorRoam;
-        [Field ("IOBluetoothHandsFreeIndicatorRoam")]
-        NSString IOBluetoothHandsFreeIndicatorRoam { get; }
-
-        // extern NSString *const IOBluetoothHandsFreeIndicatorBattChg;
-        [Field ("IOBluetoothHandsFreeIndicatorBattChg")]
-        NSString IOBluetoothHandsFreeIndicatorBattChg { get; }
-
-        // extern NSString *const IOBluetoothHandsFreeCallIndex;
-        [Field ("IOBluetoothHandsFreeCallIndex")]
-        NSString IOBluetoothHandsFreeCallIndex { get; }
-
-        // extern NSString *const IOBluetoothHandsFreeCallDirection;
-        [Field ("IOBluetoothHandsFreeCallDirection")]
-        NSString IOBluetoothHandsFreeCallDirection { get; }
-
-        // extern NSString *const IOBluetoothHandsFreeCallStatus;
-        [Field ("IOBluetoothHandsFreeCallStatus")]
-        NSString IOBluetoothHandsFreeCallStatus { get; }
-
-        // extern NSString *const IOBluetoothHandsFreeCallMode;
-        [Field ("IOBluetoothHandsFreeCallMode")]
-        NSString IOBluetoothHandsFreeCallMode { get; }
-
-        // extern NSString *const IOBluetoothHandsFreeCallMultiparty;
-        [Field ("IOBluetoothHandsFreeCallMultiparty")]
-        NSString IOBluetoothHandsFreeCallMultiparty { get; }
-
-        // extern NSString *const IOBluetoothHandsFreeCallNumber;
-        [Field ("IOBluetoothHandsFreeCallNumber")]
-        NSString IOBluetoothHandsFreeCallNumber { get; }
-
-        // extern NSString *const IOBluetoothHandsFreeCallType;
-        [Field ("IOBluetoothHandsFreeCallType")]
-        NSString IOBluetoothHandsFreeCallType { get; }
-
-        // extern NSString *const IOBluetoothHandsFreeCallName;
-        [Field ("IOBluetoothHandsFreeCallName")]
-        NSString IOBluetoothHandsFreeCallName { get; }
-    }
+    
 
     [Static]
-    [Verify (ConstantsInterfaceAssociation)]
-    partial interface Constants
+    public partial interface PduConstants
     {
         // extern NSString *const IOBluetoothPDUServicCenterAddress;
-        [Field ("IOBluetoothPDUServicCenterAddress")]
-        NSString IOBluetoothPDUServicCenterAddress { get; }
+        [Field ("IOBluetoothPDUServicCenterAddress", libraryName: "__Internal")]
+        NSString ServiceCenterAddress { get; }
 
         // extern NSString *const IOBluetoothPDUServiceCenterAddressType;
-        [Field ("IOBluetoothPDUServiceCenterAddressType")]
-        NSString IOBluetoothPDUServiceCenterAddressType { get; }
+        [Field ("IOBluetoothPDUServiceCenterAddressType", libraryName: "__Internal")]
+        NSString ServiceCenterAddressType { get; }
 
         // extern NSString *const IOBluetoothPDUType;
-        [Field ("IOBluetoothPDUType")]
-        NSString IOBluetoothPDUType { get; }
+        [Field ("IOBluetoothPDUType", libraryName: "__Internal")]
+        NSString Type { get; }
 
         // extern NSString *const IOBluetoothPDUOriginatingAddress;
-        [Field ("IOBluetoothPDUOriginatingAddress")]
-        NSString IOBluetoothPDUOriginatingAddress { get; }
+        [Field ("IOBluetoothPDUOriginatingAddress", libraryName: "__Internal")]
+        NSString OriginatingAddress { get; }
 
         // extern NSString *const IOBluetoothPDUOriginatingAddressType;
-        [Field ("IOBluetoothPDUOriginatingAddressType")]
-        NSString IOBluetoothPDUOriginatingAddressType { get; }
+        [Field ("IOBluetoothPDUOriginatingAddressType", libraryName: "__Internal")]
+        NSString OriginatingAddressType { get; }
 
         // extern NSString *const IOBluetoothPDUProtocolID;
-        [Field ("IOBluetoothPDUProtocolID")]
-        NSString IOBluetoothPDUProtocolID { get; }
+        [Field ("IOBluetoothPDUProtocolID", libraryName: "__Internal")]
+        NSString ProtocolID { get; }
 
         // extern NSString *const IOBluetoothPDUTimestamp;
-        [Field ("IOBluetoothPDUTimestamp")]
-        NSString IOBluetoothPDUTimestamp { get; }
+        [Field ("IOBluetoothPDUTimestamp", libraryName: "__Internal")]
+        NSString Timestamp { get; }
 
         // extern NSString *const IOBluetoothPDUEncoding;
-        [Field ("IOBluetoothPDUEncoding")]
-        NSString IOBluetoothPDUEncoding { get; }
+        [Field ("IOBluetoothPDUEncoding", libraryName: "__Internal")]
+        NSString Encoding { get; }
 
         // extern NSString *const IOBluetoothPDUUserData;
-        [Field ("IOBluetoothPDUUserData")]
-        NSString IOBluetoothPDUUserData { get; }
-    }*/
+        [Field ("IOBluetoothPDUUserData", libraryName: "__Internal")]
+        NSString UserData { get; }
+    }
 }

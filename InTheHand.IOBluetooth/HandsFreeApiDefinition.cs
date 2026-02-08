@@ -337,7 +337,7 @@ namespace IOBluetooth
         // -(void)sendSMS:(NSString *)aNumber message:(NSString *)aMessage __attribute__((availability(macos, introduced=10.7)));
         [Introduced(PlatformName.MacOSX, 10, 7)]
         [Export("sendSMS:message:")]
-        void SendSMS(string aNumber, string aMessage);
+        void SendSMS(string number, string message);
 
         // -(void)sendATCommand:(NSString *)atCommand __attribute__((availability(macos, introduced=10.7)));
         [Introduced(PlatformName.MacOSX, 10, 7)]
@@ -418,5 +418,121 @@ namespace IOBluetooth
         [Introduced(PlatformName.MacOSX, 10, 7)]
         [Export("handsFree:unhandledResultCode:")]
         void UnhandledResultCode(HandsFreeDevice device, string resultCode);
+    }
+
+    [Static]
+    public partial interface HandsFreeIndicator
+    {
+        /// <summary>
+        /// The command string you use to show a carrier network connection indicator on a phone.
+        /// </summary>
+        // extern NSString *const IOBluetoothHandsFreeIndicatorService;
+        [Field("IOBluetoothHandsFreeIndicatorService", libraryName: "__Internal")]
+        NSString Service { get; }
+
+        /// <summary>
+        /// The command string you use to show an active call indicator on a phone.
+        /// </summary>
+        // extern NSString *const IOBluetoothHandsFreeIndicatorCall;
+        [Field("IOBluetoothHandsFreeIndicatorCall", libraryName: "__Internal")]
+        NSString Call { get; }
+
+        /// <summary>
+        /// The command string you use to show a call setup status indicator on a phone.
+        /// </summary>
+        // extern NSString *const IOBluetoothHandsFreeIndicatorCallSetup;
+        [Field("IOBluetoothHandsFreeIndicatorCallSetup", libraryName: "__Internal")]
+        NSString CallSetup { get; }
+
+        /// <summary>
+        /// The command string you use to show a call hold status indicator on a phone.
+        /// </summary>
+        // extern NSString *const IOBluetoothHandsFreeIndicatorCallHeld;
+        [Field("IOBluetoothHandsFreeIndicatorCallHeld", libraryName: "__Internal")]
+        NSString CallHeld { get; }
+
+        /// <summary>
+        /// The command string you use to show a signal strength indicator on a phone.
+        /// </summary>
+        // extern NSString *const IOBluetoothHandsFreeIndicatorSignal;
+        [Field("IOBluetoothHandsFreeIndicatorSignal", libraryName: "__Internal")]
+        NSString Signal { get; }
+
+        /// <summary>
+        /// The command string you use to show a roaming status indicator on a phone.
+        /// </summary>
+        // extern NSString *const IOBluetoothHandsFreeIndicatorRoam;
+        [Field("IOBluetoothHandsFreeIndicatorRoam", libraryName: "__Internal")]
+        NSString Roam { get; }
+
+        /// <summary>
+        /// The command string you use to show a battery charge level indicator on a phone.
+        /// </summary>
+        // extern NSString *const IOBluetoothHandsFreeIndicatorBattChg;
+        [Field("IOBluetoothHandsFreeIndicatorBattChg", libraryName: "__Internal")]
+        NSString BattChg { get; }
+    }
+
+    [Static]
+    public partial interface HandsFreeCall
+    {
+
+        /// <summary>
+        /// The index of the call, starting with 1.
+        /// </summary>
+        /// <remarks>Calls keep their index number until they are ended.
+        /// New calls are assigned the lowest available index number.</remarks>
+        // extern NSString *const IOBluetoothHandsFreeCallIndex;
+        [Field ("IOBluetoothHandsFreeCallIndex", libraryName: "__Internal")]
+        NSString Index { get; }
+
+        /// <summary>
+        /// A value that indicates whether a call is incoming or outgoing.
+        /// </summary>
+        // extern NSString *const IOBluetoothHandsFreeCallDirection;
+        [Field ("IOBluetoothHandsFreeCallDirection", libraryName: "__Internal")]
+        NSString Direction { get; }
+
+        /// <summary>
+        /// The current state of the call.
+        /// </summary>
+        // extern NSString *const IOBluetoothHandsFreeCallStatus;
+        [Field ("IOBluetoothHandsFreeCallStatus", libraryName: "__Internal")]
+        NSString Status { get; }
+
+        /// <summary>
+        /// The type of call data.
+        /// </summary>
+        // extern NSString *const IOBluetoothHandsFreeCallMode;
+        [Field ("IOBluetoothHandsFreeCallMode", libraryName: "__Internal")]
+        NSString Mode { get; }
+
+        /// <summary>
+        /// A value that indicates whether the call is multiple-party.
+        /// </summary>
+        // extern NSString *const IOBluetoothHandsFreeCallMultiparty;
+        [Field ("IOBluetoothHandsFreeCallMultiparty", libraryName: "__Internal")]
+        NSString Multiparty { get; }
+
+        /// <summary>
+        /// The name of the caller.
+        /// </summary>
+        // extern NSString *const IOBluetoothHandsFreeCallNumber;
+        [Field ("IOBluetoothHandsFreeCallNumber", libraryName: "__Internal")]
+        NSString Number { get; }
+
+        /// <summary>
+        /// The format of the caller’s phone number.
+        /// </summary>
+        // extern NSString *const IOBluetoothHandsFreeCallType;
+        [Field ("IOBluetoothHandsFreeCallType", libraryName: "__Internal")]
+        NSString Type { get; }
+
+        /// <summary>
+        /// The name of the caller.
+        /// </summary>
+        // extern NSString *const IOBluetoothHandsFreeCallName;
+        [Field ("IOBluetoothHandsFreeCallName", libraryName: "__Internal")]
+        NSString Name { get; }
     }
 }
