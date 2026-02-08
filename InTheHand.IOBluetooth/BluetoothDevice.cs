@@ -37,6 +37,7 @@ public partial class BluetoothDevice
     /// <remarks>This is the date that <see cref="GetRecentDevices"/> uses to sort its list of the most recently accessed devices.</remarks>
     public DateTime? RecentAccessDate => GetNullableDateTimeForNSDate(GetRecentAccessDate());
 
+    /// <inheritdoc/>
     public override string ToString()
     {
         return NameOrAddress;

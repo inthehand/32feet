@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using IOBluetooth;
 using IOBluetoothUI;
 
 namespace IOBluetoothSample;
@@ -8,6 +9,8 @@ public class AppDelegate : NSApplicationDelegate
 {
     public override void DidFinishLaunching(NSNotification notification)
     {
+        var hcontroller = IOBluetooth.HostController.DefaultController;
+
         // Insert code here to initialize your application
         foreach (var btdev in IOBluetooth.BluetoothDevice.PairedDevices)
         {

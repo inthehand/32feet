@@ -3541,7 +3541,11 @@ namespace IOBluetooth
         public int status;
     }
 
-    public enum ObexErrorCodes
+    /// <summary>
+    /// Codes for OBEX errors.
+    /// </summary>
+    /// <remarks>If the return value was not in the following range, then it is most likely resulting from kernel code/IOKit, and you should consult <see cref="IOReturn"/> for those codes.</remarks>
+    public enum ObexError
     {
         ErrorRangeMin = -21850,
         ErrorRangeMax = -21899,
