@@ -7,12 +7,16 @@
     <IsTrimmable>true</IsTrimmable>
     <RootNamespace>IOBluetoothUI</RootNamespace>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+
+    <RepositoryUrl>https://github.com/inthehand/32feet</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+
     <PackageId>InTheHand.IOBluetoothUI</PackageId>
-    <PackageVersion>0.2.222</PackageVersion>
     <Authors>peterfoot</Authors>
     <Title>IOBluetoothUI</Title>
     <Description>IOBluetoothUI bindings for .NET</Description>
-    <PackageVersion>0.2.222-pre</PackageVersion>
+    <PackageVersion>1.2.223-pre</PackageVersion>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageIcon>32feet-package-icon.png</PackageIcon>
     <PackageProjectUrl>https://github.com/inthehand/32feet</PackageProjectUrl>
