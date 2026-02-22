@@ -8,7 +8,9 @@ namespace IOBluetooth
 {
     // @interface IOBluetoothHandsFree : NSObject
     [Introduced(PlatformName.MacOSX, 10, 7)]
-    [BaseType(typeof(NSObject), Name = "IOBluetoothHandsFree")]
+    [BaseType(typeof(NSObject), Name = "IOBluetoothHandsFree",
+        Delegates = new string[] { "Delegate" },
+        Events = new Type[] { typeof(HandsFreeDelegate) })]
     public interface HandsFree
     {
         // @property (assign) uint32_t supportedFeatures __attribute__((availability(macos, introduced=10.7)));
@@ -24,7 +26,7 @@ namespace IOBluetooth
         // @property (getter = isInputMuted, assign) BOOL inputMuted __attribute__((availability(macos, introduced=10.7)));
         [Introduced(PlatformName.MacOSX, 10, 7)]
         [Export("inputMuted")]
-        bool InputMuted { [Bind("isInputMuted")] get; set; }
+        bool IsInputMuted { [Bind("isInputMuted")] get; set; }
 
         // @property (assign) float outputVolume __attribute__((availability(macos, introduced=10.7)));
         [Introduced(PlatformName.MacOSX, 10, 7)]
@@ -34,7 +36,7 @@ namespace IOBluetooth
         // @property (getter = isOutputMuted, assign) BOOL outputMuted __attribute__((availability(macos, introduced=10.7)));
         [Introduced(PlatformName.MacOSX, 10, 7)]
         [Export("outputMuted")]
-        bool OutputMuted { [Bind("isOutputMuted")] get; set; }
+        bool IsOutputMuted { [Bind("isOutputMuted")] get; set; }
 
         // @property (readonly, retain) IOBluetoothDevice * device __attribute__((availability(macos, introduced=10.7)));
         [Introduced(PlatformName.MacOSX, 10, 7)]
@@ -64,7 +66,7 @@ namespace IOBluetooth
         // @property (readonly, getter = isSMSEnabled) BOOL SMSEnabled __attribute__((availability(macos, introduced=10.7)));
         [Introduced(PlatformName.MacOSX, 10, 7)]
         [Export("SMSEnabled")]
-        bool SmsEnabled { [Bind("isSMSEnabled")] get; }
+        bool IsSmsEnabled { [Bind("isSMSEnabled")] get; }
 
         [Wrap("WeakDelegate")]
         HandsFreeDelegate Delegate { get; set; }
@@ -102,7 +104,7 @@ namespace IOBluetooth
         // @property (readonly, getter = isConnected) BOOL connected __attribute__((availability(macos, introduced=10.7)));
         [Introduced(PlatformName.MacOSX, 10, 7)]
         [Export("connected")]
-        bool Connected { [Bind("isConnected")] get; }
+        bool IsConnected { [Bind("isConnected")] get; }
 
         // -(void)connectSCO __attribute__((availability(macos, introduced=10.7)));
         [Introduced(PlatformName.MacOSX, 10, 7)]
@@ -127,22 +129,22 @@ namespace IOBluetooth
     {
         // @optional -(void)handsFree:(IOBluetoothHandsFree *)device connected:(NSNumber *)status __attribute__((availability(macos, introduced=10.7)));
         [Introduced(PlatformName.MacOSX, 10, 7)]
-        [Export("handsFree:connected:"), EventArgs("HandsFreeConnected")]
+        [Export("handsFree:connected:"), EventArgs("HandsFree")]
         void Connected(HandsFree device, NSNumber status);
 
         // @optional -(void)handsFree:(IOBluetoothHandsFree *)device disconnected:(NSNumber *)status __attribute__((availability(macos, introduced=10.7)));
         [Introduced(PlatformName.MacOSX, 10, 7)]
-        [Export("handsFree:disconnected:")]
+        [Export("handsFree:disconnected:"), EventArgs("HandsFree")]
         void Disconnected(HandsFree device, NSNumber status);
 
         // @optional -(void)handsFree:(IOBluetoothHandsFree *)device scoConnectionOpened:(NSNumber *)status __attribute__((availability(macos, introduced=10.7)));
         [Introduced(PlatformName.MacOSX, 10, 7)]
-        [Export("handsFree:scoConnectionOpened:")]
+        [Export("handsFree:scoConnectionOpened:"), EventArgs("HandsFree")]
         void ScoConnectionOpened(HandsFree device, NSNumber status);
 
         // @optional -(void)handsFree:(IOBluetoothHandsFree *)device scoConnectionClosed:(NSNumber *)status __attribute__((availability(macos, introduced=10.7)));
         [Introduced(PlatformName.MacOSX, 10, 7)]
-        [Export("handsFree:scoConnectionClosed:")]
+        [Export("handsFree:scoConnectionClosed:"), EventArgs("HandsFree")]
         void ScoConnectionClosed(HandsFree device, NSNumber status);
     }
 
@@ -186,6 +188,7 @@ namespace IOBluetooth
     // @interface IOBluetoothHandsFreeAudioGateway : IOBluetoothHandsFree
     [Introduced(PlatformName.MacOSX, 10, 7)]
     [BaseType(typeof(HandsFree), Name = "IOBluetoothHandsFreeAudioGateway")]
+    [DisableDefaultCtor]
     public interface HandsFreeAudioGateway
     {
         // -(instancetype)initWithDevice:(IOBluetoothDevice *)device delegate:(id)inDelegate __attribute__((availability(macos, introduced=10.7)));
@@ -237,6 +240,7 @@ namespace IOBluetooth
     // @interface IOBluetoothHandsFreeDevice : IOBluetoothHandsFree
     [Introduced(PlatformName.MacOSX, 10, 7)]
     [BaseType(typeof(HandsFree), Name = "IOBluetoothHandsFreeDevice")]
+    [DisableDefaultCtor]
     public interface HandsFreeDevice
     {
         // -(instancetype)initWithDevice:(IOBluetoothDevice *)device delegate:(id)delegate __attribute__((availability(macos, introduced=10.7)));
@@ -476,7 +480,6 @@ namespace IOBluetooth
     [Static]
     public partial interface HandsFreeCall
     {
-
         /// <summary>
         /// The index of the call, starting with 1.
         /// </summary>

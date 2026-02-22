@@ -1076,16 +1076,20 @@ namespace IOBluetooth
     //	OctetsMax = 251
     //}
 
+    public enum BluetoothL2CAPMtu : uint
+    {
+        LowEnergyDefault = 27,
+        LowEnergyMax = 251,
+        Minimum = 48,
+        Default = 1017,
+        Maximum = 65535,
+        Start = 32767,
+    }
+
     //[Verify (InferredFromMemberPrefix)]
     //public enum BluetoothL2CAP : uint
     //{
-    //	MTULowEnergyDefault = kBluetoothLETXOctetsMin,
-    //	MTULowEnergyMax = kBluetoothLETXOctetsMax,
-    //	MTUMinimum = 48,
-    //	MTUDefault = 1017,
-    //	MTUMaximum = 65535,
-    //	MTUStart = 32767,
-    //	Mtusig = 48,
+
     //	FlushTimeoutDefault = kBluetoothL2CAPFlushTimeoutForever,
     //	QoSFlagsDefault = 0,
     //	QoSTypeDefault = kBluetoothL2CAPQoSTypeBestEffort,

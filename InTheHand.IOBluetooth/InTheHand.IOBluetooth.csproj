@@ -7,18 +7,23 @@
     <IsTrimmable>true</IsTrimmable>
     <RootNamespace>IOBluetooth</RootNamespace>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <PackageId>InTheHand.IOBluetooth</PackageId>
-    <PackageVersion>0.2.131</PackageVersion>
+    
     <Authors>peterfoot</Authors>
     <Title>IOBluetooth</Title>
     <Description>IOBluetooth bindings for .NET</Description>
-    <PackOnBuild>true</PackOnBuild>
-    <PackageIconUrl>https://avatars3.githubusercontent.com/u/11249648</PackageIconUrl>
-    <PackageLicenseUrl>https://github.com/InTheHand/32feet/blob/master/LICENSE</PackageLicenseUrl>
-    <Owners>peterfoot</Owners>
-    <PackageProjectUrl>https://github.com/InTheHand/32feet</PackageProjectUrl>
-    <Summary>IOBluetooth bindings for .NET</Summary>
+    <RepositoryUrl>https://github.com/inthehand/32feet</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+
+    <PackageId>InTheHand.IOBluetooth</PackageId>
+    <PackageVersion>0.2.222-pre</PackageVersion>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageIcon>32feet-package-icon.png</PackageIcon>
+    <PackageProjectUrl>https://github.com/inthehand/32feet</PackageProjectUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageTags>Bluetooth macOS dotnet</PackageTags>
+    <Owners>peterfoot</Owners>
+    <Summary>IOBluetooth bindings for .NET</Summary>
   </PropertyGroup>
   <ItemGroup>
     <ObjcBindingApiDefinition Include="ApiDefinition.cs" />
@@ -31,5 +36,11 @@
   <ItemGroup>
     <LinkerArgument Include="-framework" />
     <LinkerArgument Include="IOBluetooth" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Misc\32feet-package-icon.png">
+      <Pack>True</Pack>
+      <PackagePath/>
+    </None>
   </ItemGroup>
 </Project>
