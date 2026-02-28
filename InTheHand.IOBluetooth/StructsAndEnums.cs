@@ -1,7 +1,5 @@
 using System;
 using System.Runtime.InteropServices;
-using CoreFoundation;
-using Foundation;
 using ObjCRuntime;
 
 namespace IOBluetooth
@@ -1931,7 +1929,7 @@ namespace IOBluetooth
         public byte totalNumACLDataPackets;
     }
 
-    public enum HciTimeoutValues : uint
+    public enum HciTimeoutValues : ushort
     {
         DefaultPageTimeout = 10000
     }

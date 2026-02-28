@@ -348,7 +348,7 @@ namespace IOBluetooth
         /// If authentication or a non-default page timeout is required the method OpenConnection:withPageTimeout:authenticationRequired: should be used instead.
         /// As of OS X 10.7, this method will no longer mask out “Connection Exists” ‘errors’ with a success result code; your code must account for the cases where the baseband connection is already open.</remarks>
         [Export("openConnection:")]
-        IOReturn OpenConnection(NSObject target);
+        IOReturn OpenConnection([NullAllowed] NSObject target);
 
         // -(IOReturn)openConnection:(id)target withPageTimeout:(BluetoothHCIPageTimeout)pageTimeoutValue authenticationRequired:(BOOL)authenticationRequired;
         /// <summary>
@@ -363,7 +363,7 @@ namespace IOBluetooth
         /// NOTE: This method is only available in macOS 10.2.7 (Bluetooth v1.3) or later.
         /// As of OS X 10.7, this method will no longer mask out “Connection Exists” ‘errors’ with a success result code; your code must account for the cases where the baseband connection is already open.</remarks>
         [Export("openConnection:withPageTimeout:authenticationRequired:")]
-        IOReturn OpenConnection(NSObject target, ushort pageTimeoutValue, bool authenticationRequired);
+        IOReturn OpenConnection([NullAllowed] NSObject target, ushort pageTimeoutValue, bool authenticationRequired);
 
         // -(IOReturn)closeConnection;
         /// <summary>
@@ -383,10 +383,10 @@ namespace IOBluetooth
         /// <returns>Returns IOReturn.Success if the remote name request was successfully issued (and if synchronous, if the request completed successfully).</returns>
         /// <remarks>If a target is specified, the request is asynchronous and on completion of the request, the method <see cref="BluetoothDeviceAsyncCallbacks.RemoteNameRequestComplete"/> will be called on the specified target.
         /// If no target is specified, the request is made synchronously and won’t return until the request is complete.
-        /// This call with operate with the default page timeout value.
+        /// This call with operate with the <see href="HciTimeoutValues.DefaultPageTimeout">default page timeout</see> value.
         /// If a different page timeout value is desired, the method -remoteNameRequest:withPageTimeout: should be used instead.</remarks>
         [Export("remoteNameRequest:")]
-        IOReturn RemoteNameRequest(NSObject target);
+        IOReturn RemoteNameRequest([NullAllowed] NSObject target);
 
         // -(IOReturn)remoteNameRequest:(id)target withPageTimeout:(BluetoothHCIPageTimeout)pageTimeoutValue;
         /// <summary>
@@ -399,7 +399,7 @@ namespace IOBluetooth
         /// If no target is specified, the request is made synchronously and won’t return until the request is complete.
         /// NOTE: This method is only available in macOS 10.2.7 (Bluetooth v1.3) or later.</remarks>
         [Export("remoteNameRequest:withPageTimeout:")]
-        IOReturn RemoteNameRequest(NSObject target, ushort pageTimeoutValue);
+        IOReturn RemoteNameRequest([NullAllowed] NSObject target, ushort pageTimeoutValue);
 
         // -(IOReturn)requestAuthentication;
         /// <summary>
@@ -449,12 +449,12 @@ namespace IOBluetooth
 
         // -(IOReturn)performSDPQuery:(id)target;
         [Export("performSDPQuery:")]
-        IOReturn PerformSdpQuery(NSObject target);
+        IOReturn PerformSdpQuery([NullAllowed] NSObject target);
 
         // -(IOReturn)performSDPQuery:(id)target uuids:(NSArray *)uuidArray __attribute__((availability(macos, introduced=10.7)));
         [Introduced(PlatformName.MacOSX, 10, 7)]
         [Export("performSDPQuery:uuids:")]
-        IOReturn PerformSdpQuery(NSObject target, SdpUuid[] uuidArray);
+        IOReturn PerformSdpQuery([NullAllowed] NSObject target, SdpUuid[] uuidArray);
 
         // @property (readonly, retain) NSArray * services;
         [Export("services", ArgumentSemantic.Retain)]
@@ -694,7 +694,7 @@ namespace IOBluetooth
     /// Of note is that this object MAY attempt to perform two low-level pairings, depending on the type of device you are attempting to pair.
     /// This is inconsequential to your code, however, as it occurs automatically and does not change the messaging.
     /// Once started, the pairing can be stopped.
-    /// This will set the delegate to nil and then attempt to disconnect from the device if already connected.</remarks>
+    /// This will set the delegate to null and then attempt to disconnect from the device if already connected.</remarks>
     // @interface IOBluetoothDevicePair : NSObject
     [BaseType(typeof(NSObject),
         Name = "IOBluetoothDevicePair",

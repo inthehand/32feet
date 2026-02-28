@@ -4,6 +4,8 @@ namespace IOBluetooth;
 
 public partial class BluetoothDevice
 {
+    private DeviceCallbacks? _callbacks = null!;
+
     /// <summary>
     /// Get the Bluetooth device address for the target device.
     /// </summary>
@@ -21,7 +23,7 @@ public partial class BluetoothDevice
     /// </summary>
     /// <value>The last name update.</value>
     public DateTime? LastNameUpdate => GetNullableDateTimeForNSDate(GetLastNameUpdate());
-    
+
     /// <summary>
     /// Get the date/time of the last SDP query.
     /// </summary>
@@ -47,4 +49,65 @@ public partial class BluetoothDevice
     {
         return value == null ? null : (DateTime?)value;
     }
+
+    public Task<IOReturn> OpenConnectionAsync(ushort pageTimeout, bool authenticationRequired)
+    {
+        var tcs = new TaskCompletionSource<IOReturn>();
+        _callbacks ??= new DeviceCallbacks(this);
+        _callbacks.ConnectionCompleted += Handler;
+        var returnValue = OpenConnection(_callbacks, pageTimeout, authenticationRequired);
+
+        if (returnValue != IOReturn.Success)
+        {
+            _callbacks.ConnectionCompleted -= Handler;
+            tcs.SetResult(returnValue);
+        }
+
+        return tcs.Task;
+
+        void Handler(object? sender, IOReturn args)
+        {
+            _callbacks.ConnectionCompleted -= Handler;
+            tcs.TrySetResult(args);
+        }
+    }
+
+    public Task<IOReturn> RemoteNameRequestAsync(ushort pageTimeout)
+    {
+        TaskCompletionSource<IOReturn> tcs = new TaskCompletionSource<IOReturn>();
+        _callbacks ??= new DeviceCallbacks(this);
+        _callbacks.RemoteNameRequestCompleted += Handler;
+        var returnValue = RemoteNameRequest(_callbacks, pageTimeout);
+        if (returnValue != IOReturn.Success)
+        {
+            _callbacks.RemoteNameRequestCompleted -= Handler;
+            tcs.SetResult(returnValue);
+        }
+        
+        return tcs.Task;
+
+        void Handler(object? sender, IOReturn args)
+        {
+            _callbacks.RemoteNameRequestCompleted -= Handler;
+            tcs.TrySetResult(args);
+        }
+    }
+}
+
+internal class DeviceCallbacks(BluetoothDevice device) : NSObject, IBluetoothDeviceAsyncCallbacks
+{
+    private BluetoothDevice _device = device;
+
+    public void ConnectionComplete(BluetoothDevice device, IOReturn status)
+    {
+        ConnectionCompleted?.Invoke(device, status);
+    }
+
+    public void RemoteNameRequestComplete(BluetoothDevice device, IOReturn status)
+    {
+        RemoteNameRequestCompleted?.Invoke(device, status);
+    }
+
+    public event EventHandler<IOReturn> ConnectionCompleted;
+    public event EventHandler<IOReturn> RemoteNameRequestCompleted;
 }
