@@ -451,14 +451,14 @@ namespace IOBluetoothUI
     // @interface IOBluetoothAccessibilityIgnoredTextFieldCell : NSTextFieldCell
     [Internal]
     [BaseType(typeof(NSTextFieldCell))]
-    interface AccessibilityIgnoredTextFieldCell
+    interface IOBluetoothAccessibilityIgnoredTextFieldCell
     {
     }
 
     // @interface IOBluetoothAccessibilityIgnoredImageCell : NSImageCell
     [Internal]
     [BaseType(typeof(NSImageCell))]
-    interface AccessibilityIgnoredImageCell
+    interface IOBluetoothAccessibilityIgnoredImageCell
     {
     }
 }

@@ -1,5 +1,7 @@
 using System;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using Foundation;
 using ObjCRuntime;
 
 namespace IOBluetooth
@@ -3445,7 +3447,8 @@ namespace IOBluetooth
 
     //}
 
-    public enum DeviceSearchOptionsBits : uint
+    [Flags]
+    public enum DeviceSearchOptions : uint
     {
         None = 0,
         AlwaysStartInquiry = (1 << 0),
@@ -3469,7 +3472,7 @@ namespace IOBluetooth
     [StructLayout(LayoutKind.Sequential)]
     public unsafe struct DeviceSearchAttributes
     {
-        public uint Options;
+        public DeviceSearchOptions Options;
 
         public uint MaxResults;
 
@@ -3478,11 +3481,14 @@ namespace IOBluetooth
         public unsafe DeviceSearchDeviceAttributes* AttributeList;
     }
 
+    /// <summary>
+    /// Bits to determine what Bluetooth devices to search for.
+    /// </summary>
     [Flags]
     public enum DeviceSearchType : uint
     {
         Classic = 1,
-        LE = 2
+        Le = 2
     }
 
     public enum UserNotificationChannelDirection : uint
