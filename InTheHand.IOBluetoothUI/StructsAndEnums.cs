@@ -6,25 +6,19 @@ namespace IOBluetoothUI;
 /// Option values to customize the behavior of a <see cref="ServiceBrowserController"/> object.
 /// </summary>
 [Flags]
-public enum ServiceBrowserControllerOptions : ulong
+public enum ServiceBrowserControllerOptions : uint
 {
     /// <summary>
     /// No options set.
     /// </summary>
     None = 0,
-    //automatically start an inquiry when the panel is displayed. This has been deprecated in 10.5
+    //automatically start an inquiry when the panel is displayed.
+    //This has been deprecated in 10.5
     //AutoStartInquiry = (1 << 0),
     /// <summary>
     /// Disconnect from the device when UI operations are finished.
     /// </summary>
     DisconnectWhenDone = (1 << 1)
-}
-
-
-public enum ModalResponse :int
-{
-    Success = (-1000),
-    UserCanceledErr = (-1001)
 }
 
 /*static class CFunctions

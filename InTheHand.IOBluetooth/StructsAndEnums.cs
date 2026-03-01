@@ -477,10 +477,10 @@ namespace IOBluetooth
         SerialPort = 4353,
         LanAccessUsingPpp = 4354,
         DialupNetworking = 4355,
-        IrMCSync = 4356,
+        IrMcSync = 4356,
         ObexObjectPush = 4357,
         ObexFileTransfer = 4358,
-        IrMCSyncCommand = 4359,
+        IrMcSyncCommand = 4359,
         Headset = 4360,
         CordlessTelephony = 4361,
         AudioSource = 4362,
@@ -655,8 +655,8 @@ namespace IOBluetooth
         RandomTargetAddress = 24,
         Appearance = 25,
         AdvertisingInterval = 26,
-        LEBluetoothDeviceAddress = 27,
-        LERole = 28,
+        LeBluetoothDeviceAddress = 27,
+        LeRole = 28,
         SimplePairingHash = 29,
         SimplePairingRandomizer = 30,
         ServiceSolicitation32BitUuids = 31,
@@ -903,9 +903,9 @@ namespace IOBluetooth
         MoveChannelConfirmationResponse = 17,
         ConnectionParameterUpdateRequest = 18,
         ConnectionParameterUpdateResponse = 19,
-        LECreditBasedConnectionRequest = 20,
-        LECreditBasedConnectionResponse = 21,
-        LEFlowControlCredit = 22
+        LeCreditBasedConnectionRequest = 20,
+        LeCreditBasedConnectionResponse = 21,
+        LeFlowControlCredit = 22
     }
 
     public enum L2CapCommandRejectReason : uint
@@ -1157,16 +1157,16 @@ namespace IOBluetooth
     	KeyboardOnly = 2,
     	NoInputNoOutput = 3,
     	KeyboardDisplay = 4,
-    	//ReservedStart = 5,
-    	//ReservedEnd = 255
+    	ReservedStart = 5,
+    	ReservedEnd = 255
     }
 
-    public enum BluetoothLeSecurityManagerOobData : uint
+    public enum BluetoothLeSecurityManagerOobData : byte
     {
     	AuthenticationDataNotPresent = 0,
     	AuthenticationDataPresent = 1,
-    	//ReservedStart = 2,
-    	//ReservedEnd = 255
+    	ReservedStart = 2,
+    	ReservedEnd = 255
     }
 
     //public enum BluetoothLESecurityManager : uint
@@ -1205,8 +1205,8 @@ namespace IOBluetooth
     	PasskeyDigitErased = 2,
     	PasskeyCleared = 3,
     	PasskeyEntryCompleted = 4,
-    	//ReservedStart = 5,
-    	//ReservedEnd = 255
+    	ReservedStart = 5,
+    	ReservedEnd = 255
     }
 
     public enum BluetoothAmpManagerCode : uint
@@ -1695,7 +1695,7 @@ namespace IOBluetooth
         EnableHoldMode = 2,
         EnableSniffMode = 4,
         EnableParkMode = 8,
-        //ReservedForFutureUse = 16
+        ReservedForFutureUse = 16
     }
 
     [StructLayout(LayoutKind.Sequential)]
@@ -2025,10 +2025,10 @@ namespace IOBluetooth
 
     public enum HciGeneralFlowControlStates : uint
     {
-        ostControllerToHostFlowControlOff = 0,
-        CIACLDataPacketsOnHCISCODataPacketsOff = 1,
-        CIACLDataPacketsOffHCISCODataPacketsOn = 2,
-        CIACLDataPacketsOnHCISCODataPacketsOn = 3
+        HostControllerToHostFlowControlOff = 0,
+        AclDataPacketsOnHciScoDataPacketsOff = 1,
+        AclDataPacketsOffHciScoDataPacketsOn = 2,
+        AclDataPacketsOnHciScoDataPacketsOn = 3
     }
 
     public enum HciTransmitReadPowerLevelTypes : uint
@@ -2037,7 +2037,7 @@ namespace IOBluetooth
         MaximumTransmitPowerLevel = 1
     }
 
-    public enum HciAFHChannelAssessmentModes : uint
+    public enum HciAfhChannelAssessmentModes : uint
     {
         Disabled = 0,
         Enabled = 1
@@ -2046,12 +2046,12 @@ namespace IOBluetooth
     [StructLayout(LayoutKind.Sequential)]
     public struct HciTransmitPowerLevelInfo
     {
-        public ushort handle;
+        public ushort Handle;
 
-        public sbyte level;
+        public sbyte Level;
     }
 
-    public enum HCIHoldModeActivityStates : uint
+    public enum HciHoldModeActivityStates : uint
     {
         MaintainCurrentPowerState = 0,
         SuspendPageScan = 1,
@@ -2075,37 +2075,37 @@ namespace IOBluetooth
     [StructLayout(LayoutKind.Sequential)]
     public struct HciAutomaticFlushTimeoutInfo
     {
-        public ushort handle;
+        public ushort Handle;
 
-        public ushort timeout;
+        public ushort Timeout;
     }
 
     [StructLayout(LayoutKind.Sequential)]
     public struct BluetoothTransportInfo
     {
-        public uint productID;
+        public uint ProductID;
 
-        public uint vendorID;
+        public uint VendorID;
 
-        public uint type;
+        public uint Type;
 
-        public sbyte[] productName;
+        public sbyte[] ProductName;
 
-        public sbyte[] vendorName;
+        public sbyte[] VendorName;
 
-        public ulong totalDataBytesSent;
+        public ulong TotalDataBytesSent;
 
-        public ulong totalSCOBytesSent;
+        public ulong TotalSCOBytesSent;
 
-        public ulong totalDataBytesReceived;
+        public ulong TotalDataBytesReceived;
 
-        public ulong totalSCOBytesReceived;
+        public ulong TotalSCOBytesReceived;
     }
 
     public enum BluetoothTransportType : uint
     {
         Usb = 1,
-        PCCard = 2,
+        PcCard = 2,
         PciCard = 3,
         Uart = 4
     }
@@ -2113,49 +2113,49 @@ namespace IOBluetooth
     [StructLayout(LayoutKind.Sequential)]
     public struct HciInquiryResult
     {
-        public BluetoothDeviceAddress deviceAddress;
+        public BluetoothDeviceAddress DeviceAddress;
 
-        public byte pageScanRepetitionMode;
+        public byte PageScanRepetitionMode;
 
-        public byte pageScanPeriodMode;
+        public byte PageScanPeriodMode;
 
-        public byte pageScanMode;
+        public byte pPageScanMode;
 
-        public uint classOfDevice;
+        public uint ClassOfDevice;
 
-        public ushort clockOffset;
+        public ushort ClockOffset;
     }
 
     [StructLayout(LayoutKind.Sequential)]
     public struct HciInquiryResults
     {
-        public HciInquiryResult[] results;
+        public HciInquiryResult[] Results;
 
-        public uint count;
+        public uint Count;
     }
 
     [StructLayout(LayoutKind.Sequential)]
     public struct HciInquiryWithRssiResult
     {
-        public BluetoothDeviceAddress deviceAddress;
+        public BluetoothDeviceAddress DeviceAddress;
 
-        public byte pageScanRepetitionMode;
+        public byte PageScanRepetitionMode;
 
-        public byte reserved;
+        public byte Reserved;
 
-        public uint classOfDevice;
+        public uint ClassOfDevice;
 
-        public ushort clockOffset;
+        public ushort ClockOffset;
 
-        public sbyte RSSIValue;
+        public sbyte RssiValue;
     }
 
     [StructLayout(LayoutKind.Sequential)]
     public struct HciInquiryWithRssiResults
     {
-        public HciInquiryWithRssiResult[] results;
+        public HciInquiryWithRssiResult[] Results;
 
-        public uint count;
+        public uint Count;
     }
 
     public enum HciFecRequiredValues : uint
@@ -2171,7 +2171,7 @@ namespace IOBluetooth
         WithRssiOrExtendedInquiryResultFormat = 2
     }
 
-    public enum HciInquiryScanType : uint
+    public enum HciInquiryScanType : byte
     {
         Standard = 0,
         Interlaced = 1,
@@ -2182,45 +2182,45 @@ namespace IOBluetooth
     [StructLayout(LayoutKind.Sequential)]
     public struct HciExtendedInquiryResponse
     {
-        public byte[] data;
+        public byte[] Data;
     }
 
     [StructLayout(LayoutKind.Sequential)]
     public struct HciReadExtendedInquiryResponseResults
     {
-        public byte outFECRequired;
+        public byte OutFecRequired;
 
-        public HciExtendedInquiryResponse extendedInquiryResponse;
+        public HciExtendedInquiryResponse ExtendedInquiryResponse;
     }
 
     [StructLayout(LayoutKind.Sequential)]
     public struct HciExtendedInquiryResult
     {
-        public byte numberOfReponses;
+        public byte NumberOfReponses;
 
-        public BluetoothDeviceAddress deviceAddress;
+        public BluetoothDeviceAddress DeviceAddress;
 
-        public byte pageScanRepetitionMode;
+        public byte PageScanRepetitionMode;
 
-        public byte reserved;
+        public byte Reserved;
 
-        public uint classOfDevice;
+        public uint ClassOfDevice;
 
-        public ushort clockOffset;
+        public ushort ClockOffset;
 
         public sbyte RssiValue;
 
-        public HciExtendedInquiryResponse extendedInquiryResponse;
+        public HciExtendedInquiryResponse ExtendedInquiryResponse;
     }
 
     [StructLayout(LayoutKind.Sequential)]
     public struct HciReadLmpHandleResults
     {
-        public ushort handle;
+        public ushort Handle;
 
-        public byte lmp_handle;
+        public byte LmpHandle;
 
-        public uint reserved;
+        public uint Reserved;
     }
 
     public enum HciSimplePairingMode : uint
@@ -2238,18 +2238,18 @@ namespace IOBluetooth
     [StructLayout(LayoutKind.Sequential)]
     public struct HciSimplePairingOobData
     {
-        public byte[] data;
+        public byte[] Data;
     }
 
     [StructLayout(LayoutKind.Sequential)]
     public struct HciReadLocalOobDataResults
     {
-        public HciSimplePairingOobData hash;
+        public HciSimplePairingOobData Hash;
 
-        public HciSimplePairingOobData randomizer;
+        public HciSimplePairingOobData Randomizer;
     }
 
-    public enum BluetoothOOBDataPresenceValues : uint
+    public enum BluetoothOobDataPresenceValues : uint
     {
         NotPresent = 0,
         FromRemoteDevicePresent = 1
@@ -2313,19 +2313,19 @@ namespace IOBluetooth
     //}
 
     [StructLayout(LayoutKind.Sequential)]
-    public struct BluetoothAFHHostChannelClassification
+    public struct BluetoothAfhHostChannelClassification
     {
-        public byte[] data;
+        public byte[] Data;
     }
 
     [StructLayout(LayoutKind.Sequential)]
-    public struct BluetoothAFHResults
+    public struct BluetoothAfhResults
     {
-        public ushort handle;
+        public ushort Handle;
 
-        public byte mode;
+        public byte Mode;
 
-        public byte[] afhMap;
+        public byte[] AfhMap;
     }
 
     [StructLayout(LayoutKind.Sequential)]
@@ -3141,18 +3141,18 @@ namespace IOBluetooth
     //	ServiceSearchAttributeResponse = 7
     //}
 
-    public enum SdpErrorCode : uint
+    public enum SdpErrorCode : ushort
     {
         Success = 0,
         //Reserved = 0,
-        InvalidSDPVersion = 1,
+        InvalidSdpVersion = 1,
         InvalidServiceRecordHandle = 2,
         InvalidRequestSyntax = 3,
-        InvalidPDUSize = 4,
+        InvalidPduSize = 4,
         InvalidContinuationState = 5,
         InsufficientResources = 6,
-        //ReservedStart = 7,
-        //ReservedEnd = 65535
+        ReservedStart = 7,
+        ReservedEnd = 65535
     }
 
     [Native]
@@ -3167,8 +3167,8 @@ namespace IOBluetooth
         DataElementSequence = 6,
         DataElementAlternative = 7,
         Url = 8,
-        //ReservedStart = 9,
-        //ReservedEnd = 31
+        ReservedStart = 9,
+        ReservedEnd = 31
     }
 
     public enum BluetoothLEScanType : uint

@@ -8,17 +8,20 @@ using ObjCRuntime;
 namespace IOBluetoothUI
 {
     /// <summary>
-    /// An NSWindowController subclass to display a window to initiate pairing to other bluetooth devices.
+    /// An NSWindowController subclass to display a window to initiate pairing to other Bluetooth devices.
     /// </summary>
+    /// <remarks>Implementation of a window controller to return an array of selected Bluetooth devices.
+    /// This class will handle connecting to the Bluetooth Daemon for the purposes of searches, and displaying the results.
+    /// This controller will return an array of BluetoothDevice objects to the user.</remarks>
     // @interface IOBluetoothDeviceSelectorController : NSWindowController
     [BaseType(typeof(NSWindowController), Name = "IOBluetoothDeviceSelectorController")]
     public interface DeviceSelectorController
     {
         // +(IOBluetoothDeviceSelectorController *)deviceSelector;
         /// <summary>
-        /// Method call to instantiate a new IOBluetoothDeviceSelectorController object.
+        /// Method call to instantiate a new DeviceSelectorController object.
         /// </summary>
-        /// <value>Success - a new instance of the device selector Controller Failure - nil.</value>
+        /// <value>Success - a new instance of the device selector Controller Failure - null.</value>
         [Static]
         [Export("deviceSelector")]
         DeviceSelectorController DeviceSelector { get; }
@@ -27,9 +30,12 @@ namespace IOBluetoothUI
         /// <summary>
         /// Runs the device selector panel in a modal session to allow the user to select a Bluetooth device.
         /// </summary>
-        /// <returns>The modal.</returns>
+        /// <returns>Returns <see cref="NSRunResponse.Stopped"/> if a successful, validated device selection was made by the user.
+        /// Returns <see cref="NSRunResponse.Aborted"/> if the user cancelled the panel.
+        /// They are the standard values used in a modal session.</returns>
+        /// <seealso cref="NSRunResponse"/>
         [Export("runModal")]
-        int RunModal();
+        NSRunResponse RunModal();
 
         // -(IOReturn)beginSheetModalForWindow:(NSWindow *)sheetWindow modalDelegate:(id)modalDelegate didEndSelector:(SEL)didEndSelector contextInfo:(void *)contextInfo;
         /// <summary>
@@ -41,13 +47,14 @@ namespace IOBluetoothUI
         /// <param name="didEndSelector">Did end selector.</param>
         /// <param name="contextInfo">Context info.</param>
         [Export("beginSheetModalForWindow:modalDelegate:didEndSelector:contextInfo:")]
-        unsafe int BeginSheetModalForWindow(NSWindow sheetWindow, NSObject modalDelegate, Selector didEndSelector, IntPtr contextInfo);
+        unsafe IOReturn BeginSheetModalForWindow(NSWindow sheetWindow, NSObject modalDelegate, Selector didEndSelector, IntPtr contextInfo);
 
         // -(NSArray *)getResults;
         /// <summary>
         /// Returns the result of the user's selection.
         /// </summary>
-        /// <value>The results.</value>
+        /// <value>Returns an array of BluetoothDevice objects corresponding to the user’s selection.
+        /// If the user cancelled the panel, null will be returned.</value>
         [Export("getResults")]
         BluetoothDevice[] Results { get; }
 
@@ -153,13 +160,12 @@ namespace IOBluetoothUI
         /// <summary>
         /// Runs the pairing panel in a modal session to allow the user to select a Bluetooth device.
         /// </summary>
-        /// <returns>Returns kIOBluetoothUISuccess if a successful, validated device selection was made by the user and that device successfully paired. 
-        /// Returns kIOBluetoothUIUserCanceledErr if the user cancelled the panel. 
-        /// These return values are the same as NSRunStoppedResponse and NSRunAbortedResponse respectively. 
+        /// <returns>Returns <see cref="NSRunResponse.Stopped"/> if a successful, validated device selection was made by the user and that device successfully paired. 
+        /// Returns <see cref="NSRunResponse.Aborted"/> if the user cancelled the panel.
         /// They are the standard values used in a modal session.</returns>
         // -(int)runModal;
         [Export("runModal")]
-        int RunModal();
+        NSRunResponse RunModal();
 
         /// <summary>
         /// Returns an array of the devices that were paired.
@@ -252,12 +258,11 @@ namespace IOBluetoothUI
         /// <summary>
         /// Runs the service browser panel in a modal session to allow the user to select a service on a Bluetooth device.
         /// </summary>
-        /// <returns>Returns kIOBluetoothUISuccess if a successful, validated service selection was made by the user. 
-        /// Returns kIOBluetoothUIUserCanceledErr if the user cancelled the panel. 
-        /// These return values are the same as NSRunStoppedResponse and NSRunAbortedResponse respectively. 
+        /// <returns>Returns <see cref="NSRunResponse.Stopped"/> if a successful, validated service selection was made by the user. 
+        /// Returns <see cref="NSRunResponse.Aborted"/> if the user cancelled the panel.
         /// They are the standard values used in a modal session.</returns>
         [Export("runModal")]
-        int RunModal();
+        NSRunResponse RunModal();
 
         // -(IOReturn)beginSheetModalForWindow:(NSWindow *)sheetWindow modalDelegate:(id)modalDelegate didEndSelector:(SEL)didEndSelector contextInfo:(void *)contextInfo;
         /// <summary>
@@ -269,7 +274,7 @@ namespace IOBluetoothUI
         /// <param name="didEndSelector">Selector sent to the modalDelegate when the sheet modal session is finished.</param>
         /// <param name="contextInfo">User-definied value passed to the modalDelegate in the didEndSelector.</param>
         [Export("beginSheetModalForWindow:modalDelegate:didEndSelector:contextInfo:")]
-        unsafe int BeginSheetModalForWindow(NSWindow sheetWindow, NSObject modalDelegate, Selector didEndSelector, IntPtr contextInfo);
+        unsafe IOReturn BeginSheetModalForWindow(NSWindow sheetWindow, NSObject modalDelegate, Selector didEndSelector, IntPtr contextInfo);
 
         // -(NSArray *)getResults;
         /// <summary>
@@ -353,7 +358,7 @@ namespace IOBluetoothUI
     {
         // -(IOBluetoothObjectPushUIController *)initObjectPushWithBluetoothDevice:(IOBluetoothDevice *)inDevice withFiles:(NSArray *)inFiles delegate:(id)inDelegate;
         [Export("initObjectPushWithBluetoothDevice:withFiles:delegate:")]
-        IntPtr Constructor(BluetoothDevice device, NSString[] files, NSObject inDelegate);
+        NativeHandle Constructor(BluetoothDevice device, NSString[] files, NSObject inDelegate);
 
         // -(void)runModal;
         [Export("runModal")]
@@ -365,7 +370,7 @@ namespace IOBluetoothUI
 
         // -(IOReturn)beginSheetModalForWindow:(NSWindow *)sheetWindow modalDelegate:(id)modalDelegate didEndSelector:(SEL)didEndSelector contextInfo:(void *)contextInfo;
         [Export("beginSheetModalForWindow:modalDelegate:didEndSelector:contextInfo:")]
-        unsafe int BeginSheetModalForWindow(NSWindow sheetWindow, NSObject modalDelegate, Selector didEndSelector, IntPtr contextInfo);
+        unsafe IOReturn BeginSheetModalForWindow(NSWindow sheetWindow, NSObject modalDelegate, Selector didEndSelector, IntPtr contextInfo);
 
         // -(void)stop;
         [Export("stop")]
@@ -446,14 +451,14 @@ namespace IOBluetoothUI
     // @interface IOBluetoothAccessibilityIgnoredTextFieldCell : NSTextFieldCell
     [Internal]
     [BaseType(typeof(NSTextFieldCell))]
-    interface IOBluetoothAccessibilityIgnoredTextFieldCell
+    interface AccessibilityIgnoredTextFieldCell
     {
     }
 
     // @interface IOBluetoothAccessibilityIgnoredImageCell : NSImageCell
     [Internal]
     [BaseType(typeof(NSImageCell))]
-    interface IOBluetoothAccessibilityIgnoredImageCell
+    interface AccessibilityIgnoredImageCell
     {
     }
 }
