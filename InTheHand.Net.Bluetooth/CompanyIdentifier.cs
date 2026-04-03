@@ -2,7 +2,7 @@
 //
 // InTheHand.Net.Bluetooth.CompanyIdentifier
 // 
-// Copyright (c) 2003-2024 In The Hand Ltd, All rights reserved.
+// Copyright (c) 2003-2026 In The Hand Ltd, All rights reserved.
 // This source code is licensed under the MIT License
 
 using System;
@@ -16,6 +16,7 @@ namespace InTheHand.Net.Bluetooth
     /// <remarks>See the list at <see href="https://bitbucket.org/bluetooth-SIG/public/src/main/assigned_numbers/company_identifiers/company_identifiers.yaml"/>.</remarks>
     public enum CompanyIdentifier : ushort
     {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         Unknown = 0xffff,
 
         KEEPEN = 0x0D01,
@@ -58,45 +59,33 @@ namespace InTheHand.Net.Bluetooth
 
         MadgeTech = 0x0CEE,
 
-       /* = 0x0CED
-          CV. NURI TEKNIK
+        CvNuriTeknik = 0x0CED,
 
-        = 0x0CEC
-          Pacific Coast Fishery Services (2003) Inc.
+        PacificCoastFisheryServices2003 = 0x0CEC,
 
-        = 0x0CEB
-          Shenzhen Tingting Technology Co. LTD
+        ShenzhenTingtingTechnology = 0x0CEB,
 
-        = 0x0CEA
-          HAYWARD INDUSTRIES, INC.
+        HaywardIndustries = 0x0CEA,
 
-        = 0x0CE9
-          PEAG, LLC dba JLab Audio
+        JLabAudio = 0x0CE9,
 
-        = 0x0CE8
-          Dongguan Yougo Electronics Co.,Ltd.
+        DongguanYougoElectronics = 0x0CE8,
 
-        = 0x0CE7
-          TAG HEUER SA
+        TagHeuer = 0x0CE7,
 
-        = 0x0CE6
-          McWong International, Inc.
+        McWongInternational = 0x0CE6,
 
-        = 0x0CE5
-          Amina Distribution AS
+        AminaDistribution = 0x0CE5,
 
-        = 0x0CE4
-          Off-Highway Powertrain Services Germany GmbH
+        OffHighwayPowertrainServicesGermany = 0x0CE4,
 
-        = 0x0CE3
-          Taiwan Fuhsing
+        TaiwanFuhsing = 0x0CE3,
 
-        = 0x0CE2
-          CORVENT MEDICAL, INC.
+        CorventMedicalInc = 0x0CE2,
 
-        = 0x0CE1
-          Regal Beloit America, Inc.
-
+        RegalBeloitAmericaInc = 0x0CE1,
+          
+/* 
         = 0x0CE0
           VODALOGIC PTY LTD
 
@@ -9883,5 +9872,6 @@ namespace InTheHand.Net.Bluetooth
         NokiaMobilePhones = 0x0001,
 
         Ericsson = 0x0000,
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     }
 }
