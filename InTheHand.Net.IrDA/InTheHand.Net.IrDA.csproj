@@ -30,7 +30,7 @@
 
 	<ItemGroup>
 		<PackageReference Include="DotNet.ReproducibleBuilds" Version="1.2.25" PrivateAssets="All" />
-		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
+		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="10.0.300" PrivateAssets="All" />
 	</ItemGroup>
 	<ItemGroup>
 		<None Include="..\Misc\32feet-package-icon.png">
