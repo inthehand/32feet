@@ -1,4 +1,4 @@
-﻿// 32feet.NET - Personal Area Networking for .NET
+// 32feet.NET - Personal Area Networking for .NET
 //
 // InTheHand.Net.ObexListener
 // 
@@ -65,7 +65,7 @@ namespace InTheHand.Net
         /// <param name="transport">Specifies the transport protocol to use.
         /// </param>
         public ObexListener(ObexTransport transport)
-        { 
+        {
             switch (transport)
             {
                 case ObexTransport.Bluetooth:
@@ -254,7 +254,7 @@ namespace InTheHand.Net
                 {
                     case ObexTransport.Bluetooth:
                         var bluetoothClient = bListener.AcceptBluetoothClient();
-                        socket = bListener.AcceptBluetoothClient().Client;
+                        socket = bluetoothClient.Client;
                         if (socket == null)
                         {
                             stream = bluetoothClient.GetStream(); // platforms which don't use System.Net.Sockets can return a stream instead
@@ -282,9 +282,9 @@ namespace InTheHand.Net
                 {
                     Debug.WriteLine($"Stream {stream.GetHashCode():X8}: Accepted", "ObexListener");
                     // call to stream implementation to go here
-                    
+
                 }
-                
+
                 return null;
             }
             catch
@@ -292,7 +292,7 @@ namespace InTheHand.Net
                 return null;
             }
         }
-        
+
         public async Task<ObexListenerContext> GetContextAsync()
         {
             if (!listening)
@@ -309,7 +309,7 @@ namespace InTheHand.Net
                 {
                     case ObexTransport.Bluetooth:
                         var bluetoothClient = await bListener.AcceptBluetoothClientAsync();
-                        socket = (await bListener.AcceptBluetoothClientAsync()).Client;
+                        socket = bluetoothClient.Client;
                         if (socket == null)
                         {
                             stream = bluetoothClient.GetStream(); // platforms which don't use System.Net.Sockets can return a stream instead
@@ -337,9 +337,9 @@ namespace InTheHand.Net
                 {
                     Debug.WriteLine($"Stream {stream.GetHashCode():X8}: Accepted", "ObexListener");
                     // call to stream implementation to go here
-                    
+
                 }
-                
+
                 return null;
             }
             catch
