@@ -1,5 +1,5 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-	<Sdk Name="DotNet.ReproducibleBuilds.Isolated" Version="1.2.25" />
+	<Sdk Name="DotNet.ReproducibleBuilds.Isolated" Version="2.0.5" />
 	<PropertyGroup>
 		<TargetFramework>netstandard2.0</TargetFramework>
 		<Company>In The Hand Ltd</Company>
@@ -12,9 +12,9 @@
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 		<Nullable>disable</Nullable>
 		<PackageProjectUrl>https://github.com/inthehand/32feet</PackageProjectUrl>
-		<Copyright>Copyright (c) 2004-2025 In The Hand Ltd</Copyright>
+		<Copyright>Copyright (c) 2004-2026 In The Hand Ltd</Copyright>
 		<Description>32feet.NET is an open-source project to make personal area networking technologies such as Bluetooth easily accessible from .NET code.</Description>
-		<FileVersion>4.1.0.0309</FileVersion>
+		<FileVersion>4.1.0.0810</FileVersion>
 		<AssemblyVersion>4.1.0.0</AssemblyVersion>
 		<AssemblyName>InTheHand.Net.Obex</AssemblyName>
 		<DebugSymbols>true</DebugSymbols>
@@ -43,7 +43,7 @@
 	<ItemGroup>
 		<PackageReference Include="InTheHand.Net.Bluetooth" Version="4.2.4" />
 		<PackageReference Include="InTheHand.Net.IrDA" Version="4.0.4" />
-		<PackageReference Include="DotNet.ReproducibleBuilds" Version="1.2.25" PrivateAssets="All" />
+		<PackageReference Include="DotNet.ReproducibleBuilds" Version="2.0.5" PrivateAssets="All" />
 		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="10.0.300" PrivateAssets="All" />
 	</ItemGroup>
 

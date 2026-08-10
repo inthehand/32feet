@@ -81,152 +81,104 @@ namespace InTheHand.Net.Bluetooth
 
         TaiwanFuhsing = 0x0CE3,
 
-        CorventMedicalInc = 0x0CE2,
+        CorventMedical = 0x0CE2,
 
-        RegalBeloitAmericaInc = 0x0CE1,
-          
-/* 
-        = 0x0CE0
-          VODALOGIC PTY LTD
+        RegalBeloitAmerica = 0x0CE1,
 
-        = 0x0CDF
-          SHENZHEN CHENYUN ELECTRONICS  CO., LTD
+        Vodalogic = 0x0CE0,
 
-        = 0x0CDE
-          RESPONSE TECHNOLOGIES, LTD.
+        ShenzenChenyunElectronics = 0x0CDF,
 
-        = 0x0CDD
-          Alif Semiconductor, Inc.
+        ResponseTechnologies = 0x0CDE,
 
-        = 0x0CDC
-          Ypsomed AG
+        AlifSemiconductor = 0x0CDD,
 
-        = 0x0CDB
-          Circus World Displays Limited
+        Ypsomed = 0x0CDC,
 
-        = 0x0CDA
-          Wolf Steel ltd
+        CircusWorldDisplays = 0x0CDB,
 
-        = 0x0CD9
-          Minami acoustics Limited
+        WolfSteel = 0x0CDA,
 
-        = 0x0CD8
-          SIA Mesh Group
+        MinamiAcoustics = 0x0CD9,
 
-        = 0x0CD7
-          Maztech Industries, LLC
+        SiaMeshGroup = 0x0CD8,
 
-        = 0x0CD6
-          HHO (Hangzhou) Digital Technology Co., Ltd.
+        MaztechIndustries = 0x0CD7,
 
-        = 0x0CD5
-          Numa Products, LLC
+        HhoDigitalTechnology = 0x0CD6,
 
-        = 0x0CD4
-          Shenzhen Zhiduotun IoT Technology Co., Ltd
+        NumaProducts = 0x0CD5,
 
-        = 0x0CD3
-          TechSwipe
+        ShenzhenZhiduotunIotTechnology = 0x0CD4,
 
-        = 0x0CD2
-          EQOM SSC B.V.
+        TechSwipe = 0x0CD3,
 
-        = 0x0CD1
-          Imagine Marketing Limited
+        EqomSsc = 0x0CD2,
 
-        = 0x0CD0
-          MooreSilicon Semiconductor Technology (Shanghai) Co., LTD.
+        ImagineMarketing = 0x0CD1,
 
-        = 0x0CCF
-          Shenzhen CESI Information Technology Co., Ltd.
+        MooreSiliconSemiconductorTechnology = 0x0CD0,
+        
+        ShenzhenCesiInformationTechnology = 0x0CCF,
 
-        = 0x0CCE
-          SENOSPACE LLC
+        Senospace = 0x0CCE,
 
-        = 0x0CCD
-          YanFeng Visteon(Chongqing) Automotive Electronic Co.,Ltd
+        YanFengVisteonChongqingAutomotiveElectronic = 0x0CCD,
+        
+        KordDefence = 0x0CCC,
 
-        = 0x0CCC
-          Kord Defence Pty Ltd
+        NothingTechnology = 0x0CCB,
 
-        = 0x0CCB
-          NOTHING TECHNOLOGY LIMITED
+        CyclopsMarine = 0x0CCA,
 
-        = 0x0CCA
-          Cyclops Marine Ltd
+        InnocentTechnology = 0x0CC9,
 
-        = 0x0CC9
-          Innocent Technology Co., Ltd.
+        TrikThom = 0x0CC8,
 
-        = 0x0CC8
-          TrikThom
+        SbCs = 0x0CC7,
 
-        = 0x0CC7
-          SB C&S Corp.
+        SerialTechnology = 0x0CC6,
 
-        = 0x0CC6
-          Serial Technology Corporation
+        OpenRoadSolutions = 0x0CC5,
 
-        = 0x0CC5
-          Open Road Solutions, Inc.
+        AbusAugustBremickerSoehneKommanditgesellschaft = 0x0CC4,
 
-        = 0x0CC4
-          ABUS August Bremicker Soehne Kommanditgesellschaft
+        HmdGlobal = 0x0CC3,
 
-        = 0x0CC3
-          HMD Global Oy
+        AnkerInnovations = 0x0CC2,
 
-        = 0x0CC2
-          Anker Innovations Limited
+        Cleio = 0x0CC1,
 
-        = 0x0CC1
-          CLEIO Inc.
+        GarnetInstruments = 0x0CC0,
 
-        = 0x0CC0
-          Garnet Instruments Ltd.
+        ForwardThinkingSystems = 0x0CBF,
 
-        = 0x0CBF
-          Forward Thinking Systems LLC.
+        Pricer = 0x0CBD,
 
-        = 0x0CBD
-          Pricer AB
+        Trox = 0x0CBC,
 
-        = 0x0CBC
-          TROX GmbH
+        EmlidTech = 0x0CBB,
 
-        = 0x0CBB
-          Emlid Tech Kft.
+        AmesoTech = 0x0CBA,
 
-        = 0x0CBA
-          Ameso Tech (OPC) Private Limited
+        Seca = 0x0CB9,
 
-        = 0x0CB9
-          seca GmbH & Co. KG
+        ShanghaiProxyNetworkTechnology = 0x0CB8,
 
-        = 0x0CB8
-          Shanghai Proxy Network Technology Co., Ltd.
+        CucumberLightingControls = 0x0CB7,
 
-        = 0x0CB7
-          Cucumber Lighting Controls Limited
+        TheEelectricMacaron = 0x0CB6,
 
-        = 0x0CB6
-          THE EELECTRIC MACARON LLC
+        Racketry = 0x0CB5,
 
-        = 0x0CB5
-          Racketry, d. o. o.
+        EberspaecherClimateControlSystems = 0x0CB4,
 
-        = 0x0CB4
-          Eberspaecher Climate Control Systems GmbH
+        Janova = 0x0CB3,
 
-        = 0x0CB3
-          janova GmbH
+        ShinkawaSensorTechnology = 0x0CB2,
 
-        = 0x0CB2
-          SHINKAWA Sensor Technology, Inc.
-
-        = 0x0CB1
-          RF Creations
-
+        RfCreations = 0x0CB1,
+/*
         = 0x0CB0
           SwipeSense, Inc.
 

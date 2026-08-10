@@ -1,5 +1,5 @@
 ﻿<Project Sdk="MSBuild.Sdk.Extras/3.0.44">
-	<Sdk Name="DotNet.ReproducibleBuilds.Isolated" Version="1.2.25" />
+	<Sdk Name="DotNet.ReproducibleBuilds.Isolated" Version="2.0.5" />
 	<PropertyGroup>
 		<TargetFrameworks>netstandard2.0;netstandard2.1;net9.0;net9.0-windows7.0;net9.0-windows10.0.19041.0;net9.0-android;net9.0-ios;net462</TargetFrameworks>
 		<Company>In The Hand Ltd</Company>
@@ -20,8 +20,8 @@
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<Copyright>Copyright (c) 2004-2026 In The Hand Ltd</Copyright>
 		<Description>32feet.NET is an open-source project to make personal area networking technologies such as Bluetooth easily accessible from .NET code.</Description>
-		<FileVersion>4.2.4</FileVersion>
-		<AssemblyVersion>4.2.4.0</AssemblyVersion>
+		<FileVersion>4.2.5</FileVersion>
+		<AssemblyVersion>4.2.5.0</AssemblyVersion>
 		<AssemblyName>InTheHand.Net.Bluetooth</AssemblyName>
 		<AssemblyTitle>InTheHand.Net.Bluetooth-$(TargetFramework)</AssemblyTitle>
 		<GenerateDocumentationFile Condition=" '$(Configuration)' == 'Release' ">true</GenerateDocumentationFile>
@@ -43,8 +43,8 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="DotNet.ReproducibleBuilds" Version="1.2.25" PrivateAssets="All" />
-		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
+		<PackageReference Include="DotNet.ReproducibleBuilds" Version="2.0.5" PrivateAssets="All" />
+		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="10.0.301" PrivateAssets="All" />
 		<PackageReference Include="MSBuild.Sdk.Extras" Version="3.0.44" PrivateAssets="All" />
 	</ItemGroup>
 	<ItemGroup>
