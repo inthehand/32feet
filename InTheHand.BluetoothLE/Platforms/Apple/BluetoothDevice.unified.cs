@@ -1,6 +1,6 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="BluetoothDevice.unified.cs" company="In The Hand Ltd">
-//   Copyright (c) 2018-25 In The Hand Ltd, All rights reserved.
+//   Copyright (c) 2018-26 In The Hand Ltd, All rights reserved.
 //   This source code is licensed under the MIT License - see License.txt
 // </copyright>
 //-----------------------------------------------------------------------
@@ -14,7 +14,7 @@ namespace InTheHand.Bluetooth
 {
     partial class BluetoothDevice
     {
-        private CBPeripheral _peripheral;
+        private readonly CBPeripheral _peripheral;
 
         private BluetoothDevice(CBPeripheral peripheral)
         {
@@ -28,7 +28,7 @@ namespace InTheHand.Bluetooth
 
         public static implicit operator BluetoothDevice(CBPeripheral peripheral)
         {
-            return peripheral == null ? null : new BluetoothDevice(peripheral);
+            return new BluetoothDevice(peripheral);
         }
 
         public static implicit operator CBPeripheral(BluetoothDevice device)
@@ -36,10 +36,9 @@ namespace InTheHand.Bluetooth
             return device._peripheral;
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
-            BluetoothDevice device = obj as BluetoothDevice;
-            if (device != null)
+            if (obj is BluetoothDevice device)
             {
                 return _peripheral == device._peripheral;
             }
@@ -51,7 +50,7 @@ namespace InTheHand.Bluetooth
         {
             try
             {
-                NSUuid nativeIdentifier = new NSUuid(id);
+                NSUuid nativeIdentifier = new(id);
                 var devices = Bluetooth._manager.RetrievePeripheralsWithIdentifiers(nativeIdentifier);
 
                 if (devices != null && devices.Length > 0)
@@ -66,7 +65,6 @@ namespace InTheHand.Bluetooth
             return null;
         }
 
-
         public override int GetHashCode()
         {
             return _peripheral.GetHashCode();
@@ -79,7 +77,7 @@ namespace InTheHand.Bluetooth
 
         private string GetName()
         {
-            return _peripheral.Name;
+            return _peripheral.Name ?? string.Empty;
         }
 
         private RemoteGattServer GetGatt()
@@ -92,15 +90,9 @@ namespace InTheHand.Bluetooth
             return false;
         }
 
-        private Task PlatformPairAsync()
-        {
-            throw new PlatformNotSupportedException();
-        }
+        private Task PlatformPairAsync() => throw new PlatformNotSupportedException();
 
-        private Task PlatformPairAsync(string pairingCode)
-        {
-            throw new PlatformNotSupportedException();
-        }
+        private Task PlatformPairAsync(string pairingCode) => throw new PlatformNotSupportedException();
 
         public void Dispose() {}
 

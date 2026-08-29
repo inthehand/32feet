@@ -14,14 +14,8 @@ namespace InTheHand.Bluetooth.Permissions
     /// </summary>
     /// <remarks>
     /// </remarks>
-#if NET8_0_OR_GREATER
     [Obsolete("Use the built-in Microsoft.Maui.ApplicationModel.Permissions.Bluetooth permission in .NET 8.0 and above", true)]
     public class Bluetooth : Microsoft.Maui.ApplicationModel.Permissions.Bluetooth
-#elif NET6_0_OR_GREATER
-    public partial class Bluetooth : Microsoft.Maui.ApplicationModel.Permissions.BasePlatformPermission
-#else
-    public partial class Bluetooth : Xamarin.Essentials.Permissions.BasePlatformPermission
-#endif
     {
     }
 }

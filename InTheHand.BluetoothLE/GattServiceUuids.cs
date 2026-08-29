@@ -12,7 +12,7 @@ namespace InTheHand.Bluetooth
     /// <summary>
     /// Provides service UUIDs for common GATT services.
     /// </summary>
-    /// <remarks>To view a list of all Bluetooth SIG-defined service UUIDs, see <see href="https://bitbucket.org/bluetooth-SIG/public/src/main/assigned_numbers/uuids/service_uuids.yaml">Bluetooth SIG-defined Service UUIDs</a>.</remarks>
+    /// <remarks>To view a list of all Bluetooth SIG-defined service UUIDs, see <see href="https://bitbucket.org/bluetooth-SIG/public/src/main/assigned_numbers/uuids/service_uuids.yaml">Bluetooth SIG-defined Service UUIDs</see>.</remarks>
     [BluetoothUti(Namespace)]
     public static class GattServiceUuids
     {
@@ -37,7 +37,7 @@ namespace InTheHand.Bluetooth
                 var attr = field.GetCustomAttribute(typeof(BluetoothUtiAttribute));
                 if (attr != null && ((BluetoothUtiAttribute)attr).Uti == requestedUti)
                 {
-                    return (BluetoothUuid)field.GetValue(null);
+                    return (BluetoothUuid)field.GetValue(null)!;
                 }
             }
 
@@ -52,7 +52,7 @@ namespace InTheHand.Bluetooth
                 var fields = typeof(GattServiceUuids).GetFields(BindingFlags.Static | BindingFlags.Public);
                 foreach (var field in fields)
                 {
-                    if ((BluetoothUuid)field.GetValue(null) == uuid)
+                    if ((BluetoothUuid)field.GetValue(null)! == uuid)
                     {
                         var attr = field.GetCustomAttribute(typeof(BluetoothUtiAttribute));
                         if (attr != null)

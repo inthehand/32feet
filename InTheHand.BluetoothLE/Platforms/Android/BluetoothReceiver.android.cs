@@ -13,11 +13,11 @@ namespace InTheHand.Bluetooth
     [BroadcastReceiver(Enabled = true)]
     internal class BluetoothReceiver : BroadcastReceiver
     {
-        public override void OnReceive(Context context, Intent intent)
+        public override void OnReceive(Context? context, Intent? intent)
         {
-            if(intent.Action == BluetoothAdapter.ActionStateChanged)
+            if(intent?.Action == BluetoothAdapter.ActionStateChanged)
             {
-                Bluetooth.OnAvailabilityChanged();
+                _ = Bluetooth.OnAvailabilityChanged();
             }
         }
     }

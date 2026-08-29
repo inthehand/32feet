@@ -7,6 +7,7 @@
 
 using Android.Bluetooth.LE;
 using Android.OS;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
@@ -62,10 +63,10 @@ namespace InTheHand.Bluetooth
         private string PlatformGetName()
         {
             if(_scanResult.ScanRecord != null)
-                return _scanResult.ScanRecord.DeviceName;
+                return _scanResult.ScanRecord.DeviceName ?? string.Empty;
 
             if(_scanResult.Device != null)
-                return _scanResult.Device.Name;
+                return _scanResult.Device.Name ?? string.Empty;
 
             return string.Empty;
         }
@@ -77,7 +78,7 @@ namespace InTheHand.Bluetooth
 
         private sbyte PlatformGetTxPower()
         {
-            if (Build.VERSION.SdkInt >= BuildVersionCodes.O)
+            if (OperatingSystem.IsAndroidVersionAtLeast(26))
             {
                 return (sbyte)_scanResult.TxPower;
             }
@@ -88,10 +89,10 @@ namespace InTheHand.Bluetooth
         private IReadOnlyDictionary<ushort, byte[]> PlatformGetManufacturerData()
         {
             Dictionary<ushort, byte[]> data = new Dictionary<ushort, byte[]>();
-            for (int i = 0; i < _scanResult.ScanRecord.ManufacturerSpecificData.Size(); i++)
+            for (int i = 0; i < _scanResult.ScanRecord!.ManufacturerSpecificData!.Size(); i++)
             {
                 var id = _scanResult.ScanRecord.ManufacturerSpecificData.KeyAt(i);
-                var val = (byte[])_scanResult.ScanRecord.ManufacturerSpecificData.ValueAt(i);
+                var val = (byte[])_scanResult.ScanRecord!.ManufacturerSpecificData!.ValueAt(i)!;
                 data.Add((ushort)id, val);
             }
 
@@ -100,8 +101,11 @@ namespace InTheHand.Bluetooth
 
         private IReadOnlyDictionary<BluetoothUuid, byte[]> PlatformGetServiceData()
         {
-            Dictionary<BluetoothUuid, byte[]> data = new Dictionary<BluetoothUuid, byte[]>();
-            foreach(var entry in _scanResult.ScanRecord.ServiceData)
+            Dictionary<BluetoothUuid, byte[]> data = [];
+            if(_scanResult.ScanRecord?.ServiceData == null)
+                return new ReadOnlyDictionary<BluetoothUuid, byte[]>(data); 
+
+            foreach (var entry in _scanResult.ScanRecord!.ServiceData!)
             {
                 data.Add(entry.Key, entry.Value);
             }

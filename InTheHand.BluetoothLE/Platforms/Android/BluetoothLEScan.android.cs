@@ -74,11 +74,14 @@ namespace InTheHand.Bluetooth
 
             public override void OnScanResult(ScanCallbackType callbackType, ScanResult? result)
             {
-                Debug.WriteLine($"BluetoothLEScan.OnScanResult {result.Device} {result.Rssi} {result.TxPower} {result.ScanRecord}");
-                Bluetooth.OnAdvertisementReceived(result);
+                Debug.WriteLine($"BluetoothLEScan.OnScanResult {result?.Device} {result?.Rssi} {result?.ScanRecord}");
+                if(result != null)
+                {
+                    Bluetooth.OnAdvertisementReceived(result);
+                }
             }
 
-            public override void OnBatchScanResults(IList<ScanResult> results)
+            public override void OnBatchScanResults(IList<ScanResult>? results)
             {
                 Debug.WriteLine("BluetoothLEScan.OnBatchScanResults");
             }

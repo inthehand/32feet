@@ -21,7 +21,7 @@
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<Copyright>Copyright (c) 2004-2026 In The Hand Ltd</Copyright>
 		<Description>32feet.NET is an open-source project to make personal area networking technologies such as Bluetooth easily accessible from .NET code.</Description>
-		<FileVersion>4.0.45.0810</FileVersion>
+		<FileVersion>4.0.45.0829</FileVersion>
 		<AssemblyVersion>4.0.0.0</AssemblyVersion>
 		<AssemblyName>InTheHand.BluetoothLE</AssemblyName>
 		<PackageIconUrl></PackageIconUrl>

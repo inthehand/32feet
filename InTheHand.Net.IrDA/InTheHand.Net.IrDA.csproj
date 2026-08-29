@@ -26,6 +26,8 @@
 		<PackageReadmeFile>Readme.md</PackageReadmeFile>
 		<PackageReleaseNotes>Public constructor for IrDADeviceInfo.</PackageReleaseNotes>
 		<Description>32feet.NET is an open-source project to make personal area networking technologies easily accessible from .NET code. This library supports IrDA networking using .NET Sockets on Windows Desktop.</Description>
+		<FileVersion>4.1.0.0829</FileVersion>
+		<AssemblyVersion>4.1.0.0</AssemblyVersion>
 	</PropertyGroup>
 
 	<ItemGroup>

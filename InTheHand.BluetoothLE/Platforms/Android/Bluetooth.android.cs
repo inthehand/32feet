@@ -1,6 +1,6 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="Bluetooth.android.cs" company="In The Hand Ltd">
-//   Copyright (c) 2018-25 In The Hand Ltd, All rights reserved.
+//   Copyright (c) 2018-26 In The Hand Ltd, All rights reserved.
 //   This source code is licensed under the MIT License - see License.txt
 // </copyright>
 //-----------------------------------------------------------------------
@@ -14,6 +14,8 @@ using Android.Content.PM;
 using Android.OS;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -21,7 +23,7 @@ namespace InTheHand.Bluetooth
 {
     partial class Bluetooth
     {
-        internal static readonly BluetoothManager _manager = (BluetoothManager)Application.Context.GetSystemService(Context.BluetoothService);
+        internal static readonly BluetoothManager _manager = (BluetoothManager)Application.Context.GetSystemService(Context.BluetoothService)!;
         private static readonly EventWaitHandle s_handle = new EventWaitHandle(false, EventResetMode.AutoReset);
         internal static Android.Bluetooth.BluetoothDevice? s_device;
         private static BluetoothReceiver? _receiver;
@@ -83,7 +85,7 @@ namespace InTheHand.Bluetooth
             {
                 s_handle.WaitOne();
 
-                return Task.FromResult<BluetoothDevice?>(s_device ?? null);
+                return Task.FromResult<BluetoothDevice?>(s_device == null ? null : (BluetoothDevice)s_device);
             });
         }
 
@@ -107,7 +109,7 @@ namespace InTheHand.Bluetooth
                         b.SetDeviceName(f.Name);
                     }
                     
-                    filters.Add(b.Build());
+                    filters.Add(b.Build()!);
                 }
             }
 
@@ -117,7 +119,7 @@ namespace InTheHand.Bluetooth
             var settings = sb.Build();
             var callback = new DevicesCallback(options?.Timeout);
 
-            _manager.Adapter.BluetoothLeScanner.StartScan(filters, settings, callback);
+            _manager.Adapter!.BluetoothLeScanner!.StartScan(filters, settings, callback);
 
             await Task.Run(() =>
             {
@@ -132,17 +134,10 @@ namespace InTheHand.Bluetooth
 
         private static Task<IReadOnlyCollection<BluetoothDevice>> PlatformGetPairedDevices()
         {
-            var devices = new List<BluetoothDevice>();
-
-            foreach (var device in _manager.Adapter.BondedDevices)
-            {
-                if(device.Type == BluetoothDeviceType.Le || device.Type == BluetoothDeviceType.Dual)
-                {
-                    devices.Add(device);
-                }
-            }
-
-            return Task.FromResult<IReadOnlyCollection<BluetoothDevice>>(devices.AsReadOnly());
+            var devices = (from device in _manager.Adapter!.BondedDevices
+                           where device.Type == BluetoothDeviceType.Le || device.Type == BluetoothDeviceType.Dual
+                           select device).ToList();
+            return Task.FromResult((IReadOnlyCollection<BluetoothDevice>)devices.AsReadOnly());
         }
 
         private class DevicesCallback : ScanCallback
@@ -169,18 +164,18 @@ namespace InTheHand.Bluetooth
                 handle.WaitOne();
             }
 
-            public override void OnBatchScanResults(IList<ScanResult> results)
+            public override void OnBatchScanResults(IList<ScanResult>? results)
             {
                 System.Diagnostics.Debug.WriteLine("OnBatchScanResults");
 
                 base.OnBatchScanResults(results);
             }
 
-            public override void OnScanResult(ScanCallbackType callbackType, ScanResult result)
+            public override void OnScanResult(ScanCallbackType callbackType, ScanResult? result)
             {
                 System.Diagnostics.Debug.WriteLine("OnScanResult");
 
-                if (!Devices.Contains(result.Device))
+                if (result != null && result.Device != null && !Devices.Contains(result.Device))
                 {
                     Devices.Add(result.Device);
                 }
@@ -200,20 +195,20 @@ namespace InTheHand.Bluetooth
 
         private static Task<BluetoothLEScan> PlatformRequestLEScan(BluetoothLEScanOptions? options)
         {
-            return Task.FromResult(new BluetoothLEScan(options, _manager.Adapter.BluetoothLeScanner));
+            return Task.FromResult(new BluetoothLEScan(options, _manager.Adapter!.BluetoothLeScanner!));
         }
 
         [Activity(NoHistory = false, LaunchMode = LaunchMode.Multiple)]
         private sealed class DevicePickerActivity : Activity
         {
-            protected override void OnCreate(Bundle savedInstanceState)
+            protected override void OnCreate(Bundle? savedInstanceState)
             {
                 base.OnCreate(savedInstanceState);
 
                 // Android 12+
                 if (OperatingSystem.IsAndroidVersionAtLeast(31) && CheckCallingOrSelfPermission(PermissionName) != Permission.Granted)
                 {
-                    RequestPermissions(new string[] { PermissionName }, 123);
+                    RequestPermissions([PermissionName], 123);
                 }
                 else
                 {
@@ -233,7 +228,7 @@ namespace InTheHand.Bluetooth
             }
 
             // set the handle when the picker has completed and return control straight back to the calling activity
-            protected override void OnActivityResult(int requestCode, Result resultCode, Intent data)
+            protected override void OnActivityResult(int requestCode, Result resultCode, Intent? data)
             {
                 System.Diagnostics.Debug.Write(resultCode.ToString());
 

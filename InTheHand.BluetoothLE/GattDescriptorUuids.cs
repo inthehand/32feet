@@ -14,7 +14,7 @@ namespace InTheHand.Bluetooth
     /// <summary>
     /// Represents an enumeration of the most well known Descriptor UUID values.
     /// </summary>
-    /// <remarks>To view a list of all Bluetooth SIG-defined descriptor UUIDs, see <see href="https://bitbucket.org/bluetooth-SIG/public/src/main/assigned_numbers/uuids/descriptors.yaml">Bluetooth SIG-defined Descriptor UUIDs</a>.</remarks>
+    /// <remarks>To view a list of all Bluetooth SIG-defined descriptor UUIDs, see <see href="https://bitbucket.org/bluetooth-SIG/public/src/main/assigned_numbers/uuids/descriptors.yaml">Bluetooth SIG-defined Descriptor UUIDs</see>.</remarks>
     [BluetoothUti(Namespace)]
     public static class GattDescriptorUuids
     {
@@ -39,7 +39,7 @@ namespace InTheHand.Bluetooth
                 var attr = field.GetCustomAttribute(typeof(BluetoothUtiAttribute));
                 if (attr != null && ((BluetoothUtiAttribute)attr).Uti == requestedUti)
                 {
-                    return (BluetoothUuid)field.GetValue(null);
+                    return (BluetoothUuid)field.GetValue(null)!;
                 }
             }
 
@@ -54,7 +54,7 @@ namespace InTheHand.Bluetooth
                 var fields = typeof(GattDescriptorUuids).GetFields(BindingFlags.Static | BindingFlags.Public);
                 foreach (var field in fields)
                 {
-                    if ((BluetoothUuid)field.GetValue(null) == uuid)
+                    if ((BluetoothUuid)field.GetValue(null)! == uuid)
                     {
                         var attr = field.GetCustomAttribute(typeof(BluetoothUtiAttribute));
                         if (attr != null)

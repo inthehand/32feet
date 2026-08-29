@@ -39,7 +39,7 @@ namespace InTheHand.Bluetooth
             {
                 Debug.WriteLine("Initialize");
                 
-                var hasInfoKey = CoreFoundation.CFBundle.GetMain().InfoDictionary.ContainsKey(new NSString("NSBluetoothAlwaysUsageDescription"));
+                var hasInfoKey = CoreFoundation.CFBundle.GetMain()?.InfoDictionary?.ContainsKey(new NSString("NSBluetoothAlwaysUsageDescription")) ?? false;
                 if(!hasInfoKey)
                 {
                     throw new PlatformNotSupportedException("Application info.plist must contain an entry for NSBluetoothAlwaysUsageDescription");
@@ -135,7 +135,7 @@ namespace InTheHand.Bluetooth
         }
 
 #if __IOS__
-        private static UIAlertController _controller = null;
+        private static UIAlertController? _controller = null;
 #endif
 
         internal static CBUUID[] GetUuidsForFilters(RequestDeviceOptions options)
@@ -156,7 +156,7 @@ namespace InTheHand.Bluetooth
             return uuids.ToArray();
         }
         
-        private static async Task<BluetoothDevice> PlatformRequestDevice(RequestDeviceOptions options)
+        private static async Task<BluetoothDevice?> PlatformRequestDevice(RequestDeviceOptions options)
         {
             Initialize();
 
@@ -164,7 +164,7 @@ namespace InTheHand.Bluetooth
                 return null;
 
 #if __IOS__
-            TaskCompletionSource<BluetoothDevice> tcs = new TaskCompletionSource<BluetoothDevice>();
+            TaskCompletionSource<BluetoothDevice> tcs = new();
 
             _controller = UIAlertController.Create("Select a Bluetooth accessory", null, UIAlertControllerStyle.Alert);
             _controller.AddAction(UIAlertAction.Create("Cancel", UIAlertActionStyle.Cancel, (a)=> {
@@ -194,7 +194,7 @@ namespace InTheHand.Bluetooth
             _controller.SetValueForKey(tvc, new Foundation.NSString("contentViewController"));
 
             //TODO: investigate what this means for multiple windows e.g. iPad
-            UIViewController currentController = UIApplication.SharedApplication.KeyWindow.RootViewController;
+            UIViewController? currentController = UIApplication.SharedApplication.KeyWindow?.RootViewController ?? null;
             while (currentController.PresentedViewController != null)
                 currentController = currentController.PresentedViewController;
 

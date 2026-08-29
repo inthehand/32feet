@@ -1,6 +1,6 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="RemoteGattServer.cs" company="In The Hand Ltd">
-//   Copyright (c) 2018-25 In The Hand Ltd, All rights reserved.
+//   Copyright (c) 2018-26 In The Hand Ltd, All rights reserved.
 //   This source code is licensed under the MIT License - see License.txt
 // </copyright>
 //-----------------------------------------------------------------------
@@ -27,7 +27,7 @@ namespace InTheHand.Bluetooth
             PlatformInit();
         }
 
-        private void Device_GattServerDisconnected(object sender, EventArgs e)
+        private void Device_GattServerDisconnected(object? sender, EventArgs e)
         {
             Device.OnGattServerDisconnected();
         }
@@ -36,13 +36,6 @@ namespace InTheHand.Bluetooth
         /// Gets the parent remote device.
         /// </summary>
         public BluetoothDevice Device { get; private set; }
-
-        [Obsolete("Use IsConnected instead", true)]
-        [Browsable(false)]
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-
-        public bool Connected => IsConnected;
 
         /// <summary>
         /// Gets a value indicating if there is an active connection with the remote GATT server.
@@ -80,7 +73,7 @@ namespace InTheHand.Bluetooth
         /// </summary>
         /// <param name="service">The requested service or null if not present.</param>
         /// <returns></returns>
-        public Task<GattService> GetPrimaryServiceAsync(BluetoothUuid service)
+        public Task<GattService?> GetPrimaryServiceAsync(BluetoothUuid service)
         {
             return PlatformGetPrimaryService(service);
         }

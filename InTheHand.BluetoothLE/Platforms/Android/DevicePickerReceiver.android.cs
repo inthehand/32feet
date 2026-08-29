@@ -6,6 +6,7 @@
 //-----------------------------------------------------------------------
 
 using Android.Content;
+using System;
 
 namespace InTheHand.Bluetooth
 {
@@ -13,10 +14,16 @@ namespace InTheHand.Bluetooth
     internal class DevicePickerReceiver : BroadcastReceiver
     {
         // receive broadcast if a device is selected and store the device.
-        public override void OnReceive(Context context, Intent intent)
+        public override void OnReceive(Context? context, Intent? intent)
         {
-            var dev = (Android.Bluetooth.BluetoothDevice)intent.Extras.Get("android.bluetooth.device.extra.DEVICE");
-            Bluetooth.s_device = dev;
+            if (OperatingSystem.IsAndroidVersionAtLeast(33))
+            {
+                Bluetooth.s_device = (Android.Bluetooth.BluetoothDevice?)intent?.GetParcelableExtra("android.bluetooth.device.extra.DEVICE", Java.Lang.Class.ForName("android.Bluetooth.BluetoothDevice"));
+            }
+            else
+            {
+                Bluetooth.s_device = (Android.Bluetooth.BluetoothDevice?)intent?.GetParcelableExtra("android.bluetooth.device.extra.DEVICE");
+            }
         }
     }
 }

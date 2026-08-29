@@ -44,7 +44,7 @@ namespace InTheHand.Bluetooth
         /// </summary>
         /// <param name="characteristic"></param>
         /// <returns></returns>
-        public Task<GattCharacteristic> GetCharacteristicAsync(BluetoothUuid characteristic)
+        public Task<GattCharacteristic?> GetCharacteristicAsync(BluetoothUuid characteristic)
         {
             return PlatformGetCharacteristic(characteristic);
         }
@@ -78,9 +78,9 @@ namespace InTheHand.Bluetooth
         }
 
 #if DEBUG
-        public event EventHandler ServiceAdded;
-        public event EventHandler ServiceChanged;
-        public event EventHandler ServiceRemoved;
+        public event EventHandler? ServiceAdded;
+        public event EventHandler? ServiceChanged;
+        public event EventHandler? ServiceRemoved;
 #endif
     }
 }

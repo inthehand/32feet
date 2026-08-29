@@ -22,7 +22,7 @@ namespace InTheHand.Bluetooth
         /// <summary>
         /// If present requires a device to exactly match the supplied name.
         /// </summary>
-        public string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
 
         /// <summary>
         /// If present requires a device name to start with the supplied prefix.

@@ -1,6 +1,6 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="BluetoothUuid.android.cs" company="In The Hand Ltd">
-//   Copyright (c) 2019-24 In The Hand Ltd, All rights reserved.
+//   Copyright (c) 2019-26 In The Hand Ltd, All rights reserved.
 //   This source code is licensed under the MIT License - see License.txt
 // </copyright>
 //-----------------------------------------------------------------------
@@ -15,12 +15,12 @@ namespace InTheHand.Bluetooth
     {
         public static implicit operator UUID(BluetoothUuid uuid)
         {
-            return UUID.FromString(uuid.Value.ToString());
+            return UUID.FromString(uuid.Value.ToString())!;
         }
 
         public static implicit operator ParcelUuid(BluetoothUuid uuid)
         {
-            return ParcelUuid.FromString(uuid.Value.ToString());
+            return ParcelUuid.FromString(uuid.Value.ToString())!;
         }
 
         public static implicit operator BluetoothUuid(UUID uuid)

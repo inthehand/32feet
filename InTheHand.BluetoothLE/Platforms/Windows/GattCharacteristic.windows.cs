@@ -73,7 +73,7 @@ namespace InTheHand.Bluetooth
             return descriptors;
         }
 
-        private byte[] PlatformGetValue()
+        private byte[]? PlatformGetValue()
         {
             var t = _characteristic.ReadValueAsync(Windows.Devices.Bluetooth.BluetoothCacheMode.Cached).AsTask();
             t.Wait();
@@ -87,7 +87,7 @@ namespace InTheHand.Bluetooth
             return null;
         }
 
-        private async Task<byte[]> PlatformReadValue()
+        private async Task<byte[]?> PlatformReadValue()
         {
             var result = await _characteristic.ReadValueAsync(Windows.Devices.Bluetooth.BluetoothCacheMode.Uncached).AsTask().ConfigureAwait(false);
 

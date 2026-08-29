@@ -51,7 +51,7 @@ namespace InTheHand.Bluetooth
             return _isPrimary;
         }
 
-        async Task<GattCharacteristic> PlatformGetCharacteristic(BluetoothUuid characteristic)
+        async Task<GattCharacteristic?> PlatformGetCharacteristic(BluetoothUuid characteristic)
         {
             var linuxCharacteristic = await _service.GetCharacteristicAsync(characteristic.Value.ToString());
 
@@ -83,7 +83,7 @@ namespace InTheHand.Bluetooth
             return characteristics.AsReadOnly();
         }
 
-        private async Task<GattService> PlatformGetIncludedServiceAsync(BluetoothUuid service)
+        private async Task<GattService?> PlatformGetIncludedServiceAsync(BluetoothUuid service)
         {
             var paths = await _service.GetIncludesAsync();
             foreach(var path in paths)

@@ -100,7 +100,7 @@ partial class Bluetooth
             }
         }
 
-        Adapter.DeviceFound += handler;
+        Adapter?.DeviceFound += handler;
 
         var timeout = options?.Timeout ?? TimeSpan.FromMilliseconds(30000);
             
@@ -108,19 +108,19 @@ partial class Bluetooth
         {
             try
             {
-                await Adapter.StartDiscoveryAsync();
+                await Adapter?.StartDiscoveryAsync();
                 await Task.Delay(timeout, cancellationToken);
-                await Adapter.StopDiscoveryAsync();
+                await Adapter?.StopDiscoveryAsync();
                 result.TrySetResult(devices);
             }
             catch (TaskCanceledException) 
             {
-                await Adapter.StopDiscoveryAsync();
+                await Adapter?.StopDiscoveryAsync();
                 result.TrySetResult(devices); // if cancelled, return the devices found so far
             }
             finally
             {
-                Adapter.DeviceFound -= handler;
+                Adapter?.DeviceFound -= handler;
             }
         }, CancellationToken.None);
 

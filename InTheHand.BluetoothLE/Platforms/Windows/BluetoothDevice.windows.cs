@@ -1,6 +1,6 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="BluetoothDevice.windows.cs" company="In The Hand Ltd">
-//   Copyright (c) 2018-23 In The Hand Ltd, All rights reserved.
+//   Copyright (c) 2018-26 In The Hand Ltd, All rights reserved.
 //   This source code is licensed under the MIT License - see License.txt
 // </copyright>
 //-----------------------------------------------------------------------
@@ -19,9 +19,9 @@ namespace InTheHand.Bluetooth
     partial class BluetoothDevice : IDisposable
     {
         internal BluetoothLEDevice NativeDevice;
-        internal readonly ConcurrentDictionary<int, IDisposable> NativeDisposeList = new ConcurrentDictionary<int, IDisposable>();
-        private string _cachedId;
-        private string _cachedName;
+        internal readonly ConcurrentDictionary<int, IDisposable?> NativeDisposeList = new();
+        private string? _cachedId;
+        private string? _cachedName;
         internal ulong LastKnownAddress;
         private bool _disposed;
 
@@ -63,7 +63,7 @@ namespace InTheHand.Bluetooth
         /// <summary>Called in RemoteServer.PlatformCleanup to dispose all of the native object that have been collected.</summary>
         internal void DisposeAllNativeObjects()
         {
-            Dictionary<int, IDisposable> itemsDisposed = new Dictionary<int, IDisposable>();
+            Dictionary<int, IDisposable?> itemsDisposed = [];
             foreach (var kv in NativeDisposeList)
             {
                 try
@@ -78,8 +78,7 @@ namespace InTheHand.Bluetooth
 
             foreach (var kv in itemsDisposed)
             {
-                IDisposable val;
-                NativeDisposeList.TryRemove(kv.Key, out val);
+                NativeDisposeList.TryRemove(kv.Key, out _);
             }
         }
 
@@ -116,7 +115,7 @@ namespace InTheHand.Bluetooth
         /// <returns>True if the container exists and it's native object has been disposed.</returns>
         internal bool IsDisposedItem(object container)
         {
-            if (NativeDisposeList.TryGetValue(container.GetHashCode(), out IDisposable existingItem))
+            if (NativeDisposeList.TryGetValue(container.GetHashCode(), out IDisposable? existingItem))
             {
                 return existingItem == null;
             }
@@ -131,13 +130,12 @@ namespace InTheHand.Bluetooth
 
         public static implicit operator BluetoothDevice(BluetoothLEDevice device)
         {
-            return device == null ? null : new BluetoothDevice(device);
+            return new BluetoothDevice(device);
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
-            BluetoothDevice device = obj as BluetoothDevice;
-            if (device != null)
+            if (obj is BluetoothDevice device)
             {
                 return NativeDevice == device.NativeDevice;
             }
@@ -153,7 +151,7 @@ namespace InTheHand.Bluetooth
             {
                 if (Bluetooth.KnownDevices.TryGetValue(parsedId, out var device1))
                 {
-                    var knownDevice = (BluetoothDevice)device1.Target;
+                    var knownDevice = (BluetoothDevice?)device1.Target;
                     if (knownDevice != null)
                         return knownDevice;
                 }
@@ -180,14 +178,14 @@ namespace InTheHand.Bluetooth
 
         internal string GetId()
         {
-            if (IsDisposedItem(this)) return _cachedId;
+            if (IsDisposedItem(this)) return _cachedId ?? string.Empty;
             _cachedId = NativeDevice.BluetoothAddress.ToString("X6");
             return _cachedId;
         }
 
         internal string GetName()
         {
-            if (IsDisposedItem(this)) return _cachedName;
+            if (IsDisposedItem(this)) return _cachedName ?? string.Empty;
             if (NativeDevice.Name.StartsWith("Bluetooth "))
             {
                 _cachedName = NativeDevice.DeviceInformation.Name;

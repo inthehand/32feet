@@ -9,7 +9,7 @@ using ABluetooth = Android.Bluetooth;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Android.OS;
+using System;
 
 namespace InTheHand.Bluetooth
 {
@@ -29,7 +29,7 @@ namespace InTheHand.Bluetooth
 
         private BluetoothUuid GetUuid()
         {
-            return _characteristic.Uuid;
+            return _characteristic.Uuid!;
         }
 
         private GattCharacteristicProperties GetProperties()
@@ -45,26 +45,24 @@ namespace InTheHand.Bluetooth
 
         private async Task<IReadOnlyList<GattDescriptor>> PlatformGetDescriptors()
         {
-            List<GattDescriptor> descriptors = new List<GattDescriptor>();
-
-            foreach (var descriptor in _characteristic.Descriptors)
-            {
-                descriptors.Add(new GattDescriptor(this, descriptor));
-            }
-
-            return descriptors;
+            return (from descriptor in _characteristic.Descriptors
+                    select new GattDescriptor(this, descriptor)).ToList();
         }
 
-        private byte[] PlatformGetValue()
+        private byte[]? PlatformGetValue()
         {
+            if(OperatingSystem.IsAndroidVersionAtLeast(33))
+            {
+                return PlatformReadValue().GetAwaiter().GetResult();
+            }
             return _characteristic.GetValue();
         }
 
-        private Task<byte[]> PlatformReadValue()
+        private Task<byte[]?> PlatformReadValue()
         {
-            TaskCompletionSource<byte[]> tcs = new TaskCompletionSource<byte[]>();
+            TaskCompletionSource<byte[]?> tcs = new();
 
-            void handler(object s, CharacteristicEventArgs e)
+            void handler(object? s, CharacteristicEventArgs e)
             {
                 if (e.Characteristic == _characteristic)
                 {
@@ -91,13 +89,11 @@ namespace InTheHand.Bluetooth
 
         private Task PlatformWriteValue(byte[] value, bool requireResponse)
         {
-            TaskCompletionSource<bool> tcs = null;
+            TaskCompletionSource<bool> tcs = new();
 
             if (requireResponse)
             {
-                tcs = new TaskCompletionSource<bool>();
-
-                void handler(object s, CharacteristicEventArgs e)
+                void handler(object? s, CharacteristicEventArgs e)
                 {
                     if (e.Characteristic == _characteristic)
                     {
@@ -114,8 +110,8 @@ namespace InTheHand.Bluetooth
             }
 
             bool written = false;
-#if NET7_0_OR_GREATER
-            if (Build.VERSION.SdkInt >= BuildVersionCodes.Tiramisu)
+
+            if (OperatingSystem.IsAndroidVersionAtLeast(33))
             {
                 int result = ((ABluetooth.BluetoothGatt)Service.Device.Gatt).WriteCharacteristic(_characteristic, value, requireResponse ? (int)ABluetooth.GattWriteType.Default : (int)ABluetooth.GattWriteType.NoResponse);
                 written = result == (int)ABluetooth.CurrentBluetoothStatusCodes.Success;
@@ -127,13 +123,11 @@ namespace InTheHand.Bluetooth
             }
             else
             {
-#endif
                 written = _characteristic.SetValue(value);
                 _characteristic.WriteType = requireResponse ? ABluetooth.GattWriteType.Default : ABluetooth.GattWriteType.NoResponse;
                 written = ((ABluetooth.BluetoothGatt)Service.Device.Gatt).WriteCharacteristic(_characteristic);
-#if NET7_0_OR_GREATER
             } 
-#endif
+
             if (written && requireResponse)
                 return tcs.Task;
 
@@ -145,7 +139,7 @@ namespace InTheHand.Bluetooth
             Service.Device.Gatt.CharacteristicChanged += Gatt_CharacteristicChanged;
         }
 
-        private void Gatt_CharacteristicChanged(object sender, CharacteristicEventArgs e)
+        private void Gatt_CharacteristicChanged(object? sender, CharacteristicEventArgs e)
         {
             if (e.Characteristic == _characteristic)
                 OnCharacteristicValueChanged(new GattCharacteristicValueChangedEventArgs(e.Characteristic.GetValue()));
@@ -161,15 +155,18 @@ namespace InTheHand.Bluetooth
             byte[] data;
 
             if (_characteristic.Properties.HasFlag(ABluetooth.GattProperty.Notify))
-                data = ABluetooth.BluetoothGattDescriptor.EnableNotificationValue.ToArray();
+                data = ABluetooth.BluetoothGattDescriptor.EnableNotificationValue!.ToArray();
             else if (_characteristic.Properties.HasFlag(ABluetooth.GattProperty.Indicate))
-                data = ABluetooth.BluetoothGattDescriptor.EnableIndicationValue.ToArray();
+                data = ABluetooth.BluetoothGattDescriptor.EnableIndicationValue!.ToArray();
             else
                 return;
 
             ((ABluetooth.BluetoothGatt)Service.Device.Gatt).SetCharacteristicNotification(_characteristic, true);
             var descriptor = await GetDescriptorAsync(GattDescriptorUuids.ClientCharacteristicConfiguration);
-            await descriptor.WriteValueAsync(data);
+            if(descriptor != null)
+            {
+                await descriptor.WriteValueAsync(data);
+            }
         }
 
         private async Task PlatformStopNotifications()
@@ -178,7 +175,10 @@ namespace InTheHand.Bluetooth
             if (Service.Device.Gatt.IsConnected)
             {
                 var descriptor = await GetDescriptorAsync(GattDescriptorUuids.ClientCharacteristicConfiguration);
-                await descriptor.WriteValueAsync([0, 0]);
+                if(descriptor != null)
+                {
+                    await descriptor.WriteValueAsync([0, 0]);
+                }
             }
         }
     }

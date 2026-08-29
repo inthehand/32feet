@@ -1,12 +1,13 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="GattDescriptor.android.cs" company="In The Hand Ltd">
-//   Copyright (c) 2018-24 In The Hand Ltd, All rights reserved.
+//   Copyright (c) 2018-26 In The Hand Ltd, All rights reserved.
 //   This source code is licensed under the MIT License - see License.txt
 // </copyright>
 //-----------------------------------------------------------------------
 
 using Android.Bluetooth;
 using Android.OS;
+using System;
 using System.Threading.Tasks;
 using ABluetooth = Android.Bluetooth;
 
@@ -28,19 +29,19 @@ namespace InTheHand.Bluetooth
 
         BluetoothUuid GetUuid()
         {
-            return _descriptor.Uuid;
+            return _descriptor.Uuid!;
         }
 
-        byte[] PlatformGetValue()
+        byte[]? PlatformGetValue()
         {
             return _descriptor.GetValue();
         }
 
-        Task<byte[]> PlatformReadValue()
+        Task<byte[]?> PlatformReadValue()
         {
-            TaskCompletionSource<byte[]> tcs = new TaskCompletionSource<byte[]>();
+            TaskCompletionSource<byte[]?> tcs = new();
 
-            void handler(object s, DescriptorEventArgs e)
+            void handler(object? s, DescriptorEventArgs e)
             {
                 if (e.Descriptor == _descriptor)
                 {
@@ -86,7 +87,7 @@ namespace InTheHand.Bluetooth
 
             bool written = false;
 #if NET7_0_OR_GREATER
-            if (Build.VERSION.SdkInt >= BuildVersionCodes.Tiramisu)
+            if (OperatingSystem.IsAndroidVersionAtLeast(33))
             {
                 int result = ((ABluetooth.BluetoothGatt)Characteristic.Service.Device.Gatt).WriteDescriptor(_descriptor, value);
                 written = result == (int)CurrentBluetoothStatusCodes.Success;

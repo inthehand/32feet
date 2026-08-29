@@ -65,7 +65,7 @@ namespace InTheHand.Bluetooth
         {
         }
 
-        async Task<GattService> PlatformGetPrimaryService(BluetoothUuid service)
+        async Task<GattService?> PlatformGetPrimaryService(BluetoothUuid service)
         {
             string uuid = service.Value.ToString();
             var gattService = await Device._device.GetServiceAsync(uuid);

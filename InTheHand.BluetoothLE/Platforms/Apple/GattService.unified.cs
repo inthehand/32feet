@@ -1,6 +1,6 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="GattService.unified.cs" company="In The Hand Ltd">
-//   Copyright (c) 2018-22 In The Hand Ltd, All rights reserved.
+//   Copyright (c) 2018-26 In The Hand Ltd, All rights reserved.
 //   This source code is licensed under the MIT License - see License.txt
 // </copyright>
 //-----------------------------------------------------------------------
@@ -8,9 +8,8 @@
 using CoreBluetooth;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace InTheHand.Bluetooth
 {
@@ -38,12 +37,12 @@ namespace InTheHand.Bluetooth
             return true;
         }
 
-        Task<GattCharacteristic> PlatformGetCharacteristic(BluetoothUuid characteristic)
+        Task<GattCharacteristic?> PlatformGetCharacteristic(BluetoothUuid characteristic)
         {
-            TaskCompletionSource<GattCharacteristic> tcs = new TaskCompletionSource<GattCharacteristic>();
+            TaskCompletionSource<GattCharacteristic?> tcs = new();
             CBPeripheral peripheral = Device;
 
-            void handler(object sender, CBServiceEventArgs args)
+            void handler(object? sender, CBServiceEventArgs args)
             {
 #if NET6_0_OR_GREATER
                 peripheral.DiscoveredCharacteristics -= handler;
@@ -53,14 +52,13 @@ namespace InTheHand.Bluetooth
                 if (args.Error != null)
                     tcs.SetException(new Exception(args.Error.ToString()));
 
-                GattCharacteristic matchingCharacteristic = null;
-                foreach (CBCharacteristic cbcharacteristic in _service.Characteristics)
+                GattCharacteristic? matchingCharacteristic = null;
+                foreach (var cbcharacteristic in from CBCharacteristic cbcharacteristic in _service.Characteristics
+                                                 where (BluetoothUuid)cbcharacteristic.UUID == characteristic
+                                                 select cbcharacteristic)
                 {
-                    if ((BluetoothUuid)cbcharacteristic.UUID == characteristic)
-                    {
-                        matchingCharacteristic = new GattCharacteristic(this, cbcharacteristic);
-                        break;
-                    }
+                    matchingCharacteristic = new GattCharacteristic(this, cbcharacteristic);
+                    break;
                 }
 
                 tcs.SetResult(matchingCharacteristic);
@@ -81,7 +79,7 @@ namespace InTheHand.Bluetooth
             TaskCompletionSource<IReadOnlyList<GattCharacteristic>> tcs = new TaskCompletionSource<IReadOnlyList<GattCharacteristic>>();
             CBPeripheral peripheral = Device;
            
-            void handler(object sender, CBServiceEventArgs args)
+            void handler(object? sender, CBServiceEventArgs args)
             {
 #if NET6_0_OR_GREATER
                 peripheral.DiscoveredCharacteristics -= handler;
@@ -91,13 +89,8 @@ namespace InTheHand.Bluetooth
                 if (args.Error != null)
                     tcs.SetException(new Exception(args.Error.ToString()));
 
-                List<GattCharacteristic> characteristics = new List<GattCharacteristic>();
-            
-                foreach (CBCharacteristic cbcharacteristic in _service.Characteristics)
-                {
-                    characteristics.Add(new GattCharacteristic(this, cbcharacteristic));
-                }
-
+                List<GattCharacteristic> characteristics = (from CBCharacteristic cbcharacteristic in _service.Characteristics
+                                                            select new GattCharacteristic(this, cbcharacteristic)).ToList();
                 tcs.SetResult(characteristics.AsReadOnly());
             }
 
@@ -141,7 +134,7 @@ namespace InTheHand.Bluetooth
             TaskCompletionSource<IReadOnlyList<GattService>> tcs = new TaskCompletionSource<IReadOnlyList<GattService>>();
             CBPeripheral peripheral = Device;
 
-            void handler(object sender, CBServiceEventArgs args)
+            void handler(object? sender, CBServiceEventArgs args)
             {
                 peripheral.DiscoveredIncludedService -= handler;
 
@@ -151,13 +144,8 @@ namespace InTheHand.Bluetooth
                 }
                 else
                 {
-                    List<GattService> services = new List<GattService>();
-                    
-                    foreach (var includedService in _service.IncludedServices)
-                    {
-                        services.Add(new GattService(Device, includedService));
-                    }
-
+                    List<GattService> services = (from includedService in _service.IncludedServices
+                                                  select new GattService(Device, includedService)).ToList();
                     tcs.SetResult(services.AsReadOnly());
                 }
             }

@@ -38,7 +38,7 @@ namespace InTheHand.Bluetooth
                 _appearance = BitConverter.ToUInt16(appearanceArray, 0);
             }
 
-            IAsyncOperation<BluetoothLEDevice> deviceAsync = null;
+            IAsyncOperation<BluetoothLEDevice>? deviceAsync = null;
 
             // https://docs.microsoft.com/en-us/uwp/api/windows.devices.bluetooth.bluetoothledevice.frombluetoothaddressasync?view=winrt-20348
             // If there are no other pending request, and the remote device is unreachable,

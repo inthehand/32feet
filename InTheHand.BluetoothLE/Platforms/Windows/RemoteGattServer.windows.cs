@@ -1,6 +1,6 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="BluetoothRemoteGATTServer.windows.cs" company="In The Hand Ltd">
-//   Copyright (c) 2018-25 In The Hand Ltd, All rights reserved.
+//   Copyright (c) 2018-26 In The Hand Ltd, All rights reserved.
 //   This source code is licensed under the MIT License - see License.txt
 // </copyright>
 //-----------------------------------------------------------------------
@@ -91,7 +91,7 @@ namespace InTheHand.Bluetooth
             // and dispose all of the native windows bluetooth objects.  This will release the device
             // so that it can be used by another application or re-connected by the current
             // application.
-            if (Device.NativeDisposeList.TryGetValue(Device.GetHashCode(), out IDisposable existingDevice))
+            if (Device.NativeDisposeList.TryGetValue(Device.GetHashCode(), out IDisposable? existingDevice))
             {
                 if (existingDevice != null)
                 {
@@ -101,7 +101,7 @@ namespace InTheHand.Bluetooth
             }
         }
 
-        private async Task<GattService> PlatformGetPrimaryService(BluetoothUuid service)
+        private async Task<GattService?> PlatformGetPrimaryService(BluetoothUuid service)
         {
             if (await Device.CreateNativeInstance()) PlatformInit();
             var result = await Device.NativeDevice.GetGattServicesForUuidAsync(service, Windows.Devices.Bluetooth.BluetoothCacheMode.Uncached);

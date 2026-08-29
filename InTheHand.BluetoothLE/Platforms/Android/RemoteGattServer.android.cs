@@ -1,6 +1,6 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="RemoteGattServer.android.cs" company="In The Hand Ltd">
-//   Copyright (c) 2018-24 In The Hand Ltd, All rights reserved.
+//   Copyright (c) 2018-26 In The Hand Ltd, All rights reserved.
 //   This source code is licensed under the MIT License - see License.txt
 // </copyright>
 //-----------------------------------------------------------------------
@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using ABluetooth = Android.Bluetooth;
+using System.Linq;
 
 namespace InTheHand.Bluetooth
 {
@@ -21,7 +22,10 @@ namespace InTheHand.Bluetooth
         private void PlatformInit()
         {
             _gattCallback = new GattCallback(this);
-            _gatt = ((ABluetooth.BluetoothDevice)Device).ConnectGatt(AndroidActivity.CurrentActivity, AutoConnect, _gattCallback, ABluetooth.BluetoothTransports.Auto);
+            if(OperatingSystem.IsAndroidVersionAtLeast(23))
+                _gatt = ((ABluetooth.BluetoothDevice)Device).ConnectGatt(AndroidActivity.CurrentActivity, AutoConnect, _gattCallback, ABluetooth.BluetoothTransports.Auto)!;
+            else
+                _gatt = ((ABluetooth.BluetoothDevice)Device).ConnectGatt(AndroidActivity.CurrentActivity, AutoConnect, _gattCallback)!;
         }
 
         public static implicit operator ABluetooth.BluetoothGatt(RemoteGattServer gatt)
@@ -29,15 +33,15 @@ namespace InTheHand.Bluetooth
             return gatt._gatt;
         }
 
-        internal event EventHandler<ConnectionStateEventArgs> ConnectionStateChanged;
-        internal event EventHandler<CharacteristicEventArgs> CharacteristicChanged;
-        internal event EventHandler<CharacteristicEventArgs> CharacteristicRead;
-        internal event EventHandler<CharacteristicEventArgs> CharacteristicWrite;
-        internal event EventHandler<DescriptorEventArgs> DescriptorRead;
+        internal event EventHandler<ConnectionStateEventArgs>? ConnectionStateChanged;
+        internal event EventHandler<CharacteristicEventArgs>? CharacteristicChanged;
+        internal event EventHandler<CharacteristicEventArgs>? CharacteristicRead;
+        internal event EventHandler<CharacteristicEventArgs>? CharacteristicWrite;
+        internal event EventHandler<DescriptorEventArgs>? DescriptorRead;
         internal event EventHandler<DescriptorEventArgs> DescriptorWrite;
-        internal event EventHandler<GattEventArgs> ServicesDiscovered;
-        internal event EventHandler<RssiEventArgs> ReadRemoteRssi;
-        internal event EventHandler<MtuEventArgs> MtuChanged;
+        internal event EventHandler<GattEventArgs>? ServicesDiscovered;
+        internal event EventHandler<RssiEventArgs>? ReadRemoteRssi;
+        internal event EventHandler<MtuEventArgs>? MtuChanged;
 
         private bool _servicesDiscovered = false;
 
@@ -78,7 +82,7 @@ namespace InTheHand.Bluetooth
                         Task.Run(async () =>
                         {
                             System.Diagnostics.Debug.WriteLine(Android.OS.Build.VERSION.SdkInt);
-                            if (Android.OS.Build.VERSION.SdkInt < Android.OS.BuildVersionCodes.N && gatt.Device.BondState == ABluetooth.Bond.Bonded)
+                            if (Android.OS.Build.VERSION.SdkInt < Android.OS.BuildVersionCodes.N && gatt.Device!.BondState == ABluetooth.Bond.Bonded)
                                 await Task.Delay(1000);
 
                             gatt.DiscoverServices();
@@ -101,21 +105,24 @@ namespace InTheHand.Bluetooth
                 _owner.CharacteristicRead?.Invoke(_owner, new CharacteristicEventArgs { Characteristic = characteristic, Status = status, Value = value });
             }
 #endif
-            public override void OnCharacteristicRead(ABluetooth.BluetoothGatt gatt, ABluetooth.BluetoothGattCharacteristic characteristic, ABluetooth.GattStatus status)
+            public override void OnCharacteristicRead(ABluetooth.BluetoothGatt gatt, ABluetooth.BluetoothGattCharacteristic? characteristic, ABluetooth.GattStatus status)
             {
-                System.Diagnostics.Debug.WriteLine($"CharacteristicRead {characteristic.Uuid} Status:{status}");
-                _owner.CharacteristicRead?.Invoke(_owner, new CharacteristicEventArgs { Characteristic = characteristic, Status = status, Value = characteristic.GetValue() });
+                System.Diagnostics.Debug.WriteLine($"CharacteristicRead {characteristic?.Uuid} Status:{status}");
+                if(characteristic != null)
+                {
+                    _owner.CharacteristicRead?.Invoke(_owner, new CharacteristicEventArgs { Characteristic = characteristic, Status = status, Value = characteristic!.GetValue() });
+                }
             }
 
-            public override void OnCharacteristicWrite(ABluetooth.BluetoothGatt gatt, ABluetooth.BluetoothGattCharacteristic characteristic, ABluetooth.GattStatus status)
+            public override void OnCharacteristicWrite(ABluetooth.BluetoothGatt? gatt, ABluetooth.BluetoothGattCharacteristic? characteristic, ABluetooth.GattStatus status)
             {
-                System.Diagnostics.Debug.WriteLine($"CharacteristicWrite {characteristic.Uuid} Status:{status}");
-                _owner.CharacteristicWrite?.Invoke(_owner, new CharacteristicEventArgs { Characteristic = characteristic, Status = status });
+                System.Diagnostics.Debug.WriteLine($"CharacteristicWrite {characteristic!.Uuid} Status:{status}");
+                _owner.CharacteristicWrite?.Invoke(_owner, new CharacteristicEventArgs { Characteristic = characteristic!, Status = status });
             }
 
-            public override void OnCharacteristicChanged(ABluetooth.BluetoothGatt gatt, ABluetooth.BluetoothGattCharacteristic characteristic)
+            public override void OnCharacteristicChanged(ABluetooth.BluetoothGatt? gatt, ABluetooth.BluetoothGattCharacteristic? characteristic)
             {
-                System.Diagnostics.Debug.WriteLine($"CharacteristicChanged {characteristic.Uuid}");
+                System.Diagnostics.Debug.WriteLine($"CharacteristicChanged {characteristic!.Uuid}");
                 _owner.CharacteristicChanged?.Invoke(_owner, new CharacteristicEventArgs { Characteristic = characteristic });
             }
 
@@ -126,19 +133,19 @@ namespace InTheHand.Bluetooth
                 _owner.DescriptorRead?.Invoke(_owner, new DescriptorEventArgs { Descriptor = descriptor, Status = status, Value = value });
             }
 #endif
-            public override void OnDescriptorRead(ABluetooth.BluetoothGatt gatt, ABluetooth.BluetoothGattDescriptor descriptor, ABluetooth.GattStatus status)
+            public override void OnDescriptorRead(ABluetooth.BluetoothGatt? gatt, ABluetooth.BluetoothGattDescriptor? descriptor, ABluetooth.GattStatus status)
             {
-                System.Diagnostics.Debug.WriteLine($"DescriptorRead {descriptor.Uuid} Status:{status}");
+                System.Diagnostics.Debug.WriteLine($"DescriptorRead {descriptor!.Uuid} Status:{status}");
                 _owner.DescriptorRead?.Invoke(_owner, new DescriptorEventArgs { Descriptor = descriptor, Status = status, Value = descriptor.GetValue() });
             }
 
-            public override void OnDescriptorWrite(ABluetooth.BluetoothGatt gatt, ABluetooth.BluetoothGattDescriptor descriptor, ABluetooth.GattStatus status)
+            public override void OnDescriptorWrite(ABluetooth.BluetoothGatt? gatt, ABluetooth.BluetoothGattDescriptor? descriptor, ABluetooth.GattStatus status)
             {
-                System.Diagnostics.Debug.WriteLine($"DescriptorWrite {descriptor.Uuid} Status:{status}");
+                System.Diagnostics.Debug.WriteLine($"DescriptorWrite {descriptor!.Uuid} Status:{status}");
                 _owner.DescriptorWrite?.Invoke(_owner, new DescriptorEventArgs { Descriptor = descriptor, Status = status });
             }
 
-            public override void OnServicesDiscovered(ABluetooth.BluetoothGatt gatt, ABluetooth.GattStatus status)
+            public override void OnServicesDiscovered(ABluetooth.BluetoothGatt? gatt, ABluetooth.GattStatus status)
             {
                 System.Diagnostics.Debug.WriteLine($"ServicesDiscovered Status:{status}");
                 _owner._servicesDiscovered = true;
@@ -151,16 +158,21 @@ namespace InTheHand.Bluetooth
                 _owner._servicesDiscovered = false;
                 gatt.DiscoverServices();
 
-                base.OnServiceChanged(gatt);
+                System.Diagnostics.Debug.WriteLine($"ServiceChanged");
+
+                if (OperatingSystem.IsAndroidVersionAtLeast(33))
+                {
+                    base.OnServiceChanged(gatt);
+                }
             }
 #endif
-            public override void OnReadRemoteRssi(ABluetooth.BluetoothGatt gatt, int rssi, ABluetooth.GattStatus status)
+            public override void OnReadRemoteRssi(ABluetooth.BluetoothGatt? gatt, int rssi, ABluetooth.GattStatus status)
             {
                 System.Diagnostics.Debug.WriteLine($"ReadRemoteRssi {rssi}");
                 _owner.ReadRemoteRssi?.Invoke(_owner, new RssiEventArgs { Status = status, Rssi = (short)rssi });
             }
 
-            public override void OnPhyUpdate(ABluetooth.BluetoothGatt gatt, ABluetooth.LE.ScanSettingsPhy txPhy, ABluetooth.LE.ScanSettingsPhy rxPhy, ABluetooth.GattStatus status)
+            public override void OnPhyUpdate(ABluetooth.BluetoothGatt? gatt, ABluetooth.LE.ScanSettingsPhy txPhy, ABluetooth.LE.ScanSettingsPhy rxPhy, ABluetooth.GattStatus status)
             {
                 System.Diagnostics.Debug.WriteLine($"PhyUpdate TX:{txPhy} RX:{rxPhy} Status:{status}");
             }
@@ -176,9 +188,9 @@ namespace InTheHand.Bluetooth
             if (_servicesDiscovered)
                 return true;
 
-            TaskCompletionSource<bool> tcs = new TaskCompletionSource<bool>();
+            TaskCompletionSource<bool> tcs = new();
 
-            void handler(object s, GattEventArgs e)
+            void handler(object? s, GattEventArgs e)
             {
                 ServicesDiscovered -= handler;
 
@@ -204,9 +216,9 @@ namespace InTheHand.Bluetooth
 
         Task PlatformConnect()
         {
-            TaskCompletionSource<bool> tcs = new TaskCompletionSource<bool>();
-
-            void handler(object s, ConnectionStateEventArgs e)
+            TaskCompletionSource<bool> tcs = new();
+            
+            void handler(object? s, ConnectionStateEventArgs e)
             {
                 ConnectionStateChanged -= handler;
 
@@ -248,11 +260,11 @@ namespace InTheHand.Bluetooth
             // Android has no explicit cleanup 🤪
         }
 
-        async Task<GattService> PlatformGetPrimaryService(BluetoothUuid service)
+        async Task<GattService?> PlatformGetPrimaryService(BluetoothUuid service)
         {
             await WaitForServiceDiscovery();
 
-            ABluetooth.BluetoothGattService nativeService = _gatt.GetService(service);
+            ABluetooth.BluetoothGattService? nativeService = _gatt.GetService(service);
 
             return nativeService is null ? null : new GattService(Device, nativeService);
         }
@@ -262,16 +274,9 @@ namespace InTheHand.Bluetooth
             var services = new List<GattService>();
 
             await WaitForServiceDiscovery();
-
-            foreach (var serv in _gatt.Services)
-            {
-                // if a service was specified only add if service uuid is a match
-                if (serv.Type == ABluetooth.GattServiceType.Primary && (!service.HasValue || service.Value == serv.Uuid))
-                {
-                    services.Add(new GattService(Device, serv));
-                }
-            }
-
+            services.AddRange(from serv in _gatt.Services// if a service was specified only add if service uuid is a match
+                              where serv.Type == ABluetooth.GattServiceType.Primary && (!service.HasValue || service.Value == serv.Uuid!)
+                              select new GattService(Device, serv));
             return services;
         }
 
@@ -279,7 +284,7 @@ namespace InTheHand.Bluetooth
         {
             TaskCompletionSource<short> tcs = new TaskCompletionSource<short>();
 
-            void handler(object s, RssiEventArgs e)
+            void handler(object? s, RssiEventArgs e)
             {
                 ReadRemoteRssi -= handler;
 
@@ -309,7 +314,7 @@ namespace InTheHand.Bluetooth
 
         void PlatformSetPreferredPhy(BluetoothPhy phy)
         {
-            if (Android.OS.Build.VERSION.SdkInt >= Android.OS.BuildVersionCodes.O)
+            if (OperatingSystem.IsAndroidVersionAtLeast(26))
                 _gatt.SetPreferredPhy(ToAndroidPhy(phy), ToAndroidPhy(phy), ABluetooth.BluetoothPhyOption.NoPreferred);
         }
 
@@ -326,7 +331,7 @@ namespace InTheHand.Bluetooth
                 var cs = new CancellationTokenSource(1000);
                 cs.Token.Register(() => tcs.TrySetResult(false), useSynchronizationContext: false);
 
-                void handler(object s, MtuEventArgs e)
+                void handler(object? s, MtuEventArgs e)
                 {
                     MtuChanged -= handler;
                     switch (e.Status)
@@ -394,9 +399,9 @@ namespace InTheHand.Bluetooth
 
     internal class CharacteristicEventArgs : GattEventArgs
     {
-        public ABluetooth.BluetoothGattCharacteristic Characteristic { get; internal set; }
+        public ABluetooth.BluetoothGattCharacteristic Characteristic { get; internal set; } = null!;
 
-        public byte[] Value { get; internal set; }
+        public byte[]? Value { get; internal set; }
     }
 
     internal class DescriptorEventArgs : GattEventArgs

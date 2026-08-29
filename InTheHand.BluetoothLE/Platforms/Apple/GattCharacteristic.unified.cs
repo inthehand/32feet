@@ -1,6 +1,6 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="GattCharacteristic.unified.cs" company="In The Hand Ltd">
-//   Copyright (c) 2018-24 In The Hand Ltd, All rights reserved.
+//   Copyright (c) 2018-26 In The Hand Ltd, All rights reserved.
 //   This source code is licensed under the MIT License - see License.txt
 // </copyright>
 //-----------------------------------------------------------------------
@@ -10,6 +10,7 @@ using Foundation;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace InTheHand.Bluetooth
 {
@@ -42,7 +43,7 @@ namespace InTheHand.Bluetooth
             TaskCompletionSource<GattDescriptor?> tcs = new();
             CBPeripheral peripheral = Service.Device;
 
-            void handler(object sender, CBCharacteristicEventArgs args)
+            void handler(object? sender, CBCharacteristicEventArgs args)
             {
                 peripheral.DiscoveredDescriptor -= handler;
 
@@ -52,13 +53,12 @@ namespace InTheHand.Bluetooth
                     return;
                 }
 
-                foreach (CBDescriptor cbdescriptor in _characteristic.Descriptors)
+                foreach (var cbdescriptor in from CBDescriptor cbdescriptor in _characteristic.Descriptors
+                                             where (BluetoothUuid)cbdescriptor.UUID == descriptor
+                                             select cbdescriptor)
                 {
-                    if((BluetoothUuid)cbdescriptor.UUID == descriptor)
-                    {
-                        tcs.SetResult(new GattDescriptor(this, cbdescriptor));
-                        return;
-                    }
+                    tcs.SetResult(new GattDescriptor(this, cbdescriptor));
+                    return;
                 }
 
                 tcs.SetResult(null);
@@ -75,7 +75,7 @@ namespace InTheHand.Bluetooth
             TaskCompletionSource<IReadOnlyList<GattDescriptor>> tcs = new TaskCompletionSource<IReadOnlyList<GattDescriptor>>();
             CBPeripheral peripheral = Service.Device;
 
-            void handler(object sender, CBCharacteristicEventArgs args)
+            void handler(object? sender, CBCharacteristicEventArgs args)
             {
                 peripheral.DiscoveredDescriptor -= handler;
 
@@ -101,17 +101,17 @@ namespace InTheHand.Bluetooth
             return tcs.Task;
         }
 
-        private byte[] PlatformGetValue()
+        private byte[]? PlatformGetValue()
         {
-            return _characteristic.Value.ToArray();
+            return _characteristic.Value?.ToArray();
         }
 
-        private Task<byte[]> PlatformReadValue()
+        private Task<byte[]?> PlatformReadValue()
         {
-            TaskCompletionSource<byte[]> tcs = new TaskCompletionSource<byte[]>();
+            TaskCompletionSource<byte[]?> tcs = new();
             CBPeripheral peripheral = Service.Device;
 
-            void handler(object s, CBCharacteristicEventArgs e)
+            void handler(object? s, CBCharacteristicEventArgs e)
             {
                 if (e.Characteristic == _characteristic)
                 {
@@ -145,14 +145,12 @@ namespace InTheHand.Bluetooth
 
         private Task PlatformWriteValue(byte[] value, bool requireResponse)
         {
-            TaskCompletionSource<bool> tcs = null;
+            TaskCompletionSource<bool> tcs = new();
             CBPeripheral peripheral = Service.Device;
 
             if (requireResponse)
             {
-                tcs = new TaskCompletionSource<bool>();
-
-                void handler(object s, CBCharacteristicEventArgs e)
+                void handler(object? s, CBCharacteristicEventArgs e)
                 {
                     if (e.Characteristic == _characteristic)
                     {
@@ -187,7 +185,7 @@ namespace InTheHand.Bluetooth
             peripheral.UpdatedCharacterteristicValue += Peripheral_UpdatedCharacteristicValue;
         }
 
-        private void Peripheral_UpdatedCharacteristicValue(object sender, CBCharacteristicEventArgs e)
+        private void Peripheral_UpdatedCharacteristicValue(object? sender, CBCharacteristicEventArgs e)
         {
             if (e.Characteristic == _characteristic)
             {

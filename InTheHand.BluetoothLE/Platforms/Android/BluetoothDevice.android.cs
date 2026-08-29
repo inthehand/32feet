@@ -1,6 +1,6 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="BluetoothDevice.android.cs" company="In The Hand Ltd">
-//   Copyright (c) 2018-25 In The Hand Ltd, All rights reserved.
+//   Copyright (c) 2018-26 In The Hand Ltd, All rights reserved.
 //   This source code is licensed under the MIT License - see License.txt
 // </copyright>
 //-----------------------------------------------------------------------
@@ -27,7 +27,7 @@ namespace InTheHand.Bluetooth
 
         public static implicit operator BluetoothDevice(ABluetooth.BluetoothDevice device)
         {
-            return device == null ? null : new BluetoothDevice(device);
+            return new BluetoothDevice(device);
         }
 
         public override bool Equals(object? obj)
@@ -42,15 +42,16 @@ namespace InTheHand.Bluetooth
 
         private static async Task<BluetoothDevice?> PlatformFromId(string id)
         {
-            var adapter = Bluetooth._manager.Adapter;
-            return adapter.GetRemoteDevice(id);
+            var adapter = Bluetooth._manager.Adapter!;
+            var device = adapter.GetRemoteDevice(id);
+            return device != null ? new BluetoothDevice(device) : null;
         }
 
         public override int GetHashCode() => _device.GetHashCode();
 
-        private string GetId() => _device.Address;
+        private string GetId() => _device.Address ?? string.Empty;
 
-        private string GetName() => _device.Name;
+        private string GetName() => _device.Name ?? string.Empty;
 
         private RemoteGattServer GetGatt() => new RemoteGattServer(this);
 

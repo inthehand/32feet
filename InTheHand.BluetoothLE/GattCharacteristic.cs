@@ -1,6 +1,6 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="GattCharacteristic.cs" company="In The Hand Ltd">
-//   Copyright (c) 2018-25 In The Hand Ltd, All rights reserved.
+//   Copyright (c) 2018-26 In The Hand Ltd, All rights reserved.
 //   This source code is licensed under the MIT License - see License.txt
 // </copyright>
 //-----------------------------------------------------------------------
@@ -45,13 +45,13 @@ namespace InTheHand.Bluetooth
         /// The currently cached characteristic value. 
         /// This value gets updated when the value of the characteristic is read or updated via a notification or indication.
         /// </summary>
-        public byte[] Value => PlatformGetValue();
+        public byte[]? Value => PlatformGetValue();
 
         /// <summary>
         /// Performs a Characteristic Value read from the Bluetooth LE device.
         /// </summary>
         /// <returns>The object required to manage the asynchronous operation, which, upon completion, returns the data read from the device.</returns>
-        public Task<byte[]> ReadValueAsync()
+        public Task<byte[]?> ReadValueAsync()
         {
             //if (!Service.Device.Gatt.Connected)
                 //throw new NetworkException();
@@ -85,7 +85,7 @@ namespace InTheHand.Bluetooth
 
         public Task<IReadOnlyList<GattDescriptor>> GetDescriptorsAsync() => PlatformGetDescriptors();
 
-        private event EventHandler<GattCharacteristicValueChangedEventArgs> characteristicValueChanged;
+        private event EventHandler<GattCharacteristicValueChangedEventArgs>? characteristicValueChanged;
 
         private void OnCharacteristicValueChanged(GattCharacteristicValueChangedEventArgs args)
         {
@@ -95,7 +95,7 @@ namespace InTheHand.Bluetooth
         /// <summary>
         /// Fired when the value changes, as a result of a value change notification/indication.
         /// </summary>
-        public event EventHandler<GattCharacteristicValueChangedEventArgs> CharacteristicValueChanged
+        public event EventHandler<GattCharacteristicValueChangedEventArgs>? CharacteristicValueChanged
         {
             add
             {

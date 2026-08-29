@@ -29,7 +29,7 @@ namespace InTheHand.Bluetooth
 
         private void PlatformStop()
         {
-            Bluetooth.Adapter.StopDiscoveryAsync();
+            Bluetooth.Adapter?.StopDiscoveryAsync();
         }
     }
 }

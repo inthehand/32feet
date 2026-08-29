@@ -1,6 +1,6 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="GattCharacteristic.linux.cs" company="In The Hand Ltd">
-//   Copyright (c) 2023-24 In The Hand Ltd, All rights reserved.
+//   Copyright (c) 2023-26 In The Hand Ltd, All rights reserved.
 //   This source code is licensed under the MIT License - see License.txt
 // </copyright>
 //-----------------------------------------------------------------------
@@ -8,7 +8,6 @@
 using System;
 using Linux.Bluetooth;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Threading.Tasks;
 
 namespace InTheHand.Bluetooth
@@ -118,7 +117,7 @@ namespace InTheHand.Bluetooth
 
         Task<IReadOnlyList<GattDescriptor>> PlatformGetDescriptors()
         {
-            return Task.FromResult((IReadOnlyList<GattDescriptor>)null);
+            return Task.FromResult((IReadOnlyList<GattDescriptor>) new List<GattDescriptor>().AsReadOnly());
         }
 
         private byte[] _value;
@@ -127,7 +126,7 @@ namespace InTheHand.Bluetooth
             return _value;
         }
 
-        private async Task<byte[]> PlatformReadValue()
+        private async Task<byte[]?> PlatformReadValue()
         {
             var newValue = await _characteristic.ReadValueAsync(new Dictionary<string, object>());
             if(newValue != null)

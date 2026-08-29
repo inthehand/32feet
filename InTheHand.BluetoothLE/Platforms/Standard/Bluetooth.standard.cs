@@ -19,12 +19,12 @@ namespace InTheHand.Bluetooth
             return Task.FromResult(false);
         }
 
-        private static Task<BluetoothDevice> PlatformRequestDevice(RequestDeviceOptions options)
+        private static Task<BluetoothDevice?> PlatformRequestDevice(RequestDeviceOptions options)
         {
-            return Task.FromException<BluetoothDevice>(new PlatformNotSupportedException());
+            return Task.FromException<BluetoothDevice?>(new PlatformNotSupportedException());
         }
 
-        private static Task<IReadOnlyCollection<BluetoothDevice>> PlatformScanForDevices(RequestDeviceOptions options, CancellationToken cancellationToken = default)
+        private static Task<IReadOnlyCollection<BluetoothDevice>> PlatformScanForDevices(RequestDeviceOptions? options, CancellationToken cancellationToken = default)
         {
             return Task.FromException<IReadOnlyCollection<BluetoothDevice>>(new PlatformNotSupportedException());
         }

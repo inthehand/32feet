@@ -36,7 +36,7 @@ namespace InTheHand.Bluetooth
         /// </summary>
         /// <param name="options"></param>
         /// <returns>A BluetoothDevice or null if unsuccessful.</returns>
-        public static Task<BluetoothDevice> RequestDeviceAsync(RequestDeviceOptions? options = null)
+        public static Task<BluetoothDevice?> RequestDeviceAsync(RequestDeviceOptions? options = null)
         {
             ThrowOnInvalidOptions(options);
             return PlatformRequestDevice(options);
@@ -120,7 +120,7 @@ namespace InTheHand.Bluetooth
             return PlatformRequestLEScan(options);
         }
 
-        public static event EventHandler<BluetoothAdvertisingEvent> AdvertisementReceived;
+        public static event EventHandler<BluetoothAdvertisingEvent>? AdvertisementReceived;
 
         internal static void OnAdvertisementReceived(BluetoothAdvertisingEvent advertisingEvent)
         {

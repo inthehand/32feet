@@ -11,6 +11,7 @@ using System.Threading;
 using System.Threading.Tasks;
 #if !__MACOS__
 using UIKit;
+using System.Linq;
 #endif
 
 namespace InTheHand.Bluetooth
@@ -37,7 +38,7 @@ namespace InTheHand.Bluetooth
         {
             TaskCompletionSource<bool> tcs = new TaskCompletionSource<bool>();
 
-            void connectedHandler(object sender, CBPeripheralEventArgs e)
+            void connectedHandler(object? sender, CBPeripheralEventArgs e)
             {
                 if (e.Peripheral.Identifier.IsEqual(((CBPeripheral)Device).Identifier))
                 {
@@ -48,7 +49,7 @@ namespace InTheHand.Bluetooth
                 }
             };
 
-            void failedConnectHandler(object sender, CBPeripheralErrorEventArgs e)
+            void failedConnectHandler(object? sender, CBPeripheralErrorEventArgs e)
             {
                 if (e.Peripheral.Identifier.IsEqual(((CBPeripheral)Device).Identifier))
                 {
@@ -103,7 +104,7 @@ namespace InTheHand.Bluetooth
             }
         }
 
-        private void Bluetooth_DisconnectedPeripheral(object sender, CBPeripheralErrorEventArgs e)
+        private void Bluetooth_DisconnectedPeripheral(object? sender, CBPeripheralErrorEventArgs e)
         {
             if (e.Peripheral.Identifier.Equals(Device.Id))
             {
@@ -123,13 +124,13 @@ namespace InTheHand.Bluetooth
             Bluetooth._manager.DisconnectedPeripheral -= Bluetooth_DisconnectedPeripheral;
         }
 
-        Task<GattService> PlatformGetPrimaryService(BluetoothUuid service)
+        Task<GattService?> PlatformGetPrimaryService(BluetoothUuid service)
         {
             return Task.Run(() =>
             {
                 EventWaitHandle handle = new EventWaitHandle(false, EventResetMode.AutoReset);
 
-                GattService matchingService = null;
+                GattService? matchingService = null;
 
                 ((CBPeripheral)Device).DiscoveredService += (sender, args) =>
                  {
@@ -139,13 +140,11 @@ namespace InTheHand.Bluetooth
                 ((CBPeripheral)Device).DiscoverServices(new CBUUID[] { service });
                 
                 handle.WaitOne();
-
-                foreach (CBService cbservice in ((CBPeripheral)Device).Services)
+                foreach (var cbservice in from CBService cbservice in ((CBPeripheral)Device).Services
+                                          where (BluetoothUuid)cbservice.UUID == service
+                                          select cbservice)
                 {
-                    if ((BluetoothUuid)cbservice.UUID == service)
-                    {
-                        matchingService = new GattService(Device, cbservice);
-                    }
+                    matchingService = new GattService(Device, cbservice);
                 }
 
                 return matchingService;
@@ -158,7 +157,7 @@ namespace InTheHand.Bluetooth
             {
                 var services = new List<GattService>();
             
-                EventWaitHandle handle = new EventWaitHandle(false, EventResetMode.AutoReset);
+                EventWaitHandle handle = new(false, EventResetMode.AutoReset);
 
                 ((CBPeripheral)Device).DiscoveredService += (sender, args) =>
                 {
@@ -167,7 +166,7 @@ namespace InTheHand.Bluetooth
 
                 if (service.HasValue)
                 {
-                    ((CBPeripheral)Device).DiscoverServices(new CBUUID[] { service });
+                    ((CBPeripheral)Device).DiscoverServices([service]);
                 }
                 else
                 {
@@ -190,7 +189,7 @@ namespace InTheHand.Bluetooth
             TaskCompletionSource<short> tcs = new TaskCompletionSource<short>();
             var peripheral = (CBPeripheral)Device;
 
-            void handler(object s, CBRssiEventArgs e)
+            void handler(object? s, CBRssiEventArgs e)
             {
                 peripheral.RssiRead -= handler;
 

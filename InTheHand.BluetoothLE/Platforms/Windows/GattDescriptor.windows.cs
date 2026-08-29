@@ -35,7 +35,7 @@ namespace InTheHand.Bluetooth
             return _descriptor.Uuid;
         }
 
-        private byte[] PlatformGetValue()
+        private byte[]? PlatformGetValue()
         {
             var result = _descriptor.ReadValueAsync(Windows.Devices.Bluetooth.BluetoothCacheMode.Cached).GetResults();
 
@@ -47,7 +47,7 @@ namespace InTheHand.Bluetooth
             return null;
         }
 
-        private async Task<byte[]> PlatformReadValue()
+        private async Task<byte[]?> PlatformReadValue()
         {
             var result = await _descriptor.ReadValueAsync(Windows.Devices.Bluetooth.BluetoothCacheMode.Uncached).AsTask().ConfigureAwait(false);
 

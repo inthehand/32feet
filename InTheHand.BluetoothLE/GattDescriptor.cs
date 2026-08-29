@@ -36,7 +36,7 @@ namespace InTheHand.Bluetooth
         /// The currently cached descriptor value. 
         /// This value gets updated when the value of the descriptor is read.
         /// </summary>
-        public byte[] Value => PlatformGetValue();
+        public byte[]? Value => PlatformGetValue();
 
         /// <summary>
         /// Retrieve the current descriptor value from the remote device.

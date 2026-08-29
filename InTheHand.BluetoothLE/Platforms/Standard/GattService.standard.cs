@@ -24,9 +24,9 @@ namespace InTheHand.Bluetooth
             return true;
         }
 
-        Task<GattCharacteristic> PlatformGetCharacteristic(BluetoothUuid characteristic)
+        Task<GattCharacteristic?> PlatformGetCharacteristic(BluetoothUuid characteristic)
         {
-            return Task.FromResult((GattCharacteristic)null);
+            return Task.FromResult((GattCharacteristic?)null);
         }
 
         Task<IReadOnlyList<GattCharacteristic>> PlatformGetCharacteristics()
@@ -38,12 +38,12 @@ namespace InTheHand.Bluetooth
 
         private async Task<GattService> PlatformGetIncludedServiceAsync(BluetoothUuid service)
         {
-            return null;
+            return null!;
         }
 
         private async Task<IReadOnlyList<GattService>> PlatformGetIncludedServicesAsync()
         {
-            return null;
+            return null!;
         }
     }
 }

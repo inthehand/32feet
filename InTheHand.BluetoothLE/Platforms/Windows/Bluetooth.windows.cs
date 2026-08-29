@@ -20,7 +20,6 @@ using Windows.Devices.Bluetooth.Advertisement;
 using Windows.Devices.Bluetooth.GenericAttributeProfile;
 using Windows.Devices.Enumeration;
 using Windows.Devices.Radios;
-using Windows.UI;
 
 namespace InTheHand.Bluetooth
 {
@@ -66,9 +65,9 @@ namespace InTheHand.Bluetooth
             return false;
         }
 
-        static async Task<BluetoothDevice> PlatformRequestDevice(RequestDeviceOptions? options)
+        static async Task<BluetoothDevice?> PlatformRequestDevice(RequestDeviceOptions? options)
         {
-            DevicePicker picker = new DevicePicker();
+            DevicePicker picker = new();
             Windows.Foundation.Rect bounds = Windows.Foundation.Rect.Empty;
 #if !UAP
             uint len = 64;
@@ -198,19 +197,19 @@ namespace InTheHand.Bluetooth
             throw new SecurityException("UWP Applications require the 'bluetooth' device capability to be declared in the Package.appxmanifest.");
         }
 
-        static async Task<IReadOnlyCollection<BluetoothDevice>> PlatformScanForDevices(RequestDeviceOptions options, CancellationToken cancellationToken = default)
+        static async Task<IReadOnlyCollection<BluetoothDevice>> PlatformScanForDevices(RequestDeviceOptions? options, CancellationToken cancellationToken = default)
         {
-            List<BluetoothDevice> devices = new List<BluetoothDevice>();
+            List<BluetoothDevice> devices = [];
 
             // None of the build in selectors do a scan and return both paired and unpaired devices so here is the raw AQS string
             string selectionQuery = "System.Devices.DevObjectType:=5 AND System.Devices.Aep.ProtocolId:=\"{BB7BB05E-5972-42B5-94FC-76EAA7084D49}\" AND (System.Devices.Aep.IsPaired:=System.StructuredQueryType.Boolean#False OR System.Devices.Aep.IsPaired:=System.StructuredQueryType.Boolean#True OR System.Devices.Aep.Bluetooth.IssueInquiry:=System.StructuredQueryType.Boolean#True)";
-            StringBuilder filterQuery = new StringBuilder();
+            StringBuilder filterQuery = new();
 
             if (options is { Filters: not null })
             {
                 foreach (var filter in options.Filters)
                 {
-                    List<string> clauses = new List<string>();
+                    List<string> clauses = [];
 
                     if (!string.IsNullOrEmpty(filter.Name)) 
                         clauses.Add($"System.ItemNameDisplay:=\"{filter.Name}\""); 
