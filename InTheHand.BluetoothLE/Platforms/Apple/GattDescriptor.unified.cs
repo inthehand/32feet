@@ -31,9 +31,9 @@ namespace InTheHand.Bluetooth
             return _descriptor.UUID;
         }
 
-        byte[] PlatformGetValue()
+        byte[]? PlatformGetValue()
         {
-            return ((NSData)_descriptor.Value).ToArray();
+            return _descriptor.Value == null ? null : ((NSData)_descriptor.Value).ToArray();
         }
 
         Task<byte[]> PlatformReadValue()
@@ -41,7 +41,7 @@ namespace InTheHand.Bluetooth
             TaskCompletionSource<byte[]> tcs = new TaskCompletionSource<byte[]>();
             CBPeripheral peripheral = Characteristic.Service.Device;
 
-            void handler(object s, CBDescriptorEventArgs e)
+            void handler(object? s, CBDescriptorEventArgs e)
             {
                 if (e.Descriptor == _descriptor)
                 {

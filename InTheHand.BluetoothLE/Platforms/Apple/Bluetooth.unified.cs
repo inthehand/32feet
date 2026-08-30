@@ -164,7 +164,7 @@ namespace InTheHand.Bluetooth
                 return null;
 
 #if __IOS__
-            TaskCompletionSource<BluetoothDevice> tcs = new();
+            TaskCompletionSource<BluetoothDevice?> tcs = new();
 
             _controller = UIAlertController.Create("Select a Bluetooth accessory", null, UIAlertControllerStyle.Alert);
             _controller.AddAction(UIAlertAction.Create("Cancel", UIAlertActionStyle.Cancel, (a)=> {
@@ -195,10 +195,10 @@ namespace InTheHand.Bluetooth
 
             //TODO: investigate what this means for multiple windows e.g. iPad
             UIViewController? currentController = UIApplication.SharedApplication.KeyWindow?.RootViewController ?? null;
-            while (currentController.PresentedViewController != null)
+            while (currentController?.PresentedViewController != null)
                 currentController = currentController.PresentedViewController;
 
-            currentController.PresentViewController(_controller, true, null);
+            currentController?.PresentViewController(_controller, true, null);
 
             return await tcs.Task;
 #else
@@ -257,30 +257,28 @@ namespace InTheHand.Bluetooth
         static async Task<IReadOnlyCollection<BluetoothDevice>> PlatformGetPairedDevices()
         {
             Initialize();
+            var devices = new List<BluetoothDevice>();
 
             if (!IsAvailable)
-                return null;
+                return devices.AsReadOnly();
 #if __IOS__
-            PairedDeviceHandler deviceHandler = new PairedDeviceHandler();
+            PairedDeviceHandler deviceHandler = new();
             OnRetrievedPeripherals += deviceHandler.OnRetrievedPeripherals;
-            var devices = new List<BluetoothDevice>();
+            
             var periphs = _manager.RetrieveConnectedPeripherals(GattServiceUuids.GenericAccess, GattServiceUuids.GenericAttribute, GattServiceUuids.DeviceInformation, GattServiceUuids.Battery);
             foreach (var p in periphs)
             {
                 devices.Add(p);
             }
-
-            return devices.AsReadOnly();
-#else
-            return (IReadOnlyCollection<BluetoothDevice>)new List<BluetoothDevice>().AsReadOnly();
 #endif
+            return devices.AsReadOnly();
         }
 
 #if __IOS__
         private class PairedDeviceHandler
         {
-            EventWaitHandle handle = new EventWaitHandle(false, EventResetMode.ManualReset);
-            List<BluetoothDevice> devices = new List<BluetoothDevice>();
+            readonly EventWaitHandle handle = new(false, EventResetMode.ManualReset);
+            readonly List<BluetoothDevice> devices = [];
 
             public IReadOnlyCollection<BluetoothDevice> Devices
             {
@@ -295,7 +293,7 @@ namespace InTheHand.Bluetooth
                 handle.WaitOne();
             }
 
-            public void OnRetrievedPeripherals(object sender, CBPeripheral[] peripherals)
+            public void OnRetrievedPeripherals(object? sender, CBPeripheral[] peripherals)
             {
                 foreach (var peripheral in peripherals)
                 {
