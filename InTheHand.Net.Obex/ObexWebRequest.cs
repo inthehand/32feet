@@ -2,7 +2,7 @@
 //
 // InTheHand.Net.ObexWebRequest
 // 
-// Copyright (c) 2003-2023 In The Hand Ltd, All rights reserved.
+// Copyright (c) 2003-2026 In The Hand Ltd, All rights reserved.
 // This source code is licensed under the MIT License
 
 using System;
@@ -13,9 +13,7 @@ using InTheHand.Net.IrDA;
 using InTheHand.Net.Sockets;
 using InTheHand.Net.Bluetooth;
 using System.Diagnostics;
-using System.Threading;
 using InTheHand.Net.Obex;
-using System.Security.Cryptography;
 
 namespace InTheHand.Net
 {
@@ -105,17 +103,16 @@ namespace InTheHand.Net
         private ushort remoteMaxPacket = 0x400;
         private int connectionId = INVALID_CONNECTION_ID;
 
-
         static ObexWebRequest()
         {
             //register the obex schemes with the WebRequest base method
             ObexWebRequestCreate owrc = new ObexWebRequestCreate();
-            WebRequest.RegisterPrefix(ObexSchemeName.Default, owrc);
-            WebRequest.RegisterPrefix(ObexSchemeName.Push, owrc);
-            WebRequest.RegisterPrefix(ObexSchemeName.Ftp, owrc);
-            WebRequest.RegisterPrefix(ObexSchemeName.Sync, owrc);
-            WebRequest.RegisterPrefix(ObexSchemeName.PhoneBookAccessProfile, owrc);
-            WebRequest.RegisterPrefix(ObexSchemeName.MessagingAccessProfile, owrc);
+            RegisterPrefix(ObexSchemeName.Default, owrc);
+            RegisterPrefix(ObexSchemeName.Push, owrc);
+            RegisterPrefix(ObexSchemeName.Ftp, owrc);
+            RegisterPrefix(ObexSchemeName.Sync, owrc);
+            RegisterPrefix(ObexSchemeName.PhoneBookAccessProfile, owrc);
+            RegisterPrefix(ObexSchemeName.MessagingAccessProfile, owrc);
         }
 
         /// <overloads>

@@ -5,11 +5,9 @@
 // Copyright (c) 2003-2023 In The Hand Ltd, All rights reserved.
 // This source code is licensed under the MIT License
 
-
 using System;
 using System.Net;
 using System.Net.Sockets;
-using InTheHand.Net;
 using InTheHand.Net.Sockets;
 using InTheHand.Net.Bluetooth;
 using System.Diagnostics;

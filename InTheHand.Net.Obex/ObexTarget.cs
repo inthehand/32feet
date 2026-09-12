@@ -1,8 +1,8 @@
 // 32feet.NET - Personal Area Networking for .NET
 //
-// InTheHand.Net.ObexHeader
+// InTheHand.Net.ObexTarget
 // 
-// Copyright (c) 2020-21 In The Hand Ltd, All rights reserved.
+// Copyright (c) 2020-2026 In The Hand Ltd, All rights reserved.
 // This source code is licensed under the MIT License
 
 using System;

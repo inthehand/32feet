@@ -2,16 +2,13 @@
 //
 // InTheHand.Net.ObexListenerContext
 // 
-// Copyright (c) 2003-2024 In The Hand Ltd, All rights reserved.
+// Copyright (c) 2003-2026 In The Hand Ltd, All rights reserved.
 // This source code is licensed under the MIT License
 
 using System;
 using System.IO;
 using System.Net;
 using System.Net.Sockets;
-using InTheHand.Net;
-using InTheHand.Net.Sockets;
-using InTheHand.Net.Bluetooth;
 using System.Diagnostics;
 
 namespace InTheHand.Net
@@ -21,21 +18,21 @@ namespace InTheHand.Net
     /// </summary>
     public class ObexListenerContext
     {
-        readonly byte[] buffer;
+        private readonly byte[] _buffer;
 
-        private readonly ObexListenerRequest request;
-        private readonly WebHeaderCollection headers = new WebHeaderCollection();
-        private readonly MemoryStream bodyStream = new MemoryStream();
-        private readonly EndPoint localEndPoint;
-        private readonly EndPoint remoteEndPoint;
-        ushort remoteMaxPacket = 0;
+        private readonly ObexListenerRequest _request;
+        private readonly WebHeaderCollection _headers = new WebHeaderCollection();
+        private readonly MemoryStream _bodyStream = new MemoryStream();
+        private readonly EndPoint _localEndPoint;
+        private readonly EndPoint _remoteEndPoint;
+        private ushort _remoteMaxPacket = 0;
 
         internal ObexListenerContext(Socket s)
         {
-            buffer = new byte[0x2000];
+            _buffer = new byte[0x2000];
 
-            this.localEndPoint = s.LocalEndPoint;
-            this.remoteEndPoint = s.RemoteEndPoint;
+            _localEndPoint = s.LocalEndPoint;
+            _remoteEndPoint = s.RemoteEndPoint;
 
             bool moreToReceive = true;
             bool putCompleted = false;
@@ -49,7 +46,7 @@ namespace InTheHand.Net
                 {
                     while (received < 3)
                     {
-                        int readLen = s.Receive(buffer, received, 3 - received, SocketFlags.None);
+                        int readLen = s.Receive(_buffer, received, 3 - received, SocketFlags.None);
                         if (readLen == 0)
                         {
                             moreToReceive = false;
@@ -74,9 +71,9 @@ namespace InTheHand.Net
 
                 if (received == 3)
                 {
-                    ObexMethod method = (ObexMethod)buffer[0];
+                    ObexMethod method = (ObexMethod)_buffer[0];
                     //get length (excluding the 3 byte header)
-                    short len = (short)(IPAddress.NetworkToHostOrder(BitConverter.ToInt16(buffer, 1)) - 3);
+                    short len = (short)(IPAddress.NetworkToHostOrder(BitConverter.ToInt16(_buffer, 1)) - 3);
                     if (len > 0)
                     {
                         int iPos = 0;
@@ -85,7 +82,7 @@ namespace InTheHand.Net
                         {
                             int wanted = len - iPos;
                             Debug.Assert(wanted > 0, "NOT wanted > 0, is: " + wanted);
-                            int receivedBytes = s.Receive(this.buffer, iPos + 3, wanted, SocketFlags.None);
+                            int receivedBytes = s.Receive(_buffer, iPos + 3, wanted, SocketFlags.None);
                             if (receivedBytes == 0)
                             {
                                 moreToReceive = false;
@@ -130,7 +127,7 @@ namespace InTheHand.Net
                 // Should not return the request.
                 throw new ProtocolViolationException("No PutFinal received.");
             }
-            request = new ObexListenerRequest(bodyStream.ToArray(), headers, localEndPoint, remoteEndPoint);
+            _request = new ObexListenerRequest(_bodyStream.ToArray(), _headers, _localEndPoint, _remoteEndPoint);
 
         }
 
@@ -140,7 +137,7 @@ namespace InTheHand.Net
             switch (method)
             {
                 case ObexMethod.Connect:
-                    ObexParser.ParseHeaders(buffer, true, ref remoteMaxPacket, bodyStream, headers);
+                    ObexParser.ParseHeaders(_buffer, true, ref _remoteMaxPacket, _bodyStream, _headers);
                     responsePacket = new byte[7] { 0xA0, 0x00, 0x07, 0x10, 0x00, 0x20, 0x00 };
                     break;
                 case ObexMethod.Put:
@@ -148,7 +145,7 @@ namespace InTheHand.Net
                     { // Don't allow another PUT to append to the previous content!
                         goto case ObexMethod.PutFinal;
                     }
-                    ObexParser.ParseHeaders(buffer, false, ref remoteMaxPacket, bodyStream, headers);
+                    ObexParser.ParseHeaders(_buffer, false, ref _remoteMaxPacket, _bodyStream, _headers);
                     responsePacket = new byte[3] { (byte)(ObexStatusCode.Continue | ObexStatusCode.Final), 0x00, 0x03 };
                     break;
                 case ObexMethod.PutFinal:
@@ -159,13 +156,13 @@ namespace InTheHand.Net
                         moretoreceive = false;
                         break;
                     }
-                    ObexParser.ParseHeaders(buffer, false, ref remoteMaxPacket, bodyStream, headers);
+                    ObexParser.ParseHeaders(_buffer, false, ref _remoteMaxPacket, _bodyStream, _headers);
                     responsePacket = new byte[3] { (byte)(ObexStatusCode.OK | ObexStatusCode.Final), 0x00, 0x03 };
                     // Shouldn't return an object if the sender didn't send it all.
                     putCompleted = true; // (Need to just assume that it does contains EndOfBody)
                     break;
                 case ObexMethod.Disconnect:
-                    ObexParser.ParseHeaders(buffer, false, ref remoteMaxPacket, bodyStream, headers);
+                    ObexParser.ParseHeaders(_buffer, false, ref _remoteMaxPacket, _bodyStream, _headers);
                     responsePacket = new byte[3] { (byte)(ObexStatusCode.OK | ObexStatusCode.Final), 0x00, 0x03 };
                     moretoreceive = false;
                     break;
@@ -190,7 +187,7 @@ namespace InTheHand.Net
         {
             get
             {
-                return request;
+                return _request;
             }
         }
 

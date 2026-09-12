@@ -2,13 +2,11 @@
 //
 // InTheHand.Net.Obex.ObexClient
 // 
-// Copyright (c) 2020-2022 In The Hand Ltd, All rights reserved.
+// Copyright (c) 2020-2026 In The Hand Ltd, All rights reserved.
 // This source code is licensed under the MIT License
 
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace InTheHand.Net.Obex

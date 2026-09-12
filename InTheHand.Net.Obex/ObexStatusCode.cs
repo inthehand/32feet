@@ -2,11 +2,10 @@
 //
 // InTheHand.Net.ObexStatusCode
 // 
-// Copyright (c) 2003-2020 In The Hand Ltd, All rights reserved.
+// Copyright (c) 2003-2026 In The Hand Ltd, All rights reserved.
 // This source code is licensed under the MIT License
 
 using System;
-using System.Diagnostics.CodeAnalysis;
 
 namespace InTheHand.Net
 {
@@ -15,7 +14,6 @@ namespace InTheHand.Net
     /// </summary>
     /// <remarks>OBEX codes are directly related to their HTTP equivalents - see <see cref="System.Net.HttpStatusCode"/>.</remarks>
     [Flags]
-    [SuppressMessage("Microsoft.Design", "CA1028:EnumStorageShouldBeInt32")]
     public enum ObexStatusCode : byte
     {
         /// <summary>

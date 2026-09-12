@@ -2,7 +2,7 @@
 //
 // InTheHand.Net.GuidHelper
 // 
-// Copyright (c) 2022 In The Hand Ltd, All rights reserved.
+// Copyright (c) 2022-2026 In The Hand Ltd, All rights reserved.
 // This source code is licensed under the MIT License
 
 using System;
@@ -28,7 +28,7 @@ namespace InTheHand.Net
         /// <summary>
         /// Converts a <see cref="Guid"/> value from network byte order to host byte order.
         /// </summary>
-        /// <param name="host">The <see cref="Guid"/> to convert, expressed in network byte order.</param>
+        /// <param name="network">The <see cref="Guid"/> to convert, expressed in network byte order.</param>
         /// <returns>A <see cref="Guid"/> value, expressed in host byte order.</returns>
         public static Guid NetworkToHostOrder(Guid network)
         {
