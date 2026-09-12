@@ -21,7 +21,7 @@
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<Copyright>Copyright (c) 2004-2026 In The Hand Ltd</Copyright>
 		<Description>32feet.NET is an open-source project to make personal area networking technologies such as Bluetooth easily accessible from .NET code.</Description>
-		<FileVersion>4.0.45.0829</FileVersion>
+		<FileVersion>4.0.45.0912</FileVersion>
 		<AssemblyVersion>4.0.0.0</AssemblyVersion>
 		<AssemblyName>InTheHand.BluetoothLE</AssemblyName>
 		<PackageIconUrl></PackageIconUrl>
@@ -42,7 +42,7 @@
 
 	<ItemGroup>
 		<PackageReference Include="DotNet.ReproducibleBuilds" Version="2.0.5" PrivateAssets="All" />
-		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="10.0.301" PrivateAssets="All" />
+		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="10.0.401" PrivateAssets="All" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -101,12 +101,12 @@
 	</ItemGroup>
 
 	<ItemGroup Condition=" '$(TargetFramework)' == 'net462' ">
-		<PackageReference Include="Microsoft.Windows.SDK.Contracts" Version="10.0.22621.2428" />
+		<PackageReference Include="Microsoft.Windows.SDK.Contracts" Version="10.0.28000.2705" />
 		<Compile Include="Platforms\Windows\*.cs" />
 	</ItemGroup>
 	
 	<ItemGroup Condition=" '$(TargetFramework)' == 'monoandroid10.0' ">
-		<PackageReference Include="InTheHand.AndroidActivity" Version="1.0.4" />
+		<PackageReference Include="InTheHand.AndroidActivity" Version="1.0.5" />
 		<Compile Include="Platforms\Android\*.cs" />
 	</ItemGroup>
 
@@ -149,6 +149,7 @@
 	</ItemGroup>
 
 	<ItemGroup Condition=" '$(TargetFramework)' == 'net9.0' ">
+		<PackageReference Include="Tmds.DBus" Version="0.95.1" />
 		<PackageReference Include="Linux.Bluetooth" Version="5.67.1" />
 		<Compile Include="Platforms\Linux\*.cs" />
 	</ItemGroup>
