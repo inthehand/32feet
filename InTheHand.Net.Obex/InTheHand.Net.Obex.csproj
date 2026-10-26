@@ -44,7 +44,7 @@
 		<PackageReference Include="InTheHand.Net.Bluetooth" Version="4.2.5" />
 		<PackageReference Include="InTheHand.Net.IrDA" Version="4.0.5" />
 		<PackageReference Include="DotNet.ReproducibleBuilds" Version="2.0.5" PrivateAssets="All" />
-		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="10.0.401" PrivateAssets="All" />
+		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="10.0.403" PrivateAssets="All" />
 	</ItemGroup>
 
 </Project>
