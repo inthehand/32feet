@@ -173,19 +173,22 @@ namespace InTheHand.Bluetooth
 
         public override int GetHashCode()
         {
-            return NativeDevice.GetHashCode();
+            // NativeDevice can be null when an advertising event is raised for a device that
+            // BluetoothLEDevice.FromBluetoothAddressAsync could not resolve (it returns null for
+            // unreachable/unresolvable devices). Guard against dereferencing it here.
+            return NativeDevice?.GetHashCode() ?? 0;
         }
 
         internal string GetId()
         {
-            if (IsDisposedItem(this)) return _cachedId ?? string.Empty;
+            if (NativeDevice == null || IsDisposedItem(this)) return _cachedId ?? string.Empty;
             _cachedId = NativeDevice.BluetoothAddress.ToString("X6");
             return _cachedId;
         }
 
         internal string GetName()
         {
-            if (IsDisposedItem(this)) return _cachedName ?? string.Empty;
+            if (NativeDevice == null || IsDisposedItem(this)) return _cachedName ?? string.Empty;
             if (NativeDevice.Name.StartsWith("Bluetooth "))
             {
                 _cachedName = NativeDevice.DeviceInformation.Name;
