@@ -1,4 +1,4 @@
-﻿//-----------------------------------------------------------------------
+//-----------------------------------------------------------------------
 // <copyright file="Bluetooth.windows.cs" company="In The Hand Ltd">
 //   Copyright (c) 2018-24 In The Hand Ltd, All rights reserved.
 //   This source code is licensed under the MIT License - see License.txt
@@ -331,10 +331,18 @@ namespace InTheHand.Bluetooth
 
         private static async Task<BluetoothLEScan> PlatformRequestLEScan(BluetoothLEScanOptions options)
         {
-            if (options == null)
-                return new BluetoothLEAdvertisementWatcher();
+            BluetoothLEAdvertisementWatcher watcher = options == null
+                ? new BluetoothLEAdvertisementWatcher()
+                : new BluetoothLEAdvertisementWatcher(options);
 
-            return new BluetoothLEAdvertisementWatcher(options);
+            if (options != null)
+            {
+                watcher.ScanningMode = options.ScanningMode == BluetoothLEScanningMode.Active
+                    ? Windows.Devices.Bluetooth.Advertisement.BluetoothLEScanningMode.Active
+                    : Windows.Devices.Bluetooth.Advertisement.BluetoothLEScanningMode.Passive;
+            }
+
+            return watcher;
         }
 
 
