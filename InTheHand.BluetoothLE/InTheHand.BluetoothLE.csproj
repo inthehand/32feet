@@ -42,7 +42,7 @@
 
 	<ItemGroup>
 		<PackageReference Include="DotNet.ReproducibleBuilds" Version="2.0.5" PrivateAssets="All" />
-		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="10.0.401" PrivateAssets="All" />
+		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="11.0.100" PrivateAssets="All" />
 	</ItemGroup>
 
 	<ItemGroup>
