@@ -23,11 +23,14 @@ namespace InTheHand.Bluetooth
         /// Gets or sets the scanning mode used when starting the scan.
         /// </summary>
         /// <remarks>
-        /// Defaults to <see cref="BluetoothLEScanningMode.Passive"/>. Set to
-        /// <see cref="BluetoothLEScanningMode.Active"/> to also receive scan response packets
-        /// (for example to obtain the local name of devices that advertise it there).
-        /// Currently honoured on Windows; other platforms ignore it.
+        /// Defaults to <see cref="BluetoothLEScanningMode.Active"/>, which also issues scan requests
+        /// so that scan response packets are received (for example to obtain the local name of
+        /// devices that advertise it there). This matches the native default on Android and iOS,
+        /// which both scan actively. Set to <see cref="BluetoothLEScanningMode.Passive"/> to
+        /// suppress scan requests.
+        /// Honoured on Windows; on Android and iOS the radio always scans actively, so this option
+        /// currently has no effect there.
         /// </remarks>
-        public BluetoothLEScanningMode ScanningMode { get; set; }
+        public BluetoothLEScanningMode ScanningMode { get; set; } = BluetoothLEScanningMode.Active;
     }
 }

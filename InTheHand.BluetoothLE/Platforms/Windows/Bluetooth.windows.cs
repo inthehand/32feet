@@ -335,12 +335,13 @@ namespace InTheHand.Bluetooth
                 ? new BluetoothLEAdvertisementWatcher()
                 : new BluetoothLEAdvertisementWatcher(options);
 
-            if (options != null)
-            {
-                watcher.ScanningMode = options.ScanningMode == BluetoothLEScanningMode.Active
-                    ? Windows.Devices.Bluetooth.Advertisement.BluetoothLEScanningMode.Active
-                    : Windows.Devices.Bluetooth.Advertisement.BluetoothLEScanningMode.Passive;
-            }
+            // Match the shared default (Active); scan passively only when explicitly requested.
+            // Without this the null-options path would keep the WinRT default (Passive) and miss
+            // scan response packets.
+            var scanningMode = options == null ? BluetoothLEScanningMode.Active : options.ScanningMode;
+            watcher.ScanningMode = scanningMode == BluetoothLEScanningMode.Active
+                ? Windows.Devices.Bluetooth.Advertisement.BluetoothLEScanningMode.Active
+                : Windows.Devices.Bluetooth.Advertisement.BluetoothLEScanningMode.Passive;
 
             return watcher;
         }
